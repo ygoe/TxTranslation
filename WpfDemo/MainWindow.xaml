@@ -1,0 +1,21 @@
+﻿<Window x:Class="Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+		TextOptions.TextFormattingMode="Display"
+        Title="TxTranslator Demo" Height="350" Width="525">
+	<Grid Margin="12">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		
+		<TextBlock Grid.Row="0" Name="InfoText" Text="{Tx:UT monate, {Binding Value, ElementName=Counter}}"/>
+		<Slider Grid.Row="1" Name="Counter" Margin="0,12,0,0" Value="5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" />
+		<Button Grid.Row="2" Name="ChangeLanguageButton" Click="ChangeLanguageButton_Click">Change language</Button>
+		
+		<TextBlock Grid.Row="3" Name="Info2Text"/>
+	</Grid>
+</Window>
