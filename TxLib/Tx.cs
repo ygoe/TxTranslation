@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace TxLib
 {
 	public static class Tx
 	{
-		#region System key constants
+		#region Constants
 
 		/// <summary>
 		/// Environment variable name that specifies the log file name. If the environment variable
@@ -48,14 +49,82 @@ namespace TxLib
 			public const string QuoteEnd = "Tx:quote end";
 			public const string QuoteNestedBegin = "Tx:quote nested begin";
 			public const string QuoteNestedEnd = "Tx:quote nested end";
-			public const string NumberNegative = "Tx:number negative";
-			public const string NumberDecimalSeparator = "Tx:number decimal separator";
-			public const string NumberGroupSeparator = "Tx:number group separator";
-			public const string NumberGroupSeparatorThreshold = "Tx:number group separator threshold";
-			public const string NumberUnitSeparator = "Tx:number unit separator";
+			public const string NumberNegative = "Tx:number.negative";
+			public const string NumberDecimalSeparator = "Tx:number.decimal separator";
+			public const string NumberGroupSeparator = "Tx:number.group separator";
+			public const string NumberGroupSeparatorThreshold = "Tx:number.group separator threshold";
+			public const string NumberUnitSeparator = "Tx:number.unit separator";
+			public const string NumberOrdinal = "Tx:number.ordinal";
+			public const string NumberOrdinalFeminin = "Tx:number.ordinal f";
+			public const string DateYear = "Tx:date.year";
+			public const string DateYearMonth = "Tx:date.year month";
+			public const string DateYearMonthAbbr = "Tx:date.year month abbr";
+			public const string DateYearMonthLong = "Tx:date.year month long";
+			public const string DateYearMonthDay = "Tx:date.year month day";
+			public const string DateYearMonthDayAbbr = "Tx:date.year month day abbr";
+			public const string DateYearMonthDayLong = "Tx:date.year month day long";
+			public const string DateMonth = "Tx:date.month";
+			public const string DateMonthAbbr = "Tx:date.month abbr";
+			public const string DateMonthLong = "Tx:date.month long";
+			public const string DateMonthDay = "Tx:date.month day";
+			public const string DateMonthDayAbbr = "Tx:date.month day abbr";
+			public const string DateMonthDayLong = "Tx:date.month day long";
+			public const string DateDay = "Tx:date.day";
+			public const string DateYearQuarter = "Tx:date.year quarter";
+			public const string DateQuarter = "Tx:date.quarter";
+			public const string DateDowWithDate = "Tx:date.dow with date";
+			public const string TimeHourMinuteSecondMs = "Tx:time.hour minute second ms";
+			public const string TimeHourMinuteSecond = "Tx:time.hour minute second";
+			public const string TimeHourMinute = "Tx:time.hour minute";
+			public const string TimeHour = "Tx:time.hour";
+			public const string TimeAM = "Tx:time.am";
+			public const string TimePM = "Tx:time.pm";
+			public const string TimeRelativeSeparator = "Tx:time.relative separator";
+			public const string TimeRelative = "Tx:time.relative";
+			public const string TimeRelativeNeg = "Tx:time.relative neg";
+			public const string TimeRelativeYears = "Tx:time.relative.years";
+			public const string TimeRelativeMonths = "Tx:time.relative.months";
+			public const string TimeRelativeDays = "Tx:time.relative.days";
+			public const string TimeRelativeHours = "Tx:time.relative.hours";
+			public const string TimeRelativeMinutes = "Tx:time.relative.minutes";
+			public const string TimeRelativeSeconds = "Tx:time.relative.seconds";
+			public const string TimeRelativeNegYears = "Tx:time.relative neg.years";
+			public const string TimeRelativeNegMonths = "Tx:time.relative neg.months";
+			public const string TimeRelativeNegDays = "Tx:time.relative neg.days";
+			public const string TimeRelativeNegHours = "Tx:time.relative neg.hours";
+			public const string TimeRelativeNegMinutes = "Tx:time.relative neg.minutes";
+			public const string TimeRelativeNegSeconds = "Tx:time.relative neg.seconds";
+			public const string TimeSpanRelative = "Tx:time.relative span";
+			public const string TimeSpanRelativeNeg = "Tx:time.relative span neg";
+			public const string TimeSpanRelativeYears = "Tx:time.relative span.years";
+			public const string TimeSpanRelativeMonths = "Tx:time.relative span.months";
+			public const string TimeSpanRelativeDays = "Tx:time.relative span.days";
+			public const string TimeSpanRelativeHours = "Tx:time.relative span.hours";
+			public const string TimeSpanRelativeMinutes = "Tx:time.relative span.minutes";
+			public const string TimeSpanRelativeSeconds = "Tx:time.relative span.seconds";
+			public const string TimeSpanRelativeNegYears = "Tx:time.relative span neg.years";
+			public const string TimeSpanRelativeNegMonths = "Tx:time.relative span neg.months";
+			public const string TimeSpanRelativeNegDays = "Tx:time.relative span neg.days";
+			public const string TimeSpanRelativeNegHours = "Tx:time.relative span neg.hours";
+			public const string TimeSpanRelativeNegMinutes = "Tx:time.relative span neg.minutes";
+			public const string TimeSpanRelativeNegSeconds = "Tx:time.relative span neg.seconds";
+			public const string TimeSpan = "Tx:time.span";
+			public const string TimeSpanNeg = "Tx:time.span neg";
+			public const string TimeSpanYears = "Tx:time.span.years";
+			public const string TimeSpanMonths = "Tx:time.span.months";
+			public const string TimeSpanDays = "Tx:time.span.days";
+			public const string TimeSpanHours = "Tx:time.span.hours";
+			public const string TimeSpanMinutes = "Tx:time.span.minutes";
+			public const string TimeSpanSeconds = "Tx:time.span.seconds";
+			public const string TimeSpanNegYears = "Tx:time.span neg.years";
+			public const string TimeSpanNegMonths = "Tx:time.span neg.months";
+			public const string TimeSpanNegDays = "Tx:time.span neg.days";
+			public const string TimeSpanNegHours = "Tx:time.span neg.hours";
+			public const string TimeSpanNegMinutes = "Tx:time.span neg.minutes";
+			public const string TimeSpanNegSeconds = "Tx:time.span neg.seconds";
 		}
 
-		#endregion System key constants
+		#endregion Constants
 
 		#region Global data
 
@@ -93,6 +162,22 @@ namespace TxLib
 		/// Access to this object is synchronised through rwlock.
 		/// </remarks>
 		private static bool useFileSystemWatcher;
+
+		/// <remarks>
+		/// Access to this object is synchronised through rwlock.
+		/// </remarks>
+		private static string primaryCulture;
+
+		/// <summary>
+		/// A list of all culture names accepted by the browser, sorted by descending preference.
+		/// This must be updated by the calling ASP.NET application for every page request from the
+		/// HTTP_ACCEPT_LANGUAGE header value through the SetWebCulture method.
+		/// </summary>
+		/// <remarks>
+		/// No locking is required for this field because every thread has its own instance.
+		/// </remarks>
+		[ThreadStatic]
+		private static string[] httpPreferredCultures;
 
 		/// <summary>
 		/// Contains a FileSystemWatcher instance monitoring each loaded file for changes.
@@ -295,7 +380,10 @@ namespace TxLib
 		/// </remarks>
 		public static void LoadFromXmlFile(string fileName)
 		{
-			LoadFromXmlFile(fileName, languages);
+			using (new WriteLock(rwlock))
+			{
+				LoadFromXmlFile(fileName, languages);
+			}
 		}
 
 		/// <summary>
@@ -305,6 +393,11 @@ namespace TxLib
 		/// <param name="dict">Dictionary to load the texts into.</param>
 		private static void LoadFromXmlFile(string fileName, Dictionary<string, Dictionary<string, Dictionary<int, string>>> dict)
 		{
+			if (!Path.IsPathRooted(fileName))
+			{
+				fileName = Path.GetFullPath(fileName);
+			}
+
 			using (new WriteLock(rwlock))
 			{
 				if (UseFileSystemWatcher)
@@ -326,8 +419,14 @@ namespace TxLib
 			}
 
 			// First load the XML file into an XmlDocument for further processing
+			XmlReaderSettings xrs = new XmlReaderSettings();
+			xrs.IgnoreWhitespace = false;
 			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.Load(fileName);
+			using (StreamReader sr = new StreamReader(fileName))
+			using (XmlReader xr = XmlReader.Create(sr, xrs))
+			{
+				xmlDoc.Load(xr);
+			}
 
 			// Try to recognise the culture name from the file name
 			Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
@@ -335,6 +434,14 @@ namespace TxLib
 			{
 				CultureInfo ci = CultureInfo.GetCultureInfo(m.Groups[1].Value);
 				LoadFromXml(ci.Name, xmlDoc.DocumentElement, dict);
+
+				// Set the primary culture if a file claims to be it
+				XmlAttribute primaryAttr = xmlDoc.DocumentElement.Attributes["primary"];
+				if (primaryAttr != null && primaryAttr.Value == "true")
+				{
+					PrimaryCulture = ci.Name;
+				}
+
 				return;
 			}
 
@@ -343,6 +450,13 @@ namespace TxLib
 			{
 				CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
 				LoadFromXml(ci.Name, xe, dict);
+
+				// Set the primary culture if a culture in the file claims to be it
+				XmlAttribute primaryAttr = xe.Attributes["primary"];
+				if (primaryAttr != null && primaryAttr.Value == "true")
+				{
+					PrimaryCulture = ci.Name;
+				}
 			}
 		}
 
@@ -395,6 +509,47 @@ namespace TxLib
 				// TODO: Test behaviour with a global unhandled exception handler in place.
 				System.Diagnostics.Trace.WriteLine("Unhandled " + ex.GetType().Name + " while reloading the dictionary files: " + ex.Message);
 			}
+		}
+
+		/// <summary>
+		/// Loads all text definitions from an embedded resource XML file into the global
+		/// dictionary. Only the combined format with all cultures in one document is supported by
+		/// this method.
+		/// </summary>
+		/// <param name="name">Name of the embedded resource file to load.</param>
+		/// <remarks>
+		/// The resource name is the project's default namespace and the file path relative to the
+		/// project, combined with dots (.) and all path separators also replaced with dots.
+		/// </remarks>
+		public static void LoadFromEmbeddedResource(string name)
+		{
+			// First load the XML file into an XmlDocument for further processing
+			Stream stream = System.Reflection.Assembly.GetCallingAssembly().GetManifestResourceStream(name);
+			if (stream == null)
+			{
+				throw new ArgumentException("The embedded resource name was not found in the calling assembly.");
+			}
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(stream);
+
+			// Try to find the culture name inside a combined XML document
+			using (new WriteLock(rwlock))
+			{
+				foreach (XmlElement xe in xmlDoc.DocumentElement.SelectNodes("culture[@name]"))
+				{
+					CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
+					LoadFromXml(ci.Name, xe, languages);
+
+					// Set the primary culture if a culture in the file claims to be it
+					XmlAttribute primaryAttr = xe.Attributes["primary"];
+					if (primaryAttr != null && primaryAttr.Value == "true")
+					{
+						PrimaryCulture = ci.Name;
+					}
+				}
+			}
+			// Need to raise the event after releasing the write lock
+			RaiseDictionaryChanged();
 		}
 
 		/// <summary>
@@ -491,9 +646,12 @@ namespace TxLib
 				}
 			}
 
-			if (isGlobalDict)
+			if (isGlobalDict && !rwlock.IsWriteLockHeld)
 			{
-				// Raise the changed event if the texts have been loaded into the global dictionary
+				// Raise the changed event if the texts have been loaded into the global
+				// dictionary, but not if a write lock is held because then, nothing could be read
+				// from the dictionary by others. In a situation where this method is called with
+				// a write lock, the caller must raise the changed event after releasing the lock.
 				RaiseDictionaryChanged();
 			}
 		}
@@ -696,7 +854,8 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Gets the RFC 4646 name of the thread's current culture.
+		/// Gets the RFC 4646 name of the thread's current culture. It is not guaranteed that this
+		/// culture is available in the global dictionary.
 		/// </summary>
 		public static string CurrentThreadCulture
 		{
@@ -704,7 +863,8 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Gets the two-letter ISO 639-1 language code of the thread's current culture.
+		/// Gets the two-letter ISO 639-1 language code of the thread's current culture. It is not
+		/// guaranteed that this language is available in the global dictionary.
 		/// </summary>
 		public static string CurrentThreadLanguage
 		{
@@ -712,7 +872,8 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Gets the native full name of the thread's current culture.
+		/// Gets the native full name of the thread's current culture. It is not guaranteed that
+		/// this culture is available in the global dictionary.
 		/// </summary>
 		public static string CurrentThreadCultureNativeName
 		{
@@ -720,7 +881,9 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Gets or sets the primary culture name that serves as fallback for incomplete translations.
+		/// Gets or sets the primary culture name that serves as fallback for incomplete
+		/// translations. If this is null, it will not be considered when translating texts. It is
+		/// not guaranteed that this culture is available in the global dictionary.
 		/// </summary>
 		public static string PrimaryCulture
 		{
@@ -741,20 +904,23 @@ namespace TxLib
 						{
 							primaryCulture = value;
 						}
-						RaiseDictionaryChanged();
+						if (!rwlock.IsWriteLockHeld)
+						{
+							// Raise the changed event only if no write lock is held, because then,
+							// nothing could be read from the dictionary by others. In a situation
+							// where this property is set with a write lock, the caller must raise
+							// the changed event after releasing the lock.
+							RaiseDictionaryChanged();
+						}
 					}
 				}
 			}
 		}
-		/// <remarks>
-		/// Access to this object is synchronised through rwlock.
-		/// </remarks>
-		private static string primaryCulture;
 
 		/// <summary>
 		/// Sets the current thread culture.
 		/// </summary>
-		/// <param name="culture">Culture name as supported by the CultureInfo class.</param>
+		/// <param name="culture">Culture name as supported by the CultureInfo class. This culture does not have to be available in the global dictionary.</param>
 		public static void SetCulture(string culture)
 		{
 			CultureInfo ci = new CultureInfo(culture);
@@ -766,56 +932,208 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Gets the supported current culture name for the thread. This can be
-		/// CurrentThreadCulture, CurrentThreadLanguage, PrimaryCulture or, if none of them are
-		/// available, any one of the available (loaded) cultures.
+		/// Gets the best supported current culture name for the thread. This can be
+		/// CurrentThreadCulture, CurrentThreadLanguage, one of the browser's supported cultures
+		/// (if specified), PrimaryCulture or, if none of them are available, any one of the
+		/// available (loaded) cultures. This culture will be tried first to find translated texts.
 		/// </summary>
 		/// <returns></returns>
 		public static string GetCultureName()
 		{
 			using (new ReadLock(rwlock))
 			{
-				// First try with the current culture, if set.
-				string cc = CultureInfo.CurrentCulture.Name;
-				if (languages.ContainsKey(cc)) return cc;
-
-				// If the culture name has a region set, try without it.
-				if (cc.Length == 5)
+				foreach (string culture in GetCulturesToTry(3))
 				{
-					cc = cc.Substring(0, 2);
-					if (languages.ContainsKey(cc)) return cc;
+					if (languages.ContainsKey(culture)) return culture;
 				}
-
-				// TODO: Implement other language priorities, e.g. for HTTP requests (cf. GetText method)
-
-				// Then try with the primary culture, if set.
-				if (PrimaryCulture != null)
-				{
-					cc = PrimaryCulture;
-					if (languages.ContainsKey(cc)) return cc;
-
-					// If the culture name has a region set, try without it.
-					if (cc.Length == 5)
-					{
-						cc = PrimaryCulture.Substring(0, 2);
-						if (languages.ContainsKey(cc)) return cc;
-					}
-				}
-
-				// Finally try every available language
-				foreach (string cc2 in languages.Keys)
-				{
-					return cc2;
-				}
-
 				// The dictionary is empty
 				return null;
 			}
 		}
 
+		/// <summary>
+		/// Returns all culture names to search, sorted by descending preference.
+		/// </summary>
+		/// <param name="stages">Stages to try, combination of 1 or 2.</param>
+		/// <returns></returns>
+		private static IEnumerable<string> GetCulturesToTry(int stages)
+		{
+			using (new ReadLock(rwlock))
+			{
+				if ((stages & 1) != 0)
+				{
+					// First try with the current culture, if set.
+					string cc = CultureInfo.CurrentCulture.Name;
+					yield return cc;
+
+					// If the culture name has a region set, try without it.
+					if (cc.Length == 5)
+					{
+						yield return cc.Substring(0, 2);
+					}
+				}
+				if ((stages & 2) != 0)
+				{
+					// Try other cultures, according to the preference set from the HTTP request header (cf. GetCultureName method)
+					if (httpPreferredCultures != null)
+					{
+						for (int i = 0; i < httpPreferredCultures.Length; i++)
+						{
+							string cc2 = httpPreferredCultures[i];
+							yield return cc2;
+
+							// If the culture name has a region set AND the culture without a region is
+							// not contained in the list of preferred cultures AND no other culture
+							// with this language part is yet to come in the list of preferred
+							// cultures, THEN try without the region now.
+							if (cc2.Length == 5 &&
+								Array.IndexOf(httpPreferredCultures, cc2.Substring(0, 2)) == -1)
+							{
+								bool found = false;
+								for (int j = i + 1; j < httpPreferredCultures.Length; j++)
+								{
+									if (httpPreferredCultures[j].Substring(0, 2) == cc2.Substring(0, 2))
+									{
+										found = true;
+										break;
+									}
+								}
+								if (!found)
+								{
+									yield return cc2.Substring(0, 2);
+								}
+							}
+						}
+					}
+
+					// Then try with the primary culture, if set.
+					if (PrimaryCulture != null)
+					{
+						yield return PrimaryCulture;
+
+						// If the culture name has a region set, try without it.
+						if (PrimaryCulture.Length == 5)
+						{
+							yield return PrimaryCulture.Substring(0, 2);
+						}
+					}
+
+					// Finally try every available language
+					foreach (string cc2 in languages.Keys)
+					{
+						yield return cc2;
+					}
+				}
+			}
+		}
+
 		#endregion Culture control
 
-		#region Public text retrieval methods
+		#region Web culture control
+
+		/// <summary>
+		/// Sets the best supported culture for a web page from the browser's language preference
+		/// and updates the preference list for the current thread. Only available (loaded)
+		/// cultures will be regarded, so all languages must be loaded before calling this method
+		/// and it must be called again after loading or reloading the translation files.
+		/// </summary>
+		/// <param name="httpAcceptLanguage">Value of the HTTP_ACCEPT_LANGUAGE request header.</param>
+		/// <remarks>
+		/// Tx.SetWebCulture(HttpContext.Current.Request.ServerVariables["HTTP_ACCEPT_LANGUAGE"] as string);
+		/// </remarks>
+		public static void SetWebCulture(string httpAcceptLanguage)
+		{
+			if (string.IsNullOrEmpty(httpAcceptLanguage))
+			{
+				httpPreferredCultures = new string[0];
+			}
+
+			// Parse every item from the list
+			List<CulturePriority> cpList = new List<CulturePriority>();
+			float priority = 1;
+			int index = 0;
+			using (new ReadLock(rwlock))
+			{
+				foreach (string item in httpAcceptLanguage.Split(','))
+				{
+					string[] parts = item.Split(';');
+
+					// Parse, validate and normalise culture name
+					string culture = parts[0].Trim().Replace('_', '-');
+					try
+					{
+						CultureInfo ci = CultureInfo.GetCultureInfo(culture);
+						culture = ci.Name;
+					}
+					catch (ArgumentException)
+					{
+						// .NET 4.0 will throw a CultureNotFoundException, which is inherited from ArgumentException
+						// Culture not found. Skip it, we couldn't support it anyway.
+						continue;
+					}
+					if (!languages.ContainsKey(culture))
+					{
+						// This locale is currently not loaded, so it cannot be supported.
+						continue;
+					}
+
+					// Parse the priority value for this culture name, if set.
+					// If no valid q value was found, the previous item's will be kept.
+					if (parts.Length > 1)
+					{
+						Match m = Regex.Match(parts[1].Trim(), @"q\s*=\s*([0-9.]+)");
+						if (m.Success)
+						{
+							priority = float.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture);
+						}
+					}
+
+					cpList.Add(new CulturePriority(culture, priority, index++));
+				}
+			}
+
+			httpPreferredCultures = cpList
+				.OrderByDescending(cp => cp.Priority)
+				.ThenBy(cp => cp.Index)
+				.Select(cp => cp.Culture)
+				.ToArray();
+
+			if (httpPreferredCultures.Length > 0)
+			{
+				// Set the current thread's culture to the most preferred one
+				SetCulture(httpPreferredCultures[0]);
+			}
+			else
+			{
+				// At least raise this event because the culture preferences have changed
+				RaiseDictionaryChanged();
+			}
+		}
+
+		#region Helper data structures
+
+		/// <summary>
+		/// Contains all data fields from an item of the browser's accept-language header list.
+		/// </summary>
+		private struct CulturePriority
+		{
+			public string Culture;
+			public float Priority;
+			public int Index;
+
+			public CulturePriority(string culture, float priority, int index)
+			{
+				Culture = culture;
+				Priority = priority;
+				Index = index;
+			}
+		}
+
+		#endregion Helper data structures
+
+		#endregion Web culture control
+
+		#region Public translation and formatting methods
 
 		#region Text overloads
 
@@ -1151,6 +1469,12 @@ namespace TxLib
 			{
 				return number;
 			}
+			// Certain unit characters have no spacing
+			// Source: http://de.wikipedia.org/wiki/Schreibweise_von_Zahlen#Ma.C3.9Feinheit
+			if (unit[0] == '°' || unit[0] == '′' || unit[0] == '″' || unit[0] == '"')
+			{
+				return number + unit;
+			}
 			return number + GetText(SystemKeys.NumberUnitSeparator, false, " ") + unit;
 		}
 
@@ -1189,18 +1513,388 @@ namespace TxLib
 			// A long (Int64) value cannot get greater than this
 		}
 
+		public static string Ordinal(int number)
+		{
+			return Ordinal(number, false);
+		}
+
+		public static string Ordinal(int number, bool femininGender)
+		{
+			string text = null;
+			if (femininGender)
+			{
+				text = ResolveData(GetText(SystemKeys.NumberOrdinalFeminin, number, false, false), SystemKeys.NumberOrdinalFeminin, number, (Dictionary<string, string>) null);
+			}
+			if (text == null)
+			{
+				text = ResolveData(GetText(SystemKeys.NumberOrdinal, number, false, true), SystemKeys.NumberOrdinal, number, (Dictionary<string, string>) null);
+			}
+			if (text == null)
+			{
+				text = number.ToString() + ".";
+			}
+			return text;
+		}
+
 		#endregion Number formatting
 
 		#region Date and time formatting
 
-		public static string Date(DateTime time)
+		/// <summary>
+		/// Formats a date with the specified level of detail.
+		/// </summary>
+		/// <param name="time">DateTime value to format.</param>
+		/// <param name="details">Details to include in the formatted string.</param>
+		/// <returns></returns>
+		public static string Time(DateTime time, TxTime details)
 		{
-			return "";
+			string dowStr = null;
+			StringBuilder sb = new StringBuilder();
+
+			// Day of week
+			if ((details & TxTime.Dow) != 0)
+			{
+				dowStr = time.ToString("ddd");
+			}
+			if ((details & TxTime.DowLong) != 0)
+			{
+				dowStr = time.ToString("dddd");
+			}
+
+			// Date combinations
+			Dictionary<string, string> data;
+			switch (details & TxTime.AnyDate)
+			{
+				case TxTime.Year:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYear, false, "yyyy")));
+					break;
+				case TxTime.YearMonth:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonth, false, "yyyy-MM")));
+					break;
+				case TxTime.YearMonthAbbr:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthAbbr, false, "MMM yyyy")));
+					break;
+				case TxTime.YearMonthLong:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthLong, false, "Y")));
+					break;
+				case TxTime.YearMonthDay:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDay, false, "d")));
+					break;
+				case TxTime.YearMonthDayAbbr:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDayAbbr, false, "d MMM yyyy")));
+					break;
+				case TxTime.YearMonthDayLong:
+					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDayLong, false, "d MMMM yyyy")));
+					break;
+				case TxTime.Month:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonth, false, "%M")));
+					break;
+				case TxTime.MonthAbbr:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonthAbbr, false, "MMM")));
+					break;
+				case TxTime.MonthLong:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonthLong, false, "MMMM")));
+					break;
+				case TxTime.MonthDay:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDay, false, "MM-dd")));
+					break;
+				case TxTime.MonthDayAbbr:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDayAbbr, false, "dd MMM")));
+					break;
+				case TxTime.MonthDayLong:
+					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDayLong, false, "M")));
+					break;
+				case TxTime.Day:
+					sb.Append(time.ToString(GetText(SystemKeys.DateDay, false, "%d")));
+					break;
+				case TxTime.YearQuarter:
+					data = new Dictionary<string, string>();
+					data["year"] = time.Year.ToString();
+					data["quarter"] = ((time.Month - 1) / 3 + 1).ToString();
+					sb.Append(ResolveData(GetText(SystemKeys.DateYearQuarter, false, "Q{quarter}'/'{year}"), "", -1, data));
+					break;
+				case TxTime.Quarter:
+					data = new Dictionary<string, string>();
+					data["quarter"] = ((time.Month - 1) / 3 + 1).ToString();
+					sb.Append(ResolveData(GetText(SystemKeys.DateQuarter, false, "Q{quarter}"), "", -1, data));
+					break;
+			}
+
+			if (dowStr != null && sb.Length > 0)
+			{
+				// Day of week and date are used together, combine them
+				data = new Dictionary<string, string>();
+				data["dow"] = dowStr;
+				data["date"] = sb.ToString();
+				string dowAndDate = ResolveData(GetText(SystemKeys.DateDowWithDate, false, "{dow}, {date}"), SystemKeys.DateDowWithDate, -1, data);
+				sb.Clear();
+				sb.Append(dowAndDate);
+			}
+
+			if ((details & TxTime.AnyDate) != 0 && (details | TxTime.AnyTime) != 0)
+			{
+				sb.Append("\u2007");   // Non-breaking figure space
+			}
+
+			if ((details | TxTime.AnyTime) != 0)
+			{
+				DateTimeFormatInfo fi = (DateTimeFormatInfo) CultureInfo.CurrentCulture.DateTimeFormat.Clone();
+				fi.AMDesignator = GetText(SystemKeys.TimeAM, false, fi.AMDesignator);
+				fi.PMDesignator = GetText(SystemKeys.TimePM, false, fi.PMDesignator);
+
+				// Time combinations
+				switch (details & TxTime.AnyTime)
+				{
+					case TxTime.HourMinuteSecondMs:
+						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinuteSecondMs, false, "HH:mm:ss.fff"), fi));
+						break;
+					case TxTime.HourMinuteSecond:
+						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinuteSecond, false, "T"), fi));
+						break;
+					case TxTime.HourMinute:
+						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinute, false, "t"), fi));
+						break;
+					case TxTime.Hour:
+						sb.Append(time.ToString(GetText(SystemKeys.TimeHour, false, "%H"), fi));
+						break;
+				}
+			}
+
+			if ((details & TxTime.Zone) != 0)
+			{
+				if (details != TxTime.Zone)
+				{
+					sb.Append("\xA0");   // Non-breaking space
+				}
+				sb.Append(time.ToString("zzz"));
+			}
+
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="time">Time to compare with now. If Kind is not Utc, the value is converted to UTC for comparison.</param>
+		/// <returns></returns>
+		public static string RelativeTime(DateTime time)
+		{
+			if (time == DateTime.MinValue)
+			{
+				return GetText("never", -1);
+			}
+			
+			// Calculate time span between specified time and now
+			if (time.Kind != DateTimeKind.Utc)
+			{
+				time = time.ToUniversalTime();
+			}
+			DateTimeInterval interval = GetRoundedInterval(DateTime.UtcNow, time);
+
+			if (interval.TimeSpan.TotalSeconds < 3)
+			{
+				return GetText("now", -1);
+			}
+
+			string[] keys = new string[6];
+			keys[0] = !interval.Negative ? SystemKeys.TimeRelativeYears : SystemKeys.TimeRelativeNegYears;
+			keys[1] = !interval.Negative ? SystemKeys.TimeRelativeMonths : SystemKeys.TimeRelativeNegMonths;
+			keys[2] = !interval.Negative ? SystemKeys.TimeRelativeDays : SystemKeys.TimeRelativeNegDays;
+			keys[3] = !interval.Negative ? SystemKeys.TimeRelativeHours : SystemKeys.TimeRelativeNegHours;
+			keys[4] = !interval.Negative ? SystemKeys.TimeRelativeMinutes : SystemKeys.TimeRelativeNegMinutes;
+			keys[5] = !interval.Negative ? SystemKeys.TimeRelativeSeconds : SystemKeys.TimeRelativeNegSeconds;
+			string intervalStr = FormatTimeInterval(interval, keys);
+
+			Dictionary<string, string> data = new Dictionary<string, string>();
+			data["interval"] = intervalStr;
+			return ResolveData(GetText(SystemKeys.TimeRelative, -1), SystemKeys.TimeRelative, -1, data);
+		}
+
+		public static string TimeSpan(DateTime time)
+		{
+			if (time == DateTime.MinValue)   // TODO: Actually this should not be allowed
+			{
+				return GetText("never", -1);
+			}
+
+			// Calculate time span between specified time and now
+			if (time.Kind != DateTimeKind.Utc)
+			{
+				time = time.ToUniversalTime();
+			}
+			DateTimeInterval interval = GetRoundedInterval(DateTime.UtcNow, time);
+
+			string[] keys = new string[6];
+			keys[0] = !interval.Negative ? SystemKeys.TimeSpanRelativeYears : SystemKeys.TimeSpanRelativeNegYears;
+			keys[1] = !interval.Negative ? SystemKeys.TimeSpanRelativeMonths : SystemKeys.TimeSpanRelativeNegMonths;
+			keys[2] = !interval.Negative ? SystemKeys.TimeSpanRelativeDays : SystemKeys.TimeSpanRelativeNegDays;
+			keys[3] = !interval.Negative ? SystemKeys.TimeSpanRelativeHours : SystemKeys.TimeSpanRelativeNegHours;
+			keys[4] = !interval.Negative ? SystemKeys.TimeSpanRelativeMinutes : SystemKeys.TimeSpanRelativeNegMinutes;
+			keys[5] = !interval.Negative ? SystemKeys.TimeSpanRelativeSeconds : SystemKeys.TimeSpanRelativeNegSeconds;
+			string intervalStr = FormatTimeInterval(interval, keys);
+
+			Dictionary<string, string> data = new Dictionary<string, string>();
+			data["interval"] = intervalStr;
+			return ResolveData(GetText(SystemKeys.TimeSpanRelative, -1), SystemKeys.TimeSpanRelative, -1, data);
+		}
+
+		public static string TimeSpan(TimeSpan span)
+		{
+			// Calculate time span between specified time and now
+			DateTime now = DateTime.UtcNow;
+			DateTimeInterval interval = GetRoundedInterval(now, now + span);
+
+			string[] keys = new string[6];
+			keys[0] = !interval.Negative ? SystemKeys.TimeSpanYears : SystemKeys.TimeSpanNegYears;
+			keys[1] = !interval.Negative ? SystemKeys.TimeSpanMonths : SystemKeys.TimeSpanNegMonths;
+			keys[2] = !interval.Negative ? SystemKeys.TimeSpanDays : SystemKeys.TimeSpanNegDays;
+			keys[3] = !interval.Negative ? SystemKeys.TimeSpanHours : SystemKeys.TimeSpanNegHours;
+			keys[4] = !interval.Negative ? SystemKeys.TimeSpanMinutes : SystemKeys.TimeSpanNegMinutes;
+			keys[5] = !interval.Negative ? SystemKeys.TimeSpanSeconds : SystemKeys.TimeSpanNegSeconds;
+			string intervalStr = FormatTimeInterval(interval, keys);
+
+			Dictionary<string, string> data = new Dictionary<string, string>();
+			data["interval"] = intervalStr;
+			return ResolveData(GetText(SystemKeys.TimeSpan, -1), SystemKeys.TimeSpan, -1, data);
+		}
+
+		/// <summary>
+		/// Calculates a DateTimeInterval from two DateTime values and rounds it to a resolution of
+		/// not more than 2 levels.
+		/// </summary>
+		/// <param name="time">Start time of the interval.</param>
+		/// <param name="end">End time of the interval.</param>
+		/// <returns></returns>
+		private static DateTimeInterval GetRoundedInterval(DateTime start, DateTime end)
+		{
+			DateTimeInterval interval = new DateTimeInterval(start, end);
+
+			// Snap to grid
+			// Only snap a unit downwards if there is a greater unit.
+			if ((interval.Years != 0 || interval.Months != 0 || interval.Days != 0 || interval.Hours != 0 || interval.Minutes != 0) && interval.Seconds <= 3)
+			{
+				interval.Seconds = 0;
+			}
+			else if (interval.Seconds >= 57)
+			{
+				interval.Minutes++;
+				interval.Seconds = 0;
+			}
+			if ((interval.Years != 0 || interval.Months != 0 || interval.Days != 0 || interval.Hours != 0) && interval.Minutes <= 3)
+			{
+				interval.Minutes = 0;
+			}
+			else if (interval.Minutes >= 57)
+			{
+				interval.Hours++;
+				interval.Minutes = 0;
+			}
+			if ((interval.Years != 0 || interval.Months != 0 || interval.Days != 0) && interval.Hours <= 1)
+			{
+				interval.Hours = 0;
+			}
+			else if (interval.Hours >= 23)
+			{
+				interval.Days++;
+				interval.Hours = 0;
+			}
+			if ((interval.Years != 0 || interval.Months != 0) && interval.Days <= 2)
+			{
+				interval.Days = 0;
+			}
+			else if (interval.Days >= 28)
+			{
+				interval.Months++;
+				interval.Days = 0;
+			}
+			// (Months are not snapped)
+
+			// Decrease resolution over time, also ensure that only one smaller unit is set
+			if (interval.Years >= 5)
+			{
+				if (interval.Months >= 7)
+					interval.Years++;
+				interval.Months = 0;
+			}
+			if (interval.Years >= 1)
+			{
+				interval.Days = 0;
+				interval.Hours = 0;
+				interval.Minutes = 0;
+				interval.Seconds = 0;
+			}
+			if (interval.Months >= 5)
+			{
+				if (interval.Days >= 16)
+					interval.Months++;
+				interval.Days = 0;
+			}
+			if (interval.Months >= 1)
+			{
+				interval.Hours = 0;
+				interval.Minutes = 0;
+				interval.Seconds = 0;
+			}
+			if (interval.Days >= 5)
+			{
+				if (interval.Hours >= 12)
+					interval.Days++;
+				interval.Hours = 0;
+			}
+			if (interval.Days >= 1)
+			{
+				interval.Minutes = 0;
+				interval.Seconds = 0;
+			}
+			if (interval.Hours >= 5)
+			{
+				if (interval.Minutes >= 30)
+					interval.Hours++;
+				interval.Minutes = 0;
+			}
+			if (interval.Hours >= 1)
+			{
+				interval.Seconds = 0;
+			}
+			if (interval.Minutes >= 5)
+			{
+				if (interval.Seconds >= 30)
+					interval.Minutes++;
+				interval.Seconds = 0;
+			}
+
+			return interval;
+		}
+
+		/// <summary>
+		/// Formats a DateTimeInterval value with the specified set of text keys for a specific
+		/// grammatical situation.
+		/// </summary>
+		/// <param name="interval">Interval data.</param>
+		/// <param name="keys">Text keys for years, months, days, hours, minutes and seconds.</param>
+		/// <returns></returns>
+		private static string FormatTimeInterval(DateTimeInterval interval, string[] keys)
+		{
+			List<string> levels = new List<string>();
+			if (interval.Years > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[0], interval.Years), keys[0], interval.Years, (Dictionary<string, string>) null));
+			if (interval.Months > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[1], interval.Months), keys[1], interval.Months, (Dictionary<string, string>) null));
+			if (interval.Days > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[2], interval.Days), keys[2], interval.Days, (Dictionary<string, string>) null));
+			if (interval.Hours > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[3], interval.Hours), keys[3], interval.Hours, (Dictionary<string, string>) null));
+			if (interval.Minutes > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[4], interval.Minutes), keys[4], interval.Minutes, (Dictionary<string, string>) null));
+			if (interval.Seconds > 0 && levels.Count < 2)
+				levels.Add(ResolveData(GetText(keys[5], interval.Seconds), keys[5], interval.Seconds, (Dictionary<string, string>) null));
+
+			return string.Join(GetText(SystemKeys.TimeRelativeSeparator, " "), levels.ToArray());
 		}
 
 		#endregion Date and time formatting
 
-		#endregion Public text retrieval methods
+		#endregion Public translation and formatting methods
 
 		#region Abbreviated public methods
 
@@ -2105,7 +2799,7 @@ namespace TxLib
 			
 			if (string.IsNullOrEmpty(text))
 			{
-				if (newUnusedSet)
+				if (newUnusedSet && data != null)
 					LogUnusedPlaceholderNames(key, data, usedPlaceholderNames);
 				return text;
 			}
@@ -2136,34 +2830,6 @@ namespace TxLib
 					}
 					else
 					{
-						#region // Extract everything in this brace block, counting opening and closing braces
-						//int braceLevel = 1;
-						//int nextBracePos = openBracePos;
-						//while ((nextBracePos = text.IndexOfAny(new char[] { '{', '}' }, nextBracePos + 1)) >= 0)
-						//{
-						//    // Skip if escape sequence
-						//    if (text.Length > nextBracePos + 1 && text[nextBracePos + 1] == '{')
-						//    {
-						//        openBracePos += 2;
-						//    }
-						//    // Update brace level
-						//    else if (text[nextBracePos] == '{')
-						//    {
-						//        braceLevel++;
-						//    }
-						//    else
-						//    {
-						//        braceLevel--;
-						//        if (braceLevel == 0) break;
-						//    }
-						//}
-						//if (braceLevel == 0)
-						//{
-						//    // Evaluate complete brace block
-
-						//}
-						#endregion
-
 						int closeBracePos = text.IndexOf('}', openBracePos + 1);
 						if (closeBracePos == -1)
 						{
@@ -2199,21 +2865,29 @@ namespace TxLib
 								// Count value found
 								subkey = text.Substring(openBracePos + 2, countPos - (openBracePos + 2));
 								string countName = text.Substring(countPos + 1, closeBracePos - (countPos + 1));
-								if (usedPlaceholderNames != null)
-									usedPlaceholderNames.Add(countName);
-								string countValue;
-								if (data != null && data.TryGetValue(countName, out countValue))
+								if (countName != "")
 								{
-									if (!int.TryParse(countValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out subcount))
+									if (usedPlaceholderNames != null)
+										usedPlaceholderNames.Add(countName);
+									string countValue;
+									if (data != null && data.TryGetValue(countName, out countValue))
 									{
-										// Reset value
-										subcount = -1;
-										Log("Resolve data: Subcount placeholder name \"{0}\" resolves to value \"{1}\" which is not an integer. Ignoring count.", countName, countValue);
+										if (!int.TryParse(countValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out subcount))
+										{
+											// Reset value
+											subcount = -1;
+											Log("Resolve data: Subcount placeholder name \"{0}\" resolves to value \"{1}\" which is not an integer. Ignoring count.", countName, countValue);
+										}
+									}
+									else
+									{
+										Log("Resolve data: Subcount placeholder name \"{0}\" is unset. Ignoring count.", countName);
 									}
 								}
 								else
 								{
-									Log("Resolve data: Subcount placeholder name \"{0}\" is unset. Ignoring count.", countName);
+									// Pass through the current count value
+									subcount = count;
 								}
 							}
 							// Resolve the subtext
@@ -2267,71 +2941,6 @@ namespace TxLib
 			if (newUnusedSet)
 				LogUnusedPlaceholderNames(key, data, usedPlaceholderNames);
 			return result.ToString();
-
-			#region // Regex replacing (2.5 times slower in a test)
-			//text = Regex.Replace(text, @"(?<!{){(?:([^=}][^}]*)|=([^#}]+)(?:#([^}]+))?)}", delegate(Match m)
-			//{
-			//    if (m.Groups[1].Success)
-			//    {
-			//        string name = m.Groups[1].Value;
-			//        if (name == "#")
-			//        {
-			//            if (count != -1)
-			//            {
-			//                return count.ToString();
-			//            }
-			//            else
-			//            {
-			//                // TO-DO: Profiling: Log missing count value
-			//                return "{#}";
-			//            }
-			//        }
-			//        string value;
-			//        if (data != null && data.TryGetValue(name, out value))
-			//        {
-			//            return value;
-			//        }
-			//        // TO-DO: Profiling: Log missing placeholder value
-			//        return "{" + name + "}";
-			//    }
-			//    if (m.Groups[2].Success)
-			//    {
-			//        string subkey = m.Groups[2].Value;
-			//        int subcount = -1;
-			//        if (m.Groups[3].Success)
-			//        {
-			//            string subcountName = m.Groups[3].Value;
-			//            string subcountStr;
-			//            if (data != null && data.TryGetValue(subcountName, out subcountStr))
-			//            {
-			//                if (!int.TryParse(subcountStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out subcount))
-			//                {
-			//                    // Reset value
-			//                    subcount = -1;
-			//                    // TO-DO: Profiling: Log invalid subcount format
-			//                }
-			//            }
-			//            else
-			//            {
-			//                // TO-DO: Profiling: Log missing subcount value
-			//            }
-			//        }
-			//        string subtext = GetText(subkey, subcount);
-			//        if (subtext != null)
-			//        {
-			//            if (subcount != -1)
-			//            {
-			//                // Text could contain the {#} placeholder, resolve it with the count value
-			//                return ResolveData(subtext, subcount);
-			//            }
-			//            return subtext;
-			//        }
-			//        // TO-DO: Profiling: Log missing subtext key
-			//        return "{=" + subkey + "}";
-			//    }
-			//    return "";   // Should not happen
-			//});
-			#endregion
 		}
 
 		#endregion Private placeholder resolution methods
@@ -2393,49 +3002,27 @@ namespace TxLib
 
 			using (new ReadLock(rwlock))
 			{
-				string text;
-
-				// First try with the current culture, if set.
-				string cc = CultureInfo.CurrentCulture.Name;
-				text = GetCultureText(cc, key, count);
-				if (text != null) return text;
-
-				// If the culture name has a region set, try without it.
-				if (cc.Length == 5)
+				string firstCulture = null;
+				foreach (string culture in GetCulturesToTry(1))
 				{
-					text = GetCultureText(cc.Substring(0, 2), key, count);
+					string text = GetCultureText(culture, key, count);
 					if (text != null) return text;
+					if (firstCulture == null) firstCulture = culture;
 				}
 				if (logMissing)
 				{
-					Log("Get text: Text key \"{0}\" is unset for culture {1}. Fallback cultures will {2}be used.", key, cc, useFallback ? "" : "NOT ");
+					Log("Get text: Text key \"{0}\" is unset for culture {1}. Fallback cultures will {2}be used.",
+						key,
+						firstCulture.Length == 5 ? firstCulture + " and " + firstCulture.Substring(0, 2) : firstCulture,
+						useFallback ? "" : "NOT ");
 				}
-
 				if (!useFallback) return null;
 
-				// TODO: Implement other language priorities, e.g. for HTTP requests (cf. GetCultureName method)
-
-				// Then try with the primary culture, if set.
-				if (PrimaryCulture != null)
+				foreach (string culture in GetCulturesToTry(2))
 				{
-					text = GetCultureText(PrimaryCulture, key, count);
-					if (text != null) return text;
-
-					// If the culture name has a region set, try without it.
-					if (PrimaryCulture.Length == 5)
-					{
-						text = GetCultureText(PrimaryCulture.Substring(0, 2), key, count);
-						if (text != null) return text;
-					}
-				}
-
-				// Finally try every available language
-				foreach (string cc2 in languages.Keys)
-				{
-					text = GetCultureText(cc2, key, count);
+					string text = GetCultureText(culture, key, count);
 					if (text != null) return text;
 				}
-
 				// Nothing found, return null
 				Log("Get text: Text key \"{0}\" is unset for ALL cultures.", key);
 				return null;
@@ -2471,17 +3058,30 @@ namespace TxLib
 						{
 							return text;
 						}
-						// Then test all available quantifiers (except -1)
+						// Then test all available quantifiers (except -1).
+						// First collect all defined quantifiers
+						List<int> quantifiers = new List<int>();
 						foreach (KeyValuePair<int, string> kvp in textItem)
 						{
 							if (kvp.Key != -1)
 							{
-								int c = kvp.Key & 0xFFFF;
-								int mod = (kvp.Key >> 16) & 0xFFFF;
-								if (mod >= 2 && c == count % mod)
-								{
-									return kvp.Value;
-								}
+								quantifiers.Add(kvp.Key);
+							}
+						}
+						// Then sort them by value
+						quantifiers.Sort();
+						// And evaluate them, the greatest value first, then decreasing.
+						// (Greatest modulo values are most specific and need to be considered first.
+						// Since the modulo value is encoded in the higher bits, this can be compared
+						// normally.)
+						for (int i = quantifiers.Count - 1; i >= 0; i--)
+						{
+							int q = quantifiers[i];
+							int c = q & 0xFFFF;
+							int mod = (q >> 16) & 0xFFFF;
+							if (mod >= 2 && c == count % mod)
+							{
+								return textItem[q];
 							}
 						}
 					}
@@ -2762,4 +3362,175 @@ namespace TxLib
 
 		#endregion Synchronisation helper classes
 	}
+
+	#region Date and time format enumeration
+
+	/// <summary>
+	/// Defines date and time components to be used with the Tx.Time method. Some of these values
+	/// can be combined, other values should not be used.
+	/// </summary>
+	[Flags]
+	public enum TxTime
+	{
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentYear = 0x1,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMonth = 0x2,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMonthAbbr = 0x4,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMonthLong = 0x8,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentDay = 0x10,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentQuarter = 0x20,
+
+		/// <summary>
+		/// The day of the week in abbreviated form.
+		/// </summary>
+		Dow = 0x40,
+		/// <summary>
+		/// The day of the week in full.
+		/// </summary>
+		DowLong = 0x80,
+
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentHour = 0x100,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMinute = 0x200,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentSecond = 0x400,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMs = 0x800,
+
+		/// <summary>
+		/// The time zone.
+		/// </summary>
+		Zone = 0x1000,
+
+		/// <summary>
+		/// Internal value, do not use. Combines all date-related fragment values.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		AnyDate = FragmentYear | FragmentMonth | FragmentMonthAbbr | FragmentMonthLong | FragmentDay | FragmentQuarter,
+		/// <summary>
+		/// Internal value, do not use. Combines all time-related fragment values.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		AnyTime = FragmentHour | FragmentMinute | FragmentSecond | FragmentMs,
+
+		/// <summary>
+		/// The year alone.
+		/// </summary>
+		Year = FragmentYear,
+		/// <summary>
+		/// The year and month in numeric form.
+		/// </summary>
+		YearMonth = FragmentYear | FragmentMonth,
+		/// <summary>
+		/// The year and month in abbreviated form.
+		/// </summary>
+		YearMonthAbbr = FragmentYear | FragmentMonthAbbr,
+		/// <summary>
+		/// The year and month in full.
+		/// </summary>
+		YearMonthLong = FragmentYear | FragmentMonthLong,
+		/// <summary>
+		/// The year, month and day in numeric form.
+		/// </summary>
+		YearMonthDay = FragmentYear | FragmentMonth | FragmentDay,
+		/// <summary>
+		/// The year, month and day in abbreviated form.
+		/// </summary>
+		YearMonthDayAbbr = FragmentYear | FragmentMonthAbbr | FragmentDay,
+		/// <summary>
+		/// The year, month and day in full.
+		/// </summary>
+		YearMonthDayLong = FragmentYear | FragmentMonthLong | FragmentDay,
+		/// <summary>
+		/// The month alone in numeric form.
+		/// </summary>
+		Month = FragmentMonth,
+		/// <summary>
+		/// The month alone in abbreviated form.
+		/// </summary>
+		MonthAbbr = FragmentMonthAbbr,
+		/// <summary>
+		/// The month alone in full.
+		/// </summary>
+		MonthLong = FragmentMonthLong,
+		/// <summary>
+		/// The month and day in numeric form.
+		/// </summary>
+		MonthDay = FragmentMonth | FragmentDay,
+		/// <summary>
+		/// The month and day in abbreviated form.
+		/// </summary>
+		MonthDayAbbr = FragmentMonthAbbr | FragmentDay,
+		/// <summary>
+		/// The month and day in full.
+		/// </summary>
+		MonthDayLong = FragmentMonthLong | FragmentDay,
+		/// <summary>
+		/// The day alone.
+		/// </summary>
+		Day = FragmentDay,
+		/// <summary>
+		/// The year and quarter.
+		/// </summary>
+		YearQuarter = FragmentYear | FragmentQuarter,
+		/// <summary>
+		/// The quarter alone.
+		/// </summary>
+		Quarter = FragmentQuarter,
+
+		/// <summary>
+		/// The time of day with hour, minute, second and millisecond.
+		/// </summary>
+		HourMinuteSecondMs = FragmentHour | FragmentMinute | FragmentSecond | FragmentMs,
+		/// <summary>
+		/// The time of day with hour, minute and second.
+		/// </summary>
+		HourMinuteSecond = FragmentHour | FragmentMinute | FragmentSecond,
+		/// <summary>
+		/// The time of day with hour and minute.
+		/// </summary>
+		HourMinute = FragmentHour | FragmentMinute,
+		/// <summary>
+		/// The time of day with the hour alone.
+		/// </summary>
+		Hour = FragmentHour,
+	}
+
+	#endregion Date and time format enumeration
 }

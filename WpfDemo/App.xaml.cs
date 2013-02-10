@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 
-namespace Demo
+namespace WpfDemo
 {
 	/// <summary>
 	/// Interaktionslogik für "App.xaml"

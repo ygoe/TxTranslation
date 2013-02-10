@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -11,11 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TxLib;
 using System.Xml;
-using System.Diagnostics;
+using TxLib;
 
-namespace Demo
+namespace WpfDemo
 {
 	/// <summary>
 	/// Interaktionslogik für MainWindow.xaml
@@ -24,37 +25,35 @@ namespace Demo
 	{
 		public MainWindow()
 		{
+			// Setup logging
 			//Tx.LogFileName = "tx.log";
-			//Tx.LogFileName = "";
+			Tx.LogFileName = "";
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", "1", EnvironmentVariableTarget.User);
 
-			//Tx.UseFileSystemWatcher = true;
+			// Setup translation data
+			try
+			{
+				// Set the XML file's build action to "Embedded Resource" and "Never copy" for this to work.
+				Tx.LoadFromEmbeddedResource("WpfDemo.lang.languages.xml");
+			}
+			catch (ArgumentException)
+			{
+				// The file was not embedded, try reading the file. This enables file change notifications.
+				Tx.UseFileSystemWatcher = true;
+				Tx.LoadFromXmlFile(@"lang\languages.xml");
+			}
 
-			//Tx.LoadFromXmlFile("wsz.de.xml");
-			//Tx.LoadFromXmlFile("wsz.en.xml");
-			//Tx.LoadFromXmlFile("combined.xml");
-			Tx.LoadDirectory(".", "wsz");
-			Tx.PrimaryCulture = "de";
-
-			Tx.AddText("de", Tx.SystemKeys.NumberNegative, "\u2212");
-			Tx.AddText("de", Tx.SystemKeys.NumberGroupSeparator, "\u202f");
-			Tx.AddText("de", Tx.SystemKeys.NumberGroupSeparatorThreshold, "10000");
-			Tx.AddText("de", Tx.SystemKeys.NumberUnitSeparator, "\u202f");
-
-			//Tx.SetCulture("en-us");
+			// Simulate web environment
+			//Tx.SetWebCulture("de-de;q=1,de-at;q=0.8,de;q=0.7,en-us;q=0.5,en;q=0.3");
+			//Tx.SetWebCulture("en-us;q=1,en-gb;q=0.8,en;q=0.7,de-de;q=0.5,de;q=0.3");
 
 			InitializeComponent();
 
-			Info2Text.Text = Tx.QT("errors and warnings", "err", "5", "warn", "1");
+			//Info2Text.Text = Tx.QT("errors and warnings", "err", "5", "warn", "1");
 
-			//Stopwatch sw = new Stopwatch();
-			//sw.Start();
-			//for (int i = 0; i < 1000000; i++)
-			//{
-			//    string s = Tx.T("monate");
-			//}
-			//sw.Stop();
-			//Info2Text.Text = Tx.NumberUnit(Tx.Number(sw.ElapsedMilliseconds), "ms");
+			//Info2Text.Text = Tx.Time(DateTime.Now, TxTime.fr);
+
+			Info2Text.Text = Tx.RelativeTime(DateTime.Now.AddDays(140));
 		}
 
 		private void ChangeLanguageButton_Click(object sender, RoutedEventArgs e)
