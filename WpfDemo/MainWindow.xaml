@@ -9,13 +9,29 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		
 		<TextBlock Grid.Row="0" Name="InfoText" Text="{Tx:UT n months, {Binding Value, ElementName=Counter}}"/>
 		<Slider Grid.Row="1" Name="Counter" Margin="0,12,0,0" Value="5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" />
 		<Button Grid.Row="2" Name="ChangeLanguageButton" Click="ChangeLanguageButton_Click">Change language</Button>
-		
-		<TextBlock Grid.Row="3" Name="Info2Text"/>
+
+		<TextBlock Grid.Row="3" Text="{Tx:Number {Binding Value, ElementName=Counter2}, 3, Unit=kV}"/>
+		<Slider Grid.Row="4" Name="Counter2" Margin="0,12,0,0" Value="12" Minimum="-10000" Maximum="10000" TickFrequency="1000" TickPlacement="BottomRight" />
+
+		<!--TextBlock Grid.Row="5" Text="{Tx:Time {Binding SelectedDate, ElementName=DatePicker1}, Details='DowLong,YearMonthDayLong'}"/-->
+		<!--TextBlock Grid.Row="5" Text="{Tx:RelativeTime {Binding SelectedDate, ElementName=DatePicker1}, UpperCase=True}"/-->
+		<TextBlock Grid.Row="5">
+			<TextBlock.Text>
+				<Tx:RelativeTime TimeBinding="{Binding SelectedDate, ElementName=DatePicker1}" UpperCase="True"/>
+			</TextBlock.Text>
+		</TextBlock>
+		<DatePicker Grid.Row="6" Name="DatePicker1" SelectedDateFormat="Short" />
+
+		<TextBlock Grid.Row="7" Name="Info2Text"/>
 	</Grid>
 </Window>

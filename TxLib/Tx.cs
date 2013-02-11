@@ -56,6 +56,7 @@ namespace TxLib
 			public const string NumberUnitSeparator = "Tx:number.unit separator";
 			public const string NumberOrdinal = "Tx:number.ordinal";
 			public const string NumberOrdinalFeminin = "Tx:number.ordinal f";
+			public const string ByteUnit = "Tx:byte unit";
 			public const string DateYear = "Tx:date.year";
 			public const string DateYearMonth = "Tx:date.year month";
 			public const string DateYearMonthAbbr = "Tx:date.year month abbr";
@@ -80,6 +81,8 @@ namespace TxLib
 			public const string TimeAM = "Tx:time.am";
 			public const string TimePM = "Tx:time.pm";
 			public const string TimeRelativeSeparator = "Tx:time.relative separator";
+			public const string TimeNow = "Tx:time.now";
+			public const string TimeNever = "Tx:time.never";
 			public const string TimeRelative = "Tx:time.relative";
 			public const string TimeRelativeNeg = "Tx:time.relative neg";
 			public const string TimeRelativeYears = "Tx:time.relative.years";
@@ -419,14 +422,8 @@ namespace TxLib
 			}
 
 			// First load the XML file into an XmlDocument for further processing
-			XmlReaderSettings xrs = new XmlReaderSettings();
-			xrs.IgnoreWhitespace = false;
 			XmlDocument xmlDoc = new XmlDocument();
-			using (StreamReader sr = new StreamReader(fileName))
-			using (XmlReader xr = XmlReader.Create(sr, xrs))
-			{
-				xmlDoc.Load(xr);
-			}
+			xmlDoc.Load(fileName);
 
 			// Try to recognise the culture name from the file name
 			Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
@@ -1144,7 +1141,7 @@ namespace TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		public static string Text(string key)
 		{
-			return GetText(key, -1);
+			return GetText(key, -1) ?? NotFound(key);
 		}
 
 		/// <summary>
@@ -1157,7 +1154,7 @@ namespace TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, count), key, count, (Dictionary<string, string>) null);
+				return ResolveData(GetText(key, count), key, count, (Dictionary<string, string>) null) ?? NotFound(key);
 			}
 		}
 
@@ -1172,7 +1169,7 @@ namespace TxLib
 			int icount = count == (int) count ? (int) count : -1;
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, icount), key, icount, (Dictionary<string, string>) null);
+				return ResolveData(GetText(key, icount), key, icount, (Dictionary<string, string>) null) ?? NotFound(key);
 			}
 		}
 
@@ -1186,7 +1183,7 @@ namespace TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, -1), key, -1, data);
+				return ResolveData(GetText(key, -1), key, -1, data) ?? NotFound(key);
 			}
 		}
 
@@ -1200,7 +1197,7 @@ namespace TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, -1), key, -1, data);
+				return ResolveData(GetText(key, -1), key, -1, data) ?? NotFound(key);
 			}
 		}
 
@@ -1215,7 +1212,7 @@ namespace TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, count), key, count, data);
+				return ResolveData(GetText(key, count), key, count, data) ?? NotFound(key);
 			}
 		}
 
@@ -1230,7 +1227,7 @@ namespace TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, count), key, count, data);
+				return ResolveData(GetText(key, count), key, count, data) ?? NotFound(key);
 			}
 		}
 
@@ -1246,7 +1243,7 @@ namespace TxLib
 			int icount = count == (int) count ? (int) count : -1;
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, icount), key, icount, data);
+				return ResolveData(GetText(key, icount), key, icount, data) ?? NotFound(key);
 			}
 		}
 
@@ -1262,7 +1259,7 @@ namespace TxLib
 			int icount = count == (int) count ? (int) count : -1;
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, icount), key, icount, data);
+				return ResolveData(GetText(key, icount), key, icount, data) ?? NotFound(key);
 			}
 		}
 
@@ -1419,14 +1416,11 @@ namespace TxLib
 		public static string Number(decimal number)
 		{
 			string numStr = Number(number, 29);   // decimal has at most 29 siginificant digits
-			if (Math.Truncate(number) != number)
+			numStr = numStr.TrimEnd('0');
+			string decSep = GetText(SystemKeys.NumberDecimalSeparator, false, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+			if (numStr.EndsWith(decSep))
 			{
-				numStr = numStr.TrimEnd('0');
-				string decSep = GetText(SystemKeys.NumberDecimalSeparator, false, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-				if (numStr.EndsWith(decSep))
-				{
-					numStr = numStr.Substring(numStr.Length - decSep.Length - 1);
-				}
+				numStr = numStr.Substring(0, numStr.Length - decSep.Length);
 			}
 			return numStr;
 		}
@@ -1439,6 +1433,8 @@ namespace TxLib
 		/// <returns></returns>
 		public static string Number(decimal number, int decimals)
 		{
+			if (decimals < 0) throw new ArgumentOutOfRangeException("decimals", "Decimals must be greater than or equal to 0.");
+
 			using (new ReadLock(rwlock))
 			{
 				NumberFormatInfo nfi = (NumberFormatInfo) CultureInfo.CurrentCulture.NumberFormat.Clone();
@@ -1486,38 +1482,51 @@ namespace TxLib
 		/// <returns></returns>
 		public static string DataSize(long bytes)
 		{
+			string byteUnit = GetText(SystemKeys.ByteUnit, false, "B");
+
 			long absBytes = Math.Abs(bytes);
 			if (absBytes < 0.9 * 1024)
-				return NumberUnit(Number(bytes, 0), "B");
+				return NumberUnit(Number(bytes, 0), byteUnit);
 			if (absBytes < 50 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024, 1), "KiB");
+				return NumberUnit(Number((decimal) bytes / 1024, 1), "Ki" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024, 0), "KiB");
+				return NumberUnit(Number((decimal) bytes / 1024, 0), "Ki" + byteUnit);
 			if (absBytes < 50 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 1), "MiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 1), "Mi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 0), "MiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 0), "Mi" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 1), "GiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 1), "Gi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 0), "GiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 0), "Gi" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 1), "TiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 1), "Ti" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 0), "TiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 0), "Ti" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 1), "PiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Pi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 0), "PiB");
-			return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 1), "EiB");
+				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 0), "Pi" + byteUnit);
+			return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Ei" + byteUnit);
 			// A long (Int64) value cannot get greater than this
 		}
 
+		/// <summary>
+		/// Formats an ordinal number.
+		/// </summary>
+		/// <param name="number">Number to format.</param>
+		/// <returns></returns>
 		public static string Ordinal(int number)
 		{
 			return Ordinal(number, false);
 		}
 
+		/// <summary>
+		/// Formats an ordinal number with the specified grammatical gender (masculine or feminine).
+		/// </summary>
+		/// <param name="number">Number to format.</param>
+		/// <param name="femininGender">true to specify the feminine form, false for the masculine form.</param>
+		/// <returns></returns>
 		public static string Ordinal(int number, bool femininGender)
 		{
 			string text = null;
@@ -1673,15 +1682,15 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// 
+		/// Returns a verbose description of a relative point in time.
 		/// </summary>
-		/// <param name="time">Time to compare with now. If Kind is not Utc, the value is converted to UTC for comparison.</param>
+		/// <param name="time">Time to compare with now. This can be in the future or past. If Kind is not Utc, the value is converted to UTC for comparison.</param>
 		/// <returns></returns>
 		public static string RelativeTime(DateTime time)
 		{
 			if (time == DateTime.MinValue)
 			{
-				return GetText("never", -1);
+				return GetText(SystemKeys.TimeNever, -1) ?? NotFound(SystemKeys.TimeNever);
 			}
 			
 			// Calculate time span between specified time and now
@@ -1691,9 +1700,9 @@ namespace TxLib
 			}
 			DateTimeInterval interval = GetRoundedInterval(DateTime.UtcNow, time);
 
-			if (interval.TimeSpan.TotalSeconds < 3)
+			if (Math.Abs(interval.TimeSpan.TotalSeconds) <= 3)
 			{
-				return GetText("now", -1);
+				return GetText(SystemKeys.TimeNow, -1) ?? NotFound(SystemKeys.TimeNow);
 			}
 
 			string[] keys = new string[6];
@@ -1707,14 +1716,20 @@ namespace TxLib
 
 			Dictionary<string, string> data = new Dictionary<string, string>();
 			data["interval"] = intervalStr;
-			return ResolveData(GetText(SystemKeys.TimeRelative, -1), SystemKeys.TimeRelative, -1, data);
+			string key = !interval.Negative ? SystemKeys.TimeRelative : SystemKeys.TimeRelativeNeg;
+			return ResolveData(GetText(key, -1), key, -1, data);
 		}
 
+		/// <summary>
+		/// Returns a verbose description of a time span from now to the specified point in time.
+		/// </summary>
+		/// <param name="time">The other end of the time span. This can be in the future or past.</param>
+		/// <returns></returns>
 		public static string TimeSpan(DateTime time)
 		{
 			if (time == DateTime.MinValue)   // TODO: Actually this should not be allowed
 			{
-				return GetText("never", -1);
+				return GetText(SystemKeys.TimeNever, -1) ?? NotFound(SystemKeys.TimeNever);
 			}
 
 			// Calculate time span between specified time and now
@@ -1735,10 +1750,32 @@ namespace TxLib
 
 			Dictionary<string, string> data = new Dictionary<string, string>();
 			data["interval"] = intervalStr;
-			return ResolveData(GetText(SystemKeys.TimeSpanRelative, -1), SystemKeys.TimeSpanRelative, -1, data);
+			string key = !interval.Negative ? SystemKeys.TimeSpanRelative : SystemKeys.TimeSpanRelativeNeg;
+			return ResolveData(GetText(key, -1), key, -1, data);
 		}
 
+		/// <summary>
+		/// Returns a verbose description of a time span that is not related to the current time,
+		/// including introductory wording.
+		/// </summary>
+		/// <param name="span">Time span to describe. This can be positive or negative.</param>
+		/// <returns></returns>
 		public static string TimeSpan(TimeSpan span)
+		{
+			string intervalStr = TimeSpanRaw(span);
+			Dictionary<string, string> data = new Dictionary<string, string>();
+			data["interval"] = intervalStr;
+			string key = span.Ticks >= 0 ? SystemKeys.TimeSpan : SystemKeys.TimeSpanNeg;
+			return ResolveData(GetText(key, -1), key, -1, data);
+		}
+
+		/// <summary>
+		/// Returns a verbose description of a time span that is not related to the current time,
+		/// without introductory wording.
+		/// </summary>
+		/// <param name="span">Time span to describe. This can be positive or negative.</param>
+		/// <returns></returns>
+		public static string TimeSpanRaw(TimeSpan span)
 		{
 			// Calculate time span between specified time and now
 			DateTime now = DateTime.UtcNow;
@@ -1752,10 +1789,7 @@ namespace TxLib
 			keys[4] = !interval.Negative ? SystemKeys.TimeSpanMinutes : SystemKeys.TimeSpanNegMinutes;
 			keys[5] = !interval.Negative ? SystemKeys.TimeSpanSeconds : SystemKeys.TimeSpanNegSeconds;
 			string intervalStr = FormatTimeInterval(interval, keys);
-
-			Dictionary<string, string> data = new Dictionary<string, string>();
-			data["interval"] = intervalStr;
-			return ResolveData(GetText(SystemKeys.TimeSpan, -1), SystemKeys.TimeSpan, -1, data);
+			return intervalStr;
 		}
 
 		/// <summary>
@@ -1767,6 +1801,11 @@ namespace TxLib
 		/// <returns></returns>
 		private static DateTimeInterval GetRoundedInterval(DateTime start, DateTime end)
 		{
+			// Round difference to seconds, update end time
+			const long ticksPerSecond = 10000000;
+			long newEnd = (long) Math.Round((double) (end.Ticks - start.Ticks) / ticksPerSecond) * ticksPerSecond;
+			end = new DateTime(start.Ticks + newEnd);
+
 			DateTimeInterval interval = new DateTimeInterval(start, end);
 
 			// Snap to grid
@@ -2757,7 +2796,7 @@ namespace TxLib
 					string value = data[i + 1];
 					if (dataDict.ContainsKey(name))
 					{
-						Log("Resolve data: Duplicate placeholder name {0}.", name);
+						LogStack("Resolve data: Duplicate placeholder name {0}.", name);
 					}
 					dataDict[name] = value;
 					i += 2;
@@ -2846,6 +2885,10 @@ namespace TxLib
 						else if (braceLength == 1 && text[openBracePos + 1] == '#')
 						{
 							// Found a {#} placeholder, insert the count value
+							if (count == -1)
+							{
+								LogStack("Resolve data: No count value or -1 specified for {#} placeholder in key \"{0}\".", key);
+							}
 							result.Append(count.ToString());
 						}
 						else if (braceLength > 1 && text[openBracePos + 1] == '=')
@@ -2876,12 +2919,12 @@ namespace TxLib
 										{
 											// Reset value
 											subcount = -1;
-											Log("Resolve data: Subcount placeholder name \"{0}\" resolves to value \"{1}\" which is not an integer. Ignoring count.", countName, countValue);
+											LogStack("Resolve data: Subcount placeholder name \"{0}\" resolves to value \"{1}\" which is not an integer. Ignoring count.", countName, countValue);
 										}
 									}
 									else
 									{
-										Log("Resolve data: Subcount placeholder name \"{0}\" is unset. Ignoring count.", countName);
+										LogStack("Resolve data: Subcount placeholder name \"{0}\" is unset. Ignoring count.", countName);
 									}
 								}
 								else
@@ -2900,7 +2943,7 @@ namespace TxLib
 							}
 							else
 							{
-								Log("Resolve data: Subkey text \"{0}\" is unset.", subkey);
+								LogStack("Resolve data: Subkey text \"{0}\" is unset.", subkey);
 								result.Append(text.Substring(openBracePos, braceLength + 2));
 							}
 						}
@@ -2917,7 +2960,7 @@ namespace TxLib
 							}
 							else
 							{
-								Log("Resolve data: Placeholder name \"{0}\" is unset.", varName);
+								LogStack("Resolve data: Placeholder name \"{0}\" is unset.", varName);
 								result.Append(text.Substring(openBracePos, braceLength + 2));
 							}
 						}
@@ -3009,14 +3052,16 @@ namespace TxLib
 					if (text != null) return text;
 					if (firstCulture == null) firstCulture = culture;
 				}
-				if (logMissing)
+				if (!useFallback)
 				{
-					Log("Get text: Text key \"{0}\" is unset for culture {1}. Fallback cultures will {2}be used.",
-						key,
-						firstCulture.Length == 5 ? firstCulture + " and " + firstCulture.Substring(0, 2) : firstCulture,
-						useFallback ? "" : "NOT ");
+					if (logMissing)
+					{
+						Log("Get text: Text key \"{0}\" is unset for culture {1}. Fallback cultures will NOT be used.",
+							key,
+							firstCulture.Length == 5 ? firstCulture + " and " + firstCulture.Substring(0, 2) : firstCulture);
+					}
+					return null;
 				}
-				if (!useFallback) return null;
 
 				foreach (string culture in GetCulturesToTry(2))
 				{
@@ -3050,9 +3095,9 @@ namespace TxLib
 				if (language.TryGetValue(key, out textItem))
 				{
 					string text;
-					// A count value is specified, search for a matching text value
 					if (count != -1)
 					{
+						// A count value is specified, search for a matching text value.
 						// First try a direct match
 						if (textItem.TryGetValue(count, out text))
 						{
@@ -3085,6 +3130,15 @@ namespace TxLib
 							}
 						}
 					}
+					else if (usedKeys != null)
+					{
+						// No count value is specified and unused logging is active.
+						// Check whether the text key has quantifiers defined.
+						if (textItem.Count > 1 || !textItem.ContainsKey(-1))
+						{
+							LogStack("Get text: Text key \"{0}\" with quantifier in culture {1} was requested without a count value.", key, culture);
+						}
+					}
 					// Try the generic form if nothing was found by now
 					if (textItem.TryGetValue(-1, out text))
 					{
@@ -3097,9 +3151,44 @@ namespace TxLib
 			return null;
 		}
 
+		/// <summary>
+		/// Returns a replacement text for text keys that were not found in the dictionary.
+		/// </summary>
+		/// <param name="key">Text key was was not found. This is included in the return value for further analysis.</param>
+		/// <returns></returns>
+		private static string NotFound(string key)
+		{
+			return "[" + key + "]";
+		}
+
 		#endregion Private text retrieval methods
 
 		#region Logging
+
+		/// <summary>
+		/// Writes a message to the current logging target, if any, and includes a call stack if
+		/// the target is a file.
+		/// </summary>
+		/// <param name="message">Message to write. May contain placeholders like {0}, {1} like for String.Format.</param>
+		/// <param name="args">Placeholder arguments for String.Format.</param>
+		private static void LogStack(string message, params object[] args)
+		{
+			lock (logLock)
+			{
+				if (logFileName != null)
+				{
+					Log(message, args);
+					if (logWriter != null)
+					{
+						string stackTrace = Environment.StackTrace;
+						// Shorten the stack trace to the effective entry point of WPF applications
+						stackTrace = Regex.Replace(stackTrace, @"\r?\n[^\r\n]+System\.RuntimeTypeHandle\.CreateInstance\(.*?$", "", RegexOptions.Singleline);
+						logWriter.WriteLine(stackTrace);
+						logWriter.Flush();
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Writes a message to the current logging target, if any.
@@ -3141,7 +3230,7 @@ namespace TxLib
 				dataNames.ExceptWith(usedPlaceholderNames);
 				if (dataNames.Count > 0)
 				{
-					Log(
+					LogStack(
 						"Placeholder names provided but unused by text key \"{0}\": {1}",
 						key,
 						string.Join(", ", dataNames));
@@ -3213,6 +3302,8 @@ namespace TxLib
 						{
 							HashSet<string> primaryKeys = new HashSet<string>(languages[primaryCulture].Keys);
 							primaryKeys.ExceptWith(usedKeys);
+							// Don't report system keys, most of them remain unused most of the time
+							primaryKeys.RemoveWhere(s => s.StartsWith("Tx:"));
 							if (primaryKeys.Count == 0)
 							{
 								Log("No text keys from the culture {0} were not used.", primaryCulture);

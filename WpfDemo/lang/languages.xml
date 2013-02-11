@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<translation>
+<translation xml:space="preserve">
 	<culture name="en" primary="true">
 		<text key="Tx:quote begin">“</text>
 		<text key="Tx:quote end">”</text>
@@ -27,6 +27,9 @@
 		<text key="Tx:time.hour">H "o'clock"</text>
 
 		<text key="Tx:time.relative separator"> </text>
+		<text key="Tx:time.now">now</text>
+		<text key="Tx:time.never">never</text>
+
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative neg">{interval} ago</text>
 		<text key="Tx:time.relative.years">{#} years</text>
@@ -150,6 +153,90 @@
 		<text key="Tx:date.month day abbr">d. MMM.</text>
 		<text key="Tx:date.day">d.</text>
 		<text key="Tx:time.hour">H "Uhr"</text>
+
+		<text key="Tx:time.relative separator"> </text>
+		<text key="Tx:time.now">jetzt</text>
+		<text key="Tx:time.never">nie</text>
+
+		<text key="Tx:time.relative">in {interval}</text>
+		<text key="Tx:time.relative neg">vor {interval}</text>
+		<text key="Tx:time.relative.years">{#} Jahren</text>
+		<text key="Tx:time.relative.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative.months">{#} Monaten</text>
+		<text key="Tx:time.relative.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative.days">{#} Tagen</text>
+		<text key="Tx:time.relative.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative.hours">{#} Stunden</text>
+		<text key="Tx:time.relative.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative neg.years">{#} Jahren</text>
+		<text key="Tx:time.relative neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative neg.months">{#} Monaten</text>
+		<text key="Tx:time.relative neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative neg.days">{#} Tagen</text>
+		<text key="Tx:time.relative neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative neg.hours">{#} Stunden</text>
+		<text key="Tx:time.relative neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative span">für {interval}</text>
+		<text key="Tx:time.relative span neg">seit {interval}</text>
+		<text key="Tx:time.relative span.years">{#} Jahre</text>
+		<text key="Tx:time.relative span.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative span.months">{#} Monate</text>
+		<text key="Tx:time.relative span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span.days">{#} Tage</text>
+		<text key="Tx:time.relative span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span.hours">{#} Stunden</text>
+		<text key="Tx:time.relative span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative span.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative span neg.years">{#} Jahren</text>
+		<text key="Tx:time.relative span neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative span neg.months">{#} Monaten</text>
+		<text key="Tx:time.relative span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span neg.days">{#} Tagen</text>
+		<text key="Tx:time.relative span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span neg.hours">{#} Stunden</text>
+		<text key="Tx:time.relative span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative span neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative span neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative span neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.span">{interval} später</text>
+		<text key="Tx:time.span neg">{interval} davor</text>
+		<text key="Tx:time.span.years">{#} Jahre</text>
+		<text key="Tx:time.span.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.span.months">{#} Monate</text>
+		<text key="Tx:time.span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span.days">{#} Tage</text>
+		<text key="Tx:time.span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span.hours">{#} Stunden</text>
+		<text key="Tx:time.span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span.minutes">{#} Minuten</text>
+		<text key="Tx:time.span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.span.seconds">{#} Sekunden</text>
+		<text key="Tx:time.span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.span neg.years">{#} Jahre</text>
+		<text key="Tx:time.span neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.span neg.months">{#} Monate</text>
+		<text key="Tx:time.span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span neg.days">{#} Tage</text>
+		<text key="Tx:time.span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span neg.hours">{#} Stunden</text>
+		<text key="Tx:time.span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.span neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.span neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.span neg.seconds" count="1">{#} Sekunde</text>
+
 		<text key="months">Monate</text>
 		<text key="months" count="1">Monat</text>
 		<text key="n months">{#} Monate</text>
@@ -193,6 +280,7 @@
 		<text key="Tx:number.ordinal">{#}ᵉ</text>
 		<text key="Tx:number.ordinal" count="1">{#}ᵉʳ</text>
 		<text key="Tx:number.ordinal f" count="1">{#}ʳᵉ</text>
+		<text key="Tx:byte unit">o</text>
 		<text key="Tx:date.year month">MM/yyyy</text>
 		<text key="Tx:date.year month abbr">MMM yyyy</text>
 		<text key="Tx:date.year month day abbr">d MMM yyyy</text>

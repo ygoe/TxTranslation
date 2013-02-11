@@ -26,9 +26,10 @@ namespace WpfDemo
 		public MainWindow()
 		{
 			// Setup logging
-			//Tx.LogFileName = "tx.log";
-			Tx.LogFileName = "";
+			Tx.LogFileName = "tx.log";
+			//Tx.LogFileName = "";
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", "1", EnvironmentVariableTarget.User);
+			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", null, EnvironmentVariableTarget.User);
 
 			// Setup translation data
 			try
@@ -53,7 +54,12 @@ namespace WpfDemo
 
 			//Info2Text.Text = Tx.Time(DateTime.Now, TxTime.fr);
 
-			Info2Text.Text = Tx.RelativeTime(DateTime.Now.AddDays(140));
+			//Info2Text.Text = Tx.RelativeTime(DateTime.Now.AddMinutes(-4).AddSeconds(-10));
+			//Info2Text.Text = Tx.TimeSpan(DateTime.Now.AddMinutes(-1).AddSeconds(-10));
+			//Info2Text.Text = Tx.TimeSpan(TimeSpan.FromDays(3.4));
+
+			//Info2Text.Text = Tx.DataSize(123456);
+			Info2Text.Text = Tx.T("months");
 		}
 
 		private void ChangeLanguageButton_Click(object sender, RoutedEventArgs e)

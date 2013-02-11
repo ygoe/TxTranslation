@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<translation>
+<translation xml:space="preserve">
 	<text key="Tx:quote begin">„</text>
 	<text key="Tx:quote end">“</text>
 	<text key="title">Demo-Anwendung</text>
