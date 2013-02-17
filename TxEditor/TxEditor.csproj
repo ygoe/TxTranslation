@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MultiSelectTreeView">
+      <HintPath>.\MultiSelectTreeView.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,6 +58,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Unclassified\UI\DelegateCommand.cs" />
+    <Compile Include="Unclassified\UI\IconButton.xaml.cs">
+      <DependentUpon>IconButton.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DecoratedTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,10 +74,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DecoratedTextBox.xaml.cs">
+      <DependentUpon>DecoratedTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\StatusGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ToolGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Unclassified\UI\IconButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -91,6 +117,50 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\back.png" />
+    <Resource Include="Images\document_open.png" />
+    <Resource Include="Images\folder_open.png" />
+    <Resource Include="Images\forward.png" />
+    <Resource Include="Images\gear.png" />
+    <Resource Include="Images\hidden_chars.png" />
+    <Resource Include="Images\import.png" />
+    <Resource Include="Images\monospace.png" />
+    <Resource Include="Images\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_create_22.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_create_22.png" />
+    <Resource Include="Images\key_delete.png" />
+    <Resource Include="Images\key_duplicate.png" />
+    <Resource Include="Images\rename.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error_list_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_check_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\goto_definition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Tx.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

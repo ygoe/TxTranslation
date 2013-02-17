@@ -22,6 +22,8 @@ namespace TxEditor
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			//decoratedTextBox1.Text = "Hallo {a} Welt {und b} xyz {def}";
 		}
 	}
 }

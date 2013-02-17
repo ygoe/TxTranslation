@@ -1,8 +1,279 @@
-﻿<Window x:Class="TxEditor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="TxTranslator Editor" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+﻿<Window
+	x:Class="TxEditor.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:my="clr-namespace:TxEditor"
+	xmlns:u="clr-namespace:Unclassified.UI"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
+	TextOptions.TextFormattingMode="Display"
+	Title="TxTranslation Editor"
+	Height="350" Width="1180"
+	Icon="/Images/Tx.ico">
+    <DockPanel>
+		<Grid DockPanel.Dock="Top" Style="{StaticResource ToolGridStyle}" UseLayoutRounding="True">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="3"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="3"/>
+				<RowDefinition Height="3"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="3"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Rectangle Grid.Row="5" Grid.ColumnSpan="16" Fill="{StaticResource ToolGridShadowBrush}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+				<u:IconButton
+					Content="Load folder" IconSource="/Images/folder_open.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Load file" IconSource="/Images/document_open.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Save" IconSource="/Images/save.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="Import file" IconSource="/Images/import.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Export keys" IconSource="/Images/key_export.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">File</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+
+			<u:IconButton
+				Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="0,0,3,0"
+				Content="New culture" IconSource="/Images/globe_create_22.png" Orientation="Vertical"
+				Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			<StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
+				<u:IconButton
+					Content="Delete" IconSource="/Images/globe_delete.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="Set primary" IconSource="/Images/globe_check_small.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Culture</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+
+			<u:IconButton
+				Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="0,0,3,0"
+				Content="New key" IconSource="/Images/key_create_22.png" Orientation="Vertical"
+				Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			<StackPanel Grid.Row="1" Grid.Column="7" Orientation="Horizontal">
+				<u:IconButton
+					Content="Delete key" IconSource="/Images/key_delete.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="7" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="Rename" IconSource="/Images/rename.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Duplicate" IconSource="/Images/key_duplicate.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Text key</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="9" Orientation="Horizontal">
+				<u:IconButton
+					Content="Back" IconSource="/Images/back.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Forward" IconSource="/Images/forward.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Definition" IconSource="/Images/goto_definition.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="Monospace" IconSource="/Images/monospace.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Hidden chars" IconSource="/Images/hidden_chars.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">View</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
+				<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
+				<TextBox Margin="4,0,0,0" Width="150" Style="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}"/>
+				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False">Options</Button>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="Incomplete keys" IconSource="/Images/error_list_red.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				<u:IconButton
+					Content="Cultures" IconSource="/Images/globe_filter.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="11" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Filter</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="13" Orientation="Horizontal">
+				<u:IconButton
+					Content="Settings" IconSource="/Images/gear.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<StackPanel Grid.Row="2" Grid.Column="13" Margin="0,1,0,0" Orientation="Horizontal">
+				<u:IconButton
+					Content="About" IconSource="/Images/info.png"
+					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+			</StackPanel>
+			<TextBlock
+				Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Application</TextBlock>
+
+			<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+		</Grid>
+
+		<Grid DockPanel.Dock="Bottom" Style="{StaticResource StatusGridStyle}" UseLayoutRounding="True">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="3"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="3"/>
+			</Grid.ColumnDefinitions>
+
+			<Rectangle Grid.Row="0" Grid.ColumnSpan="16" Fill="{StaticResource StatusGridShadowBrush}"/>
+
+			<TextBlock Grid.Row="1" Grid.Column="1" Margin="3,2">Abc</TextBlock>
+
+			<ContentControl Grid.Row="1" Grid.Column="2" Template="{StaticResource StatusGridLargeSeparator}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal">
+				<TextBlock Margin="3,2" Text="Text size"/>
+				<Slider
+					Width="150" Margin="3,2"
+					Minimum="100" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10">
+					<Slider.LayoutTransform>
+						<ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+					</Slider.LayoutTransform>
+				</Slider>
+			</StackPanel>
+		</Grid>
+		
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1*"/>
+				<ColumnDefinition Width="6" />
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+
+			<Controls:MultiSelectTreeView
+				Name="KeysTreeView"
+				Grid.Row="0"
+				Grid.Column="0"
+				ItemsSource="{Binding Keys}"
+				BorderThickness="0">
+				<!--PreviewSelectionChanged="ObjectsTreeView_PreviewSelectionChanged"
+				ContextMenuOpening="ObjectsTreeView_ContextMenuOpening"-->
+			</Controls:MultiSelectTreeView>
+
+			<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
+			<Path Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
+				Fill="#50000000" Data="M0,0 H2 V2 H0z M0,4 H2 V6 H0z M0,8 H2 V10 H0z M0,12 H2 V14 H0z M0,16 H2 V18 H0z"/>
+
+			<ContentControl Grid.Column="2" Focusable="False" Name="TextsView">
+				
+			</ContentControl>
+			
+			<!-- Layout prototype -->
+			<Grid Grid.Column="2" Margin="12">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
+					<TextBlock Opacity="0.5" Margin="1,0">Deutsch (Deutschland)</TextBlock>
+				</DockPanel>
+				<my:DecoratedTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0"/>
+				<Line Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
+
+				<DockPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
+					<TextBlock Opacity="0.5" Margin="1,0">Deutsch (Österreich)</TextBlock>
+				</DockPanel>
+				<TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0" AcceptsReturn="True"/>
+				<Line Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
+
+				<DockPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
+					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
+					<TextBlock Opacity="0.5" Margin="1,0">English (USA)</TextBlock>
+				</DockPanel>
+				<TextBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0" AcceptsReturn="True"/>
+				<Line Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
+			</Grid>
+		</Grid>
+	</DockPanel>
 </Window>

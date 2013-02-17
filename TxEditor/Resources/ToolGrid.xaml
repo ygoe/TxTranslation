@@ -1,0 +1,50 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Style x:Key="ToolGridStyle" TargetType="Grid">
+		<Setter Property="Background">
+			<Setter.Value>
+				<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+					<LinearGradientBrush.GradientStops>
+						<GradientStop Color="#c0ffffff" Offset="0"/>
+						<GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="1"/>
+					</LinearGradientBrush.GradientStops>
+				</LinearGradientBrush>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<ControlTemplate x:Key="ToolGridLargeSeparator">
+		<Grid Margin="3,0">
+			<Rectangle Width="3">
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<LinearGradientBrush.GradientStops>
+							<GradientStop Color="Transparent" Offset="0"/>
+							<GradientStop Color="White" Offset="1"/>
+						</LinearGradientBrush.GradientStops>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Rectangle Width="1" Margin="1,0">
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+						<LinearGradientBrush.GradientStops>
+							<GradientStop Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" Offset="0"/>
+							<GradientStop Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" Offset="1"/>
+						</LinearGradientBrush.GradientStops>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+		</Grid>
+	</ControlTemplate>
+
+	<LinearGradientBrush x:Key="ToolGridShadowBrush" StartPoint="0,0" EndPoint="0,1">
+		<LinearGradientBrush.GradientStops>
+			<GradientStop Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" Offset="0"/>
+			<GradientStop Color="Transparent" Offset="1"/>
+		</LinearGradientBrush.GradientStops>
+	</LinearGradientBrush>
+	
+</ResourceDictionary>
