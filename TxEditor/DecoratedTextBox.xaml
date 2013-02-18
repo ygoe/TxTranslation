@@ -14,6 +14,6 @@
 			Text="{Binding Text, ElementName=root}"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
 			TextWrapping="Wrap"
-			Background="Transparent" AcceptsTab="True"/>
+			Background="Transparent" AcceptsTab="True" VerticalScrollBarVisibility="Auto" />
 	</Grid>
 </UserControl>

@@ -11,21 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TxEditor.ViewModel;
 
-namespace TxEditor
+namespace TxEditor.View
 {
 	/// <summary>
-	/// Interaktionslogik für MainWindow.xaml
+	/// Interaktionslogik für TextKeyView.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class TextKeyView : UserControl
 	{
-		public MainWindow()
+		public TextKeyView()
 		{
 			InitializeComponent();
-
-			var vm = new MainWindowViewModel();
-			DataContext = vm;
 		}
 	}
 }

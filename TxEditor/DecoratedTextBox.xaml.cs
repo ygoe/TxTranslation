@@ -36,6 +36,8 @@ namespace TxEditor
 		public DecoratedTextBox()
 		{
 			InitializeComponent();
+
+			//var scrollViewer = textBox1.Template.FindName("PART_ContentHost", textBox1) as ScrollViewer;
 		}
 
 		private void textBox1_TextChanged(object sender, TextChangedEventArgs e)

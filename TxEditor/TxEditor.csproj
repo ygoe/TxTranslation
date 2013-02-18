@@ -62,6 +62,24 @@
     <Compile Include="Unclassified\UI\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
+    <Compile Include="Unclassified\UnicodeInfo.cs" />
+    <Compile Include="ViewModel\CultureTextViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
+    <Compile Include="ViewModel\TextKeyViewModel.cs" />
+    <Compile Include="ViewModel\TreeNodesConverter.cs" />
+    <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\CultureTextView.xaml.cs">
+      <DependentUpon>CultureTextView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\QuantifiedTextView.xaml.cs">
+      <DependentUpon>QuantifiedTextView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TextKeyView.xaml.cs">
+      <DependentUpon>TextKeyView.xaml</DependentUpon>
+    </Compile>
     <Page Include="DecoratedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -93,6 +111,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\CultureTextView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\QuantifiedTextView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TextKeyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -117,6 +147,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="UnicodeTable.deflate" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\globe_delete.png" />

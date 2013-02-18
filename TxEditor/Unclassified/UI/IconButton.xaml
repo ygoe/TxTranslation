@@ -25,7 +25,7 @@
 										<Setter Property="Opacity" Value="0.3"/>
 									</Trigger>
 									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
-										<Setter Property="Margin" Value="0,0,0,2"/>
+										<Setter Property="Margin" Value="0,0,0,1"/>
 									</DataTrigger>
 								</Style.Triggers>
 							</Style>
@@ -35,7 +35,18 @@
 						Visibility="{Binding ContentVisibility, ElementName=_this}"
 						RecognizesAccessKey="True"
 						Content="{Binding Content, ElementName=_this}"
-						VerticalAlignment="Center"/>
+						VerticalAlignment="Center">
+						<ContentPresenter.Style>
+							<Style TargetType="{x:Type ContentPresenter}">
+								<Setter Property="Margin" Value="0"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
+										<Setter Property="Margin" Value="0,0,0,1"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ContentPresenter.Style>
+					</ContentPresenter>
 				</StackPanel>
 			</Button>
 		</ControlTemplate>

@@ -3,13 +3,21 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:u="clr-namespace:Unclassified.UI"
+	xmlns:v="clr-namespace:TxEditor.View"
+	xmlns:vm="clr-namespace:TxEditor.ViewModel"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
 	TextOptions.TextFormattingMode="Display"
 	Title="TxTranslation Editor"
-	Height="350" Width="1180"
+	Height="589" Width="1180"
 	Icon="/Images/Tx.ico">
-    <DockPanel>
+	
+	<Window.Resources>
+		<u:TextHighlightConverter x:Key="textHighlightConverter"/>
+		<vm:TreeNodesConverter x:Key="treeNodesConverter"/>
+	</Window.Resources>
+
+	<DockPanel>
 		<Grid DockPanel.Dock="Top" Style="{StaticResource ToolGridStyle}" UseLayoutRounding="True">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="3"/>
@@ -42,6 +50,7 @@
 
 			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 				<u:IconButton
+					Command="{Binding LoadFolderCommand}"
 					Content="Load folder" IconSource="/Images/folder_open.png"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				<u:IconButton
@@ -135,7 +144,7 @@
 
 			<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
 				<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
-				<TextBox Margin="4,0,0,0" Width="150" Style="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}"/>
+				<TextBox Name="SearchText" Margin="4,0,0,0" Width="150" Style="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}"/>
 				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False">Options</Button>
 			</StackPanel>
 			<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
@@ -179,6 +188,8 @@
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="3"/>
 			</Grid.ColumnDefinitions>
 
@@ -188,13 +199,21 @@
 
 			<ContentControl Grid.Row="1" Grid.Column="2" Template="{StaticResource StatusGridLargeSeparator}"/>
 
-			<StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal">
+			<StackPanel Grid.Row="1" Grid.Column="3" Margin="3,2" Orientation="Horizontal">
+				<TextBlock>U+0000</TextBlock>
+				<TextBlock Margin="6,0,0,0">NULL</TextBlock>
+				<TextBlock Margin="6,0,0,0" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">C0 controls</TextBlock>
+			</StackPanel>
+
+			<ContentControl Grid.Row="1" Grid.Column="4" Template="{StaticResource StatusGridLargeSeparator}"/>
+
+			<StackPanel Grid.Row="1" Grid.Column="5" Orientation="Horizontal">
 				<TextBlock Margin="3,2" Text="Text size"/>
 				<Slider
 					Width="150" Margin="3,2"
 					Minimum="100" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10">
 					<Slider.LayoutTransform>
-						<ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+						<ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
 					</Slider.LayoutTransform>
 				</Slider>
 			</StackPanel>
@@ -211,69 +230,67 @@
 			</Grid.ColumnDefinitions>
 
 			<Controls:MultiSelectTreeView
-				Name="KeysTreeView"
-				Grid.Row="0"
-				Grid.Column="0"
-				ItemsSource="{Binding Keys}"
+				Name="TextKeysTreeView"
+				Grid.Row="0" Grid.Column="0"
+				ItemsSource="{Binding RootTextKey.Children}"
 				BorderThickness="0">
 				<!--PreviewSelectionChanged="ObjectsTreeView_PreviewSelectionChanged"
 				ContextMenuOpening="ObjectsTreeView_ContextMenuOpening"-->
+
+				<Controls:MultiSelectTreeView.ItemContainerStyle>
+					<Style TargetType="{x:Type Controls:MultiSelectTreeViewItem}">
+						<Setter Property="DisplayName" Value="{Binding DisplayName, Mode=TwoWay}" />
+						<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+						<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+						<Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" />
+						<Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=TwoWay}" />
+					</Style>
+				</Controls:MultiSelectTreeView.ItemContainerStyle>
+
+				<Controls:MultiSelectTreeView.Resources>
+					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding Children}">
+						<StackPanel Orientation="Horizontal">
+							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}" />
+							<ContentControl>
+								<ContentControl.Content>
+									<MultiBinding Converter="{StaticResource textHighlightConverter}">
+										<MultiBinding.Bindings>
+											<Binding Path="DisplayName" Mode="OneWay"/>
+											<Binding Path="Text" ElementName="SearchText" Mode="OneWay"/>
+										</MultiBinding.Bindings>
+									</MultiBinding>
+								</ContentControl.Content>
+							</ContentControl>
+							<TextBlock
+								Text="{Binding Remarks}"
+								Padding="6,0,2,0"
+								Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+								Opacity="0.5"
+								Visibility="{Binding RemarksVisibility}"/>
+						</StackPanel>
+					</HierarchicalDataTemplate>
+				</Controls:MultiSelectTreeView.Resources>
 			</Controls:MultiSelectTreeView>
 
 			<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
 			<Path Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
 				Fill="#50000000" Data="M0,0 H2 V2 H0z M0,4 H2 V6 H0z M0,8 H2 V10 H0z M0,12 H2 V14 H0z M0,16 H2 V18 H0z"/>
 
-			<ContentControl Grid.Column="2" Focusable="False" Name="TextsView">
-				
+			<ContentControl Grid.Column="2" Focusable="False">
+				<ContentControl.Content>
+					<MultiBinding Converter="{StaticResource treeNodesConverter}">
+						<!-- The list to observe must be the very first binding (index 0) for the converter to work -->
+						<Binding Path="SelectedItems" ElementName="TextKeysTreeView" Mode="OneWay"/>
+						<Binding Path="SelectedItems.Count" ElementName="TextKeysTreeView" Mode="OneWay"/>
+					</MultiBinding>
+				</ContentControl.Content>
+
+				<ContentControl.Resources>
+					<DataTemplate DataType="{x:Type vm:TextKeyViewModel}">
+						<v:TextKeyView/>
+					</DataTemplate>
+				</ContentControl.Resources>
 			</ContentControl>
-			
-			<!-- Layout prototype -->
-			<Grid Grid.Column="2" Margin="12">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
-
-				<DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-					<TextBlock Opacity="0.5" Margin="1,0">Deutsch (Deutschland)</TextBlock>
-				</DockPanel>
-				<my:DecoratedTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0"/>
-				<Line Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
-
-				<DockPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-					<TextBlock Opacity="0.5" Margin="1,0">Deutsch (Österreich)</TextBlock>
-				</DockPanel>
-				<TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0" AcceptsReturn="True"/>
-				<Line Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
-
-				<DockPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
-					<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-					<TextBlock Opacity="0.5" Margin="1,0">English (USA)</TextBlock>
-				</DockPanel>
-				<TextBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" Padding="0" Margin="-1,6,0,0" AcceptsReturn="True"/>
-				<Line Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
-			</Grid>
 		</Grid>
 	</DockPanel>
 </Window>

@@ -438,7 +438,6 @@ namespace TxLib
 				{
 					PrimaryCulture = ci.Name;
 				}
-
 				return;
 			}
 
