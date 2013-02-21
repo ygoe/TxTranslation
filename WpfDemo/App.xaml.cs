@@ -7,9 +7,6 @@ using System.Windows;
 
 namespace WpfDemo
 {
-	/// <summary>
-	/// Interaktionslogik für "App.xaml"
-	/// </summary>
 	public partial class App : Application
 	{
 	}

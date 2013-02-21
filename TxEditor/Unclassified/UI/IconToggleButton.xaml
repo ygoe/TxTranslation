@@ -1,0 +1,55 @@
+﻿<ToggleButton
+	x:Class="Unclassified.UI.IconToggleButton"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	x:Name="_this">
+
+	<ToggleButton.Template>
+		<ControlTemplate>
+			<ToggleButton
+				Padding="{TemplateBinding Padding}"
+				Style="{TemplateBinding Style}"
+				Focusable="{TemplateBinding Focusable}"
+				IsChecked="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsChecked, Mode=TwoWay}"
+				Command="{TemplateBinding ToggleButton.Command}">
+
+				<StackPanel Name="StackPanel" Orientation="{Binding Orientation, ElementName=_this}">
+					<Image Name="Icon"
+						Source="{Binding IconSource, ElementName=_this}"
+						VerticalAlignment="Center">
+						<Image.Style>
+							<Style TargetType="{x:Type Image}">
+								<Setter Property="Margin" Value="0,0,3,0"/>
+								<Style.Triggers>
+									<Trigger Property="Button.IsEnabled" Value="False">
+										<Setter Property="Opacity" Value="0.3"/>
+									</Trigger>
+									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
+										<Setter Property="Margin" Value="0,0,0,1"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Image.Style>
+					</Image>
+					<ContentPresenter
+						Visibility="{Binding ContentVisibility, ElementName=_this}"
+						RecognizesAccessKey="True"
+						Content="{Binding Content, ElementName=_this}"
+						VerticalAlignment="Center">
+						<ContentPresenter.Style>
+							<Style TargetType="{x:Type ContentPresenter}">
+								<Setter Property="Margin" Value="0"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
+										<Setter Property="Margin" Value="0,0,0,1"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ContentPresenter.Style>
+					</ContentPresenter>
+				</StackPanel>
+			</ToggleButton>
+		</ControlTemplate>
+	</ToggleButton.Template>
+</ToggleButton>

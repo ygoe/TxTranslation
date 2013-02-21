@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -11,27 +13,115 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Controls.Primitives;
-using System.Text.RegularExpressions;
 
 namespace TxEditor
 {
 	public partial class DecoratedTextBox : UserControl
 	{
+		#region Private data
+
+		private bool hasFocus;
 		private List<FrameworkElement> decos = new List<FrameworkElement>();
 		private Popup popup;
+
+		#endregion Private data
+
+		#region Dependency properties
 
 		public static DependencyProperty TextProperty = DependencyProperty.Register(
 			"Text",
 			typeof(string),
 			typeof(DecoratedTextBox),
-			new FrameworkPropertyMetadata("", null));
-
+			new FrameworkPropertyMetadata("", TextChanged));
 		public string Text
 		{
 			get { return (string) GetValue(TextProperty); }
 			set { SetValue(TextProperty, value); }
 		}
+		private static void TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DecoratedTextBox dt = d as DecoratedTextBox;
+			if (dt != null)
+			{
+				dt.PlaceholderVisibility = string.IsNullOrEmpty(e.NewValue as string) ? Visibility.Visible : Visibility.Collapsed;
+			}
+		}
+
+		public static DependencyProperty CursorCharProperty = DependencyProperty.Register(
+			"CursorChar",
+			typeof(string),
+			typeof(DecoratedTextBox));
+		public string CursorChar
+		{
+			get { return (string) GetValue(CursorCharProperty); }
+			set { SetValue(CursorCharProperty, value); }   // Should be private, but somehow cannot be. Giving up.
+		}
+
+		public static DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
+			"PlaceholderText",
+			typeof(string),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata("", null));
+		public string PlaceholderText
+		{
+			get { return (string) GetValue(PlaceholderTextProperty); }
+			set { SetValue(PlaceholderTextProperty, value); }
+		}
+
+		public static DependencyProperty PlaceholderVisibilityProperty = DependencyProperty.Register(
+			"PlaceholderVisibility",
+			typeof(Visibility),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata(Visibility.Collapsed));
+		public Visibility PlaceholderVisibility
+		{
+			get { return (Visibility) GetValue(PlaceholderVisibilityProperty); }
+			set { SetValue(PlaceholderVisibilityProperty, value); }
+		}
+
+		public static DependencyProperty HiddenCharsProperty = DependencyProperty.Register(
+			"HiddenChars",
+			typeof(bool),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata(false, HiddenCharsChanged));
+		public bool HiddenChars
+		{
+			get { return (bool) GetValue(HiddenCharsProperty); }
+			set { SetValue(HiddenCharsProperty, value); }
+		}
+		private static void HiddenCharsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DecoratedTextBox dt = d as DecoratedTextBox;
+			if (dt != null)
+			{
+				dt.UpdateDecorations();
+			}
+		}
+
+		#endregion Dependency properties
+
+		#region Properties
+
+		public TextBox InnerTextBox
+		{
+			get { return textBox1; }
+		}
+
+		#endregion Properties
+
+		#region Static constructor
+
+		// No longer required, left as reference
+		//static DecoratedTextBox()
+		//{
+		//    UserControl.FontSizeProperty.OverrideMetadata(
+		//        typeof(DecoratedTextBox),
+		//        new FrameworkPropertyMetadata(FontSizeChanged));
+		//}
+
+		#endregion Static constructor
+
+		#region Constructors
 
 		public DecoratedTextBox()
 		{
@@ -40,7 +130,68 @@ namespace TxEditor
 			//var scrollViewer = textBox1.Template.FindName("PART_ContentHost", textBox1) as ScrollViewer;
 		}
 
+		#endregion Constructors
+
+		#region Event handlers
+
+		protected override void OnRender(DrawingContext drawingContext)
+		{
+			base.OnRender(drawingContext);
+			UpdateDecorations();
+		}
+
 		private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			UpdateDecorations();
+			UpdateCursorChar();
+		}
+
+		private void textBox1_SelectionChanged(object sender, RoutedEventArgs e)
+		{
+			// Remove the popup if the caret goes out of the { } range
+			// Remember this range when opening the popup
+			// Update the range as the input is changed, also when a } is added
+
+			UpdateCursorChar();
+		}
+
+		private void textBox1_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Space &&
+				(e.KeyboardDevice.IsKeyDown(Key.LeftShift) || e.KeyboardDevice.IsKeyDown(Key.RightShift)))
+			{
+				int sel = textBox1.SelectionStart;
+				textBox1.Text = textBox1.Text.Insert(textBox1.CaretIndex, "\xa0");
+				textBox1.SelectionStart = sel + 1;
+				e.Handled = true;
+			}
+		}
+
+		private void textBox1_GotFocus(object sender, RoutedEventArgs e)
+		{
+			hasFocus = true;
+			UpdateCursorChar();
+		}
+
+		private void textBox1_LostFocus(object sender, RoutedEventArgs e)
+		{
+			hasFocus = false;
+			UpdateCursorChar();
+		}
+
+		private void UpdateCursorChar()
+		{
+			if (hasFocus && textBox1.SelectionStart < textBox1.Text.Length)
+				CursorChar = textBox1.Text.Substring(textBox1.SelectionStart, 1);
+			else
+				CursorChar = null;
+		}
+
+		#endregion Event handlers
+
+		#region Decoration work
+
+		public void UpdateDecorations()
 		{
 			foreach (FrameworkElement el in decos)
 			{
@@ -78,75 +229,108 @@ namespace TxEditor
 				m = m.NextMatch();
 			}
 
-			int pos = -1;
-			while (true)
+			if (HiddenChars)
 			{
-				pos = textBox1.Text.IndexOfAny(new char[] { ' ', '\n', '\t', '\xa0' }, pos + 1);
-				if (pos < 0) break;
-
-				Rect startRect = textBox1.GetRectFromCharacterIndex(pos);
-				Rect endRect = textBox1.GetRectFromCharacterIndex(pos + 1);
-
-				if (!startRect.IsEmpty && !endRect.IsEmpty)
+				int pos = -1;
+				while (true)
 				{
-					TextBlock tb;
-					if ((int) startRect.Top == (int) endRect.Top)
+					pos = textBox1.Text.IndexOfAny(new char[] { ' ', '\n', '\t', '\xa0', '\x2002', '\x2003', '\x2004', '\x2005', '\x2006', '\x2007', '\x2008', '\x2009', '\x200a', '\x200b', '\x202f', '\x205f' }, pos + 1);
+					if (pos < 0) break;
+
+					Rect startRect = textBox1.GetRectFromCharacterIndex(pos);
+					Rect endRect = textBox1.GetRectFromCharacterIndex(pos + 1);
+
+					if (!startRect.IsEmpty && !endRect.IsEmpty)
 					{
-						// Single line
+						TextBlock tb;
+						double width = double.NaN;
+						if ((int) startRect.Top == (int) endRect.Top)
+						{
+							// Single line
+							width = endRect.X - startRect.X;
+						}
+						else
+						{
+							// Spanning multiple lines
+						}
+						
 						switch (textBox1.Text[pos])
 						{
-							case ' ':
-								//Ellipse ell = new Ellipse();
-								//ell.HorizontalAlignment = HorizontalAlignment.Left;
-								//ell.VerticalAlignment = VerticalAlignment.Top;
-								//ell.Margin = new Thickness(Math.Round((startRect.Left + endRect.Left) / 2) - 1, Math.Round((startRect.Top + startRect.Bottom) / 2), 0, 0);
-								//ell.Width = 2;
-								//ell.Height = 2;
-								//ell.Fill = Brushes.DarkGray;
-								//grid1.Children.Insert(0, ell);
-								//decos.Add(ell);
-								tb = new TextBlock();
-								tb.HorizontalAlignment = HorizontalAlignment.Left;
-								tb.VerticalAlignment = VerticalAlignment.Top;
-								tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
-								tb.Text = "·";
-								tb.Foreground = Brushes.DarkGray;
-								grid1.Children.Insert(0, tb);
-								decos.Add(tb);
-								break;
 							case '\t':
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
-								tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+								if (width != double.NaN)
+								{
+									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
+									tb.Width = width + 20;
+									tb.TextAlignment = TextAlignment.Center;
+								}
+								else
+								{
+									tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+								}
 								tb.Text = "→";
 								tb.Foreground = Brushes.DarkGray;
 								grid1.Children.Insert(0, tb);
 								decos.Add(tb);
 								break;
-							case '\xa0':
+							case ' ':
+							case '\u2002':
+							case '\u2003':
+							case '\u2004':
+							case '\u2005':
+							case '\u2006':
+							case '\u2008':
+							case '\u2009':
+							case '\u200a':
+							case '\u200b':
+							case '\u205f':
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
-								tb.Margin = new Thickness(startRect.Left - 1, startRect.Top, 0, 0);
+								if (width != double.NaN)
+								{
+									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
+									tb.Width = width + 20;
+									tb.TextAlignment = TextAlignment.Center;
+								}
+								else
+								{
+									tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+								}
+								tb.Text = "·";
+								tb.Foreground = Brushes.DarkGray;
+								grid1.Children.Insert(0, tb);
+								decos.Add(tb);
+								break;
+							case '\xa0':
+							case '\u2007':
+							case '\u202f':
+								tb = new TextBlock();
+								tb.HorizontalAlignment = HorizontalAlignment.Left;
+								tb.VerticalAlignment = VerticalAlignment.Top;
+								if (width != double.NaN)
+								{
+									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
+									tb.Width = width + 20;
+									tb.TextAlignment = TextAlignment.Center;
+								}
+								else
+								{
+									tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+								}
 								tb.Text = "°";
 								tb.Foreground = Brushes.DarkGray;
 								grid1.Children.Insert(0, tb);
 								decos.Add(tb);
 								break;
-						}
-					}
-					else
-					{
-						// Spanning multiple lines
-						switch (textBox1.Text[pos])
-						{
 							case '\n':
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
 								tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
-								tb.Text = "¶";
+								tb.Text = "↲";   // "¶";
 								tb.Foreground = Brushes.DarkGray;
 								grid1.Children.Insert(0, tb);
 								decos.Add(tb);
@@ -180,23 +364,6 @@ namespace TxEditor
 			//}
 		}
 
-		private void textBox1_SelectionChanged(object sender, RoutedEventArgs e)
-		{
-			// Remove the popup if the caret goes out of the { } range
-			// Remember this range when opening the popup
-			// Update the range as the input is changed, also when a } is added
-		}
-
-		private void textBox1_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Space &&
-				(e.KeyboardDevice.IsKeyDown(Key.LeftShift) || e.KeyboardDevice.IsKeyDown(Key.RightShift)))
-			{
-				int sel = textBox1.SelectionStart;
-				textBox1.Text = textBox1.Text.Insert(textBox1.CaretIndex, "\xa0");
-				textBox1.SelectionStart = sel + 1;
-				e.Handled = true;
-			}
-		}
+		#endregion Decoration work
 	}
 }

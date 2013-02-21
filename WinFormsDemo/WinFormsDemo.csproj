@@ -83,18 +83,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lang\demo.de-de.xml">
+    <None Include="lang\demo.de-de.txd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lang\demo.de.xml">
+    </None>
+    <None Include="lang\demo.de.txd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lang\demo.en.xml">
+    </None>
+    <None Include="lang\demo.en.txd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="lang\demo.fr.xml">
+    </None>
+    <None Include="lang\demo.fr.txd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

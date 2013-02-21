@@ -331,12 +331,12 @@ namespace TxLib
 		/// <param name="filePrefix">File name prefix to limit loading to.</param>
 		/// <remarks>
 		/// <para>
-		/// This method searches the directory for files that end with the extension .xml and an
-		/// optional culture name directly before the extension. If filePrefix is set, the matching
-		/// file names additionally need to begin with this prefix and may not contain additional
-		/// characters between the prefix and the culture and extension. For example, the files
-		/// "demo.en-us.xml" and "demo.xml" match the prefix "demo" as well as no prefix at all,
-		/// but no other prefix.
+		/// This method searches the directory for files that end with the extension .txd (for Tx
+		/// dictionary) and an optional culture name directly before the extension. If filePrefix
+		/// is set, the matching file names additionally need to begin with this prefix and may not
+		/// contain additional characters between the prefix and the culture and extension. For
+		/// example, the files "demo.en-us.txd" and "demo.txd" match the prefix "demo" as well as
+		/// no prefix at all, but no other prefix.
 		/// </para>
 		/// <para>
 		/// Since the filePrefix value is directly used in a regular expression, it should not
@@ -347,7 +347,7 @@ namespace TxLib
 		/// </remarks>
 		public static void LoadDirectory(string path, string filePrefix = null)
 		{
-			string regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.xml$";
+			string regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.(?:txd|xml)$";
 			if (!string.IsNullOrEmpty(filePrefix))
 			{
 				regex = "^" + filePrefix + regex;
@@ -371,7 +371,7 @@ namespace TxLib
 		/// <param name="fileName">Name of the XML file to load.</param>
 		/// <remarks>
 		/// <para>
-		/// If the file name ends with ".[culture name].xml", then the culture name of the file
+		/// If the file name ends with ".[culture name].txd", then the culture name of the file
 		/// name is used. Otherwise a combined file is assumed that contains a "culture" element
 		/// with a "name" attribute for each defined culture.
 		/// </para>
@@ -426,7 +426,7 @@ namespace TxLib
 			xmlDoc.Load(fileName);
 
 			// Try to recognise the culture name from the file name
-			Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
+			Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.(?:txd|xml)$", RegexOptions.IgnoreCase);
 			if (m.Success)
 			{
 				CultureInfo ci = CultureInfo.GetCultureInfo(m.Groups[1].Value);

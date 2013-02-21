@@ -35,12 +35,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\Tx.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MultiSelectTreeView">
       <HintPath>.\MultiSelectTreeView.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -58,11 +65,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Unclassified\DelayedCall.cs" />
+    <Compile Include="Unclassified\ErrorHandling.cs" />
+    <Compile Include="Unclassified\MyEnvironment.cs" />
+    <Compile Include="Unclassified\Settings.cs" />
+    <Compile Include="Unclassified\UI\AnimationHelper.cs" />
+    <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
     <Compile Include="Unclassified\UI\DelegateCommand.cs" />
     <Compile Include="Unclassified\UI\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Unclassified\UI\IconToggleButton.xaml.cs">
+      <DependentUpon>IconToggleButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Unclassified\UI\EmptyIntegerConverter.cs" />
+    <Compile Include="Unclassified\UI\OpenFolderDialog.cs" />
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
+    <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -71,6 +92,9 @@
     <Compile Include="ViewModel\TreeNodesConverter.cs" />
     <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CultureTextView.xaml.cs">
       <DependentUpon>CultureTextView.xaml</DependentUpon>
     </Compile>
@@ -84,7 +108,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,7 +119,7 @@
     <Compile Include="DecoratedTextBox.xaml.cs">
       <DependentUpon>DecoratedTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -110,6 +134,14 @@
     <Page Include="Unclassified\UI\IconButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Unclassified\UI\IconToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CultureTextView.xaml">
       <SubType>Designer</SubType>
@@ -142,6 +174,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -193,7 +226,31 @@
   <ItemGroup>
     <Resource Include="Images\Tx.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Tx_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TxDocument.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TxLib\TxLib.csproj">
+      <Project>{DC6BA170-806F-4D6E-9165-401DE852E304}</Project>
+      <Name>TxLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key.png" />
+    <Resource Include="Images\textkey_namespace.png" />
+    <Resource Include="Images\textkey_segment.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -3,10 +3,65 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:my="clr-namespace:TxEditor"
+	xmlns:u="clr-namespace:Unclassified.UI"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
-	d:DesignHeight="154" d:DesignWidth="412">
+	d:DesignHeight="66" d:DesignWidth="412"
+	Focusable="False">
+	<UserControl.Resources>
+		<u:EmptyIntegerConverter x:Key="EmptyIntConv"/>
+	</UserControl.Resources>
+	
 	<Grid>
-		<TextBlock>Quantified text not yet supported.</TextBlock>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<TextBlock
+			Grid.Row="0" Grid.Column="0"
+			VerticalAlignment="Center" Margin="0,0,2,0" Opacity="0.4"
+			Text="="/>
+		<Rectangle
+			Grid.Row="0" Grid.Column="1"
+			Fill="#0E000000"/>
+		<TextBox
+			Grid.Row="0" Grid.Column="1"
+			Width="40" BorderThickness="0" Padding="0" VerticalAlignment="Center"
+			Background="Transparent"
+			TextAlignment="Right"
+			Text="{Binding Count}"/>
+
+		<TextBlock
+			Grid.Row="0" Grid.Column="2"
+			VerticalAlignment="Center" Margin="2,0" Opacity="0.4"
+			Text="%"/>
+		<Rectangle
+			Grid.Row="0" Grid.Column="3"
+			Fill="#0E000000"/>
+		<TextBox
+			Grid.Row="0" Grid.Column="3"
+			Width="40" BorderThickness="0" Padding="0" VerticalAlignment="Center"
+			Background="Transparent"
+			TextAlignment="Right"
+			Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"/>
+
+		<my:DecoratedTextBox
+			Grid.Row="0" Grid.Column="4"
+			BorderThickness="0" Padding="0" Margin="6,0,0,0" VerticalAlignment="Bottom"
+			Text="{Binding Text, Mode=TwoWay}"
+			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
+			PlaceholderText="Enter text"
+			HiddenChars="{Binding CultureTextVM.TextKeyVM.MainWindowVM.HiddenChars}"
+			FontSize="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontSize}"
+			FontFamily="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontFamily}"
+			TextOptions.TextFormattingMode="{Binding CultureTextVM.TextKeyVM.MainWindowVM.TextFormattingMode}"/>
 	</Grid>
 </UserControl>

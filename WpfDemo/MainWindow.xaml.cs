@@ -18,9 +18,6 @@ using TxLib;
 
 namespace WpfDemo
 {
-	/// <summary>
-	/// Interaktionslogik für MainWindow.xaml
-	/// </summary>
 	public partial class MainWindow : Window
 	{
 		public MainWindow()
@@ -35,13 +32,13 @@ namespace WpfDemo
 			try
 			{
 				// Set the XML file's build action to "Embedded Resource" and "Never copy" for this to work.
-				Tx.LoadFromEmbeddedResource("WpfDemo.lang.languages.xml");
+				Tx.LoadFromEmbeddedResource("WpfDemo.lang.languages.txd");
 			}
 			catch (ArgumentException)
 			{
 				// The file was not embedded, try reading the file. This enables file change notifications.
 				Tx.UseFileSystemWatcher = true;
-				Tx.LoadFromXmlFile(@"lang\languages.xml");
+				Tx.LoadFromXmlFile(@"lang\languages.txd");
 			}
 
 			// Simulate web environment

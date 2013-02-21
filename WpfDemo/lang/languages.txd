@@ -243,7 +243,7 @@
 		<text key="n months" count="1">ein Monat</text>
 	</culture>
 	<culture name="de-at">
-		<text key="Tx:number group separator threshold">1</text>
+		<text key="Tx:number.group separator threshold">1</text>
 	</culture>
 	<culture name="de-ch">
 		<text key="Tx:quote begin">«</text>

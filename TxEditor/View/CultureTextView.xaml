@@ -7,14 +7,23 @@
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
-	d:DesignHeight="214" d:DesignWidth="443">
+	d:DesignHeight="214" d:DesignWidth="443"
+	Focusable="False">
 	<StackPanel>
-		<DockPanel>
+		<DockPanel LastChildFill="False">
 			<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
 			<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-			<TextBlock Opacity="0.5" Margin="1,0" Text="{Binding CultureNativeName}"/>
+			<TextBlock DockPanel.Dock="Left" Opacity="0.4" Margin="1,0" Text="{Binding CultureNativeName}" ToolTip="{Binding CultureName}"/>
 		</DockPanel>
-		<my:DecoratedTextBox BorderThickness="0" Padding="0" Margin="-1,6,0,0" Text="{Binding Text}"/>
+		<my:DecoratedTextBox
+			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
+			Text="{Binding Text}"
+			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
+			PlaceholderText="Enter text"
+			HiddenChars="{Binding TextKeyVM.MainWindowVM.HiddenChars}"
+			FontSize="{Binding TextKeyVM.MainWindowVM.FontSize}"
+			FontFamily="{Binding TextKeyVM.MainWindowVM.FontFamily}"
+			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"/>
 		<ItemsControl ItemsSource="{Binding QuantifiedTextVMs}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
@@ -22,6 +31,6 @@
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
-		<Line X2="1" Stretch="Fill" Stroke="#40000000" Margin="0,6"/>
+		<Line X2="1" Stretch="Fill" Stroke="{Binding SeparatorBrush}" Margin="0,6"/>
 	</StackPanel>
 </UserControl>

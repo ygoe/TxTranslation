@@ -1,19 +1,27 @@
-﻿<UserControl x:Class="TxEditor.DecoratedTextBox"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-			 Name="root"
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<UserControl
+	x:Class="TxEditor.DecoratedTextBox"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	mc:Ignorable="d" 
+	Name="root"
+	d:DesignHeight="150" d:DesignWidth="358">
 	<Grid Name="grid1">
 		<TextBox
 			Name="textBox1" AcceptsReturn="True"
 			BorderThickness="{Binding BorderThickness, ElementName=root}"
 			Padding="{Binding Padding, ElementName=root}"
-			Text="{Binding Text, ElementName=root}"
+			Text="{Binding Text, ElementName=root, UpdateSourceTrigger=PropertyChanged}"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
+			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"
 			TextWrapping="Wrap"
-			Background="Transparent" AcceptsTab="True" VerticalScrollBarVisibility="Auto" />
+			Background="Transparent" AcceptsTab="True"/>
+		<TextBlock
+			Name="placeholder"
+			Text="{Binding PlaceholderText, ElementName=root, FallbackValue='Placeholder text'}"
+			Visibility="{Binding PlaceholderVisibility, ElementName=root}"
+			HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" IsHitTestVisible="False"
+			Opacity="0.4" FontStyle="Italic"/>
 	</Grid>
 </UserControl>

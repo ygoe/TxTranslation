@@ -99,9 +99,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lang\languages.xml">
+    <None Include="lang\languages.txd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

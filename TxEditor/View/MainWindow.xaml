@@ -1,5 +1,5 @@
 ﻿<Window
-	x:Class="TxEditor.MainWindow"
+	x:Class="TxEditor.View.MainWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:u="clr-namespace:Unclassified.UI"
@@ -8,10 +8,11 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
 	TextOptions.TextFormattingMode="Display"
-	Title="TxTranslation Editor"
-	Height="589" Width="1180"
-	Icon="/Images/Tx.ico">
-	
+	Title="TxEditor"
+	Height="296" Width="1180"
+	Icon="/Images/Tx.ico"
+	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
+
 	<Window.Resources>
 		<u:TextHighlightConverter x:Key="textHighlightConverter"/>
 		<vm:TreeNodesConverter x:Key="treeNodesConverter"/>
@@ -54,6 +55,7 @@
 					Content="Load folder" IconSource="/Images/folder_open.png"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				<u:IconButton
+					Command="{Binding LoadFileCommand}"
 					Content="Load file" IconSource="/Images/document_open.png"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				<u:IconButton
@@ -129,12 +131,14 @@
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 			</StackPanel>
 			<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
+				<u:IconToggleButton
 					Content="Monospace" IconSource="/Images/monospace.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
+					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+					IsChecked="{Binding MonospaceFont}"/>
+				<u:IconToggleButton
 					Content="Hidden chars" IconSource="/Images/hidden_chars.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+					IsChecked="{Binding HiddenChars}"/>
 			</StackPanel>
 			<TextBlock
 				Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
@@ -168,6 +172,7 @@
 			</StackPanel>
 			<StackPanel Grid.Row="2" Grid.Column="13" Margin="0,1,0,0" Orientation="Horizontal">
 				<u:IconButton
+					Command="{Binding AboutCommand}"
 					Content="About" IconSource="/Images/info.png"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 			</StackPanel>
@@ -200,9 +205,9 @@
 			<ContentControl Grid.Row="1" Grid.Column="2" Template="{StaticResource StatusGridLargeSeparator}"/>
 
 			<StackPanel Grid.Row="1" Grid.Column="3" Margin="3,2" Orientation="Horizontal">
-				<TextBlock>U+0000</TextBlock>
-				<TextBlock Margin="6,0,0,0">NULL</TextBlock>
-				<TextBlock Margin="6,0,0,0" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">C0 controls</TextBlock>
+				<TextBlock Margin="0,0,6,0" Text="{Binding CursorCharCodePoint}" Visibility="{Binding CursorCharVisibility}"/>
+				<TextBlock Margin="0,0,6,0" Text="{Binding CursorCharName}" Visibility="{Binding CursorCharVisibility}"/>
+				<TextBlock Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Text="{Binding CursorCharCategory}"/>
 			</StackPanel>
 
 			<ContentControl Grid.Row="1" Grid.Column="4" Template="{StaticResource StatusGridLargeSeparator}"/>
@@ -211,7 +216,8 @@
 				<TextBlock Margin="3,2" Text="Text size"/>
 				<Slider
 					Width="150" Margin="3,2"
-					Minimum="100" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10">
+					Minimum="100" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10"
+					Value="{Binding FontScale}">
 					<Slider.LayoutTransform>
 						<ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
 					</Slider.LayoutTransform>
@@ -251,7 +257,7 @@
 					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding Children}">
 						<StackPanel Orientation="Horizontal">
 							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}" />
-							<ContentControl>
+							<ContentControl Margin="0,0,2,0">
 								<ContentControl.Content>
 									<MultiBinding Converter="{StaticResource textHighlightConverter}">
 										<MultiBinding.Bindings>

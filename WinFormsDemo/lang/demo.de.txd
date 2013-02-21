@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <translation xml:space="preserve">
 	<text key="Tx:quote begin">„</text>
 	<text key="Tx:quote end">“</text>
@@ -7,6 +7,6 @@
 	<text key="name">Name</text>
 	<text key="password">Kennwort</text>
 	<text key="login">Anmelden</text>
-	<text key="message">Diese Anwendung tut rein gar nichts, erst recht keine Anmeldung. Aber danke für’s Klicken!</text>
 	<text key="message.caption">Anmelden</text>
+	<text key="message">Diese Anwendung tut rein gar nichts, erst recht keine Anmeldung. Aber danke für’s Klicken!</text>
 </translation>

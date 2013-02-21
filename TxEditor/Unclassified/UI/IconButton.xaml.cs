@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace Unclassified.UI
 {
-	/// <summary>
-	/// Interaktionslogik für IconButton.xaml
-	/// </summary>
 	public partial class IconButton : Button
 	{
 		public static DependencyProperty IconSourceProperty = DependencyProperty.Register(
