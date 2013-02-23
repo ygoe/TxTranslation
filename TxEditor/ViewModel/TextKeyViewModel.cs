@@ -80,6 +80,20 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private string comment;
+		public string Comment
+		{
+			get { return comment; }
+			set
+			{
+				if (value != comment)
+				{
+					comment = value;
+					OnPropertyChanged("Comment");
+				}
+			}
+		}
+
 		public TextKeyViewModel(string textKey, bool isLeafNode, TreeViewItemViewModel parent, MainWindowViewModel mainWindowVM)
 			: base(parent, false)
 		{

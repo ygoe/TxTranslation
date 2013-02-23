@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using TxEditor.View;
 using Unclassified;
 using Unclassified.UI;
+using TaskDialogInterop;
 
 namespace TxEditor.ViewModel
 {
@@ -23,6 +24,8 @@ namespace TxEditor.ViewModel
 		public MainWindow View { get; set; }
 
 		private int fileVersion;
+		private string loadedFileName;
+		private bool fileModified;
 
 		private string primaryCulture;
 		public string PrimaryCulture
@@ -74,20 +77,6 @@ namespace TxEditor.ViewModel
 		public Visibility CursorCharVisibility
 		{
 			get { return cursorChar != null ? Visibility.Visible : Visibility.Collapsed; }
-		}
-
-		private bool hiddenChars;
-		public bool HiddenChars
-		{
-			get { return hiddenChars; }
-			set
-			{
-				if (value != hiddenChars)
-				{
-					hiddenChars = value;
-					OnPropertyChanged("HiddenChars");
-				}
-			}
 		}
 
 		private double fontScale = 100;
@@ -159,6 +148,48 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private bool hiddenChars;
+		public bool HiddenChars
+		{
+			get { return hiddenChars; }
+			set
+			{
+				if (value != hiddenChars)
+				{
+					hiddenChars = value;
+					OnPropertyChanged("HiddenChars");
+				}
+			}
+		}
+
+		private bool showComments;
+		public bool ShowComments
+		{
+			get { return showComments; }
+			set
+			{
+				if (value != showComments)
+				{
+					showComments = value;
+					OnPropertyChanged("ShowComments");
+				}
+			}
+		}
+
+		private string searchText;
+		public string SearchText
+		{
+			get { return searchText; }
+			set
+			{
+				if (value != searchText)
+				{
+					searchText = value;
+					OnPropertyChanged("SearchText");
+				}
+			}
+		}
+
 		public HashSet<string> TextKeys { get; private set; }
 		public HashSet<string> LoadedCultureNames { get; private set; }
 
@@ -171,6 +202,8 @@ namespace TxEditor.ViewModel
 			TextKeys = new HashSet<string>();
 			LoadedCultureNames = new HashSet<string>();
 			RootTextKey = new TextKeyViewModel(null, false, null, this);
+
+			SearchText = "";   // Change value once to set the clear button visibility
 		}
 
 		#endregion Constructors
@@ -216,39 +249,130 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private DelegateCommand clearSearchCommand;
+		public DelegateCommand ClearSearchCommand
+		{
+			get
+			{
+				if (clearSearchCommand == null)
+				{
+					clearSearchCommand = new DelegateCommand(() => { SearchText = ""; });
+				}
+				return clearSearchCommand;
+			}
+		}
+
 		#endregion Toolbar commands
 
 		#region Toolbar command handlers
 
+		private bool CheckModifiedSaved()
+		{
+			if (fileModified)
+			{
+				var result = TaskDialog.Show(
+					owner: View,
+					title: "TxEditor",
+					mainInstruction: "Would you like to save the changes to the loaded dictionary?",
+					content: "There are unsaved changes to the currently loaded dictionary. If you load new files, you must either save or discard those changes.",
+					customButtons: new string[] { "&Save", "Do&n't save", "&Cancel" },
+					allowDialogCancellation: true);
+
+				if (result.CustomButtonResult == 0)
+				{
+					// Save
+					// TODO
+				}
+				else if (result.CustomButtonResult != 1)
+				{
+					// Cancel or unset
+					return false;
+				}
+			}
+			return true;
+		}
+
 		private void OnLoadFolder()
 		{
+			if (!CheckModifiedSaved()) return;
+
 			var d = new OpenFolderDialog();
 			d.Title = "Select folder to load files from";
 			if (d.ShowDialog(new Wpf32Window(View)) == true)
 			{
-				//string path = @"C:\Source\TxTranslator\tmp\wsz-lang\";
-				string path = d.Folder;
-				string filePrefix = "wsz";
-
-				fileVersion = 0;
-				string regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.txd$";
-				if (!string.IsNullOrEmpty(filePrefix))
-				{
-					regex = "^" + filePrefix + regex;
-				}
-				foreach (string fileName in Directory.GetFiles(path))
+				bool foundFiles = false;
+				string regex = @"^(.+?)(\.(([a-z]{2})([-][a-z]{2})?))?\.txd$";
+				List<string> prefixes = new List<string>();
+				string prefix = null;
+				foreach (string fileName in Directory.GetFiles(d.Folder))
 				{
 					Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
 					if (m.Success)
 					{
-						LoadFromXmlFile(fileName);
+						if (!foundFiles)
+						{
+							foundFiles = true;
+						}
+						prefix = m.Groups[1].Value;
+						if (!prefixes.Contains(prefix))
+						{
+							prefixes.Add(prefix);
+						}
 					}
+				}
+				if (prefixes.Count > 1)
+				{
+					prefixes.Sort();
+					var result = TaskDialog.Show(
+						owner: View,
+						title: "TxEditor",
+						mainInstruction: "There are multiple dictionaries in the selected folder.",
+						content: "Please choose the dictionary to load:",
+						radioButtons: prefixes.ToArray(),
+						customButtons: new string[] { "&Load", "&Cancel" },
+						allowDialogCancellation: true);
+					if (result.CustomButtonResult != 0 ||
+						result.RadioButtonResult == null)
+					{
+						// Cancel or unset
+						return;
+					}
+					prefix = prefixes[result.RadioButtonResult.Value];
+				}
+				if (prefix != null)
+				{
+					foundFiles = false;
+					fileVersion = 0;
+					regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.txd$";
+					if (!string.IsNullOrEmpty(prefix))
+					{
+						regex = "^" + prefix + regex;
+					}
+					foreach (string fileName in Directory.GetFiles(d.Folder))
+					{
+						Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
+						if (m.Success)
+						{
+							if (!foundFiles)
+							{
+								foundFiles = true;
+								OnCloseFile();
+							}
+							LoadFromXmlFile(fileName);
+						}
+					}
+				}
+				if (!foundFiles)
+				{
+					MessageBox.Show("No files were found in the selected folder.", "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
 				}
 			}
 		}
 
 		private void OnLoadFile()
 		{
+			if (!CheckModifiedSaved()) return;
+
 			var d = new OpenFileDialog();
 			d.CheckFileExists = true;
 			d.Filter = "Tx dictionary files (*.txd)|*.txd|XML files (*.xml)|*.xml|All files (*.*)|*.*";
@@ -257,11 +381,29 @@ namespace TxEditor.ViewModel
 			d.Title = "Select files to load";
 			if (d.ShowDialog(View) == true)
 			{
+				// TODO: Check for same prefix and reject mixed files
+				// TODO: Scan for similar files and ask if not all of them are selected
+
+				bool foundFiles = false;
 				foreach (string fileName in d.FileNames)
 				{
+					if (!foundFiles)
+					{
+						foundFiles = true;
+						OnCloseFile();
+					}
 					LoadFromXmlFile(fileName);
 				}
+				// TODO: Display a warning if multiple files claimed to be the primary culture, and which has won
 			}
+		}
+
+		private void OnCloseFile()
+		{
+			RootTextKey.Children.Clear();
+			TextKeys.Clear();
+			LoadedCultureNames.Clear();
+			PrimaryCulture = null;
 		}
 
 		private void OnAbout()
@@ -440,6 +582,8 @@ namespace TxEditor.ViewModel
 					tk = subtk;
 				}
 
+				if (!TextKeys.Contains(key))
+					TextKeys.Add(key);
 				tk.IsLeafNode = true;
 				tk.ImageSource = "/Images/key.png";
 

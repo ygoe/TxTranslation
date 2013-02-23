@@ -1,0 +1,50 @@
+﻿<UserControl
+	x:Class="TxEditor.View.DetailsMessage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	mc:Ignorable="d" 
+	d:DesignHeight="431" d:DesignWidth="686">
+
+	<Grid>
+		<Grid.Background>
+			<ImageBrush
+				ImageSource="/Images/noise.png"
+				TileMode="Tile" Stretch="None"
+				Viewport="0,0,200,200" ViewportUnits="Absolute"
+				Opacity="0.2" />
+		</Grid.Background>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="6*"/>
+			<ColumnDefinition Width="1*"/>
+		</Grid.ColumnDefinitions>
+		
+		<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
+			<TextBlock Text="{Binding Title}"
+				TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"
+				FontSize="26" FontWeight="Light" TextOptions.TextFormattingMode="Ideal"/>
+			<TextBlock Text="{Binding Message}" Opacity="0.75" Margin="0,16,0,0"
+				TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"/>
+		</StackPanel>
+
+		<Path Name="ArrowIcon" Visibility="{Binding ArrowIconVisibility}"
+			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,150"
+			Data="M1,4 L7,0 L7,2 L13,2 L13,6 L7,6 L7,8z"
+			Stroke="#0a000000" StrokeThickness="1" StrokeLineJoin="Round">
+			<Path.LayoutTransform>
+				<ScaleTransform ScaleX="20" ScaleY="20"/>
+			</Path.LayoutTransform>
+		</Path>
+
+		<Path Name="FlashIcon" Visibility="{Binding FlashIconVisibility}"
+			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,100"
+			Data="M6,0 L12,10 L0,10z  M6.25,3.75 L4.75,6.25 L6.75,6.25 L5.25,8.75"
+			Stroke="#0a000000" StrokeThickness="1" StrokeLineJoin="Miter">
+			<Path.LayoutTransform>
+				<ScaleTransform ScaleX="20" ScaleY="20"/>
+			</Path.LayoutTransform>
+		</Path>
+	</Grid>
+</UserControl>

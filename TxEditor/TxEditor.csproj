@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TaskDialog">
+      <HintPath>.\TaskDialog.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -86,6 +90,7 @@
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
+    <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
     <Compile Include="ViewModel\TextKeyViewModel.cs" />
@@ -98,6 +103,9 @@
     <Compile Include="View\CultureTextView.xaml.cs">
       <DependentUpon>CultureTextView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\DetailsMessage.xaml.cs">
+      <DependentUpon>DetailsMessage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\QuantifiedTextView.xaml.cs">
       <DependentUpon>QuantifiedTextView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +115,10 @@
     <Page Include="DecoratedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DetailsMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -242,6 +254,12 @@
     <Resource Include="Images\key.png" />
     <Resource Include="Images\textkey_namespace.png" />
     <Resource Include="Images\textkey_segment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\noise.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\balloon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -3,16 +3,43 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:u="clr-namespace:Unclassified.UI" 
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
 	d:DesignHeight="190" d:DesignWidth="572"
 	Focusable="False">
+	<UserControl.Resources>
+		<u:BoolToVisibilityConverter x:Key="boolVis"/>
+	</UserControl.Resources>
+	
 	<DockPanel>
 		<TextBlock
 			DockPanel.Dock="Top" Margin="13,12,13,12"
 			Text="{Binding TextKey, FallbackValue='Abc def ghi jkl mn opq rst uvw xyz 123 456 7890'}"
 			FontSize="26" FontWeight="Light" TextOptions.TextFormattingMode="Ideal"/>
+
+		<Grid
+			DockPanel.Dock="Top" Margin="12,0,12,12"
+			Visibility="{Binding MainWindowVM.ShowComments, Converter={StaticResource boolVis}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			
+			<Image
+				Grid.Column="0" VerticalAlignment="Top" Margin="0,3,0,0"
+				Source="/Images/balloon.png"/>
+			<TextBox
+				Grid.Column="1" Margin="6,0,0,0"
+				TextWrapping="Wrap" AcceptsReturn="True"
+				VerticalScrollBarVisibility="Auto" MaxLines="4"
+				Background="LemonChiffon"
+				Text="{Binding Comment}"/>
+		</Grid>
 
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Focusable="False" UseLayoutRounding="True">
 			<ItemsControl ItemsSource="{Binding CultureTextVMs}">

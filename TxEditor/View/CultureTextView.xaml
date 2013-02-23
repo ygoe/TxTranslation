@@ -10,11 +10,33 @@
 	d:DesignHeight="214" d:DesignWidth="443"
 	Focusable="False">
 	<StackPanel>
-		<DockPanel LastChildFill="False">
-			<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
-			<Button DockPanel.Dock="Right" Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-			<TextBlock DockPanel.Dock="Left" Opacity="0.4" Margin="1,0" Text="{Binding CultureNativeName}" ToolTip="{Binding CultureName}"/>
-		</DockPanel>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<TextBlock Grid.Column="0" Opacity="0.4" Margin="1,0" Text="{Binding CultureNativeName}" ToolTip="{Binding CultureName}"/>
+			<StackPanel Grid.Column="2" Orientation="Horizontal">
+				<StackPanel.Style>
+					<Style TargetType="StackPanel">
+						<Setter Property="Opacity" Value="0.4"/>
+						<Style.Triggers>
+							<Trigger Property="UIElement.IsMouseOver" Value="True">
+								<Setter Property="Opacity" Value="1"/>
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</StackPanel.Style>
+				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
+				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
+				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">+</Button>
+			</StackPanel>
+		</Grid>
 		<my:DecoratedTextBox
 			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
 			Text="{Binding Text}"

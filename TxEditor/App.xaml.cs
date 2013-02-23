@@ -9,6 +9,7 @@ using System.Windows;
 using TxEditor.ViewModel;
 using Unclassified;
 using TxEditor.View;
+using TaskDialogInterop;
 
 namespace TxEditor
 {
@@ -179,5 +180,66 @@ namespace TxEditor
 		}
 
 		#endregion Event handlers
+
+		#region TaskDialog shortcuts
+
+		public static TaskDialogResult ShowTaskDialog(
+			bool allowDialogCancellation = false,
+			TaskDialogCallback callback = null,
+			object callbackData = null,
+			string[] commandButtons = null,
+			TaskDialogCommonButtons commonButtons = TaskDialogCommonButtons.None,
+			string content = null,
+			string[] customButtons = null,
+			//System.Drawing.Icon customFooterIcon = null,
+			//System.Drawing.Icon customMainIcon = null,
+			int? defaultButtonIndex = null,
+			bool enableCallbackTimer = false,
+			bool expandedByDefault = false,
+			string expandedInfo = null,
+			bool expandToFooter = false,
+			VistaTaskDialogIcon footerIcon = VistaTaskDialogIcon.None,
+			string footerText = null,
+			VistaTaskDialogIcon mainIcon = VistaTaskDialogIcon.None,
+			string mainInstruction = null,
+			Window owner = null,
+			string[] radioButtons = null,
+			bool showMarqueeProgressBar = false,
+			bool showProgressBar = false,
+			string title = null,
+			bool verificationByDefault = false,
+			string verificationText = null)
+		{
+			TaskDialogOptions options = new TaskDialogOptions();
+			options.AllowDialogCancellation = allowDialogCancellation;
+			options.Callback = callback;
+			options.CallbackData = callbackData;
+			options.CommandButtons = commandButtons;
+			options.CommonButtons = commonButtons;
+			options.Content = content;
+			options.CustomButtons = customButtons;
+			//options.CustomFooterIcon = customFooterIcon;
+			//options.CustomMainIcon = customMainIcon;
+			options.DefaultButtonIndex = defaultButtonIndex;
+			options.EnableCallbackTimer = enableCallbackTimer;
+			options.ExpandedByDefault = expandedByDefault;
+			options.ExpandedInfo = expandedInfo;
+			options.ExpandToFooter = expandToFooter;
+			options.FooterIcon = footerIcon;
+			options.FooterText = footerText;
+			options.MainIcon = mainIcon;
+			options.MainInstruction = mainInstruction;
+			options.Owner = owner;
+			options.RadioButtons = radioButtons;
+			options.ShowMarqueeProgressBar = showMarqueeProgressBar;
+			options.ShowProgressBar = showProgressBar;
+			options.Title = title;
+			options.VerificationByDefault = verificationByDefault;
+			options.VerificationText = verificationText;
+
+			return TaskDialog.Show(options);
+		}
+
+		#endregion TaskDialog shortcuts
 	}
 }

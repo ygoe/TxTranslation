@@ -31,7 +31,7 @@
 			Text="="/>
 		<Rectangle
 			Grid.Row="0" Grid.Column="1"
-			Fill="#0E000000"/>
+			Fill="#0D000000"/>
 		<TextBox
 			Grid.Row="0" Grid.Column="1"
 			Width="40" BorderThickness="0" Padding="0" VerticalAlignment="Center"
@@ -45,7 +45,7 @@
 			Text="%"/>
 		<Rectangle
 			Grid.Row="0" Grid.Column="3"
-			Fill="#0E000000"/>
+			Fill="#0D000000"/>
 		<TextBox
 			Grid.Row="0" Grid.Column="3"
 			Width="40" BorderThickness="0" Padding="0" VerticalAlignment="Center"

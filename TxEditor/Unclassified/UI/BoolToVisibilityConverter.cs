@@ -23,19 +23,22 @@ namespace Unclassified.UI
 		/// </summary>
 		/// <param name="value">Condition value, must be bool.</param>
 		/// <param name="targetType">Unused.</param>
-		/// <param name="parameter">Comparison parameter, must be bool.</param>
+		/// <param name="parameter">Comparison parameter, must be "true" or "false". Defaults to "true" if unset or empty.</param>
 		/// <param name="culture">Unused.</param>
 		/// <returns>Visible, if value is equal to parameter, Collapsed or Hidden otherwise.</returns>
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			bool param = true;
 			string paramStr = parameter as string;
-			if (string.IsNullOrEmpty(paramStr))
-				return Visibility.Visible;   // If totally unsure, make it visible
-			bool param;
-			if (!bool.TryParse(paramStr, out param))
-				return Visibility.Visible;
+			if (!string.IsNullOrEmpty(paramStr))
+			{
+				if (!bool.TryParse(paramStr, out param))
+					return Visibility.Visible;
+			}
+			
 			if (!(value is bool))
 				return Visibility.Visible;
+			
 			bool val = (bool) value;
 
 			return val == param ? Visibility.Visible : (UseHiddenValue ? Visibility.Hidden : Visibility.Collapsed);

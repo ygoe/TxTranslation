@@ -17,8 +17,7 @@ namespace TxEditor.ViewModel
 
 			if (items.Count == 0)
 			{
-				//return new DataBrowserMessageViewModel("Keine Auswahl", "Es ist kein Element in der Liste ausgewählt.", "Arrow");
-				return "No text key selected.";
+				return new DetailsMessageViewModel("No selection", "No text key selected from the list.", "Arrow");
 			}
 
 			if (items.Count == 1)
@@ -26,7 +25,7 @@ namespace TxEditor.ViewModel
 				TextKeyViewModel tkVM = items[0] as TextKeyViewModel;
 				if (tkVM != null && !tkVM.IsLeafNode)
 				{
-					return "Not a leaf node.";
+					return new DetailsMessageViewModel("Not a leaf node", "Only full text keys can be displayed and edited, not incomplete key segments.", "Arrow");
 				}
 
 				return items[0];
@@ -41,8 +40,7 @@ namespace TxEditor.ViewModel
 				}
 				else if (item.GetType() != firstType)
 				{
-					//return new DataBrowserMessageViewModel("Uneinheitliche Auswahltypen", "Es können nur Elemente des gleichen Typs gemeinsam angezeigt und bearbeitet werden.", "Flash");
-					return "Inconsistent item types selected.";
+					return new DetailsMessageViewModel("Inconsistent selection", "Only elements of the same type can be displayed and edited concurrently.", "Flash");
 				}
 			}
 
@@ -56,8 +54,7 @@ namespace TxEditor.ViewModel
 			//    return new NodeMultiViewModel(nodes, null, nodes[0].ProjectVM);
 			//}
 
-			//return new DataBrowserMessageViewModel("Auflistung mit " + items.Count + " Elementen vom Typ " + firstType.Name);
-			return items.Count + " " + firstType.Name + " items selected.";
+			return new DetailsMessageViewModel(items.Count + " " + firstType.Name + " items selected");
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

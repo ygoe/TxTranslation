@@ -9,9 +9,9 @@
 	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
 	TextOptions.TextFormattingMode="Display"
 	Title="TxEditor"
-	Height="296" Width="1180"
+	Height="296" Width="1180" UseLayoutRounding="True"
 	Icon="/Images/Tx.ico"
-	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
+	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded">
 
 	<Window.Resources>
 		<u:TextHighlightConverter x:Key="textHighlightConverter"/>
@@ -139,6 +139,10 @@
 					Content="Hidden chars" IconSource="/Images/hidden_chars.png"
 					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 					IsChecked="{Binding HiddenChars}"/>
+				<u:IconToggleButton
+					Content="Comment" IconSource="/Images/balloon.png"
+					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+					IsChecked="{Binding ShowComments}"/>
 			</StackPanel>
 			<TextBlock
 				Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
@@ -148,8 +152,33 @@
 
 			<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
 				<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
-				<TextBox Name="SearchText" Margin="4,0,0,0" Width="150" Style="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}"/>
-				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False">Options</Button>
+				<Grid Margin="4,0,0,0">
+					<TextBox Name="SearchText" Width="150" Margin="0" Padding="2,2,14,2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+						<TextBox.Style>
+							<Style TargetType="TextBox" BasedOn="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}">
+								<Setter Property="BorderBrush" Value="#1C000000"/>
+							</Style>
+						</TextBox.Style>
+					</TextBox>
+					<Button
+						HorizontalAlignment="Right"
+						BorderBrush="{x:Null}" Background="Transparent" Focusable="False"
+						Command="{Binding ClearSearchCommand}"
+						Foreground="Red"
+						Content="×">
+						<Button.Style>
+							<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+								<Setter Property="Visibility" Value="Visible"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding SearchText}" Value="">
+										<Setter Property="Visibility" Value="Hidden"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+				</Grid>
+				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Padding="0,2" Focusable="False">▾</Button>
 			</StackPanel>
 			<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
 				<u:IconButton
@@ -292,6 +321,10 @@
 				</ContentControl.Content>
 
 				<ContentControl.Resources>
+					<DataTemplate DataType="{x:Type vm:DetailsMessageViewModel}">
+						<v:DetailsMessage/>
+					</DataTemplate>
+
 					<DataTemplate DataType="{x:Type vm:TextKeyViewModel}">
 						<v:TextKeyView/>
 					</DataTemplate>

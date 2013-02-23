@@ -216,7 +216,7 @@ namespace TxEditor
 						rect.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
 						rect.Width = endRect.Left - startRect.Left;
 						rect.Height = startRect.Height;
-						rect.Fill = new SolidColorBrush(Color.FromRgb(229, 237, 193));
+						rect.Fill = new SolidColorBrush(Color.FromRgb(236, 241, 209));
 						grid1.Children.Insert(0, rect);
 						decos.Add(rect);
 					}

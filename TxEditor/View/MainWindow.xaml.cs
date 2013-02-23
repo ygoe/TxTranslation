@@ -45,5 +45,9 @@ namespace TxEditor.View
 			Window_LocationChanged(this, EventArgs.Empty);
 		}
 
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			TextKeysTreeView.Focus();
+		}
 	}
 }
