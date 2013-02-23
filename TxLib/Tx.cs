@@ -2886,7 +2886,7 @@ namespace TxLib
 							// Found a {#} placeholder, insert the count value
 							if (count == -1)
 							{
-								LogStack("Resolve data: No count value or -1 specified for {#} placeholder in key \"{0}\".", key);
+								LogStack("Resolve data: No count value or -1 specified for {{#}} placeholder in key \"{0}\".", key);
 							}
 							result.Append(count.ToString());
 						}
@@ -3289,9 +3289,9 @@ namespace TxLib
 		/// </remarks>
 		private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
 		{
-			// Close the log file if it is open
 			lock (logLock)
 			{
+				// Close the log file if it is open
 				if (logWriter != null)
 				{
 					if (usedKeys != null && !string.IsNullOrEmpty(primaryCulture))

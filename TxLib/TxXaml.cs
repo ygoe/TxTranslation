@@ -805,7 +805,10 @@ namespace TxLib
 			int count = -1;
 			if (values.Length > 1)
 			{
-				count = System.Convert.ToInt32(values[1]);
+				if (values[1] != DependencyProperty.UnsetValue)
+				{
+					count = System.Convert.ToInt32(values[1]);
+				}
 			}
 
 			// Now translate the text and return the result.

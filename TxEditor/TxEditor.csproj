@@ -74,6 +74,7 @@
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />
     <Compile Include="Unclassified\MyEnvironment.cs" />
+    <Compile Include="Unclassified\ObservableHashSet.cs" />
     <Compile Include="Unclassified\Settings.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Unclassified\UI\OpenFolderDialog.cs" />
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
+    <Compile Include="Unclassified\ULog.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
     <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
@@ -187,6 +189,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <EmbeddedResource Include="Dictionary.txd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -260,6 +263,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\balloon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_error.png" />
+    <Resource Include="Images\key_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\warning_list_yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\warning_list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error_list.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

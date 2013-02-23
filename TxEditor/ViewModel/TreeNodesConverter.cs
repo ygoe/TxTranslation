@@ -17,15 +17,15 @@ namespace TxEditor.ViewModel
 
 			if (items.Count == 0)
 			{
-				return new DetailsMessageViewModel("No selection", "No text key selected from the list.", "Arrow");
+				return new DetailsMessageViewModel("Nothing selected", "Select a text key from the list to display and edit it.", "Arrow");
 			}
 
 			if (items.Count == 1)
 			{
 				TextKeyViewModel tkVM = items[0] as TextKeyViewModel;
-				if (tkVM != null && !tkVM.IsLeafNode)
+				if (tkVM != null && !tkVM.IsFullKey)
 				{
-					return new DetailsMessageViewModel("Not a leaf node", "Only full text keys can be displayed and edited, not incomplete key segments.", "Arrow");
+					return new DetailsMessageViewModel("Incomplete text key selected", "This is only a segment of a text key. Select a complete text key’s node to display and edit it.", "Arrow");
 				}
 
 				return items[0];
@@ -40,7 +40,7 @@ namespace TxEditor.ViewModel
 				}
 				else if (item.GetType() != firstType)
 				{
-					return new DetailsMessageViewModel("Inconsistent selection", "Only elements of the same type can be displayed and edited concurrently.", "Flash");
+					return new DetailsMessageViewModel("Inconsistent selection", "Multiple items of different types are selected. Only elements of the same type can be displayed and edited concurrently.", "Flash");
 				}
 			}
 

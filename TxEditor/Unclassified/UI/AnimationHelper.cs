@@ -9,27 +9,19 @@ namespace Unclassified.UI
 {
 	static class AnimationHelper
 	{
-		public static void AnimateDouble(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void Animate(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDouble(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void Animate(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDoubleEase(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
-		{
-			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
-			anim.AccelerationRatio = 0.5;
-			anim.DecelerationRatio = 0.5;
-			obj.BeginAnimation(property, anim);
-		}
-
-		public static void AnimateDoubleEase(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void AnimateEase(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.AccelerationRatio = 0.5;
@@ -37,28 +29,36 @@ namespace Unclassified.UI
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDoubleEaseIn(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void AnimateEase(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		{
+			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
+			anim.AccelerationRatio = 0.5;
+			anim.DecelerationRatio = 0.5;
+			obj.BeginAnimation(property, anim);
+		}
+
+		public static void AnimateEaseIn(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.AccelerationRatio = 1;
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDoubleEaseIn(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void AnimateEaseIn(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.AccelerationRatio = 1;
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDoubleEaseOut(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void AnimateEaseOut(this UIElement obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.DecelerationRatio = 1;
 			obj.BeginAnimation(property, anim);
 		}
 
-		public static void AnimateDoubleEaseOut(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
+		public static void AnimateEaseOut(this Animatable obj, DependencyProperty property, double fromValue, double toValue, TimeSpan duration)
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.DecelerationRatio = 1;

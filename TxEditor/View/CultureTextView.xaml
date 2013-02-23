@@ -20,7 +20,21 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Grid.Column="0" Opacity="0.4" Margin="1,0" Text="{Binding CultureNativeName}" ToolTip="{Binding CultureName}"/>
+			<TextBlock
+				Grid.Column="0" Margin="1,0" VerticalAlignment="Center"
+				Opacity="0.4"
+				Text="{Binding CultureNativeName}"
+				ToolTip="{Binding CultureName}">
+				<TextBlock.Style>
+					<Style TargetType="TextBlock">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding CultureName}" Value="en">
+								<Setter Property="FontWeight" Value="Bold"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
 				<StackPanel.Style>
 					<Style TargetType="StackPanel">
@@ -39,7 +53,7 @@
 		</Grid>
 		<my:DecoratedTextBox
 			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
-			Text="{Binding Text}"
+			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
 			PlaceholderText="Enter text"
 			HiddenChars="{Binding TextKeyVM.MainWindowVM.HiddenChars}"

@@ -6,10 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using TxEditor.View;
 using TxEditor.ViewModel;
 using Unclassified;
-using TxEditor.View;
-using TaskDialogInterop;
+using TxLib;
 
 namespace TxEditor
 {
@@ -49,6 +49,27 @@ namespace TxEditor
 
 			// Make sure the settings are properly saved in the end
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+
+			//ULog.SetDataBindingLog();
+
+			// Setup logging
+			Tx.LogFileName = "tx.log";
+			//Tx.LogFileName = "";
+			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", "1", EnvironmentVariableTarget.User);
+			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", null, EnvironmentVariableTarget.User);
+
+			// Setup translation data
+			try
+			{
+				// Set the XML file's build action to "Embedded Resource" and "Never copy" for this to work.
+				Tx.LoadFromEmbeddedResource("TxEditor.Dictionary.txd");
+			}
+			catch (ArgumentException)
+			{
+				// The file was not embedded, try reading the file. This enables file change notifications.
+				Tx.UseFileSystemWatcher = true;
+				Tx.LoadFromXmlFile("Dictionary.txd");
+			}
 		}
 
 		#endregion Constructors
@@ -153,6 +174,8 @@ namespace TxEditor
 			{
 				viewModel.LoadFromXmlFile(fileName);
 			}
+			viewModel.ValidateTextKeys();
+			viewModel.StatusText = filesToLoad.Count + " file(s) loaded, " + viewModel.TextKeys.Count + " text keys defined.";
 
 			// Show the main window
 			view.Show();
@@ -180,66 +203,5 @@ namespace TxEditor
 		}
 
 		#endregion Event handlers
-
-		#region TaskDialog shortcuts
-
-		public static TaskDialogResult ShowTaskDialog(
-			bool allowDialogCancellation = false,
-			TaskDialogCallback callback = null,
-			object callbackData = null,
-			string[] commandButtons = null,
-			TaskDialogCommonButtons commonButtons = TaskDialogCommonButtons.None,
-			string content = null,
-			string[] customButtons = null,
-			//System.Drawing.Icon customFooterIcon = null,
-			//System.Drawing.Icon customMainIcon = null,
-			int? defaultButtonIndex = null,
-			bool enableCallbackTimer = false,
-			bool expandedByDefault = false,
-			string expandedInfo = null,
-			bool expandToFooter = false,
-			VistaTaskDialogIcon footerIcon = VistaTaskDialogIcon.None,
-			string footerText = null,
-			VistaTaskDialogIcon mainIcon = VistaTaskDialogIcon.None,
-			string mainInstruction = null,
-			Window owner = null,
-			string[] radioButtons = null,
-			bool showMarqueeProgressBar = false,
-			bool showProgressBar = false,
-			string title = null,
-			bool verificationByDefault = false,
-			string verificationText = null)
-		{
-			TaskDialogOptions options = new TaskDialogOptions();
-			options.AllowDialogCancellation = allowDialogCancellation;
-			options.Callback = callback;
-			options.CallbackData = callbackData;
-			options.CommandButtons = commandButtons;
-			options.CommonButtons = commonButtons;
-			options.Content = content;
-			options.CustomButtons = customButtons;
-			//options.CustomFooterIcon = customFooterIcon;
-			//options.CustomMainIcon = customMainIcon;
-			options.DefaultButtonIndex = defaultButtonIndex;
-			options.EnableCallbackTimer = enableCallbackTimer;
-			options.ExpandedByDefault = expandedByDefault;
-			options.ExpandedInfo = expandedInfo;
-			options.ExpandToFooter = expandToFooter;
-			options.FooterIcon = footerIcon;
-			options.FooterText = footerText;
-			options.MainIcon = mainIcon;
-			options.MainInstruction = mainInstruction;
-			options.Owner = owner;
-			options.RadioButtons = radioButtons;
-			options.ShowMarqueeProgressBar = showMarqueeProgressBar;
-			options.ShowProgressBar = showProgressBar;
-			options.Title = title;
-			options.VerificationByDefault = verificationByDefault;
-			options.VerificationText = verificationText;
-
-			return TaskDialog.Show(options);
-		}
-
-		#endregion TaskDialog shortcuts
 	}
 }

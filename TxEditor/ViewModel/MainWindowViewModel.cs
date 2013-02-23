@@ -190,10 +190,26 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private string statusText;
+		public string StatusText
+		{
+			get { return statusText; }
+			set
+			{
+				if (value != statusText)
+				{
+					statusText = value;
+					OnPropertyChanged("StatusText");
+				}
+			}
+		}
+
 		public HashSet<string> TextKeys { get; private set; }
 		public HashSet<string> LoadedCultureNames { get; private set; }
 
 		public TextKeyViewModel RootTextKey { get; private set; }
+
+		public ObservableHashSet<TextKeyViewModel> ProblemKeys { get; private set; }
 
 		#region Constructors
 
@@ -202,6 +218,7 @@ namespace TxEditor.ViewModel
 			TextKeys = new HashSet<string>();
 			LoadedCultureNames = new HashSet<string>();
 			RootTextKey = new TextKeyViewModel(null, false, null, this);
+			ProblemKeys = new ObservableHashSet<TextKeyViewModel>();
 
 			SearchText = "";   // Change value once to set the clear button visibility
 		}
@@ -233,6 +250,19 @@ namespace TxEditor.ViewModel
 					loadFileCommand = new DelegateCommand(OnLoadFile);
 				}
 				return loadFileCommand;
+			}
+		}
+
+		private DelegateCommand saveCommand;
+		public DelegateCommand SaveCommand
+		{
+			get
+			{
+				if (saveCommand == null)
+				{
+					saveCommand = new DelegateCommand(OnSave);
+				}
+				return saveCommand;
 			}
 		}
 
@@ -339,6 +369,7 @@ namespace TxEditor.ViewModel
 					}
 					prefix = prefixes[result.RadioButtonResult.Value];
 				}
+				int fileCount = 0;
 				if (prefix != null)
 				{
 					foundFiles = false;
@@ -359,10 +390,16 @@ namespace TxEditor.ViewModel
 								OnCloseFile();
 							}
 							LoadFromXmlFile(fileName);
+							fileCount++;
 						}
 					}
 				}
-				if (!foundFiles)
+				if (foundFiles)
+				{
+					ValidateTextKeys();
+					StatusText = fileCount + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+				}
+				else
 				{
 					MessageBox.Show("No files were found in the selected folder.", "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
 				}
@@ -395,6 +432,9 @@ namespace TxEditor.ViewModel
 					LoadFromXmlFile(fileName);
 				}
 				// TODO: Display a warning if multiple files claimed to be the primary culture, and which has won
+
+				ValidateTextKeys();
+				StatusText = d.FileNames.Length + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
 			}
 		}
 
@@ -404,6 +444,12 @@ namespace TxEditor.ViewModel
 			TextKeys.Clear();
 			LoadedCultureNames.Clear();
 			PrimaryCulture = null;
+			ProblemKeys.Clear();
+		}
+
+		private void OnSave()
+		{
+			OnCloseFile();   // DEBUG
 		}
 
 		private void OnAbout()
@@ -414,15 +460,15 @@ namespace TxEditor.ViewModel
 			blur.Radius = 0;
 			root.Effect = blur;
 
-			root.AnimateDoubleEase(UIElement.OpacityProperty, 1, 0.6, TimeSpan.FromSeconds(1));
-			blur.AnimateDoubleEase(BlurEffect.RadiusProperty, 0, 4, TimeSpan.FromSeconds(0.5));
+			root.AnimateEase(UIElement.OpacityProperty, 1, 0.6, TimeSpan.FromSeconds(1));
+			blur.AnimateEase(BlurEffect.RadiusProperty, 0, 4, TimeSpan.FromSeconds(0.5));
 
 			var win = new AboutWindow();
 			win.Owner = View;
 			win.ShowDialog();
 
-			root.AnimateDoubleEase(UIElement.OpacityProperty, 0.6, 1, TimeSpan.FromSeconds(0.2));
-			blur.AnimateDoubleEase(BlurEffect.RadiusProperty, 4, 0, TimeSpan.FromSeconds(0.2));
+			root.AnimateEase(UIElement.OpacityProperty, 0.6, 1, TimeSpan.FromSeconds(0.2));
+			blur.AnimateEase(BlurEffect.RadiusProperty, 4, 0, TimeSpan.FromSeconds(0.2));
 
 			DelayedCall.Start(() =>
 			{
@@ -480,7 +526,7 @@ namespace TxEditor.ViewModel
 			// Add the new culture everywhere
 			if (!LoadedCultureNames.Contains(cultureName))
 			{
-				AddNewCulture(RootTextKey, cultureName);
+				AddNewCulture(RootTextKey, cultureName, false);
 			}
 			
 			// Read the XML document
@@ -544,7 +590,7 @@ namespace TxEditor.ViewModel
 						// Namespace tree item does not exist yet, create it
 						subtk = new TextKeyViewModel(key, false, tk, tk.MainWindowVM);
 						subtk.DisplayName = nsParts[0];
-						subtk.ImageSource = "/Images/textkey_namespace.png";
+						subtk.IsNamespace = true;
 						tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
 					}
 					tk = subtk;
@@ -569,14 +615,6 @@ namespace TxEditor.ViewModel
 						// This level of text key item does not exist yet, create it
 						subtk = new TextKeyViewModel(key, i == keySegments.Length - 1, tk, tk.MainWindowVM);
 						subtk.DisplayName = keySegment;
-						if (subtk.IsLeafNode)
-						{
-							subtk.ImageSource = "/Images/key.png";
-						}
-						else
-						{
-							subtk.ImageSource = "/Images/textkey_segment.png";
-						}
 						tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
 					}
 					tk = subtk;
@@ -584,8 +622,7 @@ namespace TxEditor.ViewModel
 
 				if (!TextKeys.Contains(key))
 					TextKeys.Add(key);
-				tk.IsLeafNode = true;
-				tk.ImageSource = "/Images/key.png";
+				tk.IsFullKey = true;
 
 				// Ensure that all loaded cultures exist in every text key so that they can be entered
 				foreach (string cn in LoadedCultureNames)
@@ -615,6 +652,26 @@ namespace TxEditor.ViewModel
 
 		#endregion XML loading methods
 
+		#region Text validation
+
+		public void ValidateTextKeys(TextKeyViewModel root = null)
+		{
+			if (root == null)
+			{
+				root = RootTextKey;
+			}
+			foreach (TextKeyViewModel tk in root.Children)
+			{
+				tk.Validate();
+				if (tk.Children.Count > 0)
+				{
+					ValidateTextKeys(tk);
+				}
+			}
+		}
+
+		#endregion Text validation
+
 		#region Culture management
 
 		private void EnsureCultureInTextKey(TextKeyViewModel tk, string cultureName)
@@ -625,7 +682,7 @@ namespace TxEditor.ViewModel
 			}
 		}
 
-		private void AddNewCulture(TextKeyViewModel root, string cultureName)
+		private void AddNewCulture(TextKeyViewModel root, string cultureName, bool validate)
 		{
 			foreach (TextKeyViewModel tk in root.Children)
 			{
@@ -633,12 +690,16 @@ namespace TxEditor.ViewModel
 				tk.UpdateCultureTextSeparators();
 				if (tk.Children.Count > 0)
 				{
-					AddNewCulture(tk, cultureName);
+					AddNewCulture(tk, cultureName, validate);
 				}
 			}
 			if (!LoadedCultureNames.Contains(cultureName))
 			{
 				LoadedCultureNames.Add(cultureName);
+			}
+			if (validate)
+			{
+				ValidateTextKeys();
 			}
 		}
 

@@ -47,6 +47,7 @@ namespace TxEditor.ViewModel
 				{
 					text = value;
 					OnPropertyChanged("Text");
+					CultureTextVM.TextKeyVM.Validate();
 				}
 			}
 		}
