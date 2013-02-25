@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace TxEditor.View
 {
-	/// <summary>
-	/// Interaktionslogik für TextKeyView.xaml
-	/// </summary>
 	public partial class TextKeyView : UserControl
 	{
 		public TextKeyView()

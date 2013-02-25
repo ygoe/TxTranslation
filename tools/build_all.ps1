@@ -1,4 +1,5 @@
 #cmd /c color f0
+$Host.UI.RawUI.WindowTitle = "TxEditor build"
 Clear-Host
 echo "Creating a release build for TxEditor"
 echo ""
@@ -49,7 +50,30 @@ function Check-RegFilename($key, $value)
     }
 }
 
-function Wait-Key($msg = $true)
+function Move-Cursor($count)
+{
+    $x = $Host.UI.RawUI.CursorPosition.X + $count
+    $y = $Host.UI.RawUI.CursorPosition.Y
+    if ($x -lt 0)
+    {
+        $x = 0
+    }
+    if ($x -ge $Host.UI.RawUI.BufferSize.Width)
+    {
+        $x = $Host.UI.RawUI.BufferSize.Width - 1
+    }
+    $Host.UI.RawUI.CursorPosition = New-Object System.Management.Automation.Host.Coordinates $x, $y
+}
+
+function Clear-KeyBuffer()
+{
+    while ($Host.UI.RawUI.KeyAvailable)
+    {
+        [void]$Host.UI.RawUI.ReadKey("IncludeKeyUp,IncludeKeyDown,NoEcho")
+    }
+}
+
+function Wait-Key($msg = $true, $timeout = -1, $showDots = $false)
 {
     if ($psISE)
     {
@@ -60,14 +84,62 @@ function Wait-Key($msg = $true)
     {
         if ($msg)
         {
-            Write-Host -NoNewline "Press any key to continue..."
+            Write-Host -NoNewline "Press any key to continue"
+            if (-not $showDots)
+            {
+                Write-Host -NoNewline "..."
+            }
         }
-        [void][System.Console]::ReadKey($true)
+        if ($timeout -lt 0)
+        {
+            Clear-KeyBuffer
+            #[void][System.Console]::ReadKey($true)
+            [void]$Host.UI.RawUI.ReadKey("IncludeKeyUp,IncludeKeyDown,NoEcho")
+        }
+        else
+        {
+            if ($showDots)
+            {
+                $counter = $timeout
+                while ($counter -gt 0)
+                {
+                    $counter -= 1000
+                    Write-Host "." -NoNewLine
+                }
+            }
+            $counter = 0
+            $step = 100
+            $nextSecond = 1000
+            Clear-KeyBuffer
+            while (!$Host.UI.RawUI.KeyAvailable -and ($counter -lt $timeout))
+            {
+                Start-Sleep -m $step
+                $counter += $step
+                if ($showDots -and $counter -ge $nextSecond)
+                {
+                    $nextSecond += 1000
+                    Move-Cursor -1
+                    Write-Host " " -NoNewLine
+                    Move-Cursor -1
+                }
+            }
+            Clear-KeyBuffer
+        }
         if ($msg)
         {
             Write-Host ""
         }
     }
+}
+
+function WaitError($msg)
+{
+	echo ""
+	.\FlashConsoleWindow -error
+	.\FlashConsoleWindow
+	Write-Host -ForegroundColor Red ("ERROR: " + $msg)
+	Wait-Key
+	.\FlashConsoleWindow -noprogress
 }
 
 # ---------------------------------------------------------------------------------
@@ -84,6 +156,7 @@ else
 	$arch = "x86"
 }
 
+.\FlashConsoleWindow -progress 5
 if ($doBuild)
 {
     # Find the MSBuild binary
@@ -104,9 +177,7 @@ if ($doBuild)
     }
     if ($msbuildBin -eq $null)
     {
-	    echo ""
-	    Write-Host -ForegroundColor Red "ERROR: MSBuild binary not found"
-        Wait-Key
+	    WaitError "MSBuild binary not found"
 	    return
     }
 }
@@ -124,9 +195,7 @@ if ($doObfuscate)
     }
     if ($dotfuscatorBin -eq $null)
     {
-	    echo ""
-	    Write-Host -ForegroundColor Red "ERROR: Dotfuscator binary not found"
-        Wait-Key
+	    WaitError "Dotfuscator binary not found"
         return
     }
 }
@@ -146,9 +215,7 @@ if ($doSetup)
     }
     if ($innosetupBin -eq $null)
     {
-	    echo ""
-	    Write-Host -ForegroundColor Red "ERROR: InnoSetup binary not found"
-        Wait-Key
+	    WaitError "InnoSetup binary not found"
         return
     }
 }
@@ -159,9 +226,7 @@ if ($revId -eq $null)
     #$revId = & .\GitRevisionTool --format "{bmin:2012}.{commit:8}{!:+}" "$sourcePath"
     if ($revId -eq $null)
     {
-	    echo ""
-	    Write-Host -ForegroundColor Red "ERROR: Repository revision could not be determined"
-        Wait-Key
+	    WaitError "Repository revision could not be determined"
         return
     }
 }
@@ -179,11 +244,10 @@ if ($doBuild)
     & $msbuildBin /nologo "$sourcePath\TxTranslation.sln" /t:Rebuild /p:Configuration=Release /p:Platform="$buildPlatform" /v:minimal
     if (-not $?)
     {
-	    echo ""
-	    Write-Host -ForegroundColor Red "ERROR: Build failed"
-        Wait-Key
+	    WaitError "Build failed"
 	    return
     }
+	.\FlashConsoleWindow -progress 20
 }
 
 if ($doObfuscate)
@@ -206,11 +270,10 @@ if ($doObfuscate)
     }
 	if (-not $?)
     {
-		echo ""
-        Write-Host -ForegroundColor Red "ERROR: Obfuscation failed"
-        Wait-Key
+        WaitError "Obfuscation failed"
 		return
 	}
+	.\FlashConsoleWindow -progress 80
 
     Move-Item -Force "$sourcePath\Dotfuscated\Map.xml" "$sourcePath\Dotfuscated\Map.$revId.xml"
 }
@@ -223,11 +286,10 @@ if ($doSetup)
     & $innosetupBin /q "$sourcePath\Setup\TxEditor.iss" /dRevId=$revId
 	if (-not $?)
     {
-		echo ""
-		Write-Host -ForegroundColor Red "ERROR: Creating setup failed"
-        Wait-Key
+		WaitError "Creating setup failed"
 		return
 	}
+	.\FlashConsoleWindow -progress 100
 }
 
 # ---------------------------------------------------------------------------------
@@ -242,7 +304,10 @@ else
     $duration = ($endTime - $startTime).TotalSeconds.ToString("0") + " seconds"
 }
 
-& .\FlashConsoleWindow
 echo ""
-Write-Host -ForegroundColor Green "Build succeeded in $duration. Press any key to exit..."
-Wait-Key $false
+Write-Host -ForegroundColor DarkGreen "Build succeeded in $duration."
+.\FlashConsoleWindow -progress 100
+Write-Host "Press any key to exit" -NoNewLine
+Wait-Key $false 10000 $true
+Write-Host ""
+.\FlashConsoleWindow -noprogress

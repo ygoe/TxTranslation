@@ -111,6 +111,7 @@
 
 		<text key="view.filter.n problems">{#} problems</text>
 		<text key="view.filter.n problems" count="1">1 problem</text>
+		<!--text key="view.filter.n problems" count="0">zerro problems, hurray! everything's alright.</text-->
 	</culture>
 	<culture name="en-us">
 		<text key="Tx:date.year month">MM/yyyy</text>

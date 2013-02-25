@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace TxEditor.View
 {
-	/// <summary>
-	/// Interaktionslogik für CultureTextView.xaml
-	/// </summary>
 	public partial class CultureTextView : UserControl
 	{
 		public CultureTextView()

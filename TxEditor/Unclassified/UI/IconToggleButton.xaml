@@ -28,6 +28,9 @@
 									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
 										<Setter Property="Margin" Value="0,0,0,1"/>
 									</DataTrigger>
+									<DataTrigger Binding="{Binding ContentVisibility, ElementName=_this}" Value="Collapsed">
+										<Setter Property="Margin" Value="0"/>
+									</DataTrigger>
 								</Style.Triggers>
 							</Style>
 						</Image.Style>

@@ -78,7 +78,9 @@
     <Compile Include="Unclassified\Settings.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
+    <Compile Include="Unclassified\UI\ComparerConverter.cs" />
     <Compile Include="Unclassified\UI\DelegateCommand.cs" />
+    <Compile Include="Unclassified\UI\ICollapsableToolbarItem.cs" />
     <Compile Include="Unclassified\UI\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
@@ -266,7 +268,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\key_error.png" />
-    <Resource Include="Images\key_warning.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\warning_list_yellow.png" />
@@ -276,6 +277,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\error_list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\document_create.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

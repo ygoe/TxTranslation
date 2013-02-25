@@ -54,6 +54,7 @@ Name: "de"; MessagesFile: "compiler:Languages\German.isl"
 [Files]
 Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "..\...\TxEditor-Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]

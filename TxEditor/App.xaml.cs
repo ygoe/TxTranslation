@@ -10,6 +10,7 @@ using TxEditor.View;
 using TxEditor.ViewModel;
 using Unclassified;
 using TxLib;
+using System.Text.RegularExpressions;
 
 namespace TxEditor
 {
@@ -125,6 +126,18 @@ namespace TxEditor
 						{
 							filesToLoad.Add(fileName);
 						}
+						if (filesToLoad.Count == 0)
+						{
+							// Nothing found, try older XML file names
+							foreach (string fileName in Directory.GetFiles(argv, "*.xml"))
+							{
+								Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
+								if (m.Success)
+								{
+									filesToLoad.Add(fileName);
+								}
+							}
+						}
 					}
 					else if (argv.Contains('?') || argv.Contains('*'))
 					{
@@ -137,31 +150,32 @@ namespace TxEditor
 
 			// Scan for other files near the selected files
 			// (Currently only active if a single file is specified)
-			if (filesToLoad.Count == 1)
-			{
-				foreach (string fileName in filesToLoad.Distinct().ToArray())
-				{
-					if (fileName.ToLowerInvariant().EndsWith(".txd") && File.Exists(fileName))
-					{
-						// Existing .txd file
-						// Scan same directory for other .txd files
-						string[] otherFiles = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.txd");
-						// otherFiles should contain fileName and may contain additional files
-						if (otherFiles.Length > 1)
-						{
-							if (MessageBox.Show(
-								"Other Tx dictionary files are located in the same directory as the selected file. Should they also be loaded?",
-								"Load other files",
-								MessageBoxButton.YesNo,
-								MessageBoxImage.Question) == MessageBoxResult.Yes)
-							{
-								// Duplicates will be removed later
-								filesToLoad.AddRange(otherFiles);
-							}
-						}
-					}
-				}
-			}
+			//if (filesToLoad.Count == 1)
+			//{
+			//    foreach (string fileName in filesToLoad.Distinct().ToArray())
+			//    {
+			//        if (fileName.ToLowerInvariant().EndsWith(".txd") && File.Exists(fileName))
+			//        {
+			//            // Existing .txd file
+			//            // Scan same directory for other .txd files
+			//            string[] otherFiles = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.txd");
+			//            // otherFiles should contain fileName and may contain additional files
+			//            if (otherFiles.Length > 1)
+			//            {
+			//                if (MessageBox.Show(
+			//                    "Other Tx dictionary files are located in the same directory as the selected file. Should they also be loaded?",
+			//                    "Load other files",
+			//                    MessageBoxButton.YesNo,
+			//                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+			//                {
+			//                    // Duplicates will be removed later
+			//                    filesToLoad.AddRange(otherFiles);
+			//                }
+			//            }
+			//        }
+			//    }
+			//}
+			// TODO: Loading multiple txd files is not supported. Only scan for more cultures of version 1 files.
 
 			// Create main window and view model
 			var view = new MainWindow();
@@ -170,12 +184,7 @@ namespace TxEditor
 			view.DataContext = viewModel;
 
 			// Load selected files
-			foreach (string fileName in filesToLoad.Distinct())
-			{
-				viewModel.LoadFromXmlFile(fileName);
-			}
-			viewModel.ValidateTextKeys();
-			viewModel.StatusText = filesToLoad.Count + " file(s) loaded, " + viewModel.TextKeys.Count + " text keys defined.";
+			viewModel.LoadFiles(filesToLoad.Distinct());
 
 			// Show the main window
 			view.Show();

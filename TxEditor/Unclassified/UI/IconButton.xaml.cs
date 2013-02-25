@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 
 namespace Unclassified.UI
 {
-	public partial class IconButton : Button
+	public partial class IconButton : Button, ICollapsableToolbarItem
 	{
 		public static DependencyProperty IconSourceProperty = DependencyProperty.Register(
 			"IconSource",
@@ -50,6 +50,8 @@ namespace Unclassified.UI
 			get { return (Orientation) GetValue(OrientationProperty); }
 			set { SetValue(OrientationProperty, value); }
 		}
+
+		public int CollapsePriority { get; set; }
 
 		public IconButton()
 		{

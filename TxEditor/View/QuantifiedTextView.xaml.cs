@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace TxEditor.View
 {
-	/// <summary>
-	/// Interaktionslogik für QuantifiedTextView.xaml
-	/// </summary>
 	public partial class QuantifiedTextView : UserControl
 	{
 		public QuantifiedTextView()

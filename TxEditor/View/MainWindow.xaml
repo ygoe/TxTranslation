@@ -9,10 +9,10 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
 	TextOptions.TextFormattingMode="Display"
-	Title="TxEditor"
+	Title="{Binding DisplayName}"
 	Height="296" Width="1301" UseLayoutRounding="True"
 	Icon="/Images/Tx.ico"
-	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded">
+	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" Closed="Window_Closed">
 
 	<Window.Resources>
 		<u:TextHighlightConverter x:Key="textHighlightConverter"/>
@@ -20,209 +20,215 @@
 	</Window.Resources>
 
 	<DockPanel>
-		<Grid DockPanel.Dock="Top" Style="{StaticResource ToolGridStyle}" UseLayoutRounding="True">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="3"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="3"/>
-				<RowDefinition Height="3"/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="3"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
+		<Grid Name="ToolGrid" DockPanel.Dock="Top">
+			<Grid Name="InnerToolGrid" Style="{StaticResource ToolGridStyle}" LayoutUpdated="InnerToolGrid_LayoutUpdated">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="3"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="3"/>
+					<RowDefinition Height="3"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
 
-			<Rectangle Grid.Row="5" Grid.ColumnSpan="16" Fill="{StaticResource ToolGridShadowBrush}"/>
+				<Rectangle Grid.Row="5" Grid.ColumnSpan="16" Fill="{StaticResource ToolGridShadowBrush}"/>
 
-			<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-				<u:IconButton
-					Command="{Binding LoadFolderCommand}"
-					Content="Load folder" IconSource="/Images/folder_open.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Command="{Binding LoadFileCommand}"
-					Content="Load file" IconSource="/Images/document_open.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Command="{Binding SaveCommand}"
-					Content="Save" IconSource="/Images/save.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
-					Content="Import file" IconSource="/Images/import.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Content="Export keys" IconSource="/Images/key_export.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">File</TextBlock>
+				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+					<u:IconButton
+						Command="{Binding NewCommand}"
+						Content="New" IconSource="/Images/document_create.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+					<u:IconButton
+						Command="{Binding LoadFolderCommand}"
+						Content="Load folder" IconSource="/Images/folder_open.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+					<u:IconButton
+						Command="{Binding LoadFileCommand}"
+						Content="Load file" IconSource="/Images/document_open.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+					<u:IconButton
+						Command="{Binding SaveCommand}"
+						Content="Save" IconSource="/Images/save.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="75"/>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Content="Import file" IconSource="/Images/import.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+					<u:IconButton
+						Content="Export keys" IconSource="/Images/key_export.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">File</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
 
-			<u:IconButton
-				Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="0,0,3,0"
-				Content="New culture" IconSource="/Images/globe_create_22.png" Orientation="Vertical"
-				Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			<StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
 				<u:IconButton
-					Content="Delete" IconSource="/Images/globe_delete.png"
+					Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="0,0,3,0"
+					Content="New culture" IconSource="/Images/globe_create_22.png" Orientation="Vertical"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
-					Content="Set primary" IconSource="/Images/globe_check_small.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Culture</TextBlock>
+				<StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
+					<u:IconButton
+						Content="Delete" IconSource="/Images/globe_delete.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Content="Set primary" IconSource="/Images/globe_check_small.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Culture</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
 
-			<u:IconButton
-				Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="0,0,3,0"
-				Content="New key" IconSource="/Images/key_create_22.png" Orientation="Vertical"
-				Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			<StackPanel Grid.Row="1" Grid.Column="7" Orientation="Horizontal">
 				<u:IconButton
-					Content="Delete key" IconSource="/Images/key_delete.png"
+					Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="0,0,3,0"
+					Content="New key" IconSource="/Images/key_create_22.png" Orientation="Vertical"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="7" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
-					Content="Rename" IconSource="/Images/rename.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Content="Duplicate" IconSource="/Images/key_duplicate.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Text key</TextBlock>
+				<StackPanel Grid.Row="1" Grid.Column="7" Orientation="Horizontal">
+					<u:IconButton
+						Content="Delete key" IconSource="/Images/key_delete.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="7" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Content="Rename" IconSource="/Images/rename.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
+					<u:IconButton
+						Content="Duplicate" IconSource="/Images/key_duplicate.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Text key</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
 
-			<StackPanel Grid.Row="1" Grid.Column="9" Orientation="Horizontal">
-				<u:IconButton
-					Content="Back" IconSource="/Images/back.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Content="Forward" IconSource="/Images/forward.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-				<u:IconButton
-					Content="Definition" IconSource="/Images/goto_definition.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconToggleButton
-					Content="Monospace" IconSource="/Images/monospace.png"
-					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
-					IsChecked="{Binding MonospaceFont}"/>
-				<u:IconToggleButton
-					Content="Hidden chars" IconSource="/Images/hidden_chars.png"
-					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
-					IsChecked="{Binding HiddenChars}"/>
-				<u:IconToggleButton
-					Content="Comment" IconSource="/Images/balloon.png"
-					Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
-					IsChecked="{Binding ShowComments}"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">View</TextBlock>
+				<StackPanel Grid.Row="1" Grid.Column="9" Orientation="Horizontal">
+					<u:IconButton
+						Content="Back" IconSource="/Images/back.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
+					<u:IconButton
+						Content="Forward" IconSource="/Images/forward.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
+					<u:IconButton
+						Content="Definition" IconSource="/Images/goto_definition.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconToggleButton
+						Content="Monospace" IconSource="/Images/monospace.png"
+						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+						IsChecked="{Binding MonospaceFont}" CollapsePriority="90"/>
+					<u:IconToggleButton
+						Content="Hidden chars" IconSource="/Images/hidden_chars.png"
+						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+						IsChecked="{Binding HiddenChars}" CollapsePriority="90"/>
+					<u:IconToggleButton
+						Content="Comment" IconSource="/Images/balloon.png"
+						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+						IsChecked="{Binding ShowComments}" CollapsePriority="90"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">View</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
 
-			<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
-				<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
-				<Grid Margin="4,0,0,0">
-					<TextBox Name="SearchText" Width="150" Margin="0" Padding="2,2,14,2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
-						<TextBox.Style>
-							<Style TargetType="TextBox" BasedOn="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}">
-								<Setter Property="BorderBrush" Value="#1C000000"/>
-							</Style>
-						</TextBox.Style>
-					</TextBox>
-					<Button
-						HorizontalAlignment="Right"
-						BorderBrush="{x:Null}" Background="Transparent" Focusable="False"
-						Command="{Binding ClearSearchCommand}"
-						Foreground="Red"
-						Content="×">
-						<Button.Style>
+				<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
+					<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
+					<Grid Margin="4,0,0,0">
+						<TextBox Name="SearchText" Width="150" Margin="0" Padding="2,2,14,2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}">
+									<Setter Property="BorderBrush" Value="#1C000000"/>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+						<Button
+							HorizontalAlignment="Right"
+							BorderBrush="{x:Null}" Background="Transparent" Focusable="False"
+							Command="{Binding ClearSearchCommand}"
+							Foreground="Red"
+							Content="×">
+							<Button.Style>
+								<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+									<Setter Property="Visibility" Value="Visible"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding SearchText}" Value="">
+											<Setter Property="Visibility" Value="Hidden"/>
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</Button.Style>
+						</Button>
+					</Grid>
+					<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Padding="0,2" Focusable="False">▾</Button>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Content="{Tx:T 'view.filter.n problems', {Binding ProblemKeys.Count}, Default='0 problems'}"
+						Focusable="False">
+						<u:IconButton.Style>
 							<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-								<Setter Property="Visibility" Value="Visible"/>
+								<Setter Property="u:IconButton.IconSource" Value="/Images/error_list_red.png"/>
 								<Style.Triggers>
-									<DataTrigger Binding="{Binding SearchText}" Value="">
-										<Setter Property="Visibility" Value="Hidden"/>
+									<DataTrigger Binding="{Binding ProblemKeys.Count}" Value="0">
+										<Setter Property="u:IconButton.IconSource" Value="/Images/error_list.png"/>
 									</DataTrigger>
 								</Style.Triggers>
 							</Style>
-						</Button.Style>
-					</Button>
-				</Grid>
-				<Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Padding="0,2" Focusable="False">▾</Button>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
-					Content="{Tx:T 'view.filter.n problems', {Binding ProblemKeys.Count}}"
-					Focusable="False">
-					<u:IconButton.Style>
-						<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-							<Setter Property="u:IconButton.IconSource" Value="/Images/error_list_red.png"/>
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ProblemKeys.Count}" Value="0">
-									<Setter Property="u:IconButton.IconSource" Value="/Images/error_list.png"/>
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</u:IconButton.Style>
-				</u:IconButton>
-				<u:IconButton
-					Content="Cultures" IconSource="/Images/globe_filter.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="11" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Filter</TextBlock>
+						</u:IconButton.Style>
+					</u:IconButton>
+					<u:IconButton
+						Content="Cultures" IconSource="/Images/globe_filter.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="11" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Filter</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
 
-			<StackPanel Grid.Row="1" Grid.Column="13" Orientation="Horizontal">
-				<u:IconButton
-					Content="Settings" IconSource="/Images/gear.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<StackPanel Grid.Row="2" Grid.Column="13" Margin="0,1,0,0" Orientation="Horizontal">
-				<u:IconButton
-					Command="{Binding AboutCommand}"
-					Content="About" IconSource="/Images/info.png"
-					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
-			</StackPanel>
-			<TextBlock
-				Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Application</TextBlock>
+				<StackPanel Grid.Row="1" Grid.Column="13" Orientation="Horizontal">
+					<u:IconButton
+						Content="Settings" IconSource="/Images/gear.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				</StackPanel>
+				<StackPanel Grid.Row="2" Grid.Column="13" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Command="{Binding AboutCommand}"
+						Content="About" IconSource="/Images/info.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+				</StackPanel>
+				<TextBlock
+					Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Application</TextBlock>
 
-			<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+			</Grid>
 		</Grid>
 
 		<Grid DockPanel.Dock="Bottom" Style="{StaticResource StatusGridStyle}" UseLayoutRounding="True">

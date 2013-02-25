@@ -4,11 +4,16 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:my="clr-namespace:TxEditor"
+	xmlns:u="clr-namespace:Unclassified.UI" 
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
 	d:DesignHeight="214" d:DesignWidth="443"
 	Focusable="False">
+	<UserControl.Resources>
+		<u:ComparerConverter x:Key="CmpConv"/>
+	</UserControl.Resources>
+	
 	<StackPanel>
 		<Grid>
 			<Grid.RowDefinitions>
@@ -22,14 +27,22 @@
 
 			<TextBlock
 				Grid.Column="0" Margin="1,0" VerticalAlignment="Center"
-				Opacity="0.4"
 				Text="{Binding CultureNativeName}"
 				ToolTip="{Binding CultureName}">
 				<TextBlock.Style>
 					<Style TargetType="TextBlock">
+						<Setter Property="Opacity" Value="0.4"/>
 						<Style.Triggers>
-							<DataTrigger Binding="{Binding CultureName}" Value="en">
+							<DataTrigger Value="True">
+								<DataTrigger.Binding>
+									<MultiBinding Converter="{StaticResource CmpConv}">
+										<Binding Path="CultureName"/>
+										<Binding Path="TextKeyVM.MainWindowVM.PrimaryCulture"/>
+									</MultiBinding>
+								</DataTrigger.Binding>
 								<Setter Property="FontWeight" Value="Bold"/>
+								<Setter Property="Foreground" Value="#309030"/>
+								<Setter Property="Opacity" Value="0.6"/>
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>

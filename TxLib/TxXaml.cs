@@ -75,6 +75,11 @@ namespace TxLib
 		/// </summary>
 		public BindingBase CountBinding { get; set; }
 
+		/// <summary>
+		/// Gets or sets the default text to display at design time.
+		/// </summary>
+		public string Default { get; set; }
+
 		#endregion Properties
 
 		#region Converter action
@@ -109,7 +114,7 @@ namespace TxLib
 				multiBinding.Bindings.Add(CountBinding);
 
 				// The converter will invoke the actual translation of the key and additional data.
-				multiBinding.Converter = new TConverter(GetTFunc(), Key);
+				multiBinding.Converter = new TConverter(GetTFunc(), Key, Default);
 				return multiBinding.ProvideValue(serviceProvider);
 			}
 			else
@@ -117,7 +122,7 @@ namespace TxLib
 				// No CountBinding, so a simple binding will do.
 
 				// The converter will invoke the actual translation of the key and additional data.
-				binding.Converter = new TConverter(GetTFunc(), Key, Count);
+				binding.Converter = new TConverter(GetTFunc(), Key, Count, Default);
 				return binding.ProvideValue(serviceProvider);
 			}
 		}
@@ -736,6 +741,7 @@ namespace TxLib
 		private string key;
 		private int count;
 		private Func<string, int, string> tFunc;
+		private string defaultValue;
 
 		#endregion Private fields
 
@@ -744,24 +750,30 @@ namespace TxLib
 		/// <summary>
 		/// Initialises a new instance of the TConverter class.
 		/// </summary>
+		/// <param name="tFunc"></param>
 		/// <param name="key">Text key to translate.</param>
-		public TConverter(Func<string, int, string> tFunc, string key)
+		/// <param name="defaultValue">Default text to display at design time.</param>
+		public TConverter(Func<string, int, string> tFunc, string key, string defaultValue)
 		{
 			this.tFunc = tFunc;
 			this.key = key;
 			this.count = -1;
+			this.defaultValue = defaultValue;
 		}
 
 		/// <summary>
 		/// Initialises a new instance of the TConverter class.
 		/// </summary>
+		/// <param name="tFunc"></param>
 		/// <param name="key">Text key to translate.</param>
 		/// <param name="count">Count value to consider when selecting the text value.</param>
-		public TConverter(Func<string, int, string> tFunc, string key, int count)
+		/// <param name="defaultValue">Default text to display at design time.</param>
+		public TConverter(Func<string, int, string> tFunc, string key, int count, string defaultValue)
 		{
 			this.tFunc = tFunc;
 			this.key = key;
 			this.count = count;
+			this.defaultValue = defaultValue;
 		}
 
 		#endregion Constructors
@@ -773,7 +785,7 @@ namespace TxLib
 			// Return the text key only in design mode. Nothing better to do for now.
 			if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
 			{
-				return key;
+				return defaultValue ?? key;
 			}
 
 			// value is the Dummy binding, don't use it
@@ -796,7 +808,7 @@ namespace TxLib
 			// Return the text key only in design mode. Nothing better to do for now.
 			if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
 			{
-				return key;
+				return defaultValue ?? key;
 			}
 
 			// values[0] is the Dummy binding, don't use it

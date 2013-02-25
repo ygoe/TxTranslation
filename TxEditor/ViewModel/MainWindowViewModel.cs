@@ -24,8 +24,23 @@ namespace TxEditor.ViewModel
 		public MainWindow View { get; set; }
 
 		private int fileVersion;
-		private string loadedFileName;
+		private string loadedFilePath;
+		private string loadedFilePrefix;
+
 		private bool fileModified;
+		public bool FileModified
+		{
+			get { return fileModified; }
+			set
+			{
+				if (value != fileModified)
+				{
+					fileModified = value;
+					OnPropertyChanged("FileModified");
+					SaveCommand.RaiseCanExecuteChanged();
+				}
+			}
+		}
 
 		private string primaryCulture;
 		public string PrimaryCulture
@@ -227,6 +242,19 @@ namespace TxEditor.ViewModel
 
 		#region Toolbar commands
 
+		private DelegateCommand newCommand;
+		public DelegateCommand NewCommand
+		{
+			get
+			{
+				if (newCommand == null)
+				{
+					newCommand = new DelegateCommand(OnNew);
+				}
+				return newCommand;
+			}
+		}
+
 		private DelegateCommand loadFolderCommand;
 		public DelegateCommand LoadFolderCommand
 		{
@@ -260,7 +288,7 @@ namespace TxEditor.ViewModel
 			{
 				if (saveCommand == null)
 				{
-					saveCommand = new DelegateCommand(OnSave);
+					saveCommand = new DelegateCommand(OnSave, () => FileModified);
 				}
 				return saveCommand;
 			}
@@ -322,12 +350,27 @@ namespace TxEditor.ViewModel
 			return true;
 		}
 
+		private void OnNew()
+		{
+			if (!CheckModifiedSaved()) return;
+
+			RootTextKey.Children.Clear();
+			TextKeys.Clear();
+			LoadedCultureNames.Clear();
+			PrimaryCulture = null;
+			ProblemKeys.Clear();
+			StatusText = "";
+			loadedFilePath = null;
+			loadedFilePrefix = null;
+			UpdateTitle();
+		}
+
 		private void OnLoadFolder()
 		{
 			if (!CheckModifiedSaved()) return;
 
 			var d = new OpenFolderDialog();
-			d.Title = "Select folder to load files from";
+			d.Title = "Load files from folder";
 			if (d.ShowDialog(new Wpf32Window(View)) == true)
 			{
 				bool foundFiles = false;
@@ -387,7 +430,7 @@ namespace TxEditor.ViewModel
 							if (!foundFiles)
 							{
 								foundFiles = true;
-								OnCloseFile();
+								OnNew();
 							}
 							LoadFromXmlFile(fileName);
 							fileCount++;
@@ -418,16 +461,42 @@ namespace TxEditor.ViewModel
 			d.Title = "Select files to load";
 			if (d.ShowDialog(View) == true)
 			{
-				// TODO: Check for same prefix and reject mixed files
+				// Check for same prefix and reject mixed files
+				string regex = @"^(.+?)(\.(([a-z]{2})([-][a-z]{2})?))?\.(?:txd|xml)$";
+				List<string> prefixes = new List<string>();
+				string prefix = null;
+				foreach (string fileName in d.FileNames)
+				{
+					Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
+					if (m.Success)
+					{
+						prefix = m.Groups[1].Value;
+						if (!prefixes.Contains(prefix))
+						{
+							prefixes.Add(prefix);
+						}
+					}
+				}
+				if (prefixes.Count > 1)
+				{
+					MessageBox.Show(
+						"You cannot load files with different prefixes.",
+						"Error",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+
 				// TODO: Scan for similar files and ask if not all of them are selected
 
 				bool foundFiles = false;
+				fileVersion = 0;
 				foreach (string fileName in d.FileNames)
 				{
 					if (!foundFiles)
 					{
 						foundFiles = true;
-						OnCloseFile();
+						OnNew();
 					}
 					LoadFromXmlFile(fileName);
 				}
@@ -438,18 +507,25 @@ namespace TxEditor.ViewModel
 			}
 		}
 
-		private void OnCloseFile()
-		{
-			RootTextKey.Children.Clear();
-			TextKeys.Clear();
-			LoadedCultureNames.Clear();
-			PrimaryCulture = null;
-			ProblemKeys.Clear();
-		}
-
 		private void OnSave()
 		{
-			OnCloseFile();   // DEBUG
+			if (loadedFilePath != null && loadedFilePrefix != null)
+			{
+				if (fileVersion == 1)
+				{
+					// Check for useage of version 2 features
+					// TODO: Find modulo values and new placeholders {#} and {=...}
+				}
+
+				if (fileVersion == 1)
+				{
+					// Create a file for each culture
+				}
+				else if (fileVersion == 2)
+				{
+					// Write all cultures into one file
+				}
+			}
 		}
 
 		private void OnAbout()
@@ -480,17 +556,34 @@ namespace TxEditor.ViewModel
 
 		#region XML loading methods
 
-		public void LoadFromXmlFile(string fileName)
+		public void LoadFiles(IEnumerable<string> fileNames)
+		{
+			int count = 0;
+			foreach (string _fileName in fileNames.Distinct())
+			{
+				string fileName = _fileName;
+				if (!Path.IsPathRooted(fileName))
+				{
+					fileName = Path.GetFullPath(fileName);
+				}
+				LoadFromXmlFile(fileName);
+				count++;
+			}
+			ValidateTextKeys();
+			StatusText = count + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+		}
+
+		private void LoadFromXmlFile(string fileName)
 		{
 			// First load the XML file into an XmlDocument for further processing
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(fileName);
 
 			// Try to recognise the culture name from the file name
-			Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.(?:txd|xml)$", RegexOptions.IgnoreCase);
+			Match m = Regex.Match(Path.GetFileName(fileName), @"^(.+?)\.(([a-z]{2})([-][a-z]{2})?)\.(?:txd|xml)$", RegexOptions.IgnoreCase);
 			if (m.Success)
 			{
-				CultureInfo ci = CultureInfo.GetCultureInfo(m.Groups[1].Value);
+				CultureInfo ci = CultureInfo.GetCultureInfo(m.Groups[2].Value);
 				LoadFromXml(ci.Name, xmlDoc.DocumentElement);
 
 				// Set the primary culture if a file claims to be it
@@ -500,7 +593,12 @@ namespace TxEditor.ViewModel
 					PrimaryCulture = ci.Name;
 				}
 				if (fileVersion == 0)
+				{
 					fileVersion = 1;
+					loadedFilePath = Path.GetDirectoryName(fileName);
+					loadedFilePrefix = m.Groups[1].Value;
+					UpdateTitle();
+				}
 				return;
 			}
 
@@ -518,7 +616,12 @@ namespace TxEditor.ViewModel
 				}
 			}
 			if (fileVersion == 0)
+			{
 				fileVersion = 2;
+				loadedFilePath = Path.GetDirectoryName(fileName);
+				loadedFilePrefix = Path.GetFileNameWithoutExtension(fileName);
+				UpdateTitle();
+			}
 		}
 
 		private void LoadFromXml(string cultureName, XmlElement xe)
@@ -704,5 +807,21 @@ namespace TxEditor.ViewModel
 		}
 
 		#endregion Culture management
+
+		#region Window management
+
+		private void UpdateTitle()
+		{
+			if (!string.IsNullOrEmpty(loadedFilePath))
+			{
+				DisplayName = loadedFilePrefix + (fileVersion == 1 ? " (v1)" : "") + " in " + loadedFilePath + " – TxEditor";
+			}
+			else
+			{
+				DisplayName = "TxEditor";
+			}
+		}
+
+		#endregion Window management
 	}
 }

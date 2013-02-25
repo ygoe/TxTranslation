@@ -15,7 +15,7 @@ using System.Windows.Controls.Primitives;
 
 namespace Unclassified.UI
 {
-	public partial class IconToggleButton : ToggleButton
+	public partial class IconToggleButton : ToggleButton, ICollapsableToolbarItem
 	{
 		public static DependencyProperty IconSourceProperty = DependencyProperty.Register(
 			"IconSource",
@@ -51,6 +51,8 @@ namespace Unclassified.UI
 			get { return (Orientation) GetValue(OrientationProperty); }
 			set { SetValue(OrientationProperty, value); }
 		}
+
+		public int CollapsePriority { get; set; }
 
 		public IconToggleButton()
 		{
