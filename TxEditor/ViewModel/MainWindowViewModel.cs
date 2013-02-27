@@ -36,6 +36,7 @@ namespace TxEditor.ViewModel
 				if (value != fileModified)
 				{
 					fileModified = value;
+					UpdateTitle();
 					OnPropertyChanged("FileModified");
 					SaveCommand.RaiseCanExecuteChanged();
 				}
@@ -441,6 +442,7 @@ namespace TxEditor.ViewModel
 				{
 					ValidateTextKeys();
 					StatusText = fileCount + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+					FileModified = false;
 				}
 				else
 				{
@@ -504,28 +506,26 @@ namespace TxEditor.ViewModel
 
 				ValidateTextKeys();
 				StatusText = d.FileNames.Length + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+				FileModified = false;
 			}
 		}
 
 		private void OnSave()
 		{
-			if (loadedFilePath != null && loadedFilePrefix != null)
+			if (loadedFilePath == null || loadedFilePrefix == null)
 			{
-				if (fileVersion == 1)
-				{
-					// Check for useage of version 2 features
-					// TODO: Find modulo values and new placeholders {#} and {=...}
-				}
-
-				if (fileVersion == 1)
-				{
-					// Create a file for each culture
-				}
-				else if (fileVersion == 2)
-				{
-					// Write all cultures into one file
-				}
+				// TODO: Ask for new file name and version
+				return;
 			}
+
+			if (fileVersion == 1)
+			{
+				// Check for useage of version 2 features
+				// TODO: Find modulo values and new placeholders {#} and {=...}
+			}
+
+			WriteToXmlFile(Path.Combine(loadedFilePath, loadedFilePrefix));
+			UpdateTitle();
 		}
 
 		private void OnAbout()
@@ -571,6 +571,7 @@ namespace TxEditor.ViewModel
 			}
 			ValidateTextKeys();
 			StatusText = count + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+			FileModified = false;
 		}
 
 		private void LoadFromXmlFile(string fileName)
@@ -755,6 +756,163 @@ namespace TxEditor.ViewModel
 
 		#endregion XML loading methods
 
+		#region XML saving methods
+
+		/// <summary>
+		/// Writes all loaded text keys to a file.
+		/// </summary>
+		/// <param name="fileNamePrefix">Path and file name prefix, without culture name and extension.</param>
+		private void WriteToXmlFile(string fileNamePrefix)
+		{
+			if (fileVersion == 1)
+			{
+				// Delete previous backups and move current files to backup
+				foreach (var cultureName in LoadedCultureNames)
+				{
+					string cultureFileName = fileNamePrefix + "." + cultureName + ".xml";
+					if (File.Exists(cultureFileName))
+					{
+						File.Delete(cultureFileName + ".bak");
+						File.Move(cultureFileName, cultureFileName + ".bak");
+					}
+				}
+				// Write new files, one for each loaded culture
+				foreach (var cultureName in LoadedCultureNames)
+				{
+					XmlDocument xmlDoc = new XmlDocument();
+					if (cultureName == PrimaryCulture)
+					{
+						var primaryAttr = xmlDoc.CreateAttribute("primary");
+						primaryAttr.Value = "true";
+						xmlDoc.DocumentElement.Attributes.Append(primaryAttr);
+					}
+					WriteToXml(cultureName, xmlDoc.DocumentElement);
+
+					// Write xmlDoc to file
+					WriteXmlToFile(xmlDoc, fileNamePrefix + "." + cultureName + ".xml");
+				}
+				// Delete all backup files (could also be an option)
+				foreach (var cultureName in LoadedCultureNames)
+				{
+					string cultureFileName = fileNamePrefix + "." + cultureName + ".xml";
+					File.Delete(cultureFileName + ".bak");
+				}
+			}
+			else if (fileVersion == 2)
+			{
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.AppendChild(xmlDoc.CreateElement("translation"));
+				var spaceAttr = xmlDoc.CreateAttribute("xml:space");
+				spaceAttr.Value = "preserve";
+				xmlDoc.DocumentElement.Attributes.Append(spaceAttr);
+
+				foreach (var cultureName in LoadedCultureNames)
+				{
+					var cultureElement = xmlDoc.CreateElement("culture");
+					xmlDoc.DocumentElement.AppendChild(cultureElement);
+					var nameAttr = xmlDoc.CreateAttribute("name");
+					nameAttr.Value = cultureName;
+					cultureElement.Attributes.Append(nameAttr);
+					if (cultureName == PrimaryCulture)
+					{
+						var primaryAttr = xmlDoc.CreateAttribute("primary");
+						primaryAttr.Value = "true";
+						cultureElement.Attributes.Append(primaryAttr);
+					}
+					WriteToXml(cultureName, cultureElement);
+				}
+
+				// Write xmlDoc to file
+				WriteXmlToFile(xmlDoc, fileNamePrefix + ".txd");
+			}
+			else
+			{
+				MessageBox.Show("Unsupported file version " + fileVersion + " cannot be saved. How was that loaded?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+			FileModified = false;
+		}
+
+		private void WriteXmlToFile(XmlDocument xmlDoc, string fileName)
+		{
+			XmlWriterSettings xws = new XmlWriterSettings();
+			xws.Encoding = Encoding.UTF8;
+			xws.Indent = true;
+			xws.IndentChars = "\t";
+			xws.OmitXmlDeclaration = false;
+			using (XmlWriter xw = XmlWriter.Create(fileName + ".tmp", xws))
+			{
+				xmlDoc.Save(xw);
+			}
+
+			File.Delete(fileName);
+			File.Move(fileName + ".tmp", fileName);
+		}
+
+		private void WriteToXml(string cultureName, XmlElement xe)
+		{
+			WriteTextKeysToXml(cultureName, xe, RootTextKey);
+		}
+
+		private void WriteTextKeysToXml(string cultureName, XmlElement xe, TextKeyViewModel textKeyVM)
+		{
+			if (textKeyVM.TextKey != null)
+			{
+				var cultureTextVM = textKeyVM.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
+				if (cultureTextVM != null)
+				{
+					if (!string.IsNullOrEmpty(cultureTextVM.Text))
+					{
+						var textElement = xe.OwnerDocument.CreateElement("text");
+						xe.AppendChild(textElement);
+						var keyAttr = xe.OwnerDocument.CreateAttribute("key");
+						keyAttr.Value = textKeyVM.TextKey;
+						textElement.Attributes.Append(keyAttr);
+						textElement.InnerText = cultureTextVM.Text;
+					}
+					foreach (var quantifiedTextVM in cultureTextVM.QuantifiedTextVMs)
+					{
+						var textElement = xe.OwnerDocument.CreateElement("text");
+						xe.AppendChild(textElement);
+
+						var keyAttr = xe.OwnerDocument.CreateAttribute("key");
+						keyAttr.Value = textKeyVM.TextKey;
+						textElement.Attributes.Append(keyAttr);
+
+						if (quantifiedTextVM.Count < 0)
+						{
+							throw new Exception("Invalid count value " + quantifiedTextVM.Count + " set for text key " +
+								textKeyVM.TextKey + ", culture " + cultureName);
+						}
+						var countAttr = xe.OwnerDocument.CreateAttribute("count");
+						countAttr.Value = quantifiedTextVM.Count.ToString();
+						textElement.Attributes.Append(countAttr);
+						
+						if (quantifiedTextVM.Modulo != 0 &&
+							(quantifiedTextVM.Modulo < 2 && quantifiedTextVM.Modulo > 1000))
+						{
+							throw new Exception("Invalid modulo value " + quantifiedTextVM.Modulo + " set for text key " +
+								textKeyVM.TextKey + ", culture " + cultureName + ", count " + quantifiedTextVM.Count);
+						}
+						if (quantifiedTextVM.Modulo > 1)
+						{
+							var modAttr = xe.OwnerDocument.CreateAttribute("mod");
+							modAttr.Value = quantifiedTextVM.Modulo.ToString();
+							textElement.Attributes.Append(modAttr);
+						}
+						
+						textElement.InnerText = quantifiedTextVM.Text;
+					}
+				}
+			}
+			foreach (TextKeyViewModel child in textKeyVM.Children)
+			{
+				WriteTextKeysToXml(cultureName, xe, child);
+			}
+		}
+
+		#endregion XML saving methods
+
 		#region Text validation
 
 		public void ValidateTextKeys(TextKeyViewModel root = null)
@@ -814,7 +972,11 @@ namespace TxEditor.ViewModel
 		{
 			if (!string.IsNullOrEmpty(loadedFilePath))
 			{
-				DisplayName = loadedFilePrefix + (fileVersion == 1 ? " (v1)" : "") + " in " + loadedFilePath + " – TxEditor";
+				DisplayName =
+					loadedFilePrefix +
+					(fileModified ? "*" : "") +
+					(fileVersion == 1 ? " (v1)" : "") +
+					" in " + loadedFilePath + " – TxEditor";
 			}
 			else
 			{

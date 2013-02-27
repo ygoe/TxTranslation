@@ -59,9 +59,10 @@
 						</Style.Triggers>
 					</Style>
 				</StackPanel.Style>
-				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">0</Button>
-				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">1</Button>
-				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">+</Button>
+				<Button Padding="7,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCount0Command}">0</Button>
+				<Button Padding="7,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCount1Command}">1</Button>
+				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCommand}">+</Button>
+				<Button Padding="5,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding RefreshCommand}">↻</Button>
 			</StackPanel>
 		</Grid>
 		<my:DecoratedTextBox

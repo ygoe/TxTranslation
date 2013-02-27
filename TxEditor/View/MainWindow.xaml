@@ -10,7 +10,7 @@
 	xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=MultiSelectTreeView"
 	TextOptions.TextFormattingMode="Display"
 	Title="{Binding DisplayName}"
-	Height="296" Width="1301" UseLayoutRounding="True"
+	Height="296" Width="1304" UseLayoutRounding="True"
 	Icon="/Images/Tx.ico"
 	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" Closed="Window_Closed">
 
@@ -91,6 +91,30 @@
 					<u:IconButton
 						Content="Delete" IconSource="/Images/globe_delete.png"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
+					<u:IconButton
+						x:Name="CultureToolsButton"
+						Content="Tools" IconSource="/Images/globe_config.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70" Click="CultureToolsButton_Click">
+						<u:IconButton.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Replace culture">
+									<MenuItem.Icon>
+										<Image Source="/Images/gear.png" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<MenuItem Header="Insert system keys">
+									<MenuItem.Icon>
+										<Image Source="/Images/gear.png" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<MenuItem Header="View date and time formats">
+									<MenuItem.Icon>
+										<Image Source="/Images/gear.png" />
+									</MenuItem.Icon>
+								</MenuItem>
+							</ContextMenu>
+						</u:IconButton.ContextMenu>
+					</u:IconButton>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconButton

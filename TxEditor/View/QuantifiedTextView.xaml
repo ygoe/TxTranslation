@@ -23,6 +23,7 @@
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 
 		<TextBlock
@@ -33,6 +34,7 @@
 			Grid.Row="0" Grid.Column="1"
 			Fill="#0D000000"/>
 		<TextBox
+			Name="CountTextBox"
 			Grid.Row="0" Grid.Column="1"
 			Width="40" BorderThickness="0" Padding="0" VerticalAlignment="Center"
 			Background="Transparent"
@@ -54,6 +56,7 @@
 			Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"/>
 
 		<my:DecoratedTextBox
+			x:Name="MyTextBox"
 			Grid.Row="0" Grid.Column="4"
 			BorderThickness="0" Padding="0" Margin="6,0,0,0" VerticalAlignment="Bottom"
 			Text="{Binding Text, Mode=TwoWay}"
@@ -63,5 +66,19 @@
 			FontSize="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontSize}"
 			FontFamily="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontFamily}"
 			TextOptions.TextFormattingMode="{Binding CultureTextVM.TextKeyVM.MainWindowVM.TextFormattingMode}"/>
+
+		<StackPanel Grid.Column="5" Orientation="Horizontal">
+			<StackPanel.Style>
+				<Style TargetType="StackPanel">
+					<Setter Property="Opacity" Value="0.4"/>
+					<Style.Triggers>
+						<Trigger Property="UIElement.IsMouseOver" Value="True">
+							<Setter Property="Opacity" Value="1"/>
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</StackPanel.Style>
+			<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding RemoveCommand}">×</Button>
+		</StackPanel>
 	</Grid>
 </UserControl>

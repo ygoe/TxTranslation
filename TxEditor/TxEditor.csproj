@@ -80,6 +80,7 @@
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
     <Compile Include="Unclassified\UI\ComparerConverter.cs" />
     <Compile Include="Unclassified\UI\DelegateCommand.cs" />
+    <Compile Include="Unclassified\UI\FocusManager.cs" />
     <Compile Include="Unclassified\UI\ICollapsableToolbarItem.cs" />
     <Compile Include="Unclassified\UI\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
@@ -90,6 +91,7 @@
     <Compile Include="Unclassified\UI\EmptyIntegerConverter.cs" />
     <Compile Include="Unclassified\UI\OpenFolderDialog.cs" />
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
+    <Compile Include="Unclassified\UI\ViewCommand.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\ULog.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
@@ -119,6 +121,10 @@
     <Page Include="DecoratedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\MenuStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\DetailsMessage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -280,6 +286,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\document_create.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_config.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -18,7 +18,6 @@ namespace TxEditor.View
 	public partial class MainWindow : Window
 	{
 		private bool collapsingItems;
-		private double prevWidth;
 
 		public MainWindow()
 		{
@@ -137,6 +136,13 @@ namespace TxEditor.View
 					EnumCollapsableItems(childPanel, items);
 				}
 			}
+		}
+
+		private void CultureToolsButton_Click(object sender, RoutedEventArgs e)
+		{
+			CultureToolsButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+			CultureToolsButton.ContextMenu.PlacementTarget = CultureToolsButton;
+			CultureToolsButton.ContextMenu.IsOpen = true;
 		}
 	}
 }

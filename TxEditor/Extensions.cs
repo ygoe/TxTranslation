@@ -135,7 +135,7 @@ namespace TxEditor
 				if (cmp == 0)
 				{
 					// Direct hit, insert after this existing (undefined behaviour for multiple equal items...)
-					index++;
+					//index++;
 					break;
 				}
 				else if (cmp < 0)

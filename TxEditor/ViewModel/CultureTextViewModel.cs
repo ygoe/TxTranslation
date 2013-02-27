@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using TxLib;
 using System.Windows.Media;
+using Unclassified.UI;
 
 namespace TxEditor.ViewModel
 {
@@ -36,6 +37,7 @@ namespace TxEditor.ViewModel
 					text = value;
 					OnPropertyChanged("Text");
 					TextKeyVM.Validate();
+					TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
 		}
@@ -125,6 +127,102 @@ namespace TxEditor.ViewModel
 
 			cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
 		}
+
+		#region Commands
+
+		private DelegateCommand addCount0Command;
+		public DelegateCommand AddCount0Command
+		{
+			get
+			{
+				if (addCount0Command == null)
+				{
+					addCount0Command = new DelegateCommand(OnAddCount0);
+				}
+				return addCount0Command;
+			}
+		}
+
+		private DelegateCommand addCount1Command;
+		public DelegateCommand AddCount1Command
+		{
+			get
+			{
+				if (addCount1Command == null)
+				{
+					addCount1Command = new DelegateCommand(OnAddCount1);
+				}
+				return addCount1Command;
+			}
+		}
+
+		private DelegateCommand addCommand;
+		public DelegateCommand AddCommand
+		{
+			get
+			{
+				if (addCommand == null)
+				{
+					addCommand = new DelegateCommand(OnAdd);
+				}
+				return addCommand;
+			}
+		}
+
+		private DelegateCommand refreshCommand;
+		public DelegateCommand RefreshCommand
+		{
+			get
+			{
+				if (refreshCommand == null)
+				{
+					refreshCommand = new DelegateCommand(OnRefresh);
+				}
+				return refreshCommand;
+			}
+		}
+
+		#endregion Commands
+
+		#region Command handlers
+
+		private void OnAddCount0()
+		{
+			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
+			newVM.Count = 0;
+			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.FileModified = true;
+			newVM.ViewCommandManager.InvokeLoaded("FocusText");
+		}
+
+		private void OnAddCount1()
+		{
+			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
+			newVM.Count = 1;
+			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.FileModified = true;
+			newVM.ViewCommandManager.InvokeLoaded("FocusText");
+		}
+
+		private void OnAdd()
+		{
+			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
+			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.FileModified = true;
+			newVM.ViewCommandManager.InvokeLoaded("FocusCount");
+		}
+
+		private void OnRefresh()
+		{
+			var arr = QuantifiedTextVMs.ToArray();
+			QuantifiedTextVMs.Clear();
+			foreach (var item in arr)
+			{
+				QuantifiedTextVMs.InsertSorted(item, (a, b) => QuantifiedTextViewModel.Compare(a, b));
+			}
+		}
+
+		#endregion Command handlers
 
 		/// <summary>
 		/// Compares this CultureTextViewModel instance with another instance to determine the sort

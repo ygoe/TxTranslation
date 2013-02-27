@@ -11,14 +11,35 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Unclassified.UI;
+using TxEditor.ViewModel;
 
 namespace TxEditor.View
 {
 	public partial class QuantifiedTextView : UserControl
 	{
+		static QuantifiedTextView()
+		{
+			DataContextProperty.OverrideMetadata(
+				typeof(QuantifiedTextView),
+				new FrameworkPropertyMetadata(ViewCommandManager.ViewChangedHandler));
+		}
+
 		public QuantifiedTextView()
 		{
 			InitializeComponent();
+		}
+
+		[ViewCommand]
+		public void FocusCount()
+		{
+			CountTextBox.Focus();
+		}
+
+		[ViewCommand]
+		public void FocusText()
+		{
+			MyTextBox.Focus();
 		}
 	}
 }

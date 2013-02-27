@@ -22,7 +22,7 @@ namespace TxEditor
 
 		private bool hasFocus;
 		private List<FrameworkElement> decos = new List<FrameworkElement>();
-		private Popup popup;
+		//private Popup popup;
 
 		#endregion Private data
 
@@ -365,5 +365,10 @@ namespace TxEditor
 		}
 
 		#endregion Decoration work
+
+		public new bool Focus()
+		{
+			return textBox1.Focus();
+		}
 	}
 }

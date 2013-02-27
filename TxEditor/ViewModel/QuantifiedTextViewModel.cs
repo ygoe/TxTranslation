@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Unclassified.UI;
 
 namespace TxEditor.ViewModel
 {
-	class QuantifiedTextViewModel : ViewModelBase
+	class QuantifiedTextViewModel : ViewModelBase, IViewCommandSource
 	{
+		private ViewCommandManager viewCommandManager = new ViewCommandManager();
+		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+
 		public CultureTextViewModel CultureTextVM { get; private set; }
 
 		private int count;
@@ -18,7 +22,9 @@ namespace TxEditor.ViewModel
 				if (value != count)
 				{
 					count = value;
+					// TODO: Keep >= 0
 					OnPropertyChanged("Count");
+					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
 		}
@@ -32,7 +38,9 @@ namespace TxEditor.ViewModel
 				if (value != modulo)
 				{
 					modulo = value;
+					// TODO: Keep 0 or in 2..1000
 					OnPropertyChanged("Modulo");
+					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
 		}
@@ -48,6 +56,7 @@ namespace TxEditor.ViewModel
 					text = value;
 					OnPropertyChanged("Text");
 					CultureTextVM.TextKeyVM.Validate();
+					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
 		}
@@ -65,6 +74,33 @@ namespace TxEditor.ViewModel
 		{
 			CultureTextVM = cultureTextVM;
 		}
+
+		#region Commands
+
+		private DelegateCommand removeCommand;
+		public DelegateCommand RemoveCommand
+		{
+			get
+			{
+				if (removeCommand == null)
+				{
+					removeCommand = new DelegateCommand(OnRemove);
+				}
+				return removeCommand;
+			}
+		}
+
+		#endregion Commands
+
+		#region Command handlers
+
+		private void OnRemove()
+		{
+			CultureTextVM.QuantifiedTextVMs.Remove(this);
+			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
+		}
+
+		#endregion Command handlers
 
 		public static int Compare(object a, object b)
 		{
