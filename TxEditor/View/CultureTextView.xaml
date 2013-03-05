@@ -59,12 +59,33 @@
 						</Style.Triggers>
 					</Style>
 				</StackPanel.Style>
-				<Button Padding="7,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCount0Command}">0</Button>
-				<Button Padding="7,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCount1Command}">1</Button>
-				<Button Padding="6,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding AddCommand}">+</Button>
-				<Button Padding="5,0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="{Binding RefreshCommand}">↻</Button>
+				<Button
+					Padding="7,0"
+					Content="0"
+					ToolTip="Add quantified text for count 0."
+					Command="{Binding AddCount0Command}"
+					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
+				<Button
+					Padding="7,0"
+					Content="1"
+					ToolTip="Add quantified text for count 1."
+					Command="{Binding AddCount1Command}"
+					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
+				<Button
+					Padding="6,0"
+					Content="+"
+					ToolTip="Add quantified text."
+					Command="{Binding AddCommand}"
+					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
+				<Button
+					Padding="5,0"
+					Content="↻"
+					ToolTip="Refresh sort order of the quantified texts."
+					Command="{Binding RefreshCommand}"
+					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 			</StackPanel>
 		</Grid>
+		
 		<my:DecoratedTextBox
 			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
 			Text="{Binding Text, Mode=TwoWay}"
@@ -73,14 +94,17 @@
 			HiddenChars="{Binding TextKeyVM.MainWindowVM.HiddenChars}"
 			FontSize="{Binding TextKeyVM.MainWindowVM.FontSize}"
 			FontFamily="{Binding TextKeyVM.MainWindowVM.FontFamily}"
-			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"/>
-		<ItemsControl ItemsSource="{Binding QuantifiedTextVMs}">
+			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"
+			ValidateKey="DecoratedTextBox_ValidateKey"/>
+
+		<ItemsControl ItemsSource="{Binding QuantifiedTextVMs}" Margin="0,2,0,0" Focusable="False">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<v:QuantifiedTextView Margin="0,6,0,0"/>
+					<v:QuantifiedTextView Margin="0,2,0,0"/>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
-		<Line X2="1" Stretch="Fill" Stroke="{Binding SeparatorBrush}" Margin="0,6"/>
+		
+		<Line X2="1" Stretch="Fill" Stroke="{Binding SeparatorBrush}" Margin="0,6,0,6"/>
 	</StackPanel>
 </UserControl>

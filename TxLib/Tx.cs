@@ -2892,7 +2892,7 @@ namespace TxLib
 						}
 						else if (braceLength > 1 && text[openBracePos + 1] == '=')
 						{
-							// Found another text key inclusion, resolve that value
+							// Found another text key inclusion {=...}, resolve that value
 							string subkey;
 							int subcount = -1;
 							// Check for a count part
@@ -2904,7 +2904,7 @@ namespace TxLib
 							}
 							else
 							{
-								// Count value found
+								// Count value {=...#...} found
 								subkey = text.Substring(openBracePos + 2, countPos - (openBracePos + 2));
 								string countName = text.Substring(countPos + 1, closeBracePos - (countPos + 1));
 								if (countName != "")

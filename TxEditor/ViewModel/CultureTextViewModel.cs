@@ -207,6 +207,7 @@ namespace TxEditor.ViewModel
 		private void OnAdd()
 		{
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
+			newVM.Count = -1;
 			QuantifiedTextVMs.Add(newVM);
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusCount");

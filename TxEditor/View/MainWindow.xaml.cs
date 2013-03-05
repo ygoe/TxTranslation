@@ -144,5 +144,19 @@ namespace TxEditor.View
 			CultureToolsButton.ContextMenu.PlacementTarget = CultureToolsButton;
 			CultureToolsButton.ContextMenu.IsOpen = true;
 		}
+
+		private void CharmapButton_Click(object sender, RoutedEventArgs e)
+		{
+			Button button = sender as Button;
+			string text = button.Content as string;
+
+			var target = Keyboard.FocusedElement;
+			var routedEvent = TextCompositionManager.TextInputEvent;
+
+			target.RaiseEvent(new TextCompositionEventArgs(
+				InputManager.Current.PrimaryKeyboardDevice,
+				new TextComposition(InputManager.Current, target, text)) { RoutedEvent = routedEvent }
+			);
+		}
 	}
 }

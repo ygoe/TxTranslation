@@ -53,23 +53,23 @@
 
 				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 					<u:IconButton
-						Command="{Binding NewCommand}"
-						Content="New" IconSource="/Images/document_create.png"
+						Command="{Binding LoadFileCommand}"
+						Content="Load file" IconSource="/Images/document_open.png"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
 					<u:IconButton
 						Command="{Binding LoadFolderCommand}"
 						Content="Load folder" IconSource="/Images/folder_open.png"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
 					<u:IconButton
-						Command="{Binding LoadFileCommand}"
-						Content="Load file" IconSource="/Images/document_open.png"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
-					<u:IconButton
 						Command="{Binding SaveCommand}"
 						Content="Save" IconSource="/Images/save.png"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="75"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" Orientation="Horizontal">
+					<u:IconButton
+						Command="{Binding NewCommand}"
+						Content="New" IconSource="/Images/document_create.png"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
 					<u:IconButton
 						Content="Import file" IconSource="/Images/import.png"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
@@ -81,7 +81,7 @@
 					Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">File</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<u:IconButton
 					Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="0,0,3,0"
@@ -93,7 +93,7 @@
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
 					<u:IconButton
 						x:Name="CultureToolsButton"
-						Content="Tools" IconSource="/Images/globe_config.png"
+						Content="Tools▾" IconSource="/Images/globe_config.png"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70" Click="CultureToolsButton_Click">
 						<u:IconButton.ContextMenu>
 							<ContextMenu>
@@ -125,7 +125,7 @@
 					Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Culture</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<u:IconButton
 					Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="0,0,3,0"
@@ -148,7 +148,7 @@
 					Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Text key</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="9" Orientation="Horizontal">
 					<u:IconButton
@@ -179,7 +179,7 @@
 					Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">View</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
 					<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
@@ -234,7 +234,7 @@
 					Grid.Row="3" Grid.Column="11" Grid.ColumnSpan="1" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Filter</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="13" Orientation="Horizontal">
 					<u:IconButton
@@ -251,8 +251,37 @@
 					Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"
 					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Application</TextBlock>
 
-				<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}"/>
+				<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 			</Grid>
+		</Grid>
+
+		<Grid DockPanel.Dock="Top" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+			<StackPanel Orientation="Horizontal" Margin="5,1">
+				<TextBlock
+					VerticalAlignment="Center" Margin="0,0,6,0"
+					Text="Character map"
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+				<Button
+					MinWidth="20"
+					Content="©"
+					Click="CharmapButton_Click"
+					Style="{StaticResource LightButtonStyle}" Focusable="False"/>
+				<Button
+					MinWidth="20"
+					Content="–"
+					Click="CharmapButton_Click"
+					Style="{StaticResource LightButtonStyle}" Focusable="False"/>
+				<Button
+					MinWidth="20"
+					Content="„"
+					Click="CharmapButton_Click"
+					Style="{StaticResource LightButtonStyle}" Focusable="False"/>
+				<Button
+					MinWidth="20"
+					Content="“"
+					Click="CharmapButton_Click"
+					Style="{StaticResource LightButtonStyle}" Focusable="False"/>
+			</StackPanel>
 		</Grid>
 
 		<Grid DockPanel.Dock="Bottom" Style="{StaticResource StatusGridStyle}" UseLayoutRounding="True">
@@ -274,7 +303,7 @@
 
 			<TextBlock Grid.Row="1" Grid.Column="1" Margin="3,2" Text="{Binding StatusText}"/>
 
-			<ContentControl Grid.Row="1" Grid.Column="2" Template="{StaticResource StatusGridLargeSeparator}"/>
+			<ContentControl Grid.Row="1" Grid.Column="2" Template="{StaticResource StatusGridLargeSeparator}" Focusable="False"/>
 
 			<StackPanel Grid.Row="1" Grid.Column="3" Margin="3,2" Orientation="Horizontal">
 				<TextBlock Margin="0,0,6,0" Text="{Binding CursorCharCodePoint}" Visibility="{Binding CursorCharVisibility}"/>
@@ -282,7 +311,7 @@
 				<TextBlock Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Text="{Binding CursorCharCategory}"/>
 			</StackPanel>
 
-			<ContentControl Grid.Row="1" Grid.Column="4" Template="{StaticResource StatusGridLargeSeparator}"/>
+			<ContentControl Grid.Row="1" Grid.Column="4" Template="{StaticResource StatusGridLargeSeparator}" Focusable="False"/>
 
 			<StackPanel Grid.Row="1" Grid.Column="5" Orientation="Horizontal">
 				<TextBlock Margin="3,2" Text="Text size"/>
@@ -330,7 +359,7 @@
 					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding Children}">
 						<StackPanel Orientation="Horizontal">
 							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}" />
-							<ContentControl Margin="0,0,2,0">
+							<ContentControl Margin="0,0,2,0" Focusable="False">
 								<ContentControl.Content>
 									<MultiBinding Converter="{StaticResource textHighlightConverter}">
 										<MultiBinding.Bindings>

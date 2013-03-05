@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace TxEditor
 {
@@ -22,6 +23,8 @@ namespace TxEditor
 
 		private bool hasFocus;
 		private List<FrameworkElement> decos = new List<FrameworkElement>();
+		private bool isEditing;
+		private DispatcherTimer editTimer; 
 		//private Popup popup;
 
 		#endregion Private data
@@ -44,6 +47,7 @@ namespace TxEditor
 			if (dt != null)
 			{
 				dt.PlaceholderVisibility = string.IsNullOrEmpty(e.NewValue as string) ? Visibility.Visible : Visibility.Collapsed;
+				dt.IsEditing = true;
 			}
 		}
 
@@ -105,6 +109,19 @@ namespace TxEditor
 		public TextBox InnerTextBox
 		{
 			get { return textBox1; }
+		}
+
+		public bool IsEditing
+		{
+			get { return isEditing; }
+			set
+			{
+				isEditing = value;
+				if (editTimer != null && editTimer.IsEnabled)
+					editTimer.Stop();
+				editTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Input, EditTimeout, Dispatcher);
+				editTimer.Start();
+			}
 		}
 
 		#endregion Properties
@@ -187,9 +204,29 @@ namespace TxEditor
 				CursorChar = null;
 		}
 
+		private void EditTimeout(object sender, EventArgs e)
+		{
+			editTimer.Stop();
+			isEditing = false;
+			UpdateDecorations();
+		}
+
 		#endregion Event handlers
 
 		#region Decoration work
+
+		public event EventHandler<ValidateKeyEventArgs> ValidateKey;
+
+		private bool DoValidateKey(string textKey)
+		{
+			var e = new ValidateKeyEventArgs(textKey);
+			var handler = ValidateKey;
+			if (handler != null)
+			{
+				handler(this, e);
+			}
+			return e.IsValid;
+		}
 
 		public void UpdateDecorations()
 		{
@@ -199,7 +236,7 @@ namespace TxEditor
 			}
 			decos.Clear();
 
-			Match m = Regex.Match(textBox1.Text, @"\{.*?\}");
+			Match m = Regex.Match(textBox1.Text, @"\{(?!=).*?\}");
 			while (m.Success)
 			{
 				Rect startRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index);
@@ -216,7 +253,7 @@ namespace TxEditor
 						rect.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
 						rect.Width = endRect.Left - startRect.Left;
 						rect.Height = startRect.Height;
-						rect.Fill = new SolidColorBrush(Color.FromRgb(236, 241, 209));
+						rect.Fill = new SolidColorBrush(Color.FromRgb(242, 245, 225));
 						grid1.Children.Insert(0, rect);
 						decos.Add(rect);
 					}
@@ -224,6 +261,60 @@ namespace TxEditor
 					{
 						// Spanning multiple lines
 						// Need more rectangles
+						// TODO
+					}
+				}
+				m = m.NextMatch();
+			}
+
+			m = Regex.Match(textBox1.Text, @"\{=([^#]*?)(?:#(.*?))?\}");
+			while (m.Success)
+			{
+				Rect startRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index);
+				Rect endRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index + m.Groups[0].Length);
+
+				bool isValidKey = true;
+				if (!IsEditing)
+					isValidKey = DoValidateKey(m.Groups[1].Value);
+
+				if (!startRect.IsEmpty && !endRect.IsEmpty)
+				{
+					if ((int) startRect.Top == (int) endRect.Top)
+					{
+						// Single line
+						Rectangle rect = new Rectangle();
+						rect.HorizontalAlignment = HorizontalAlignment.Left;
+						rect.VerticalAlignment = VerticalAlignment.Top;
+						rect.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+						rect.Width = endRect.Left - startRect.Left;
+						rect.Height = startRect.Height;
+						rect.Fill = new SolidColorBrush(Color.FromRgb(232, 246, 248));
+						grid1.Children.Insert(0, rect);
+						decos.Add(rect);
+
+						if (!isValidKey)
+						{
+							Rect startRectKey = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index + 2);
+							Rect endRectKey = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index + 2 + m.Groups[1].Length);
+
+							rect = new Rectangle();
+							rect.HorizontalAlignment = HorizontalAlignment.Left;
+							rect.VerticalAlignment = VerticalAlignment.Top;
+							rect.Margin = new Thickness(startRectKey.Left, startRectKey.Bottom - 2, 0, -2);
+							rect.Width = endRectKey.Left - startRectKey.Left;
+							if (rect.Width < 5)
+								rect.Width = 5;
+							rect.Height = 3;
+							rect.Fill = Resources["SquiggleBrush"] as Brush;
+							grid1.Children.Insert(grid1.Children.Count - 2, rect);
+							decos.Add(rect);
+						}
+					}
+					else
+					{
+						// Spanning multiple lines
+						// Need more rectangles
+						// TODO
 					}
 				}
 				m = m.NextMatch();
@@ -366,9 +457,24 @@ namespace TxEditor
 
 		#endregion Decoration work
 
+		#region Overridden methods
+
 		public new bool Focus()
 		{
 			return textBox1.Focus();
+		}
+
+		#endregion Overridden methods
+	}
+
+	public class ValidateKeyEventArgs : EventArgs
+	{
+		public string TextKey { get; private set; }
+		public bool IsValid { get; set; }
+
+		public ValidateKeyEventArgs(string textKey)
+		{
+			TextKey = textKey;
 		}
 	}
 }

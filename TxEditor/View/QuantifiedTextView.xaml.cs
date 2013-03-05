@@ -20,9 +20,7 @@ namespace TxEditor.View
 	{
 		static QuantifiedTextView()
 		{
-			DataContextProperty.OverrideMetadata(
-				typeof(QuantifiedTextView),
-				new FrameworkPropertyMetadata(ViewCommandManager.ViewChangedHandler));
+			ViewCommandManager.SetupMetadata<QuantifiedTextView>();
 		}
 
 		public QuantifiedTextView()
@@ -40,6 +38,13 @@ namespace TxEditor.View
 		public void FocusText()
 		{
 			MyTextBox.Focus();
+		}
+
+		private void MyTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
+		{
+			QuantifiedTextViewModel vm = DataContext as QuantifiedTextViewModel;
+			if (vm != null)
+				e.IsValid = vm.CultureTextVM.TextKeyVM.MainWindowVM.TextKeys.Contains(e.TextKey);
 		}
 	}
 }

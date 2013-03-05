@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TxEditor.ViewModel;
 
 namespace TxEditor.View
 {
@@ -19,6 +20,13 @@ namespace TxEditor.View
 		public CultureTextView()
 		{
 			InitializeComponent();
+		}
+
+		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
+		{
+			CultureTextViewModel vm = DataContext as CultureTextViewModel;
+			if (vm != null)
+				e.IsValid = vm.TextKeyVM.MainWindowVM.TextKeys.Contains(e.TextKey);
 		}
 	}
 }

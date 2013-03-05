@@ -353,6 +353,8 @@ namespace TxEditor.ViewModel
 
 		private void OnNew()
 		{
+			
+			
 			if (!CheckModifiedSaved()) return;
 
 			RootTextKey.Children.Clear();

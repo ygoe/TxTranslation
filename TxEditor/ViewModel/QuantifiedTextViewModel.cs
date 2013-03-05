@@ -22,7 +22,7 @@ namespace TxEditor.ViewModel
 				if (value != count)
 				{
 					count = value;
-					// TODO: Keep >= 0
+					// TODO: Keep >= -1 (-1 is empty input value for new items)
 					OnPropertyChanged("Count");
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -77,16 +77,16 @@ namespace TxEditor.ViewModel
 
 		#region Commands
 
-		private DelegateCommand removeCommand;
-		public DelegateCommand RemoveCommand
+		private DelegateCommand deleteCommand;
+		public DelegateCommand DeleteCommand
 		{
 			get
 			{
-				if (removeCommand == null)
+				if (deleteCommand == null)
 				{
-					removeCommand = new DelegateCommand(OnRemove);
+					deleteCommand = new DelegateCommand(OnDelete);
 				}
-				return removeCommand;
+				return deleteCommand;
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace TxEditor.ViewModel
 
 		#region Command handlers
 
-		private void OnRemove()
+		private void OnDelete()
 		{
 			CultureTextVM.QuantifiedTextVMs.Remove(this);
 			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;

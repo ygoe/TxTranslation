@@ -13,27 +13,30 @@ Based on this suggestion, I've implemented my own ViewCommandManager that handle
 namespace Unclassified.UI
 {
 	/// <summary>
-	/// Defines a property to access the ViewCommandManager instance of an object.
-	/// </summary>
-	public interface IViewCommandSource
-	{
-		/// <summary>
-		/// Gets the ViewCommandManager instance of the object.
-		/// </summary>
-		ViewCommandManager ViewCommandManager { get; }
-	}
-
-	/// <summary>
 	/// Manages view connections to invoke commands on them.
 	/// </summary>
 	public class ViewCommandManager
 	{
+		#region Static property metadata setup
+
+		/// <summary>
+		/// Sets up the overridden property metadata to handle changes to the DataSource property.
+		/// </summary>
+		/// <typeparam name="TView">Type of the view to override the metadata for.</typeparam>
+		public static void SetupMetadata<TView>()
+			where TView : FrameworkElement
+		{
+			FrameworkElement.DataContextProperty.OverrideMetadata(
+				typeof(TView),
+				new FrameworkPropertyMetadata(ViewChangedHandler));
+		}
+
 		/// <summary>
 		/// DataContext property changed handler to use in overridden property metadata.
 		/// </summary>
 		/// <param name="d"></param>
 		/// <param name="e"></param>
-		public static void ViewChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void ViewChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			var oldValue = e.OldValue as IViewCommandSource;
 			if (oldValue != null)
@@ -43,7 +46,15 @@ namespace Unclassified.UI
 				newValue.ViewCommandManager.RegisterView(d);
 		}
 
+		#endregion Static property metadata setup
+
+		#region Private data
+
 		private List<WeakReference> weakViews = new List<WeakReference>();
+
+		#endregion Private data
+
+		#region View registration
 
 		/// <summary>
 		/// Registers a view instance for this ViewCommandManager.
@@ -63,6 +74,10 @@ namespace Unclassified.UI
 		{
 			weakViews.RemoveAll(wr => wr.Target == null || wr.Target == d);
 		}
+
+		#endregion View registration
+
+		#region Command invokation
 
 		/// <summary>
 		/// Invokes a command on all registered views.
@@ -111,6 +126,19 @@ namespace Unclassified.UI
 		{
 			BeginInvoke(commandName, DispatcherPriority.Loaded, args);
 		}
+
+		#endregion Command invokation
+	}
+
+	/// <summary>
+	/// Defines a property to access the ViewCommandManager instance of an object.
+	/// </summary>
+	public interface IViewCommandSource
+	{
+		/// <summary>
+		/// Gets the ViewCommandManager instance of the object.
+		/// </summary>
+		ViewCommandManager ViewCommandManager { get; }
 	}
 
 	/// <summary>

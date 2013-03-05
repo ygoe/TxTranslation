@@ -42,7 +42,7 @@
 		</Grid>
 
 		<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Focusable="False" UseLayoutRounding="True">
-			<ItemsControl ItemsSource="{Binding CultureTextVMs}">
+			<ItemsControl ItemsSource="{Binding CultureTextVMs}" Focusable="False">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<v:CultureTextView Margin="12,0,12,0"/>
