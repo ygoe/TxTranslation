@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Images\Tx.ico</ApplicationIcon>
+    <ApplicationIcon>Images\TxFlag.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -70,6 +70,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Unclassified\Settings.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
+    <Compile Include="Unclassified\UI\ColorMath.cs" />
     <Compile Include="Unclassified\UI\ComparerConverter.cs" />
     <Compile Include="Unclassified\UI\DelegateCommand.cs" />
     <Compile Include="Unclassified\UI\FocusManager.cs" />
@@ -100,7 +102,7 @@
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
     <Compile Include="ViewModel\TextKeyViewModel.cs" />
-    <Compile Include="ViewModel\TreeNodesConverter.cs" />
+    <Compile Include="Converters\TreeNodesConverter.cs" />
     <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\AboutWindow.xaml.cs">
@@ -111,6 +113,9 @@
     </Compile>
     <Compile Include="View\DetailsMessage.xaml.cs">
       <DependentUpon>DetailsMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TextKeyWindow.xaml.cs">
+      <DependentUpon>TextKeyWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\QuantifiedTextView.xaml.cs">
       <DependentUpon>QuantifiedTextView.xaml</DependentUpon>
@@ -127,6 +132,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\DetailsMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TextKeyWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -290,13 +299,25 @@
   <ItemGroup>
     <Resource Include="Images\globe_config.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TxFlag.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_16.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Images\TxFlag_256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\charmap.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,14 +12,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TxEditor.ViewModel;
+using Unclassified.UI;
 
 namespace TxEditor.View
 {
 	public partial class CultureTextView : UserControl
 	{
+		static CultureTextView()
+		{
+			ViewCommandManager.SetupMetadata<CultureTextView>();
+		}
+
 		public CultureTextView()
 		{
 			InitializeComponent();
+		}
+
+		[ViewCommand]
+		public void FocusText()
+		{
+			MyTextBox.Focus();
 		}
 
 		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)

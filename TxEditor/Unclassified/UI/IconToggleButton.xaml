@@ -23,7 +23,7 @@
 								<Setter Property="Margin" Value="0,0,3,0"/>
 								<Style.Triggers>
 									<Trigger Property="Button.IsEnabled" Value="False">
-										<Setter Property="Opacity" Value="0.3"/>
+										<Setter Property="Opacity" Value="0.4"/>
 									</Trigger>
 									<DataTrigger Binding="{Binding Orientation, ElementName=_this}" Value="Vertical">
 										<Setter Property="Margin" Value="0,0,0,1"/>

@@ -12,15 +12,33 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Unclassified.UI;
+using TxEditor.ViewModel;
 
 namespace TxEditor.View
 {
 	public partial class MainWindow : Window
 	{
-		private bool collapsingItems;
+		#region Static constructor
+
+		static MainWindow()
+		{
+			ViewCommandManager.SetupMetadata<MainWindow>();
+		}
+
+		#endregion Static constructor
+
+		#region Static data
+
+		public static MainWindow Instance { get; private set; }
+
+		#endregion Static data
+
+		#region Constructors
 
 		public MainWindow()
 		{
+			Instance = this;
+			
 			InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.Manual;
@@ -30,6 +48,8 @@ namespace TxEditor.View
 			Height = App.Settings.GetInt("window.height", 600);
 			WindowState = (WindowState) App.Settings.GetInt("window.state", (int) WindowState.Normal);
 		}
+
+		#endregion Constructors
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -57,6 +77,24 @@ namespace TxEditor.View
 		{
 			Window_LocationChanged(this, EventArgs.Empty);
 		}
+
+		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.F && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+			{
+				SearchText.Focus();
+			}
+			if (e.Key == Key.Escape && e.KeyboardDevice.Modifiers == ModifierKeys.None &&
+				SearchText.IsKeyboardFocused)
+			{
+				SearchText.Text = "";
+				TextKeysTreeView.Focus();
+			}
+		}
+
+		#region Tool grid layouting
+
+		private bool collapsingItems;
 
 		private void InnerToolGrid_LayoutUpdated(object sender, EventArgs e)
 		{
@@ -118,6 +156,7 @@ namespace TxEditor.View
 					kvp.Key.ContentVisibility = Visibility.Collapsed;
 				}
 			}
+			// TODO: Some controls (View group buttons) ignore Clicking (also in Style) when the next-less priority group is also collapsed
 		}
 
 		private void EnumCollapsableItems(Panel root, List<ICollapsableToolbarItem> items)
@@ -138,6 +177,8 @@ namespace TxEditor.View
 			}
 		}
 
+		#endregion Tool grid layouting
+
 		private void CultureToolsButton_Click(object sender, RoutedEventArgs e)
 		{
 			CultureToolsButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
@@ -157,6 +198,23 @@ namespace TxEditor.View
 				InputManager.Current.PrimaryKeyboardDevice,
 				new TextComposition(InputManager.Current, target, text)) { RoutedEvent = routedEvent }
 			);
+		}
+
+		private void TextKeysTreeView_SelectionChanged(object sender, EventArgs e)
+		{
+			var vm = DataContext as MainWindowViewModel;
+			if (vm != null)
+			{
+				vm.TextKeySelectionChanged(TextKeysTreeView.SelectedItems);
+			}
+		}
+
+		[ViewCommand]
+		public void SelectTextKey(object textKey)
+		{
+			TextKeysTreeView.SelectedItems.Clear();
+			TextKeysTreeView.SelectedItems.Add(textKey);
+			TextKeysTreeView.FocusItem(textKey, true);
 		}
 	}
 }

@@ -87,6 +87,7 @@
 		</Grid>
 		
 		<my:DecoratedTextBox
+			x:Name="MyTextBox"
 			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"

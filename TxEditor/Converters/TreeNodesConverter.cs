@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
+using TxEditor.ViewModel;
 
-namespace TxEditor.ViewModel
+namespace TxEditor.Converters
 {
 	class TreeNodesConverter : IMultiValueConverter
 	{
@@ -44,15 +45,16 @@ namespace TxEditor.ViewModel
 				}
 			}
 
-			//if (firstType == typeof(NodeViewModel))
-			//{
-			//    NodeViewModel[] nodes = new NodeViewModel[items.Count];
-			//    for (int i = 0; i < items.Count; i++)
-			//    {
-			//        nodes[i] = (NodeViewModel) items[i];
-			//    }
-			//    return new NodeMultiViewModel(nodes, null, nodes[0].ProjectVM);
-			//}
+			if (firstType == typeof(TextKeyViewModel))
+			{
+				return new DetailsMessageViewModel(items.Count + " text key nodes selected");
+				//TextKeyViewModel[] nodes = new TextKeyViewModel[items.Count];
+				//for (int i = 0; i < items.Count; i++)
+				//{
+				//    nodes[i] = (TextKeyViewModel) items[i];
+				//}
+				//return new TextKeyMultiViewModel(nodes);
+			}
 
 			return new DetailsMessageViewModel(items.Count + " " + firstType.Name + " items selected");
 		}

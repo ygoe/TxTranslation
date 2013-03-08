@@ -106,14 +106,8 @@ namespace TxEditor.ViewModel
 				{
 					remarks = value;
 					OnPropertyChanged("Remarks");
-					OnPropertyChanged("RemarksVisibility");
 				}
 			}
-		}
-
-		public Visibility RemarksVisibility
-		{
-			get { return !string.IsNullOrEmpty(Remarks) ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		private string comment;

@@ -4,13 +4,13 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using TxEditor.View;
 using TxEditor.ViewModel;
-using Unclassified;
 using TxLib;
-using System.Text.RegularExpressions;
+using Unclassified;
 
 namespace TxEditor
 {
@@ -180,7 +180,6 @@ namespace TxEditor
 			// Create main window and view model
 			var view = new MainWindow();
 			var viewModel = new MainWindowViewModel();
-			viewModel.View = view;
 			view.DataContext = viewModel;
 
 			// Load selected files

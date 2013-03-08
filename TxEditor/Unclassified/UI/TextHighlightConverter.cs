@@ -18,29 +18,50 @@ namespace Unclassified.UI
 			string text = value as string;
 			string search = parameter as string;
 			int start = 0;
-			int next;
 			Run run;
 
+			// Create new composited TextBlock element
 			var textblock = new TextBlock();
 
-			while (text != null && search != null && search.Length > 0)
+			if (text != null && search != null && search.Length > 0)
 			{
-				next = text.IndexOf(search, start, StringComparison.CurrentCultureIgnoreCase);
-				if (next < 0) break;
+				// Split search string into chunks to highlight any of them
+				string[] searches = search.Split('.', ':').Where(s => s.Length > 0).OrderByDescending(s => s.Length).ToArray();
+				// TODO: Configure split characters through property or constructor parameter or something
 
-				if (next > start)
+				// Scan text for matches
+				while (true)
 				{
-					run = new Run(text.Substring(start, next - start));
+					string nextString = null;
+					int nextIndex = int.MaxValue;
+					foreach (var s in searches)
+					{
+						int next = text.IndexOf(s, start, StringComparison.CurrentCultureIgnoreCase);
+						if (next != -1 && next < nextIndex)
+						{
+							nextIndex = next;
+							nextString = s;
+						}
+					}
+					if (nextIndex == int.MaxValue) break;   // Nothing more found
+
+					if (nextIndex > start)
+					{
+						// Add unmatched text until the next match
+						run = new Run(text.Substring(start, nextIndex - start));
+						textblock.Inlines.Add(run);
+					}
+
+					// Add next match with hightlighted style
+					run = new Run(text.Substring(nextIndex, nextString.Length));
+					run.Background = new SolidColorBrush(Color.FromArgb(128, 255, 255, 0));
 					textblock.Inlines.Add(run);
+
+					start = nextIndex + nextString.Length;
 				}
-
-				run = new Run(text.Substring(next, search.Length));
-				run.Background = new SolidColorBrush(Color.FromArgb(128, 255, 255, 0));
-				textblock.Inlines.Add(run);
-
-				start = next + search.Length;
 			}
 
+			// Add remaining unmatched text
 			if (text != null && start < text.Length)
 			{
 				run = new Run(text.Substring(start));
@@ -61,6 +82,12 @@ namespace Unclassified.UI
 
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
+			if (values.Length > 2 && values[2] is bool && (bool) values[2] == false)
+			{
+				// Highlighting disabled for this item
+				return values[0];
+			}
+			
 			return Convert(values[0], targetType, values[1], culture);
 		}
 

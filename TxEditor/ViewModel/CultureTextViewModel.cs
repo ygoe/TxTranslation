@@ -10,8 +10,11 @@ using Unclassified.UI;
 
 namespace TxEditor.ViewModel
 {
-	class CultureTextViewModel : ViewModelBase
+	class CultureTextViewModel : ViewModelBase, IViewCommandSource
 	{
+		private ViewCommandManager viewCommandManager = new ViewCommandManager();
+		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+
 		public TextKeyViewModel TextKeyVM { get; private set; }
 
 		private string cultureName;
