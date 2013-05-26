@@ -10,6 +10,7 @@ namespace Unclassified
 	public class Settings : IDisposable
 	{
 		public delegate void SettingChangedDelegate(string key, object oldValue, object newValue);
+		public delegate void VoidDelegate();
 
 		#region Private Datenfelder
 		private string filename;
@@ -371,6 +372,14 @@ namespace Unclassified
 		#endregion Lesender Datenzugriff
 
 		#region Ereignisbenachrichtigung
+		public void AddHandler(string key, VoidDelegate handler)
+		{
+			lock (this)
+			{
+				AddHandler(key, delegate(string key_, object oldValue, object newValue) { handler(); }, false);
+			}
+		}
+
 		public void AddHandler(string key, SettingChangedDelegate handler)
 		{
 			lock (this)

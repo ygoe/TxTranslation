@@ -23,8 +23,8 @@
 	<Grid Name="grid1">
 		<TextBox
 			Name="textBox1" AcceptsReturn="True"
-			BorderThickness="{Binding BorderThickness, ElementName=root}"
-			Padding="{Binding Padding, ElementName=root}"
+			BorderThickness="{Binding InnerBorderThickness, ElementName=root}"
+			Padding="{Binding InnerPadding, ElementName=root}"
 			Text="{Binding Text, ElementName=root, UpdateSourceTrigger=PropertyChanged}"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
 			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"

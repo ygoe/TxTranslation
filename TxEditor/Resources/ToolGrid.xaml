@@ -53,5 +53,5 @@
 			<GradientStop Color="Transparent" Offset="1"/>
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
-	
+
 </ResourceDictionary>

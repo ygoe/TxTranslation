@@ -3,15 +3,18 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:u="clr-namespace:Unclassified.UI" 
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
 	d:DesignHeight="214" d:DesignWidth="443"
-	Focusable="False">
+	Focusable="False"
+	IsKeyboardFocusWithinChanged="UserControl_IsKeyboardFocusWithinChanged">
 	<UserControl.Resources>
 		<u:ComparerConverter x:Key="CmpConv"/>
+		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
 	
 	<StackPanel>
@@ -88,13 +91,13 @@
 		
 		<my:DecoratedTextBox
 			x:Name="MyTextBox"
-			BorderThickness="0" Padding="0" Margin="-1,4,0,0"
+			InnerBorderThickness="0" InnerPadding="0" Margin="-1,4,0,0"
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
 			PlaceholderText="Enter text"
-			HiddenChars="{Binding TextKeyVM.MainWindowVM.HiddenChars}"
+			HiddenChars="{Binding TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
 			FontSize="{Binding TextKeyVM.MainWindowVM.FontSize}"
-			FontFamily="{Binding TextKeyVM.MainWindowVM.FontFamily}"
+			FontFamily="{Binding TextKeyVM.MainWindowVM.Settings.MonospaceFont, Converter={StaticResource monospaceFontConverter}}"
 			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"
 			ValidateKey="DecoratedTextBox_ValidateKey"/>
 

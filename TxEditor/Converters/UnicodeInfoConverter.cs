@@ -26,7 +26,8 @@ namespace TxEditor.Converters
 			}
 			else
 			{
-				throw new ArgumentException("Unsupported value type.");
+				//throw new ArgumentException("Unsupported value type.");
+				return null;
 			}
 
 			var info = UnicodeInfo.GetChar(codePoint);

@@ -84,21 +84,38 @@ namespace TxEditor.View
 			{
 				SearchText.Focus();
 			}
-			if (e.Key == Key.Escape && e.KeyboardDevice.Modifiers == ModifierKeys.None &&
-				SearchText.IsKeyboardFocused)
+			if (e.Key == Key.Escape && e.KeyboardDevice.Modifiers == ModifierKeys.None)
 			{
-				SearchText.Text = "";
+				if (SearchText.IsKeyboardFocused)
+				{
+					SearchText.Text = "";
+				}
 				TextKeysTreeView.Focus();
+			}
+			if (e.Key == Key.F2 && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+			{
+				(DataContext as MainWindowViewModel).RenameTextKeyCommand.TryExecute();
 			}
 		}
 
 		#region Tool grid layouting
 
 		private bool collapsingItems;
+		private double lastToolGridWidth;
 
 		private void InnerToolGrid_LayoutUpdated(object sender, EventArgs e)
 		{
-			AutoCollapseItems();
+			// NOTE: The collapsing method is only called when the layout was updated after a
+			// change in the window width. Other layout events include resizing of tool buttons
+			// (when changing the button text), but also click events on some buttons.
+			// ToggleButtons fail when they and the next collapse priority have been collapsed.
+			// As a work-around, no further UpdateLayout (and hence also no AutoCollapseItems)
+			// call shall be made if the window size has not changed.
+			if (ToolGrid.ActualWidth != lastToolGridWidth)
+			{
+				lastToolGridWidth = ToolGrid.ActualWidth;
+				AutoCollapseItems();
+			}
 		}
 
 		private void AutoCollapseItems()
@@ -131,13 +148,14 @@ namespace TxEditor.View
 			// Find the width of the right-most separator if there is one.
 			// This width can be subtracted from the toolbar's preferred width because the last
 			// separator doesn't need to be shown.
-			int extentWidth = 6;
 			// TODO
+			//int extentWidth = 0;
 			//var lastItem = Items.OfType<ToolStripItem>().OrderByDescending(i => GetColumn(i)).FirstOrDefault();
 			//if (lastItem is ToolStripSeparator)
 			//{
 			//    extentWidth = lastItem.Width;
 			//}
+			int extentWidth = 6;
 
 			// Group all items by their descending collapse priority and set their display style
 			// to image-only as long as all items don't fit in the toolbar.
@@ -156,7 +174,6 @@ namespace TxEditor.View
 					kvp.Key.ContentVisibility = Visibility.Collapsed;
 				}
 			}
-			// TODO: Some controls (View group buttons) ignore Clicking (also in Style) when the next-less priority group is also collapsed
 		}
 
 		private void EnumCollapsableItems(Panel root, List<ICollapsableToolbarItem> items)
@@ -186,6 +203,16 @@ namespace TxEditor.View
 			CultureToolsButton.ContextMenu.IsOpen = true;
 		}
 
+		private void CharMapButton_ToolTipOpening(object sender, ToolTipEventArgs e)
+		{
+			FrameworkElement obj = sender as FrameworkElement;
+			if (obj != null)
+			{
+				ToolTipService.SetPlacement(obj, System.Windows.Controls.Primitives.PlacementMode.Relative);
+				ToolTipService.SetVerticalOffset(obj, obj.ActualHeight + 6);
+			}
+		}
+
 		private void CharmapButton_Click(object sender, RoutedEventArgs e)
 		{
 			Button button = sender as Button;
@@ -206,6 +233,15 @@ namespace TxEditor.View
 			if (vm != null)
 			{
 				vm.TextKeySelectionChanged(TextKeysTreeView.SelectedItems);
+			}
+		}
+
+		private void TextKeysTreeView_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Delete && e.KeyboardDevice.Modifiers == 0)
+			{
+				(DataContext as MainWindowViewModel).DeleteTextKeyCommand.TryExecute();
+				e.Handled = true;
 			}
 		}
 

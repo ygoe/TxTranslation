@@ -10,10 +10,10 @@
 	<Grid>
 		<Grid.Background>
 			<ImageBrush
-				ImageSource="/Images/noise.png"
+				ImageSource="/Images/diag_32_full.png"
 				TileMode="Tile" Stretch="None"
-				Viewport="0,0,200,200" ViewportUnits="Absolute"
-				Opacity="0.2" />
+				Viewport="0,0,32,32" ViewportUnits="Absolute"
+				Opacity="0.012" />
 		</Grid.Background>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*"/>
@@ -31,10 +31,10 @@
 
 		<Path Name="ArrowIcon" Visibility="{Binding ArrowIconVisibility}"
 			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,150"
-			Data="M1,4 L7,0 L7,2 L13,2 L13,6 L7,6 L7,8z"
-			Stroke="#0a000000" StrokeThickness="1" StrokeLineJoin="Round">
+			Data="M0,16 L16,0 L24,0 L11,13 L50,13 L50,19 L11,19 L24,33 L16,33z"
+			Fill="#14000000" StrokeThickness="0">
 			<Path.LayoutTransform>
-				<ScaleTransform ScaleX="20" ScaleY="20"/>
+				<ScaleTransform ScaleX="4" ScaleY="4"/>
 			</Path.LayoutTransform>
 		</Path>
 

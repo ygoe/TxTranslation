@@ -39,7 +39,7 @@ namespace TxEditor.ViewModel
 				{
 					text = value;
 					OnPropertyChanged("Text");
-					TextKeyVM.Validate();
+					TextKeyVM.MainWindowVM.ValidateTextKeys();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -128,7 +128,20 @@ namespace TxEditor.ViewModel
 				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0)) :
 				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0));
 
-			cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
+			if (App.Settings.NativeCultureNames)
+				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
+			else
+				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).DisplayName);
+		}
+
+		public bool IsEmpty()
+		{
+			if (!string.IsNullOrEmpty(Text)) return false;
+			foreach (var qt in QuantifiedTextVMs)
+			{
+				if (!qt.IsEmpty()) return false;
+			}
+			return true;
 		}
 
 		#region Commands
@@ -194,6 +207,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = 0;
 			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.ValidateTextKeys();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusText");
 		}
@@ -203,6 +217,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = 1;
 			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.ValidateTextKeys();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusText");
 		}
@@ -212,6 +227,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = -1;
 			QuantifiedTextVMs.Add(newVM);
+			TextKeyVM.MainWindowVM.ValidateTextKeys();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusCount");
 		}
@@ -237,15 +253,46 @@ namespace TxEditor.ViewModel
 		public int CompareTo(CultureTextViewModel other)
 		{
 			string otherName = other.CultureName;
+			if (string.Compare(CultureName, otherName, StringComparison.InvariantCultureIgnoreCase) == 0)
+			{
+				//System.Diagnostics.Debug.WriteLine(CultureName + " = " + otherName + " (1)");
+				return 0;   // Exact match
+			}
+				
 			if (CultureName.Length >= 2 && otherName.Length >= 2)
 			{
 				// Prefer primary culture (with or without region; if set)
 				if (!string.IsNullOrEmpty(TextKeyVM.MainWindowVM.PrimaryCulture))
 				{
-					bool thisPrimary = CultureName.StartsWith(TextKeyVM.MainWindowVM.PrimaryCulture);
-					bool otherPrimary = otherName.StartsWith(TextKeyVM.MainWindowVM.PrimaryCulture);
-					if (thisPrimary && !otherPrimary) return -1;
-					if (!thisPrimary && otherPrimary) return 1;
+					// tP:  thisPrimary
+					// oP:  otherPrimary
+					// oPR: otherPrimaryRelated
+					//
+					//             !tPR         tPR
+					//             !tP    tP    !tP   tP
+					//           --------------------------
+					// !oPR  !oP | cont.  xxx | -1    -1  |
+					//       oP  |  xxx   xxx | xxx   xxx |
+					//           --------------------------
+					// oPR   !oP |   1    xxx | cont. -1  |
+					//       oP  |   1    xxx |  1    xxx |
+					//           --------------------------
+
+					bool thisPrimary = string.Compare(CultureName, TextKeyVM.MainWindowVM.PrimaryCulture, StringComparison.InvariantCultureIgnoreCase) == 0;
+					bool thisPrimaryRelated = CultureName.StartsWith(TextKeyVM.MainWindowVM.PrimaryCulture.Substring(0, 2));
+					bool otherPrimary = string.Compare(otherName, TextKeyVM.MainWindowVM.PrimaryCulture, StringComparison.InvariantCultureIgnoreCase) == 0;
+					bool otherPrimaryRelated = otherName.StartsWith(TextKeyVM.MainWindowVM.PrimaryCulture.Substring(0, 2));
+
+					if (thisPrimary || thisPrimaryRelated && !otherPrimaryRelated)
+					{
+						//System.Diagnostics.Debug.WriteLine(CultureName + " < " + otherName + " (2)");
+						return -1;
+					}
+					if (otherPrimary || otherPrimaryRelated && !thisPrimaryRelated)
+					{
+						//System.Diagnostics.Debug.WriteLine(CultureName + " > " + otherName + " (2)");
+						return 1;
+					}
 				}
 				
 				if (string.Compare(CultureName.Substring(0, 2), otherName.Substring(0, 2), StringComparison.InvariantCultureIgnoreCase) == 0)
@@ -253,7 +300,14 @@ namespace TxEditor.ViewModel
 					// Same language, prefer shorter names (without region)
 					if (CultureName.Length != otherName.Length)
 					{
-						return CultureName.Length - otherName.Length;
+						int i = CultureName.Length - otherName.Length;
+						//if (i < 0)
+						//    System.Diagnostics.Debug.WriteLine(CultureName + " < " + otherName + " (3)");
+						//else if (i > 0)
+						//    System.Diagnostics.Debug.WriteLine(CultureName + " > " + otherName + " (3)");
+						//else
+						//    System.Diagnostics.Debug.WriteLine(CultureName + " = " + otherName + " (3)");
+						return i;
 						// If this.length < other.length, then the result is negative and this comes before other
 					}
 				}

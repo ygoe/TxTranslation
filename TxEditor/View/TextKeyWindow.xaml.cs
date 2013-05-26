@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using Unclassified;
 using System.Text.RegularExpressions;
+using TxEditor.ViewModel;
 
 namespace TxEditor.View
 {
@@ -30,20 +31,45 @@ namespace TxEditor.View
 			set { TextKeyText.Text = value; }
 		}
 
+		public bool RenameSelectMode { get; set; }
+
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			//TextKeyText.SelectAll();
-			Match m = Regex.Match(TextKey, @"^((?:.*?:)?(?:[^.]*\.)*)([^.]*[:.])$");
-			if (m.Success)
+			if (!RenameSelectMode)
 			{
-				TextKeyText.SelectionStart = m.Groups[1].Length;
-				TextKeyText.SelectionLength = m.Groups[2].Length;
+				Match m = Regex.Match(TextKey, @"^((?:.*?:)?(?:[^.]*\.)*)([^.]*[:.])$");
+				if (m.Success)
+				{
+					TextKeyText.SelectionStart = m.Groups[1].Length;
+					TextKeyText.SelectionLength = m.Groups[2].Length;
+				}
+			}
+			else
+			{
+				Match m = Regex.Match(TextKey, @"^((?:.*?:)?(?:[^.]*\.)*)([^.]*)$");
+				if (m.Success)
+				{
+					TextKeyText.SelectionStart = m.Groups[1].Length;
+					TextKeyText.SelectionLength = m.Groups[2].Length;
+				}
 			}
 			TextKeyText.Focus();
 		}
 
 		private void OKButton_Click(object sender, RoutedEventArgs e)
 		{
+			string errorMessage;
+			if (!TextKeyViewModel.ValidateName(TextKey, out errorMessage))
+			{
+				MessageBox.Show(
+					"Invalid text key entered: " + errorMessage,
+					"Input error",
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return;
+			}
+			
 			DialogResult = true;
 			Close();
 		}

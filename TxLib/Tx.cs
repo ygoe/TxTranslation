@@ -2784,6 +2784,10 @@ namespace TxLib
 		/// <returns>Resolved text value.</returns>
 		private static string ResolveData(string text, string key, int count, params string[] data)
 		{
+			if ((data.Length % 2) != 0)
+			{
+				LogStack("Resolve data: Uneven length of data arguments array. The last single item is ignored.");
+			}
 			Dictionary<string, string> dataDict = null;
 			if (data != null)
 			{

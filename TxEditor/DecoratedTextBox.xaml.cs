@@ -26,10 +26,33 @@ namespace TxEditor
 		private bool isEditing;
 		private DispatcherTimer editTimer; 
 		//private Popup popup;
+		// Popup see: http://www.codeproject.com/Articles/22803/Intellisense-like-Method-Selection-Pop-up-Window
 
 		#endregion Private data
 
 		#region Dependency properties
+
+		public static DependencyProperty InnerBorderThicknessProperty = DependencyProperty.Register(
+			"InnerBorderThickness",
+			typeof(Thickness),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata(new Thickness(1)));
+		public Thickness InnerBorderThickness
+		{
+			get { return (Thickness) GetValue(InnerBorderThicknessProperty); }
+			set { SetValue(InnerBorderThicknessProperty, value); }
+		}
+
+		public static DependencyProperty InnerPaddingProperty = DependencyProperty.Register(
+			"InnerPadding",
+			typeof(Thickness),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata(new Thickness(1)));
+		public Thickness InnerPadding
+		{
+			get { return (Thickness) GetValue(InnerPaddingProperty); }
+			set { SetValue(InnerPaddingProperty, value); }
+		}
 
 		public static DependencyProperty TextProperty = DependencyProperty.Register(
 			"Text",

@@ -22,8 +22,8 @@ namespace TxEditor.ViewModel
 				if (value != count)
 				{
 					count = value;
-					// TODO: Keep >= -1 (-1 is empty input value for new items)
 					OnPropertyChanged("Count");
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -38,8 +38,8 @@ namespace TxEditor.ViewModel
 				if (value != modulo)
 				{
 					modulo = value;
-					// TODO: Keep 0 or in 2..1000
 					OnPropertyChanged("Modulo");
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -55,7 +55,7 @@ namespace TxEditor.ViewModel
 				{
 					text = value;
 					OnPropertyChanged("Text");
-					CultureTextVM.TextKeyVM.Validate();
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -73,6 +73,11 @@ namespace TxEditor.ViewModel
 		public QuantifiedTextViewModel(CultureTextViewModel cultureTextVM)
 		{
 			CultureTextVM = cultureTextVM;
+		}
+
+		public bool IsEmpty()
+		{
+			return string.IsNullOrEmpty(Text);
 		}
 
 		#region Commands
@@ -97,6 +102,7 @@ namespace TxEditor.ViewModel
 		private void OnDelete()
 		{
 			CultureTextVM.QuantifiedTextVMs.Remove(this);
+			CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
 			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 		}
 

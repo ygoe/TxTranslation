@@ -21,7 +21,7 @@ namespace TxEditor
 		/// <summary>
 		/// Gets the Settings instance used by the application.
 		/// </summary>
-		public static Settings Settings { get; private set; }
+		public static AppSettings Settings { get; private set; }
 
 		#endregion Static properties
 
@@ -41,7 +41,7 @@ namespace TxEditor
 #endif
 
 			// Initialise the settings system
-			Settings = new Settings(
+			Settings = new AppSettings(
 			Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
 				"Unclassified",

@@ -134,6 +134,26 @@ namespace Unclassified.UI
 			execute(parameter);
 		}
 
+		public void Execute()
+		{
+			Execute(null);
+		}
+
+		public bool TryExecute(object parameter)
+		{
+			if (CanExecute(parameter))
+			{
+				Execute(parameter);
+				return true;
+			}
+			return false;
+		}
+
+		public bool TryExecute()
+		{
+			return TryExecute(null);
+		}
+
 		/// <summary>
 		/// Raises the <see cref="E:CanExecuteChanged"/> event.
 		/// </summary>

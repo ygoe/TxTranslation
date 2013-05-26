@@ -40,5 +40,13 @@ namespace TxEditor.View
 			if (vm != null)
 				e.IsValid = vm.TextKeyVM.MainWindowVM.TextKeys.Contains(e.TextKey);
 		}
+
+		private void UserControl_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+			CultureTextViewModel vm = DataContext as CultureTextViewModel;
+			if (vm != null)
+				vm.TextKeyVM.MainWindowVM.SelectedCulture = focused ? vm.CultureName : null;
+		}
 	}
 }

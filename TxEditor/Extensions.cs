@@ -183,6 +183,25 @@ namespace TxEditor
 			}
 		}
 
+		/// <summary>
+		/// Replaces an item in an ObservableCollection by another item at the same index.
+		/// </summary>
+		/// <typeparam name="T">Type of the ObservableCollection items.</typeparam>
+		/// <param name="collection">Collection to replace the item in.</param>
+		/// <param name="item">Item to find and replace.</param>
+		/// <param name="replacement">New item to be set in the collection.</param>
+		/// <returns>true if the item was replaced, false if it did not exist.</returns>
+		public static bool Replace<T>(this ObservableCollection<T> collection, T item, T replacement)
+		{
+			int index = collection.IndexOf(item);
+			if (index >= 0)
+			{
+				collection[index] = replacement;
+				return true;
+			}
+			return false;
+		}
+
 		#endregion Sorted collections
 
 		#region Color maths
@@ -205,5 +224,14 @@ namespace TxEditor
 		}
 
 		#endregion Color maths
+
+		public static string ReplaceStart(this string str, string search, string replacement)
+		{
+			if (str.StartsWith(search))
+			{
+				return replacement + str.Substring(search.Length);
+			}
+			return str;
+		}
 	}
 }

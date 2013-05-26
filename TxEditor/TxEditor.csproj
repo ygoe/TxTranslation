@@ -70,11 +70,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Converters\CharacterMapConverter.cs" />
+    <Compile Include="Converters\MonospaceFontConverter.cs" />
     <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />
     <Compile Include="Unclassified\MyEnvironment.cs" />
+    <Compile Include="Unclassified\NaturalSort.cs" />
     <Compile Include="Unclassified\ObservableHashSet.cs" />
     <Compile Include="Unclassified\Settings.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
@@ -111,8 +114,14 @@
     <Compile Include="View\CultureTextView.xaml.cs">
       <DependentUpon>CultureTextView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CultureWindow.xaml.cs">
+      <DependentUpon>CultureWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\DetailsMessage.xaml.cs">
       <DependentUpon>DetailsMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TextKeyWindow.xaml.cs">
       <DependentUpon>TextKeyWindow.xaml</DependentUpon>
@@ -123,6 +132,9 @@
     <Compile Include="View\TextKeyView.xaml.cs">
       <DependentUpon>TextKeyView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TextKeyWizardWindow.xaml.cs">
+      <DependentUpon>TextKeyWizardWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="DecoratedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,9 +143,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\CultureWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DetailsMessage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TextKeyWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -183,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TextKeyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TextKeyWizardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -310,6 +334,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\charmap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\culture_16.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\textkey_segment_error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Tx_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\diag_32_full.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
