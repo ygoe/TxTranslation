@@ -30,7 +30,8 @@ namespace TxEditor.ViewModel
 			Title = title;
 		}
 
-		public Visibility ArrowIconVisibility { get { return IconName == "Arrow" ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility ArrowLeftIconVisibility { get { return IconName == "ArrowLeft" ? Visibility.Visible : Visibility.Collapsed; } }
+		public Visibility ArrowUpIconVisibility { get { return IconName == "ArrowUp" ? Visibility.Visible : Visibility.Collapsed; } }
 		public Visibility FlashIconVisibility { get { return IconName == "Flash" ? Visibility.Visible : Visibility.Collapsed; } }
 	}
 }

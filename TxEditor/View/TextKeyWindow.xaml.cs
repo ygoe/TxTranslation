@@ -27,8 +27,8 @@ namespace TxEditor.View
 
 		public string TextKey
 		{
-			get { return TextKeyText.Text; }
-			set { TextKeyText.Text = value; }
+			get { return TextKeyText.Text.Trim(); }
+			set { TextKeyText.Text = value != null ? value.Trim() : null; }
 		}
 
 		public bool RenameSelectMode { get; set; }

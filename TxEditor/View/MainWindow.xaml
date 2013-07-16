@@ -14,7 +14,7 @@
 	Height="296" Width="1304" UseLayoutRounding="True"
 	Icon="/Images/TxFlag.ico"
 	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged"
-	Loaded="Window_Loaded" Closed="Window_Closed"
+	Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing"
 	PreviewKeyDown="Window_PreviewKeyDown"
 	x:Name="_this">
 
@@ -27,11 +27,14 @@
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</Window.Resources>
 	<Window.InputBindings>
+		<KeyBinding Key="D" Modifiers="Control" Command="{Binding DuplicateTextKeyCommand}" />
 		<KeyBinding Key="N" Modifiers="Control" Command="{Binding NewTextKeyCommand}" />
 		<KeyBinding Key="O" Modifiers="Control" Command="{Binding LoadFileCommand}" />
 		<KeyBinding Key="O" Modifiers="Control+Shift" Command="{Binding LoadFolderCommand}" />
 		<KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
 		<KeyBinding Key="F12" Command="{Binding GotoDefinitionCommand}" />
+		<KeyBinding Key="Left" Modifiers="Alt" Command="{Binding NavigateBackCommand}" />
+		<KeyBinding Key="Right" Modifiers="Alt" Command="{Binding NavigateForwardCommand}" />
 	</Window.InputBindings>
 
 	<DockPanel>
@@ -69,61 +72,62 @@
 				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding LoadFileCommand}"
-						Content="Load file" IconSource="/Images/document_open.png"
-						HotkeyText="Ctrl+O" ExtendedToolTipText="Opens a new dictionary file."
+						Content="{Tx:T 'toolbar.file.load file', Default='Load file'}" IconSource="/Images/document_open.png"
+						HotkeyText="{Tx:T 'toolbar.file.load file.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.file.load file.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="82"/>
 					<u:IconButton
 						Command="{Binding LoadFolderCommand}"
-						Content="Load folder" IconSource="/Images/folder_open.png"
-						HotkeyText="Ctrl+Shift+O" ExtendedToolTipText="Opens multiple dictionary files from a folder."
+						Content="{Tx:T 'toolbar.file.load folder', Default='Load folder'}" IconSource="/Images/folder_open.png"
+						HotkeyText="{Tx:T 'toolbar.file.load folder.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.file.load folder.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="83"/>
 					<u:IconButton
 						Command="{Binding SaveCommand}"
-						Content="Save" IconSource="/Images/save.png"
-						HotkeyText="Ctrl+S" ExtendedToolTipText="Saves all changes to the loaded dictionary file(s)."
+						Content="{Tx:T 'toolbar.file.save', Default='Save'}" IconSource="/Images/save.png"
+						HotkeyText="{Tx:T 'toolbar.file.save.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.file.save.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding NewFileCommand}"
-						Content="New" IconSource="/Images/document_create.png"
-						ExtendedToolTipText="Creates an empty new dictionary."
+						Content="{Tx:T 'toolbar.file.new', Default='New'}" IconSource="/Images/document_create.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.file.new.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="82"/>
 					<u:IconButton
 						Command="{Binding ImportFileCommand}"
-						Content="Import file" IconSource="/Images/import.png"
-						ExtendedToolTipText="Imports all text keys from another dictionary file into the currently loaded dictionary."
+						Content="{Tx:T 'toolbar.file.import', Default='Import'}" IconSource="/Images/import.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.file.import.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="85"/>
 					<u:IconButton
 						Command="{Binding ExportKeysCommand}"
-						Content="Export keys" IconSource="/Images/key_export.png"
-						ExtendedToolTipText="Exports the selected text keys into a new dictionary file."
+						Content="{Tx:T 'toolbar.file.export', Default='Export'}" IconSource="/Images/key_export.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.file.export.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="80"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="85"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">File</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.file', Default='File'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<u:IconButton
 					Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="0,0,3,0"
 					Command="{Binding NewCultureCommand}"
-					Content="New culture" IconSource="/Images/globe_create_22.png" Orientation="Vertical"
-					ExtendedToolTipText="Adds a new culture to this dictionary."
+					Content="{Tx:T 'toolbar.culture.new', Default='New culture'}" IconSource="/Images/globe_create_22.png" Orientation="Vertical"
+					ExtendedToolTipText="{Tx:T 'toolbar.culture.new.tooltip'}"
 					ToolTipService.ShowOnDisabled="True"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				<StackPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding DeleteCultureCommand}"
-						Content="Delete" IconSource="/Images/globe_delete.png"
-						ExtendedToolTipText="Deletes the selected culture from this dictionary. Focus a text box to select a culture."
+						Content="{Tx:T 'toolbar.culture.delete', Default='Del'}" IconSource="/Images/globe_delete.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.culture.delete.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
 					<u:IconButton
@@ -133,19 +137,19 @@
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70" Click="CultureToolsButton_Click">
 						<u:IconButton.ContextMenu>
 							<ContextMenu>
-								<MenuItem Header="Replace culture" Command="{Binding ReplaceCultureCommand}">
+								<MenuItem Header="{Tx:T 'toolbar.culture.replace', Default='Replace culture'}" Command="{Binding ReplaceCultureCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Images/gear.png" />
+										<Image Source="/Images/globe_change.png" />
 									</MenuItem.Icon>
 								</MenuItem>
-								<MenuItem Header="Insert system keys" Command="{Binding InsertSystemKeysCommand}">
+								<MenuItem Header="{Tx:T 'toolbar.culture.insert system keys', Default='Insert system keys'}" Command="{Binding InsertSystemKeysCommand}">
 									<MenuItem.Icon>
 										<Image Source="/Images/Tx_16.png" />
 									</MenuItem.Icon>
 								</MenuItem>
-								<MenuItem Header="View date and time formats" Command="{Binding ViewDateTimeFormatsCommand}">
+								<MenuItem Header="{Tx:T 'toolbar.culture.view date and time formats', Default='View date and time formats'}" Command="{Binding ViewDateTimeFormatsCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Images/gear.png" />
+										<Image Source="/Images/globe_time.png" />
 									</MenuItem.Icon>
 								</MenuItem>
 							</ContextMenu>
@@ -155,107 +159,116 @@
 				<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding SetPrimaryCultureCommand}"
-						Content="Set primary" IconSource="/Images/globe_check_small.png"
-						ExtendedToolTipText="Sets the selected culture as the dictionary's primary culture. Focus a text box to select a culture."
+						Content="{Tx:T 'toolbar.culture.set primary', Default='Set primary'}" IconSource="/Images/globe_check_small.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.culture.set primary.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Culture</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.culture', Default='Culture'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="5" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<u:IconButton
 					Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="0,0,3,0"
 					Command="{Binding NewTextKeyCommand}"
-					Content="New key" IconSource="/Images/key_create_22.png" Orientation="Vertical"
-					HotkeyText="Ctrl+N" ExtendedToolTipText="Adds a new text key to the dictionary."
+					Content="{Tx:T 'toolbar.text key.new', Default='New key'}" IconSource="/Images/key_create_22.png" Orientation="Vertical"
+					HotkeyText="{Tx:T 'toolbar.text key.new.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.text key.new.tooltip'}"
 					ToolTipService.ShowOnDisabled="True"
 					Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				<StackPanel Grid.Row="1" Grid.Column="7" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding DeleteTextKeyCommand}"
-						Content="Delete key" IconSource="/Images/key_delete.png"
-						ExtendedToolTipText="Deletes the selected text key(s) from the dictionary."
+						Content="{Tx:T 'toolbar.text key.delete', Default='Del'}" IconSource="/Images/key_delete.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.text key.delete.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
 					<u:IconButton
 						Command="{Binding TextKeyWizardCommand}"
-						Content="Wizard" IconSource="/Images/gear.png"
-						ExtendedToolTipText="Opens the text key wizard dialog for easy adding of new text keys from existing strings in a source code."
+						Content="{Tx:T 'toolbar.text key.wizard', Default='Wiz'}" IconSource="/Images/gear.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.text key.wizard.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="7" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding RenameTextKeyCommand}"
-						Content="Rename" IconSource="/Images/rename.png"
-						ExtendedToolTipText="Renames the selected text key and optionally all its subkeys."
+						Content="{Tx:T 'toolbar.text key.rename', Default='Ren'}" IconSource="/Images/rename.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.text key.rename.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
 					<u:IconButton
 						Command="{Binding DuplicateTextKeyCommand}"
-						Content="Duplicate" IconSource="/Images/key_duplicate.png"
-						ExtendedToolTipText="Duplicates the selected text key to a new key name."
+						Content="{Tx:T 'toolbar.text key.duplicate', Default='Dupl'}" IconSource="/Images/key_duplicate.png"
+						HotkeyText="{Tx:T 'toolbar.text key.duplicate.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.text key.duplicate.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Text key</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.text key', Default='Text key'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="8" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="9" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding NavigateBackCommand}"
-						Content="Back" IconSource="/Images/back.png"
-						ExtendedToolTipText="Navigates back to the previous view."
+						Content="{Tx:T 'toolbar.view.back', Default='Back'}" IconSource="/Images/back.png"
+						HotkeyText="{Tx:T 'toolbar.view.back.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.view.back.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
 					<u:IconButton
 						Command="{Binding NavigateForwardCommand}"
-						Content="Forward" IconSource="/Images/forward.png"
-						ExtendedToolTipText="Navigates forward to the next view."
+						Content="{Tx:T 'toolbar.view.forward', Default='Fwd'}" IconSource="/Images/forward.png"
+						HotkeyText="{Tx:T 'toolbar.view.forward.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.view.forward.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
 					<u:IconButton
 						Command="{Binding GotoDefinitionCommand}"
-						Content="Definition" IconSource="/Images/goto_definition.png"
-						HotkeyText="F12" ExtendedToolTipText="Navigates to the definition of the text key under the cursor."
+						Content="{Tx:T 'toolbar.view.definition', Default='Def'}" IconSource="/Images/goto_definition.png"
+						HotkeyText="{Tx:T 'toolbar.view.definition.hotkey'}" ExtendedToolTipText="{Tx:T 'toolbar.view.definition.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
 					<u:IconToggleButton
-						Content="Comment" IconSource="/Images/balloon.png"
-						ExtendedToolTipText="Shows the comment input field for all text keys."
+						Content="{Tx:T 'toolbar.view.comment', Default='Comment'}" IconSource="/Images/balloon.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.view.comment.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 						IsChecked="{Binding Settings.ShowComments}" CollapsePriority="90"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconToggleButton
-						Content="Monospace" IconSource="/Images/monospace.png"
-						ExtendedToolTipText="Uses a fixed-width font for all translation texts and the character map."
+						Content="{Tx:T 'toolbar.view.monospace', Default='Mono'}" IconSource="/Images/monospace.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.view.monospace.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 						IsChecked="{Binding Settings.MonospaceFont}" CollapsePriority="90"/>
 					<u:IconToggleButton
-						Content="Hidden chars" IconSource="/Images/hidden_chars.png"
-						ExtendedToolTipText="Shows hidden characters like spaces or line breaks in the translation input fields."
+						Content="{Tx:T 'toolbar.view.hidden chars', Default='Hid'}" IconSource="/Images/hidden_chars.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.view.hidden chars.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 						IsChecked="{Binding Settings.ShowHiddenChars}" CollapsePriority="90"/>
 					<u:IconToggleButton
-						Content="Character map" IconSource="/Images/charmap.png" ToolTip="CharMap"
-						ExtendedToolTipText="Shows the character map to select characters from that you cannot type on your keyboard. Each character shows its codepoint and description in its tool tip."
+						Content="{Tx:T 'toolbar.view.character map', Default='CharMap'}" IconSource="/Images/charmap.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.view.character map.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 						IsChecked="{Binding Settings.ShowCharacterMap}" CollapsePriority="90"/>
+					<u:IconToggleButton
+						Content="{Tx:T 'toolbar.view.suggestions', Default='Sugg'}" IconSource="/Images/gear.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.view.suggestions.tooltip'}"
+						ToolTipService.ShowOnDisabled="True"
+						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
+						IsChecked="{Binding Settings.ShowSuggestions}" CollapsePriority="90"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">View</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.view', Default='View'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="10" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
@@ -291,8 +304,8 @@
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="11" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconToggleButton
-						Content="{Tx:T 'view.filter.n problems', {Binding ProblemKeys.Count}, Default='0 problems'}"
-						ExtendedToolTipText="Filters the text key list to only show keys with problems."
+						Content="{Tx:T 'toolbar.filter.n problems', {Binding ProblemKeys.Count}, Default='0 problems'}"
+						ExtendedToolTipText="{Tx:T 'toolbar.filter.n problems.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						IsChecked="{Binding ProblemFilterActive}"
 						Focusable="False">
@@ -315,29 +328,31 @@
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="11" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Filter</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.filter', Default='Filter'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="12" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 
 				<StackPanel Grid.Row="1" Grid.Column="13" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding SettingsCommand}"
-						Content="Settings" IconSource="/Images/gear.png"
-						ExtendedToolTipText="Opens the application settings dialog."
+						Content="{Tx:T 'toolbar.app.settings', Default='Settings'}" IconSource="/Images/gear.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.app.settings.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="13" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconButton
 						Command="{Binding AboutCommand}"
-						Content="About" IconSource="/Images/info.png"
-						ExtendedToolTipText="Shows version and copyright information about the application."
+						Content="{Tx:T 'toolbar.app.about', Default='About'}" IconSource="/Images/info.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.app.about.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"
-					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0">Application</TextBlock>
+					Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" Margin="0,4,0,0"
+					Text="{Tx:T 'toolbar.app', Default='Application'}"/>
 
 				<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 			</Grid>
@@ -359,7 +374,7 @@
 			<TextBlock
 				Grid.Column="0"
 				VerticalAlignment="Center" Margin="5,0,1,0"
-				Text="Character map"
+				Text="{Tx:T 'toolbar.view.character map', Default='Character map'}"
 				Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
 
 			<ItemsControl Grid.Column="1" Margin="5,1" ItemsSource="{Binding Settings.CharacterMap, Converter={StaticResource characterMapConverter}}">
@@ -425,7 +440,7 @@
 			<ContentControl Grid.Row="1" Grid.Column="4" Template="{StaticResource StatusGridLargeSeparator}" Focusable="False"/>
 
 			<StackPanel Grid.Row="1" Grid.Column="5" Orientation="Horizontal">
-				<TextBlock Margin="3,2" Text="Text size"/>
+				<TextBlock Margin="3,2" Text="{Tx:T 'statusbar.text size', Default='Text size'}"/>
 				<Slider
 					Width="150" Margin="3,2"
 					Minimum="100" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="10"
@@ -450,7 +465,7 @@
 			<Controls:MultiSelectTreeView
 				Name="TextKeysTreeView"
 				Grid.Row="0" Grid.Column="0"
-				ItemsSource="{Binding RootTextKey.Children}"
+				ItemsSource="{Binding RootTextKey.VisibleChildren}"
 				BorderThickness="0"
 				UseLayoutRounding="False"
 				SelectionChanged="TextKeysTreeView_SelectionChanged"
@@ -463,7 +478,7 @@
 						<Setter Property="DisplayName" Value="{Binding DisplayName, Mode=TwoWay}" />
 						<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
 						<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-						<Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" />
+						<!--Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" /-->
 						<Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=TwoWay}" />
 						<Setter Property="Remarks" Value="{Binding Remarks, Mode=TwoWay}"/>
 
@@ -491,7 +506,7 @@
 				</Controls:MultiSelectTreeView.ItemContainerStyle>
 
 				<Controls:MultiSelectTreeView.Resources>
-					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding Children}">
+					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding VisibleChildren}">
 						<StackPanel Orientation="Horizontal">
 							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}" />
 							<ContentControl Margin="0,0,2,0" Focusable="False">
@@ -509,29 +524,181 @@
 				</Controls:MultiSelectTreeView.Resources>
 			</Controls:MultiSelectTreeView>
 
-			<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" TabIndex="9999"/>
+			<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" TabIndex="9991"/>
 			<Path Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
 				Fill="#50000000" Data="M0,0 H2 V2 H0z M0,4 H2 V6 H0z M0,8 H2 V10 H0z M0,12 H2 V14 H0z M0,16 H2 V18 H0z"/>
 
-			<ContentControl Grid.Column="2" Focusable="False">
-				<ContentControl.Content>
-					<MultiBinding Converter="{StaticResource treeNodesConverter}">
-						<!-- The list to observe must be the very first binding (index 0) for the converter to work -->
-						<Binding Path="SelectedItems" ElementName="TextKeysTreeView" Mode="OneWay"/>
-						<Binding Path="SelectedItems.Count" ElementName="TextKeysTreeView" Mode="OneWay"/>
-					</MultiBinding>
-				</ContentControl.Content>
+			<Grid Grid.Column="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="2*"/>
+					<RowDefinition>
+						<RowDefinition.Style>
+							<Style TargetType="RowDefinition">
+								<Setter Property="Height" Value="6"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="True">
+										<Setter Property="Height" Value="0"/>
+									</DataTrigger>
+									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+										<Setter Property="Height" Value="0"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</RowDefinition.Style>
+					</RowDefinition>
+					<RowDefinition>
+						<RowDefinition.Style>
+							<Style TargetType="RowDefinition">
+								<Setter Property="Height" Value="1*"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="True">
+										<Setter Property="Height" Value="0"/>
+									</DataTrigger>
+									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+										<Setter Property="Height" Value="0"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</RowDefinition.Style>
+					</RowDefinition>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition>
+						<ColumnDefinition.Style>
+							<Style TargetType="ColumnDefinition">
+								<Setter Property="Width" Value="6"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
+										<Setter Property="Width" Value="0"/>
+									</DataTrigger>
+									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+										<Setter Property="Width" Value="0"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ColumnDefinition.Style>
+					</ColumnDefinition>
+					<ColumnDefinition>
+						<ColumnDefinition.Style>
+							<Style TargetType="ColumnDefinition">
+								<Setter Property="Width" Value="2*"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
+										<Setter Property="Width" Value="0"/>
+									</DataTrigger>
+									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+										<Setter Property="Width" Value="0"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ColumnDefinition.Style>
+					</ColumnDefinition>
+				</Grid.ColumnDefinitions>
 
-				<ContentControl.Resources>
-					<DataTemplate DataType="{x:Type vm:DetailsMessageViewModel}">
-						<v:DetailsMessage/>
-					</DataTemplate>
+				<ContentControl Focusable="False">
+					<ContentControl.Content>
+						<MultiBinding Converter="{StaticResource treeNodesConverter}">
+							<!-- The list to observe must be the very first binding (index 0) for the converter to work -->
+							<Binding Path="SelectedItems" ElementName="TextKeysTreeView" Mode="OneWay"/>
+							<Binding Path="SelectedItems.Count" ElementName="TextKeysTreeView" Mode="OneWay"/>
+							<Binding Path="Items.Count" ElementName="TextKeysTreeView" Mode="OneWay"/>
+							<Binding Path="SelectionDummy" Mode="OneWay"/>
+						</MultiBinding>
+					</ContentControl.Content>
 
-					<DataTemplate DataType="{x:Type vm:TextKeyViewModel}">
-						<v:TextKeyView/>
-					</DataTemplate>
-				</ContentControl.Resources>
-			</ContentControl>
+					<ContentControl.Resources>
+						<DataTemplate DataType="{x:Type vm:DetailsMessageViewModel}">
+							<v:DetailsMessage/>
+						</DataTemplate>
+
+						<DataTemplate DataType="{x:Type vm:TextKeyViewModel}">
+							<v:TextKeyView/>
+						</DataTemplate>
+					</ContentControl.Resources>
+				</ContentControl>
+
+				<GridSplitter
+					HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+					TabIndex="9992">
+					<GridSplitter.Style>
+						<Style TargetType="GridSplitter">
+							<Setter Property="Grid.Row" Value="0"/>
+							<Setter Property="Grid.Column" Value="1"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
+									<Setter Property="Grid.Row" Value="1"/>
+									<Setter Property="Grid.Column" Value="0"/>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+									<Setter Property="Visibility" Value="Collapsed"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</GridSplitter.Style>
+				</GridSplitter>
+				<Path
+					Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
+					Fill="#50000000" Data="M0,0 H2 V2 H0z M0,4 H2 V6 H0z M0,8 H2 V10 H0z M0,12 H2 V14 H0z M0,16 H2 V18 H0z"/>
+				<Path
+					Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
+					Fill="#50000000" Data="M0,0 H2 V2 H0z M4,0 H6 V2 H4z M8,0 H10 V2 H8z M12,0 H14 V2 H12z M16,0 H18 V2 H16z"/>
+
+				<Grid>
+					<Grid.Style>
+						<Style TargetType="Grid">
+							<Setter Property="Grid.Row" Value="0"/>
+							<Setter Property="Grid.Column" Value="2"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
+									<Setter Property="Grid.Row" Value="2"/>
+									<Setter Property="Grid.Column" Value="0"/>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
+									<Setter Property="Visibility" Value="Collapsed"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</Grid.Style>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					
+					<TextBlock FontSize="16" Margin="12,10,12,12" Text="{Binding SuggestionsCultureCaption, Mode=OneWay}"/>
+
+					<ScrollViewer Grid.Row="1">
+						<ItemsControl ItemsSource="{Binding Suggestions}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Margin="12,0,12,8">
+										<TextBlock TextWrapping="Wrap" ToolTip="{Binding Score}">
+											<Run Text="{Binding BaseText}"/>
+											<Run Text=" "/>
+											<Run Text="{Binding TextKey}" Foreground="#80000000"/>
+										</TextBlock>
+										<TextBlock Margin="12,4,0,0" Text="{Binding TranslatedText}" TextWrapping="Wrap" Foreground="#3560df">
+											<TextBlock.Style>
+												<Style TargetType="TextBlock">
+													<Setter Property="Visibility" Value="Visible"/>
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding TranslatedText}" Value="{x:Null}">
+															<Setter Property="Visibility" Value="Collapsed"/>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</TextBlock.Style>
+										</TextBlock>
+									</StackPanel>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+				</Grid>
+			</Grid>
 		</Grid>
 	</DockPanel>
 </Window>

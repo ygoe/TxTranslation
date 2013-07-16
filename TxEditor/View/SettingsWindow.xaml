@@ -4,6 +4,8 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+	xmlns:u="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d" 
 	d:DesignHeight="240" d:DesignWidth="700"
 	ResizeMode="NoResize"
@@ -12,11 +14,15 @@
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
 	Icon="/Images/TxFlag.ico"
-	Title="TxEditor Settings"
+	Title="{Tx:T 'window.settings.title', Default='TxEditor Settings'}"
 	SizeToContent="WidthAndHeight">
+	
+	<Window.Resources>
+		<u:NegationConverter x:Key="NegationConverter"/>
+	</Window.Resources>
 
 	<TabControl Margin="10">
-		<TabItem Header="View">
+		<TabItem Header="{Tx:T 'window.settings.view', Default='View'}">
 			<Grid Margin="4">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
@@ -33,21 +39,63 @@
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 
-				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding ShowComments}" Content="Show text key comments"/>
+				<CheckBox
+					Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Left"
+					IsChecked="{Binding ShowComments}"
+					Content="Show text key comments"/>
 
-				<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,6,0,0">Character map selection:</TextBlock>
+				<TextBlock
+					Grid.Row="1" Grid.Column="0"
+					Margin="0,6,0,0"
+					Text="{Tx:TC 'window.settings.view.character map selection', Default='Character map selection:'}"/>
 				<TextBox
-					Grid.Row="1" Grid.Column="1" Margin="8,4,0,0"
+					Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="8,4,0,0"
 					Width="300" AcceptsReturn="True" TextWrapping="Wrap"
 					Text="{Binding CharacterMap, UpdateSourceTrigger=PropertyChanged}"/>
 
-				<CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,6,0,0" IsChecked="{Binding NativeCultureNames}" Content="Show native culture names instead of in the current UI language (applied later)"/>
+				<CheckBox
+					Grid.Row="2" Grid.ColumnSpan="3"
+					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding NativeCultureNames}"
+					Content="Show native culture names instead of in the current UI language (applied later)"/>
+
+				<StackPanel
+					Grid.Row="3" Grid.ColumnSpan="3" Margin="0,6,0,0" Orientation="Horizontal">
+					<TextBlock VerticalAlignment="Center" Text="Suggestions layout:"/>
+					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding SuggestionsHorizontalLayout}">
+						<Border Margin="2,0,0,0" Height="24" BorderThickness="1" BorderBrush="DimGray">
+							<Border Margin="15,0,0,0" Width="30" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#10000000">
+								<Border HorizontalAlignment="Right" Width="12" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#809acd32"/>
+							</Border>
+						</Border>
+					</RadioButton>
+					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding SuggestionsHorizontalLayout, Converter={StaticResource NegationConverter}}">
+						<Border Margin="2,0,0,0" Height="24" BorderThickness="1" BorderBrush="DimGray">
+							<Border Margin="15,0,0,0" Width="30" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#10000000">
+								<Border VerticalAlignment="Bottom" Height="8" BorderThickness="0,1,0,0" BorderBrush="DimGray" Background="#809acd32"/>
+							</Border>
+						</Border>
+					</RadioButton>
+				</StackPanel>
+
+				<TextBlock
+					Grid.Row="4" Grid.Column="0"
+					Margin="0,6,0,0"
+					Text="Application UI language:"/>
+				<TextBox
+					Grid.Row="4" Grid.Column="1" Margin="8,4,0,0"
+					HorizontalAlignment="Left" Width="60"
+					Text="{Binding AppCulture, UpdateSourceTrigger=PropertyChanged}"/>
+				<TextBlock
+					Grid.Row="4" Grid.Column="2"
+					Margin="8,6,0,0"
+					Text="(Requires restart to apply)"/>
 			</Grid>
 		</TabItem>
 
-		<TabItem Header="File">
+		<TabItem Header="{Tx:T 'window.settings.file', Default='File'}">
 			<Grid Margin="4">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
@@ -59,7 +107,7 @@
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
-				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding AskSaveUpgrade}" Content="Ask to upgrade when saving files in older format"/>
+				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding AskSaveUpgrade}" Content="{Tx:T 'window.settings.file.ask to upgrade', Default='Ask to upgrade when saving files in older format'}"/>
 			</Grid>
 		</TabItem>
 	</TabControl>

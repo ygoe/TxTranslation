@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using TxEditor.ViewModel;
+using TxLib;
 
 namespace TxEditor.Converters
 {
@@ -14,26 +15,33 @@ namespace TxEditor.Converters
 
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			IList items = (IList) values[0];
+			IList selectedItems = (IList) values[0];
+			int selectedCount = (int) values[1];
+			int itemsCount = (int) values[2];
 
-			if (items.Count == 0)
+			if (itemsCount == 0)
 			{
-				return new DetailsMessageViewModel("Nothing selected", "Select a text key from the list to display and edit it.", "Arrow");
+				return new DetailsMessageViewModel(Tx.T("msg.nothing available"), Tx.T("msg.nothing available.desc"), "ArrowUp");
 			}
 
-			if (items.Count == 1)
+			if (selectedItems.Count == 0)
 			{
-				TextKeyViewModel tkVM = items[0] as TextKeyViewModel;
+				return new DetailsMessageViewModel(Tx.T("msg.nothing selected"), Tx.T("msg.nothing selected.desc"), "ArrowLeft");
+			}
+
+			if (selectedItems.Count == 1)
+			{
+				TextKeyViewModel tkVM = selectedItems[0] as TextKeyViewModel;
 				if (tkVM != null && !tkVM.IsFullKey)
 				{
-					return new DetailsMessageViewModel("Incomplete text key selected", "This is only a segment of a text key. Select a complete text key’s node to display and edit it.", "Arrow");
+					return new DetailsMessageViewModel(Tx.T("msg.incomplete key selected"), Tx.T("msg.incomplete key selected.desc"), "ArrowLeft");
 				}
 
-				return items[0];
+				return selectedItems[0];
 			}
 
 			Type firstType = null;
-			foreach (object item in items)
+			foreach (object item in selectedItems)
 			{
 				if (firstType == null)
 				{
@@ -47,7 +55,7 @@ namespace TxEditor.Converters
 
 			if (firstType == typeof(TextKeyViewModel))
 			{
-				return new DetailsMessageViewModel(items.Count + " text key nodes selected");
+				return new DetailsMessageViewModel(selectedItems.Count + " text key nodes selected");
 				//TextKeyViewModel[] nodes = new TextKeyViewModel[items.Count];
 				//for (int i = 0; i < items.Count; i++)
 				//{
@@ -56,7 +64,7 @@ namespace TxEditor.Converters
 				//return new TextKeyMultiViewModel(nodes);
 			}
 
-			return new DetailsMessageViewModel(items.Count + " " + firstType.Name + " items selected");
+			return new DetailsMessageViewModel(selectedItems.Count + " " + firstType.Name + " items selected");
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

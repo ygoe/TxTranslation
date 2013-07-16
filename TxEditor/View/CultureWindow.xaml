@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
 	mc:Ignorable="d" 
 	d:DesignHeight="340" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -12,7 +13,7 @@
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
 	Icon="/Images/culture_16.ico"
-	Title="Add new culture"
+	Title="{Tx:T 'window.new culture.title', Default='Add new culture'}"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight">
 	
@@ -26,8 +27,8 @@
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		
-		<TextBlock VerticalAlignment="Center">Please select the culture to add from the list, or type its code:</TextBlock>
+
+		<TextBlock VerticalAlignment="Center" Text="{Tx:TC 'window.new culture.intro', Default='Please select the culture to add from the list, or type its code:'}"/>
 		<TextBox
 			Name="CodeText"
 			Grid.Column="1"
@@ -42,8 +43,8 @@
 			MouseDoubleClick="CulturesList_MouseDoubleClick"/>
 		
 		<StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
-			<Button Name="AddButton" Padding="6,1" MinWidth="75" IsDefault="True" Click="AddButton_Click">Add culture</Button>
-			<Button Name="CancelButton" Margin="6,0,0,0" Padding="6,1" MinWidth="75" IsCancel="True">Cancel</Button>
+			<Button Name="AddButton" Padding="6,1" MinWidth="75" IsDefault="True" Click="AddButton_Click" Content="{Tx:T 'window.new culture.button.add culture', Default='Add culture'}"/>
+			<Button Name="CancelButton" Margin="6,0,0,0" Padding="6,1" MinWidth="75" IsCancel="True" Content="{Tx:T 'window.new culture.button.cancel', Default='Cancel'}"/>
 		</StackPanel>
 	</Grid>
 </Window>

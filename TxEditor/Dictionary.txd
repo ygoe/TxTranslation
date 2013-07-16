@@ -1,14 +1,146 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <translation xml:space="preserve">
 	<culture name="en" primary="true">
-		<text key="Tx:quote begin">“</text>
-		<text key="Tx:quote end">”</text>
-		<text key="Tx:quote nested begin">‘</text>
-		<text key="Tx:quote nested end">’</text>
-		<text key="Tx:number.negative">−</text>
+		<text key="file filter.all files">All files</text>
+		<text key="file filter.tx dictionary files">Tx dictionary files</text>
+		<text key="file filter.xml files">XML files</text>
+		<text key="msg.caption.error">Error</text>
+		<text key="msg.caption.warning">Warning</text>
+		<text key="msg.delete culture">Are you sure to delete the culture {name}?</text>
+		<text key="msg.delete culture.title">Delete culture</text>
+		<text key="msg.incomplete key selected">Incomplete text key selected</text>
+		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
+		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
+		<text key="msg.load file.title">Select files to load</text>
+		<text key="msg.load folder.multiple dictionaries in folder">There are multiple dictionaries in the selected folder.</text>
+		<text key="msg.load folder.multiple dictionaries in folder.desc">Please choose the dictionary to load:</text>
+		<text key="msg.load folder.no files found">No files were found in the selected folder.</text>
+		<text key="msg.load folder.title">Load files from folder</text>
+		<text key="msg.nothing available">Nothing available</text>
+		<text key="msg.nothing available.desc">Currently no text keys are available. Either add a new text key to the dictionary or adjust your search or filter to see existing text keys.</text>
+		<text key="msg.nothing selected">Nothing selected</text>
+		<text key="msg.nothing selected.desc">Select a text key from the list to display and edit it.</text>
+		<text key="msg.save.incompatible with format 1">Incompatible features used for file format version 1.</text>
+		<text key="msg.save.incompatible with format 1.desc">You are about to save the dictionary in a format 1 file but have used features that are not supported by this format. If you save in this format anyway, modulo specifications will be lost and advanced placeholders may not work at runtime.</text>
+		<text key="msg.save.save changes">Would you like to save the changes to the loaded dictionary?</text>
+		<text key="msg.save.save changes.desc">There are unsaved changes to the currently loaded dictionary. If you load new files, you must either save or discard those changes.</text>
+		<text key="msg.save.title">Select file to save as</text>
+		<text key="msg.save.upgrade to format 2">Would you like to upgrade the file to format version 2?</text>
+		<text key="msg.save.upgrade to format 2.dont ask again">Don’t ask again</text>
+		<text key="msg.set primary culture">Are you sure to switch the primary culture to {name}?</text>
+		<text key="msg.set primary culture.desc">The primary culture is used as fallback to find untranslated texts. It also serves as reference to find inconsistencies and all text key comments are assigned to it. The comments will be moved to the new primary culture.</text>
+		<text key="statusbar.char info.no character at cursor">No character at cursor</text>
+		<text key="statusbar.culture added">New culture {name} added.</text>
+		<text key="statusbar.culture deleted">Culture {name} deleted.</text>
+		<text key="statusbar.file saved">File saved.</text>
+		<text key="statusbar.n files loaded">{#} files loaded, </text>
+		<text key="statusbar.n files loaded" count="1">File loaded, </text>
+		<text key="statusbar.n results">{#} results.</text>
+		<text key="statusbar.n results" count="1">1 result.</text>
+		<text key="statusbar.n text keys defined">{#} text keys defined.</text>
+		<text key="statusbar.n text keys defined" count="1">1 text key defined.</text>
+		<text key="statusbar.n text keys deleted">{#} text keys deleted.</text>
+		<text key="statusbar.n text keys deleted" count="1">Text key deleted.</text>
+		<text key="statusbar.new dictionary created">New dictionary created.</text>
+		<text key="statusbar.primary culture set">Primary culture set to {name}.</text>
+		<text key="statusbar.text key added">New text key added.</text>
+		<text key="statusbar.text key already exists">The text key already exists and is now selected.</text>
+		<text key="statusbar.text key renamed">Text key renamed.</text>
+		<text key="statusbar.text size">Text size</text>
+		<text key="suggestions.caption">Suggestions</text>
+		<text key="suggestions.caption for">Suggestions for {name}</text>
+		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
+		<text key="task dialog.button.cancel">&amp;Cancel</text>
+		<text key="task dialog.button.dont save">Do&amp;n’t save</text>
+		<text key="task dialog.button.load">&amp;Load</text>
+		<text key="task dialog.button.save">&amp;Save</text>
+		<text key="task dialog.button.save anyway">&amp;Save anyway</text>
+		<text key="task dialog.button.save in original format">&amp;Save in original format</text>
+		<text key="task dialog.button.switch">&amp;Switch</text>
+		<text key="task dialog.button.upgrade">&amp;Upgrade</text>
+		<text key="toolbar.app">Application</text>
+		<text key="toolbar.app.about">About</text>
+		<text key="toolbar.app.about.tooltip">Shows version and copyright information about the application.</text>
+		<text key="toolbar.app.settings">Settings</text>
+		<text key="toolbar.app.settings.tooltip">Opens the application settings dialog.</text>
+		<text key="toolbar.culture">Culture</text>
+		<text key="toolbar.culture.delete">Delete</text>
+		<text key="toolbar.culture.delete.tooltip">Deletes the selected culture from this dictionary. Focus a text box to select a culture.</text>
+		<text key="toolbar.culture.insert system keys">Insert system keys</text>
+		<text key="toolbar.culture.new">New culture</text>
+		<text key="toolbar.culture.new.tooltip">Adds a new culture to this dictionary.</text>
+		<text key="toolbar.culture.replace">Replace culture</text>
+		<text key="toolbar.culture.set primary">Set primary</text>
+		<text key="toolbar.culture.set primary.tooltip">Sets the selected culture as the dictionary's primary culture. Focus a text box to select a culture.</text>
+		<text key="toolbar.culture.view date and time formats">View date and time formats</text>
+		<text key="toolbar.file">File</text>
+		<text key="toolbar.file.export">Export keys</text>
+		<text key="toolbar.file.export.tooltip">Exports the selected text keys into a new dictionary file.</text>
+		<text key="toolbar.file.import">Import file</text>
+		<text key="toolbar.file.import.tooltip">Imports all text keys from another dictionary file into the currently loaded dictionary.</text>
+		<text key="toolbar.file.load file">Load file</text>
+		<text key="toolbar.file.load file.hotkey">Ctrl+O</text>
+		<text key="toolbar.file.load file.tooltip">Opens an existing dictionary file.</text>
+		<text key="toolbar.file.load folder">Load folder</text>
+		<text key="toolbar.file.load folder.hotkey">Ctrl+Shift+O</text>
+		<text key="toolbar.file.load folder.tooltip">Opens multiple dictionary files from a folder.</text>
+		<text key="toolbar.file.new">New</text>
+		<text key="toolbar.file.new.tooltip">Creates an empty new dictionary.</text>
+		<text key="toolbar.file.save">Save</text>
+		<text key="toolbar.file.save.hotkey">Ctrl+S</text>
+		<text key="toolbar.file.save.tooltip">Saves all changes to the loaded dictionary file.</text>
+		<text key="toolbar.filter">Filter</text>
+		<text key="toolbar.filter.n problems">{#} problems</text>
+		<text key="toolbar.filter.n problems" count="1">1 problem</text>
+		<text key="toolbar.filter.n problems.tooltip">Filters the text key list to only show keys with problems.</text>
+		<text key="toolbar.text key">Text key</text>
+		<text key="toolbar.text key.delete">Delete</text>
+		<text key="toolbar.text key.delete.tooltip">Deletes the selected text keys from the dictionary.</text>
+		<text key="toolbar.text key.duplicate">Duplicate</text>
+		<text key="toolbar.text key.duplicate.hotkey">Ctrl+D</text>
+		<text key="toolbar.text key.duplicate.tooltip">Duplicates the selected text key to a new key name.</text>
+		<text key="toolbar.text key.new">New key</text>
+		<text key="toolbar.text key.new.hotkey">Ctrl+N</text>
+		<text key="toolbar.text key.new.tooltip">Adds a new text key to the dictionary.</text>
+		<text key="toolbar.text key.rename">Rename</text>
+		<text key="toolbar.text key.rename.tooltip">Renames the selected text key and optionally all its subkeys.</text>
+		<text key="toolbar.text key.wizard">Wizard</text>
+		<text key="toolbar.text key.wizard.tooltip">Opens the text key wizard dialog for easy adding of new text keys from existing strings in a source code.</text>
+		<text key="toolbar.view">View</text>
+		<text key="toolbar.view.back">Back</text>
+		<text key="toolbar.view.back.hotkey">Alt+Left</text>
+		<text key="toolbar.view.back.tooltip">Navigates back to the previous view.</text>
+		<text key="toolbar.view.character map">Character map</text>
+		<text key="toolbar.view.character map.tooltip">Shows the character map to select characters from that you cannot type on your keyboard. Each character shows its codepoint and name in its tool tip. The character list can be specified in the settings.</text>
+		<text key="toolbar.view.comment">Comment</text>
+		<text key="toolbar.view.comment.tooltip">Shows the comment input field for all text keys. The text key comment can explain a text key’s usage and help in choosing a reasonable translation.</text>
+		<text key="toolbar.view.definition">Definition</text>
+		<text key="toolbar.view.definition.hotkey">F12</text>
+		<text key="toolbar.view.definition.tooltip">Navigates to the definition of the text key under the cursor.</text>
+		<text key="toolbar.view.forward">Forward</text>
+		<text key="toolbar.view.forward.hotkey">Alt+Right</text>
+		<text key="toolbar.view.forward.tooltip">Navigates forward to the next view.</text>
+		<text key="toolbar.view.hidden chars">Hidden chars</text>
+		<text key="toolbar.view.hidden chars.tooltip">Shows hidden characters like spaces or line breaks in the translation input fields.</text>
+		<text key="toolbar.view.monospace">Monospace</text>
+		<text key="toolbar.view.monospace.tooltip">Uses a fixed-width font for all translation texts and the character map.</text>
+		<text key="toolbar.view.suggestions">Suggestions</text>
+		<text key="toolbar.view.suggestions.tooltip">Shows a list of similar texts and their translation into the selected culture.</text>
+		<text key="tooltip.add quantified text">Add quantified text</text>
+		<text key="tooltip.add quantified text 0">Add quantified text for count 0</text>
+		<text key="tooltip.add quantified text 1">Add quantified text for count 1</text>
+		<text key="tooltip.delete quantified text">Delete this quantified text</text>
+		<text key="tooltip.refresh quantified text order">Refresh sort order of the quantified texts</text>
+		<text key="Tx:date.month day">d/M</text>
+		<text key="Tx:date.month day abbr">d MMM</text>
+		<text key="Tx:date.month day long">d MMMM</text>
+		<text key="Tx:date.year month">MM/yyyy</text>
+		<text key="Tx:date.year month abbr">MMM yyyy</text>
+		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
+		<text key="Tx:date.year month day long">d MMMM yyyy</text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}th</text>
 		<text key="Tx:number.ordinal" count="1" mod="10">{#}st</text>
 		<text key="Tx:number.ordinal" count="2" mod="10">{#}nd</text>
@@ -16,118 +148,401 @@
 		<text key="Tx:number.ordinal" count="11" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="12" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}th</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
-		<text key="Tx:date.year month day long">d MMMM yyyy</text>
-		<text key="Tx:date.month day">d/M</text>
-		<text key="Tx:date.month day abbr">d MMM</text>
-		<text key="Tx:date.month day long">d MMMM</text>
-		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
+		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:quote begin">“</text>
+		<text key="Tx:quote end">”</text>
+		<text key="Tx:quote nested begin">‘</text>
+		<text key="Tx:quote nested end">’</text>
 		<text key="Tx:time.hour">H "o'clock"</text>
-
-		<text key="Tx:time.relative separator"> </text>
-		<text key="Tx:time.now">now</text>
+		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
 		<text key="Tx:time.never">never</text>
-
+		<text key="Tx:time.now">now</text>
 		<text key="Tx:time.relative">in {interval}</text>
-		<text key="Tx:time.relative neg">{interval} ago</text>
-		<text key="Tx:time.relative.years">{#} years</text>
-		<text key="Tx:time.relative.years" count="1">{#} year</text>
-		<text key="Tx:time.relative.months">{#} months</text>
-		<text key="Tx:time.relative.months" count="1">{#} month</text>
 		<text key="Tx:time.relative.days">{#} days</text>
 		<text key="Tx:time.relative.days" count="1">{#} day</text>
 		<text key="Tx:time.relative.hours">{#} hours</text>
 		<text key="Tx:time.relative.hours" count="1">{#} hour</text>
 		<text key="Tx:time.relative.minutes">{#} minutes</text>
 		<text key="Tx:time.relative.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative.months">{#} months</text>
+		<text key="Tx:time.relative.months" count="1">{#} month</text>
 		<text key="Tx:time.relative.seconds">{#} seconds</text>
 		<text key="Tx:time.relative.seconds" count="1">{#} second</text>
-		<text key="Tx:time.relative neg.years">{#} years</text>
-		<text key="Tx:time.relative neg.years" count="1">{#} year</text>
-		<text key="Tx:time.relative neg.months">{#} months</text>
-		<text key="Tx:time.relative neg.months" count="1">{#} month</text>
+		<text key="Tx:time.relative.years">{#} years</text>
+		<text key="Tx:time.relative.years" count="1">{#} year</text>
+		<text key="Tx:time.relative neg">{interval} ago</text>
 		<text key="Tx:time.relative neg.days">{#} days</text>
 		<text key="Tx:time.relative neg.days" count="1">{#} day</text>
 		<text key="Tx:time.relative neg.hours">{#} hours</text>
 		<text key="Tx:time.relative neg.hours" count="1">{#} hour</text>
 		<text key="Tx:time.relative neg.minutes">{#} minutes</text>
 		<text key="Tx:time.relative neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative neg.months">{#} months</text>
+		<text key="Tx:time.relative neg.months" count="1">{#} month</text>
 		<text key="Tx:time.relative neg.seconds">{#} seconds</text>
 		<text key="Tx:time.relative neg.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative neg.years">{#} years</text>
+		<text key="Tx:time.relative neg.years" count="1">{#} year</text>
+		<text key="Tx:time.relative separator"> </text>
 		<text key="Tx:time.relative span">for {interval}</text>
-		<text key="Tx:time.relative span neg">for {interval}</text>
-		<text key="Tx:time.relative span.years">{#} years</text>
-		<text key="Tx:time.relative span.years" count="1">{#} year</text>
-		<text key="Tx:time.relative span.months">{#} months</text>
-		<text key="Tx:time.relative span.months" count="1">{#} month</text>
 		<text key="Tx:time.relative span.days">{#} days</text>
 		<text key="Tx:time.relative span.days" count="1">{#} day</text>
 		<text key="Tx:time.relative span.hours">{#} hours</text>
 		<text key="Tx:time.relative span.hours" count="1">{#} hour</text>
 		<text key="Tx:time.relative span.minutes">{#} minutes</text>
 		<text key="Tx:time.relative span.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative span.months">{#} months</text>
+		<text key="Tx:time.relative span.months" count="1">{#} month</text>
 		<text key="Tx:time.relative span.seconds">{#} seconds</text>
 		<text key="Tx:time.relative span.seconds" count="1">{#} second</text>
-		<text key="Tx:time.relative span neg.years">{#} years</text>
-		<text key="Tx:time.relative span neg.years" count="1">{#} year</text>
-		<text key="Tx:time.relative span neg.months">{#} months</text>
-		<text key="Tx:time.relative span neg.months" count="1">{#} month</text>
+		<text key="Tx:time.relative span.years">{#} years</text>
+		<text key="Tx:time.relative span.years" count="1">{#} year</text>
+		<text key="Tx:time.relative span neg">for {interval}</text>
 		<text key="Tx:time.relative span neg.days">{#} days</text>
 		<text key="Tx:time.relative span neg.days" count="1">{#} day</text>
 		<text key="Tx:time.relative span neg.hours">{#} hours</text>
 		<text key="Tx:time.relative span neg.hours" count="1">{#} hour</text>
 		<text key="Tx:time.relative span neg.minutes">{#} minutes</text>
 		<text key="Tx:time.relative span neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative span neg.months">{#} months</text>
+		<text key="Tx:time.relative span neg.months" count="1">{#} month</text>
 		<text key="Tx:time.relative span neg.seconds">{#} seconds</text>
 		<text key="Tx:time.relative span neg.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative span neg.years">{#} years</text>
+		<text key="Tx:time.relative span neg.years" count="1">{#} year</text>
 		<text key="Tx:time.span">{interval} later</text>
-		<text key="Tx:time.span neg">{interval} before</text>
-		<text key="Tx:time.span.years">{#} years</text>
-		<text key="Tx:time.span.years" count="1">{#} year</text>
-		<text key="Tx:time.span.months">{#} months</text>
-		<text key="Tx:time.span.months" count="1">{#} month</text>
 		<text key="Tx:time.span.days">{#} days</text>
 		<text key="Tx:time.span.days" count="1">{#} day</text>
 		<text key="Tx:time.span.hours">{#} hours</text>
 		<text key="Tx:time.span.hours" count="1">{#} hour</text>
 		<text key="Tx:time.span.minutes">{#} minutes</text>
 		<text key="Tx:time.span.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.span.months">{#} months</text>
+		<text key="Tx:time.span.months" count="1">{#} month</text>
 		<text key="Tx:time.span.seconds">{#} seconds</text>
 		<text key="Tx:time.span.seconds" count="1">{#} second</text>
-		<text key="Tx:time.span neg.years">{#} years</text>
-		<text key="Tx:time.span neg.years" count="1">{#} year</text>
-		<text key="Tx:time.span neg.months">{#} months</text>
-		<text key="Tx:time.span neg.months" count="1">{#} month</text>
+		<text key="Tx:time.span.years">{#} years</text>
+		<text key="Tx:time.span.years" count="1">{#} year</text>
+		<text key="Tx:time.span neg">{interval} before</text>
 		<text key="Tx:time.span neg.days">{#} days</text>
 		<text key="Tx:time.span neg.days" count="1">{#} day</text>
 		<text key="Tx:time.span neg.hours">{#} hours</text>
 		<text key="Tx:time.span neg.hours" count="1">{#} hour</text>
 		<text key="Tx:time.span neg.minutes">{#} minutes</text>
 		<text key="Tx:time.span neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.span neg.months">{#} months</text>
+		<text key="Tx:time.span neg.months" count="1">{#} month</text>
 		<text key="Tx:time.span neg.seconds">{#} seconds</text>
 		<text key="Tx:time.span neg.seconds" count="1">{#} second</text>
-
-		<text key="view.filter.n problems">{#} problems</text>
-		<text key="view.filter.n problems" count="1">1 problem</text>
-		<!--text key="view.filter.n problems" count="0">zerro problems, hurray! everything's alright.</text-->
+		<text key="Tx:time.span neg.years">{#} years</text>
+		<text key="Tx:time.span neg.years" count="1">{#} year</text>
+		<text key="validation.content.additional placeholder">Additional placeholder: {name}</text>
+		<text key="validation.content.duplicate count modulo">Duplicate count/modulo</text>
+		<text key="validation.content.inconsistent punctuation">Inconsistent punctuation</text>
+		<text key="validation.content.invalid count">Invalid count</text>
+		<text key="validation.content.invalid modulo">Invalid modulo</text>
+		<text key="validation.content.missing placeholder">Missing placeholder: {name}</text>
+		<text key="validation.content.missing referenced key">Missing referenced key</text>
+		<text key="validation.content.missing translation">Missing translation</text>
+		<text key="validation.content.referenced key loop">Referenced key loop</text>
+		<text key="validation.key name.contains consecutive points">Key contains multiple consecutive points (.).</text>
+		<text key="validation.key name.contains multiple colons">Key contains multiple colons (:).</text>
+		<text key="validation.key name.empty">Key is empty or only white-space.</text>
+		<text key="validation.key name.ends with colon">Key ends with a colon (:).</text>
+		<text key="validation.key name.ends with point">Key ends with a point (.).</text>
+		<text key="validation.key name.starts with colon">Key starts with a colon (:).</text>
+		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
+		<text key="window.new culture.button.add culture">Add culture</text>
+		<text key="window.new culture.button.cancel">Cancel</text>
+		<text key="window.new culture.intro">Please select the culture to add from the list, or type its code</text>
+		<text key="window.new culture.title">Add new culture</text>
+		<text key="window.settings.file">File</text>
+		<text key="window.settings.file.ask to upgrade">Ask to upgrade when saving files in older format</text>
+		<text key="window.settings.title">TxEditor Settings</text>
+		<text key="window.settings.view">View</text>
+		<text key="window.settings.view.character map selection">Character map selection</text>
+		<text key="window.text key.button.cancel">Cancel</text>
 	</culture>
-	<culture name="en-us">
+	<culture name="en-US">
+		<text key="Tx:date.month day">M/d</text>
+		<text key="Tx:date.month day abbr">MMM d</text>
+		<text key="Tx:date.month day long">MMMM d</text>
 		<text key="Tx:date.year month">MM/yyyy</text>
 		<text key="Tx:date.year month abbr">MMM yyyy</text>
 		<text key="Tx:date.year month day abbr">MMM d, yyyy</text>
 		<text key="Tx:date.year month day long">MMMM d, yyyy</text>
-		<text key="Tx:date.month day">M/d</text>
-		<text key="Tx:date.month day abbr">MMM d</text>
-		<text key="Tx:date.month day long">MMMM d</text>
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
 		<text key="Tx:time.hour">h tt</text>
+		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
 	</culture>
-	<culture name="en-au">
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
-		<text key="Tx:time.hour">h tt</text>
+	<culture name="en-AU">
 		<text key="Tx:time.am">am</text>
+		<text key="Tx:time.hour">h tt</text>
+		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
 		<text key="Tx:time.pm">pm</text>
+	</culture>
+	<culture name="de">
+		<text key="file filter.all files">Alle Dateien</text>
+		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
+		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="msg.caption.error">Fehler</text>
+		<text key="msg.caption.warning">Warnung</text>
+		<text key="msg.delete culture">Möchten Sie die Kultur {name} wirklich löschen?</text>
+		<text key="msg.delete culture.title">Kultur löschen</text>
+		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
+		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
+		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
+		<text key="msg.load file.title">Dateien zum Laden auswählen</text>
+		<text key="msg.load folder.multiple dictionaries in folder">Es gibt mehrere Wörterbücher im ausgewählten Ordner.</text>
+		<text key="msg.load folder.multiple dictionaries in folder.desc">Bitte wählen Sie das zu ladende Wörterbuch aus:</text>
+		<text key="msg.load folder.no files found">Im ausgewählten Ordner wurden keine Dateien gefunden.</text>
+		<text key="msg.load folder.title">Dateien aus Ordner laden</text>
+		<text key="msg.nothing available">Nichts verfügbar</text>
+		<text key="msg.nothing available.desc">Derzeit sind keine Textschlüssel verfügbar. Fügen Sie einen neuen Textschlüssel zum Wörterbuch hinzu oder passen Sie die Suche oder den Filter an, um vorhandene Textschlüssel zu sehen.</text>
+		<text key="msg.nothing selected">Nichts ausgewählt</text>
+		<text key="msg.nothing selected.desc">Wählen Sie einen Textschlüssel aus der Liste aus, um ihn anzuzeigen und zu bearbeiten.</text>
+		<text key="msg.save.incompatible with format 1">Es wurden Funktionen genutzt, die nicht mit der Dateiformatversion 1 kompatibel sind.</text>
+		<text key="msg.save.incompatible with format 1.desc">Sie sind dabei, das Wörterbuch in der Dateiformatversion 1 zu speichern, haben aber Funktionen genutzt, die von diesem Format nicht unterstützt werden. Wenn Sie trotzdem in diesem Format speichern, gehen Modulo-Angaben verloren und erweiterte Platzhalter funktionieren möglicherweise nicht korrekt.</text>
+		<text key="msg.save.save changes">Möchten Sie die Änderungen am geladenen Wörterbuch speichern?</text>
+		<text key="msg.save.save changes.desc">Es gibt ungespeicherte Änderungen am derzeit geladenen Wörterbuch. Wenn Sie neue Dateien laden, müssen Sie diese Änderungen entweder speichern oder verwerfen.</text>
+		<text key="msg.save.title">Datei zum Speichern auswählen</text>
+		<text key="msg.save.upgrade to format 2">Möchten Sie die Datei in die Formatversion 2 aktualisieren?</text>
+		<text key="msg.save.upgrade to format 2.dont ask again">Nicht wieder fragen</text>
+		<text key="msg.set primary culture">Möchten Sie die Hauptkultur auf {name} ändern?</text>
+		<text key="msg.set primary culture.desc">Die Hauptkultur wird verwendet, um nicht übersetzte Texte zu finden. Sie dient auch als Grundlage, um Inkonsistenzen zu finden, und alle Textschlüsselkommentare sind ihr zugeordnet. Die Kommentare werden in die neue Hauptkultur verschoben.</text>
+		<text key="statusbar.char info.no character at cursor">Kein Zeichen beim Cursor</text>
+		<text key="statusbar.culture added">Neue Kultur {name} hinzugefügt.</text>
+		<text key="statusbar.culture deleted">Kultur {name} gelöscht.</text>
+		<text key="statusbar.file saved">Datei gespeichert.</text>
+		<text key="statusbar.n files loaded">{#} Dateien geladen, </text>
+		<text key="statusbar.n files loaded" count="1">Datei geladen, </text>
+		<text key="statusbar.n results">{#} Ergebnisse.</text>
+		<text key="statusbar.n results" count="1">1 Ergebnis.</text>
+		<text key="statusbar.n text keys defined">{#} Textschlüssel definiert.</text>
+		<text key="statusbar.n text keys defined" count="1">1 Textschlüssel definiert.</text>
+		<text key="statusbar.n text keys deleted">{#} Textschlüssel gelöscht.</text>
+		<text key="statusbar.n text keys deleted" count="1">Textschlüssel gelöscht.</text>
+		<text key="statusbar.new dictionary created">Neues Wörterbuch erstellt.</text>
+		<text key="statusbar.primary culture set">Hauptkultur auf {name} gesetzt.</text>
+		<text key="statusbar.text key added">Neuer Textschlüssel hinzugefügt.</text>
+		<text key="statusbar.text key already exists">Der Textschlüssel existiert bereits und wurde jetzt ausgewählt.</text>
+		<text key="statusbar.text key renamed">Textschlüssel umbenannt.</text>
+		<text key="statusbar.text size">Textgröße</text>
+		<text key="suggestions.caption">Vorschläge</text>
+		<text key="suggestions.caption for">Vorschläge für {name}</text>
+		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
+		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
+		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
+		<text key="task dialog.button.load">&amp;Laden</text>
+		<text key="task dialog.button.save">&amp;Speichern</text>
+		<text key="task dialog.button.save anyway">Trotzdem &amp;speichern</text>
+		<text key="task dialog.button.save in original format">Im ursprünglichen Format &amp;speichern</text>
+		<text key="task dialog.button.switch">&amp;Wechseln</text>
+		<text key="task dialog.button.upgrade">Akt&amp;ualisieren</text>
+		<text key="toolbar.app">Anwendung</text>
+		<text key="toolbar.app.about">Über</text>
+		<text key="toolbar.app.about.tooltip">Zeigt Versions- und Copyright-Informationen zur Anwendung an.</text>
+		<text key="toolbar.app.settings">Einstellungen</text>
+		<text key="toolbar.app.settings.tooltip">Öffnet den Anwendungseinstellungen-Dialog.</text>
+		<text key="toolbar.culture">Kultur</text>
+		<text key="toolbar.culture.delete">Löschen</text>
+		<text key="toolbar.culture.delete.tooltip">Löscht die ausgewählte Kultur aus dem Wörterbuch. Fokussieren Sie ein Textfeld, um eine Kultur auszuwählen.</text>
+		<text key="toolbar.culture.insert system keys">Systemschlüssel einfügen</text>
+		<text key="toolbar.culture.new">Neue Kultur</text>
+		<text key="toolbar.culture.new.tooltip">Fügt dem Wörterbuch eine neue Kultur hinzu.</text>
+		<text key="toolbar.culture.replace">Kultur ersetzen</text>
+		<text key="toolbar.culture.set primary">Als Hauptkultur</text>
+		<text key="toolbar.culture.set primary.tooltip">Setzt die ausgewählte Kultur als Hauptkultur im Wörterbuch. Fokussieren Sie ein Textfeld, um eine Kultur auszuwählen.</text>
+		<text key="toolbar.culture.view date and time formats">Datum- und Zeitformate anzeigen</text>
+		<text key="toolbar.file">Datei</text>
+		<text key="toolbar.file.export">Schlüssel exportieren</text>
+		<text key="toolbar.file.export.tooltip">Exportiert die ausgewählten Textschlüssel in ein neues Wörterbuch.</text>
+		<text key="toolbar.file.import">Datei importieren</text>
+		<text key="toolbar.file.import.tooltip">Importiert alle Textschlüssel aus einem anderen Wörterbuch in das aktuell geladene Wörterbuch.</text>
+		<text key="toolbar.file.load file">Datei laden</text>
+		<text key="toolbar.file.load file.hotkey">Strg+O</text>
+		<text key="toolbar.file.load file.tooltip">Öffnet eine bestehende Wörterbuch-Datei.</text>
+		<text key="toolbar.file.load folder">Ordner laden</text>
+		<text key="toolbar.file.load folder.hotkey">Strg+Umschalt+O</text>
+		<text key="toolbar.file.load folder.tooltip">Öffnet mehrere Wörterbuch-Dateien aus einem Ordner.</text>
+		<text key="toolbar.file.new">Neu</text>
+		<text key="toolbar.file.new.tooltip">Erstellt ein leeres neues Wörterbuch.</text>
+		<text key="toolbar.file.save">Speichern</text>
+		<text key="toolbar.file.save.hotkey">Strg+S</text>
+		<text key="toolbar.file.save.tooltip">Speichert alle Änderungen am geladenen Wörterbuch.</text>
+		<text key="toolbar.filter">Filter</text>
+		<text key="toolbar.filter.n problems">{#} Probleme</text>
+		<text key="toolbar.filter.n problems" count="1">1 Problem</text>
+		<text key="toolbar.filter.n problems.tooltip">Filtert die Textschlüsselliste, um nur Schlüssel mit Problemen anzuzeigen.</text>
+		<text key="toolbar.text key">Textschlüssel</text>
+		<text key="toolbar.text key.delete">Löschen</text>
+		<text key="toolbar.text key.delete.tooltip">Löscht die ausgewählten Textschlüssel aus dem Wörterbuch.</text>
+		<text key="toolbar.text key.duplicate">Duplizieren</text>
+		<text key="toolbar.text key.duplicate.hotkey">Strg+D</text>
+		<text key="toolbar.text key.duplicate.tooltip">Dupliziert den ausgewählten Textschlüssel mit einem neuen Schlüsselnamen.</text>
+		<text key="toolbar.text key.new">Neuer Schlüssel</text>
+		<text key="toolbar.text key.new.hotkey">Strg+N</text>
+		<text key="toolbar.text key.new.tooltip">Fügt dem Wörterbuch einen neuen Textschlüssel hinzu.</text>
+		<text key="toolbar.text key.rename">Umbenennen</text>
+		<text key="toolbar.text key.rename.tooltip">Benennt den ausgewählten Textschlüssel und optional auch all seine Unterschlüssel um.</text>
+		<text key="toolbar.text key.wizard">Assistent</text>
+		<text key="toolbar.text key.wizard.tooltip">Öffnet den Textschlüssel-Assistenten zum einfachen Hinzufügen neuer Textschlüssel aus bestehenden Zeichenketten in einem Quelltext.</text>
+		<text key="toolbar.view">Ansicht</text>
+		<text key="toolbar.view.back">Zurück</text>
+		<text key="toolbar.view.back.hotkey">Alt+Links</text>
+		<text key="toolbar.view.back.tooltip">Navigiert zurück zur vorherigen Ansicht.</text>
+		<text key="toolbar.view.character map">Zeichentabelle</text>
+		<text key="toolbar.view.character map.tooltip">Zeigt die Zeichentabelle an, aus der Zeichen ausgewählt werden können, die Sie nicht mit der Tastatur eingeben können. Zu jedem Zeichen wird sein Codepunkt und Name im Tooltip angezeigt. Die Zeichenliste kann in den Einstellungen festgelegt werden.</text>
+		<text key="toolbar.view.comment">Kommentar</text>
+		<text key="toolbar.view.comment.tooltip">Zeigt das Kommentarfeld für alle Textschlüssel an. Der Textschlüsselkommentar kann die Verwendung eines Textschlüssels erläutern und so bei einer sinnvollen Übersetzung behilflich sein.</text>
+		<text key="toolbar.view.definition">Definition</text>
+		<text key="toolbar.view.definition.hotkey">F12</text>
+		<text key="toolbar.view.definition.tooltip">Navigiert zur Definition des Textschlüssels unter dem Cursor.</text>
+		<text key="toolbar.view.forward">Vorwärts</text>
+		<text key="toolbar.view.forward.hotkey">Alt+Rechts</text>
+		<text key="toolbar.view.forward.tooltip">Navigiert weiter zur nächsten Ansicht.</text>
+		<text key="toolbar.view.hidden chars">Unsichtbare Zeichen</text>
+		<text key="toolbar.view.hidden chars.tooltip">Zeigt unsichtbare Zeichen wie Leerzeichen oder Zeilenumbrüche in den Textfeldern der Übersetzung an.</text>
+		<text key="toolbar.view.monospace">Festbreite</text>
+		<text key="toolbar.view.monospace.tooltip">Verwendet eine Festbreitenschrift für alle übersetzten Texte und die Zeichentabelle.</text>
+		<text key="toolbar.view.suggestions">Vorschläge</text>
+		<text key="toolbar.view.suggestions.tooltip">Zeigt eine Liste ähnlicher Texte und ihrer Übersetzung in die ausgewählte Kultur an.</text>
+		<text key="tooltip.add quantified text">Quantifizierten Text hinzufügen</text>
+		<text key="tooltip.add quantified text 0">Quantifizierten Text für Anzahl 0 hinzufügen</text>
+		<text key="tooltip.add quantified text 1">Quantifizierten Text für Anzahl 1 hinzufügen</text>
+		<text key="tooltip.delete quantified text">Diesen quantifizierten Text löschen</text>
+		<text key="tooltip.refresh quantified text order">Sortierreihenfolge der quantifizierten Texte aktualisieren</text>
+		<text key="Tx:date.day">d.</text>
+		<text key="Tx:date.month day">dd.MM.</text>
+		<text key="Tx:date.month day abbr">d. MMM.</text>
+		<text key="Tx:date.year month">MM/yyyy</text>
+		<text key="Tx:date.year month abbr">MMM. yyyy</text>
+		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
+		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:number.group separator"> </text>
+		<text key="Tx:number.group separator threshold">10000</text>
+		<text key="Tx:number.negative">−</text>
+		<text key="Tx:number.ordinal">{#}.</text>
+		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:quote begin">„</text>
+		<text key="Tx:quote end">“</text>
+		<text key="Tx:quote nested begin">‚</text>
+		<text key="Tx:quote nested end">‘</text>
+		<text key="Tx:time.hour">H "Uhr"</text>
+		<text key="Tx:time.never">nie</text>
+		<text key="Tx:time.now">jetzt</text>
+		<text key="Tx:time.relative">in {interval}</text>
+		<text key="Tx:time.relative.days">{#} Tagen</text>
+		<text key="Tx:time.relative.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative.hours">{#} Stunden</text>
+		<text key="Tx:time.relative.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative.months">{#} Monaten</text>
+		<text key="Tx:time.relative.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative.years">{#} Jahren</text>
+		<text key="Tx:time.relative.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative neg">vor {interval}</text>
+		<text key="Tx:time.relative neg.days">{#} Tagen</text>
+		<text key="Tx:time.relative neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative neg.hours">{#} Stunden</text>
+		<text key="Tx:time.relative neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative neg.months">{#} Monaten</text>
+		<text key="Tx:time.relative neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative neg.years">{#} Jahren</text>
+		<text key="Tx:time.relative neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative separator"> </text>
+		<text key="Tx:time.relative span">für {interval}</text>
+		<text key="Tx:time.relative span.days">{#} Tage</text>
+		<text key="Tx:time.relative span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span.hours">{#} Stunden</text>
+		<text key="Tx:time.relative span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative span.months">{#} Monate</text>
+		<text key="Tx:time.relative span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative span.years">{#} Jahre</text>
+		<text key="Tx:time.relative span.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative span neg">seit {interval}</text>
+		<text key="Tx:time.relative span neg.days">{#} Tagen</text>
+		<text key="Tx:time.relative span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span neg.hours">{#} Stunden</text>
+		<text key="Tx:time.relative span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.relative span neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative span neg.months">{#} Monaten</text>
+		<text key="Tx:time.relative span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.relative span neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative span neg.years">{#} Jahren</text>
+		<text key="Tx:time.relative span neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.span">{interval} später</text>
+		<text key="Tx:time.span.days">{#} Tage</text>
+		<text key="Tx:time.span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span.hours">{#} Stunden</text>
+		<text key="Tx:time.span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span.minutes">{#} Minuten</text>
+		<text key="Tx:time.span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.span.months">{#} Monate</text>
+		<text key="Tx:time.span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span.seconds">{#} Sekunden</text>
+		<text key="Tx:time.span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.span.years">{#} Jahre</text>
+		<text key="Tx:time.span.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.span neg">{interval} davor</text>
+		<text key="Tx:time.span neg.days">{#} Tage</text>
+		<text key="Tx:time.span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span neg.hours">{#} Stunden</text>
+		<text key="Tx:time.span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span neg.minutes">{#} Minuten</text>
+		<text key="Tx:time.span neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.span neg.months">{#} Monate</text>
+		<text key="Tx:time.span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span neg.seconds">{#} Sekunden</text>
+		<text key="Tx:time.span neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.span neg.years">{#} Jahre</text>
+		<text key="Tx:time.span neg.years" count="1">{#} Jahr</text>
+		<text key="validation.content.additional placeholder">Zusätzlicher Platzhalter: {name}</text>
+		<text key="validation.content.duplicate count modulo">Doppelte Anzahl/Modulo</text>
+		<text key="validation.content.inconsistent punctuation">Inkonsistente Zeichensetzung</text>
+		<text key="validation.content.invalid count">Ungültige Anzahl</text>
+		<text key="validation.content.invalid modulo">Ungültiger Modulo</text>
+		<text key="validation.content.missing placeholder">Fehlender Platzhalter: {name}</text>
+		<text key="validation.content.missing referenced key">Schlüsselverweis fehlt</text>
+		<text key="validation.content.missing translation">Fehlende Übersetzung</text>
+		<text key="validation.content.referenced key loop">Schlüsselverweisschleife</text>
+		<text key="validation.key name.contains consecutive points">Schlüssel enthält mehrere aufeinanderfolgende Punkte (.).</text>
+		<text key="validation.key name.contains multiple colons">Schlüssel enthält mehrere Doppelpunkte (:).</text>
+		<text key="validation.key name.empty">Schlüssel ist leer oder nur Leerzeichen.</text>
+		<text key="validation.key name.ends with colon">Schlüssel endet mit einem Doppelpunkt (:).</text>
+		<text key="validation.key name.ends with point">Schlüssel endet mit einem Punkt (.).</text>
+		<text key="validation.key name.starts with colon">Schlüssel beginnt mit einem Doppelpunkt (:).</text>
+		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
+		<text key="window.new culture.button.add culture">Kultur hinzufügen</text>
+		<text key="window.new culture.button.cancel">Abbrechen</text>
+		<text key="window.new culture.intro">Bitte wählen Sie die hinzuzufügende Kultur aus der Liste aus oder geben Sie ihren Code ein</text>
+		<text key="window.new culture.title">Neue Kultur hinzufügen</text>
+		<text key="window.settings.file">Datei</text>
+		<text key="window.settings.file.ask to upgrade">Beim Speichern in älterem Format nach Aktualisierung fragen</text>
+		<text key="window.settings.title">TxEditor-Einstellungen</text>
+		<text key="window.settings.view">Ansicht</text>
+		<text key="window.settings.view.character map selection">Auswahl der Zeichentabelle</text>
+		<text key="window.text key.button.cancel">Abbrechen</text>
+	</culture>
+	<culture name="de-AT">
+		<text key="Tx:number.group separator threshold">1</text>
+	</culture>
+	<culture name="de-CH">
+		<text key="Tx:quote begin">«</text>
+		<text key="Tx:quote end">»</text>
+		<text key="Tx:quote nested begin">‹</text>
+		<text key="Tx:quote nested end">›</text>
 	</culture>
 </translation>

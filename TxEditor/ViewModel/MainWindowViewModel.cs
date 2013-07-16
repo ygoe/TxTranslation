@@ -35,6 +35,9 @@ namespace TxEditor.ViewModel
 		private string loadedFilePath;
 		private string loadedFilePrefix;
 		private IList selectedTextKeys;
+		private List<TextKeyViewModel> viewHistory = new List<TextKeyViewModel>();
+		private int viewHistoryIndex;
+		private OpFlag navigatingHistory = new OpFlag();
 
 		#endregion Private data
 
@@ -44,13 +47,15 @@ namespace TxEditor.ViewModel
 		{
 			Instance = this;
 			
-			TextKeys = new HashSet<string>();
+			TextKeys = new Dictionary<string, TextKeyViewModel>();
 			LoadedCultureNames = new HashSet<string>();
 			DeletedCultureNames = new HashSet<string>();
 			RootTextKey = new TextKeyViewModel(null, false, null, this);
 			ProblemKeys = new ObservableHashSet<TextKeyViewModel>();
 
+			searchDc = DelayedCall.Create(UpdateSearch, 250);
 			SearchText = "";   // Change value once to set the clear button visibility
+			ClearViewHistory();
 
 			FontScale = App.Settings.FontScale;
 		}
@@ -59,7 +64,7 @@ namespace TxEditor.ViewModel
 
 		#region Public properties
 
-		public HashSet<string> TextKeys { get; private set; }
+		public Dictionary<string, TextKeyViewModel> TextKeys { get; private set; }
 		public HashSet<string> LoadedCultureNames { get; private set; }
 		public HashSet<string> DeletedCultureNames { get; private set; }
 		public TextKeyViewModel RootTextKey { get; private set; }
@@ -149,7 +154,7 @@ namespace TxEditor.ViewModel
 
 		public string CursorCharCategory
 		{
-			get { return cursorChar != null ? UnicodeInfo.GetChar(cursorChar[0]).Category : "No character at cursor"; }
+			get { return cursorChar != null ? UnicodeInfo.GetChar(cursorChar[0]).Category : Tx.T("statusbar.char info.no character at cursor"); }
 		}
 
 		public Visibility CursorCharVisibility
@@ -213,8 +218,64 @@ namespace TxEditor.ViewModel
 					OnPropertyChanged("SelectedCulture");
 					DeleteCultureCommand.RaiseCanExecuteChanged();
 					SetPrimaryCultureCommand.RaiseCanExecuteChanged();
+					if (selectedCulture != null)
+					{
+						LastSelectedCulture = selectedCulture;
+					}
 				}
 			}
+		}
+
+		private string lastSelectedCulture;
+		public string LastSelectedCulture
+		{
+			get { return lastSelectedCulture; }
+			set
+			{
+				if (value != lastSelectedCulture)
+				{
+					lastSelectedCulture = value;
+					OnPropertyChanged("LastSelectedCulture");
+					UpdateSuggestions();
+				}
+			}
+		}
+
+		private ObservableCollection<SuggestionViewModel> suggestions = new ObservableCollection<SuggestionViewModel>();
+		public ObservableCollection<SuggestionViewModel> Suggestions
+		{
+			get { return suggestions; }
+		}
+
+		private string suggestionsCulture;
+		public string SuggestionsCulture
+		{
+			get { return suggestionsCulture; }
+			set
+			{
+				if (value != suggestionsCulture)
+				{
+					suggestionsCulture = value;
+					OnPropertyChanged("SuggestionsCulture");
+					OnPropertyChanged("SuggestionsCultureCaption");
+				}
+			}
+		}
+
+		public string SuggestionsCultureCaption
+		{
+			get
+			{
+				if (!string.IsNullOrEmpty(suggestionsCulture))
+					return Tx.TC("suggestions.caption for", "name", suggestionsCulture);
+				else
+					return Tx.TC("suggestions.caption");
+			}
+		}
+
+		public int SelectionDummy
+		{
+			get { return 0; }
 		}
 
 		#endregion Data properties
@@ -550,22 +611,22 @@ namespace TxEditor.ViewModel
 
 		#region File section
 
-		private bool CheckModifiedSaved()
+		internal bool CheckModifiedSaved()
 		{
 			if (fileModified)
 			{
 				var result = TaskDialog.Show(
 					owner: MainWindow.Instance,
 					title: "TxEditor",
-					mainInstruction: "Would you like to save the changes to the loaded dictionary?",
-					content: "There are unsaved changes to the currently loaded dictionary. If you load new files, you must either save or discard those changes.",
-					customButtons: new string[] { "&Save", "Do&n't save", "&Cancel" },
+					mainInstruction: Tx.T("msg.save.save changes"),
+					content: Tx.T("msg.save.save changes.desc"),
+					customButtons: new string[] { Tx.T("task dialog.button.save"), Tx.T("task dialog.button.dont save"), Tx.T("task dialog.button.cancel") },
 					allowDialogCancellation: true);
 
 				if (result.CustomButtonResult == 0)
 				{
 					// Save
-					// TODO
+					return Save();
 				}
 				else if (result.CustomButtonResult != 1)
 				{
@@ -586,7 +647,7 @@ namespace TxEditor.ViewModel
 			DeletedCultureNames.Clear();
 			PrimaryCulture = null;
 			ProblemKeys.Clear();
-			StatusText = "";
+			StatusText = Tx.T("statusbar.new dictionary created");
 			loadedFilePath = null;
 			loadedFilePrefix = null;
 			UpdateTitle();
@@ -597,7 +658,7 @@ namespace TxEditor.ViewModel
 			if (!CheckModifiedSaved()) return;
 
 			var d = new OpenFolderDialog();
-			d.Title = "Load files from folder";
+			d.Title = Tx.T("msg.load folder.title");
 			if (d.ShowDialog(new Wpf32Window(MainWindow.Instance)) == true)
 			{
 				bool foundFiles = false;
@@ -626,10 +687,10 @@ namespace TxEditor.ViewModel
 					var result = TaskDialog.Show(
 						owner: MainWindow.Instance,
 						title: "TxEditor",
-						mainInstruction: "There are multiple dictionaries in the selected folder.",
-						content: "Please choose the dictionary to load:",
+						mainInstruction: Tx.T("msg.load folder.multiple dictionaries in folder"),
+						content: Tx.T("msg.load folder.multiple dictionaries in folder.desc"),
 						radioButtons: prefixes.ToArray(),
-						customButtons: new string[] { "&Load", "&Cancel" },
+						customButtons: new string[] { Tx.T("task dialog.button.load"), Tx.T("task dialog.button.cancel") },
 						allowDialogCancellation: true);
 					if (result.CustomButtonResult != 0 ||
 						result.RadioButtonResult == null)
@@ -657,6 +718,7 @@ namespace TxEditor.ViewModel
 							if (!foundFiles)
 							{
 								foundFiles = true;
+								fileModified = false;   // Prevent another unsaved warning from OnNewFile
 								OnNewFile();
 							}
 							LoadFromXmlFile(fileName);
@@ -668,13 +730,14 @@ namespace TxEditor.ViewModel
 				{
 					SortCulturesInTextKey(RootTextKey);
 					DeletedCultureNames.Clear();
-					ValidateTextKeys();
-					StatusText = fileCount + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+					ValidateTextKeysDelayed();
+					StatusText = Tx.T("statusbar.n files loaded", fileCount) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 					FileModified = false;
+					ClearViewHistory();
 				}
 				else
 				{
-					MessageBox.Show("No files were found in the selected folder.", "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+					MessageBox.Show(Tx.T("msg.load folder.no files found"), "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
 				}
 			}
 		}
@@ -688,7 +751,7 @@ namespace TxEditor.ViewModel
 			dlg.Filter = "Tx dictionary files (*.txd)|*.txd|XML files (*.xml)|*.xml|All files (*.*)|*.*";
 			dlg.Multiselect = true;
 			dlg.ShowReadOnly = false;
-			dlg.Title = "Select files to load";
+			dlg.Title = Tx.T("msg.load file.title");
 			if (dlg.ShowDialog(MainWindow.Instance) == true)
 			{
 				// Check for same prefix and reject mixed files
@@ -710,8 +773,8 @@ namespace TxEditor.ViewModel
 				if (prefixes.Count > 1)
 				{
 					MessageBox.Show(
-						"You cannot load files with different prefixes.",
-						"Error",
+						Tx.T("msg.load file.cannot load different prefixes"),
+						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
 					return;
@@ -726,6 +789,7 @@ namespace TxEditor.ViewModel
 					if (!foundFiles)
 					{
 						foundFiles = true;
+						fileModified = false;   // Prevent another unsaved warning from OnNewFile
 						OnNewFile();
 					}
 					LoadFromXmlFile(fileName);
@@ -734,13 +798,19 @@ namespace TxEditor.ViewModel
 
 				SortCulturesInTextKey(RootTextKey);
 				DeletedCultureNames.Clear();
-				ValidateTextKeys();
-				StatusText = dlg.FileNames.Length + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+				ValidateTextKeysDelayed();
+				StatusText = Tx.T("statusbar.n files loaded", dlg.FileNames.Length) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 				FileModified = false;
+				ClearViewHistory();
 			}
 		}
 
 		private void OnSave()
+		{
+			Save();
+		}
+
+		private bool Save()
 		{
 			string newFilePath = null;
 			string newFilePrefix = null;
@@ -752,9 +822,9 @@ namespace TxEditor.ViewModel
 				dlg.AddExtension = true;
 				dlg.CheckPathExists = true;
 				dlg.DefaultExt = ".txd";
-				dlg.Filter = "Tx dictionary files (*.txd)|*.txd|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+				dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" + Tx.T("file filter.xml files") + " (*.xml)|*.xml|" + Tx.T("file filter.all files") + " (*.*)|*.*";
 				dlg.OverwritePrompt = true;
-				dlg.Title = "Select file to save as";
+				dlg.Title = Tx.T("msg.save.title");
 				if (dlg.ShowDialog(MainWindow.Instance) == true)
 				{
 					newFilePath = Path.GetDirectoryName(dlg.FileName);
@@ -765,7 +835,7 @@ namespace TxEditor.ViewModel
 				}
 				else
 				{
-					return;
+					return false;
 				}
 			}
 			else if (fileVersion == 1)
@@ -779,13 +849,13 @@ namespace TxEditor.ViewModel
 						owner: MainWindow.Instance,
 						allowDialogCancellation: true,
 						title: "TxEditor",
-						mainInstruction: "Would you like to upgrade the file to format version 2?",
-						customButtons: new string[] { "&Upgrade", "&Save in original format" },
-						verificationText: "Don’t ask again");
+						mainInstruction: Tx.T("msg.save.upgrade to format 2"),
+						customButtons: new string[] { Tx.T("task dialog.button.upgrade"), Tx.T("task dialog.button.save in original format") },
+						verificationText: Tx.T("msg.save.upgrade to format 2.dont ask again"));
 
 					if (result.CustomButtonResult == null)
 					{
-						return;
+						return false;
 					}
 					if (result.CustomButtonResult == 0)
 					{
@@ -834,14 +904,13 @@ namespace TxEditor.ViewModel
 						owner: MainWindow.Instance,
 						allowDialogCancellation: true,
 						title: "TxEditor",
-						mainInstruction: "Incompatible features used for file format version 1.",
-						content: "You are about to save the dictionary in a format 1 file but have used features that are not supported by this format. " +
-							"If you save in this format anyway, modulo specifications will be lost and advanced placeholders may not work at runtime.",
-						customButtons: new string[] { "&Save anyway", "Do&n’t save" });
+						mainInstruction: Tx.T("msg.save.incompatible with format 1"),
+						content: Tx.T("msg.save.incompatible with format 1.desc"),
+						customButtons: new string[] { Tx.T("task dialog.button.save anyway"), Tx.T("task dialog.button.dont save") });
 
 					if (result.CustomButtonResult != 0)
 					{
-						return;
+						return false;
 					}
 				}
 			}
@@ -857,6 +926,8 @@ namespace TxEditor.ViewModel
 				WriteToXmlFile(Path.Combine(loadedFilePath, loadedFilePrefix));
 			}
 			UpdateTitle();
+			StatusText = Tx.T("statusbar.file saved");
+			return true;
 		}
 
 		private void OnImportFile()
@@ -890,6 +961,7 @@ namespace TxEditor.ViewModel
 					PrimaryCulture = ci.IetfLanguageTag;
 				}
 				FileModified = true;
+				StatusText = Tx.T("statusbar.culture added", "name", CultureInfoName(ci));
 			}
 		}
 
@@ -903,20 +975,23 @@ namespace TxEditor.ViewModel
 			CultureInfo ci = new CultureInfo(SelectedCulture);
 
 			if (MessageBox.Show(
-				"Are you sure to delete the culture " +
-					(App.Settings.NativeCultureNames ? ci.NativeName : ci.DisplayName) +
-					" [" + ci.IetfLanguageTag + "]?",
-				"Delete culture",
+				Tx.T("msg.delete culture", "name", CultureInfoName(ci)),
+				Tx.T("msg.delete culture.title"),
 				MessageBoxButton.YesNo,
 				MessageBoxImage.Question) == MessageBoxResult.Yes)
 			{
 				DeleteCulture(RootTextKey, SelectedCulture, true);
+				StatusText = Tx.T("statusbar.culture deleted", "name", CultureInfoName(ci));
 				FileModified = true;
 			}
 		}
 
 		private void OnReplaceCulture()
 		{
+			//SortCulturesInTextKey(RootTextKey);
+			//ValidateTextKeys();
+			//FileModified = true;
+			//SetPrimaryCultureCommand.RaiseCanExecuteChanged();
 		}
 
 		private void OnInsertSystemKeys()
@@ -935,24 +1010,23 @@ namespace TxEditor.ViewModel
 		private void OnSetPrimaryCulture()
 		{
 			CultureInfo ci = new CultureInfo(SelectedCulture);
-			string cultureName = Tx.U(App.Settings.NativeCultureNames ? ci.NativeName : ci.DisplayName) + " [" + ci.IetfLanguageTag + "]";
+			string cultureName = CultureInfoName(ci);
 
 			var result = TaskDialog.Show(
 				owner: MainWindow.Instance,
 				title: "TxEditor",
-				mainInstruction: "Are you sure to switch the primary culture to " + cultureName  + "?",
-				content: "The primary culture is used as fallback to find untranslated texts. " +
-					"It also serves as reference to find inconsistencies and all text key comments are assigned to it. " +
-					"The comments will be moved to the new primary culture.",
-				customButtons: new string[] { "&Switch", "&Cancel" },
+				mainInstruction: Tx.T("msg.set primary culture", "name", cultureName),
+				content: Tx.T("msg.set primary culture.desc"),
+				customButtons: new string[] { Tx.T("task dialog.button.switch"), Tx.T("task dialog.button.cancel") },
 				allowDialogCancellation: true);
 
 			if (result.CustomButtonResult == 0)
 			{
 				PrimaryCulture = SelectedCulture;
 				SortCulturesInTextKey(RootTextKey);
-				ValidateTextKeys();
+				ValidateTextKeysDelayed();
 				FileModified = true;
+				StatusText = Tx.T("statusbar.primary culture set", "name", CultureInfoName(ci));
 				SetPrimaryCultureCommand.RaiseCanExecuteChanged();
 			}
 		}
@@ -990,20 +1064,22 @@ namespace TxEditor.ViewModel
 				}
 				tk.UpdateCultureTextSeparators();
 
-				ValidateTextKeys();
+				ValidateTextKeysDelayed();
 				FileModified = true;
 
+				bool wasExpanded = tk.IsExpanded;
 				tk.IsExpanded = true;   // Expands all parents
-				tk.IsExpanded = false;   // Collapses this item again
+				if (!wasExpanded)
+					tk.IsExpanded = false;   // Collapses this item again
 				ViewCommandManager.InvokeLoaded("SelectTextKey", tk);
 
 				if (alreadyExists)
 				{
-					MessageBox.Show(
-						"The entered text key already exists and is now selected.",
-						"Warning",
-						MessageBoxButton.OK,
-						MessageBoxImage.Information);
+					StatusText = Tx.T("statusbar.text key already exists");
+				}
+				else
+				{
+					StatusText = Tx.T("statusbar.text key added");
 				}
 
 				if (tk.CultureTextVMs.Count > 0)
@@ -1017,6 +1093,9 @@ namespace TxEditor.ViewModel
 			DeleteTextKeyCommand.RaiseCanExecuteChanged();
 			RenameTextKeyCommand.RaiseCanExecuteChanged();
 			DuplicateTextKeyCommand.RaiseCanExecuteChanged();
+			AppendViewHistory();
+			UpdateNavigationButtons();
+			UpdateSuggestions();
 		}
 
 		private bool CanDeleteTextKey()
@@ -1029,13 +1108,18 @@ namespace TxEditor.ViewModel
 			if (selectedTextKeys == null || selectedTextKeys.Count == 0) return;
 
 			int count = 0;
+			bool onlyFullKeysSelected = true;
 			foreach (TextKeyViewModel tk in selectedTextKeys)
 			{
+				// TODO: Check whether any selected key is a child of another selected key -> don't count them additionally
 				count += CountTextKeys(tk);
+				if (!tk.IsFullKey)
+					onlyFullKeysSelected = false;
 			}
 			if (count == 0) return;   // Means there were nodes with no full keys, should not happen
 
 			TaskDialogResult result;
+			bool selectedOnlyOption = false;
 			if (count == 1)
 			{
 				result = TaskDialog.Show(
@@ -1045,6 +1129,18 @@ namespace TxEditor.ViewModel
 					mainInstruction: "Deleting text key " + Tx.Q(lastCountedTextKey) + ".",
 					content: "Are you sure to delete the selected text key with the texts of all cultures? This cannot be undone.",
 					customButtons: new string[] { "Delete", "Cancel" });
+			}
+			else if (onlyFullKeysSelected && selectedTextKeys.Count < count)
+			{
+				result = TaskDialog.Show(
+					owner: MainWindow.Instance,
+					allowDialogCancellation: true,
+					title: "TxEditor",
+					mainInstruction: "Deleting " + count + " text keys.",
+					content: "You have selected full text keys that also contain other subkeys. Are you sure to delete the selected text keys with the texts of all cultures? This cannot be undone.",
+					radioButtons: new string[] { "Also delete all subkeys", "Only delete selected keys" },
+					customButtons: new string[] { "Delete", "Cancel" });
+				selectedOnlyOption = result.RadioButtonResult == 1;
 			}
 			else
 			{
@@ -1062,13 +1158,13 @@ namespace TxEditor.ViewModel
 				selectedTextKeys.CopyTo(selectedTextKeysArray, 0);
 				foreach (TextKeyViewModel tk in selectedTextKeysArray)
 				{
-					DeleteTextKey(tk);
+					DeleteTextKey(tk, !selectedOnlyOption);
 					// Also remove unused partial keys
 					DeletePartialParentKeys(tk.Parent as TextKeyViewModel);
 					FileModified = true;
 				}
 
-				StatusText = count + " text keys deleted.";
+				StatusText = Tx.T("statusbar.n text keys deleted", count);
 			}
 		}
 
@@ -1091,18 +1187,32 @@ namespace TxEditor.ViewModel
 			return count;
 		}
 
-		private void DeleteTextKey(TextKeyViewModel tk)
+		private void DeleteTextKey(TextKeyViewModel tk, bool includeChildren = true)
 		{
-			foreach (TextKeyViewModel child in tk.Children.ToArray())
+			if (includeChildren)
 			{
-				DeleteTextKey(child);
+				foreach (TextKeyViewModel child in tk.Children.ToArray())
+				{
+					DeleteTextKey(child);
+				}
 			}
 			if (tk.IsFullKey)
 			{
 				TextKeys.Remove(tk.TextKey);
 				ProblemKeys.Remove(tk);
 			}
-			tk.Parent.Children.Remove(tk);
+			if (tk.Children.Count == 0)
+			{
+				tk.Parent.Children.Remove(tk);
+			}
+			else
+			{
+				tk.IsFullKey = false;
+				tk.CultureTextVMs.Clear();
+				tk.Comment = null;
+				tk.Validate();
+				OnPropertyChanged("SelectionDummy");
+			}
 		}
 
 		/// <summary>
@@ -1146,11 +1256,111 @@ namespace TxEditor.ViewModel
 			TextKeyWizardWindow win = new TextKeyWizardWindow();
 			win.Owner = MainWindow.Instance;
 
+			if (win.ShowDialog() == true)
+			{
+				HandleWizardInput(win.TextKeyText.Text, win.TranslationText.Text);
+			}
+		}
+
+		private IntPtr fgWin;
+
+		public void TextKeyWizardFromHotKey()
+		{
+			// Determine the currently active window
+			fgWin = WinApi.GetForegroundWindow();
+
+			// Require it to be Visual Studio, otherwise do nothing more
+			StringBuilder sb = new StringBuilder(1000);
+			WinApi.GetWindowText(fgWin, sb, 1000);
+			if (!sb.ToString().EndsWith(" - Microsoft Visual Studio")) return;
+
+			// Send Ctrl+C keys to the active window to copy the selected text
+			// (First send events to release the still-pressed hot key buttons Ctrl and Shift)
+			WinApi.INPUT[] inputs = new WinApi.INPUT[]
+			{
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL, dwFlags = WinApi.KEYEVENTF_KEYUP } },
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.SHIFT, dwFlags = WinApi.KEYEVENTF_KEYUP } },
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL } },
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.C) } },
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.C), dwFlags = WinApi.KEYEVENTF_KEYUP } },
+				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL, dwFlags = WinApi.KEYEVENTF_KEYUP } },
+			};
+			uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
+			//System.Diagnostics.Debug.WriteLine(ret + " inputs sent");
+			
+			//System.Threading.Thread.Sleep(50);
+			DelayedCall.Start(TextKeyWizardFromHotKey2, 50);
+		}
+
+		private void TextKeyWizardFromHotKey2()
+		{
+			// Create the wizard window
+			TextKeyWizardWindow win = new TextKeyWizardWindow();
+			//win.Owner = MainWindow.Instance;
+			win.ShowInTaskbar = true;
+
 			MainWindow.Instance.Hide();
 
-			win.ShowDialog();
+			bool ok = false;
+			if (win.ShowDialog() == true)
+			{
+				HandleWizardInput(win.TextKeyText.Text, win.TranslationText.Text);
+
+				ok = true;
+			}
 
 			MainWindow.Instance.Show();
+			// Activate the window we're initially coming from
+			WinApi.SetForegroundWindow(fgWin);
+
+			if (ok)
+			{
+				// Send Ctrl+V keys to paste the new Tx call with the text key,
+				// directly replacing the literal string that was selected before
+				WinApi.INPUT[] inputs = new WinApi.INPUT[]
+				{
+					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL } },
+					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.V) } },
+					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.V), dwFlags = WinApi.KEYEVENTF_KEYUP } },
+					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL, dwFlags = WinApi.KEYEVENTF_KEYUP } },
+				};
+				uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
+			}
+		}
+
+		private void HandleWizardInput(string keyName, string text)
+		{
+			TextKeyViewModel tk = FindOrCreateTextKey(keyName);
+
+			bool alreadyExists = !tk.IsEmpty();
+
+			// Ensure that all loaded cultures exist in every text key so that they can be entered
+			foreach (string cn in LoadedCultureNames)
+			{
+				EnsureCultureInTextKey(tk, cn);
+			}
+			tk.UpdateCultureTextSeparators();
+
+			// Set the text for the new key
+			tk.CultureTextVMs[0].Text = text;
+
+			ValidateTextKeysDelayed();
+			FileModified = true;
+
+			if (alreadyExists)
+			{
+				StatusText = Tx.T("statusbar.text key already exists");
+			}
+			else
+			{
+				StatusText = Tx.T("statusbar.text key added");
+			}
+
+			bool wasExpanded = tk.IsExpanded;
+			tk.IsExpanded = true;   // Expands all parents
+			if (!wasExpanded)
+				tk.IsExpanded = false;   // Collapses the item again like it was before
+			ViewCommandManager.InvokeLoaded("SelectTextKey", tk);
 		}
 
 		private bool CanRenameTextKey()
@@ -1189,14 +1399,14 @@ namespace TxEditor.ViewModel
 				string newKey = win.TextKey;
 
 				TextKeyViewModel tryDestKey = FindOrCreateTextKey(newKey, false, false);
-				bool destExists = !tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0;
+				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
 				if (destExists)
 				{
 					// TODO: What to consider if the destination key already has children?
 					// TODO: Ask user to merge, overwrite or cancel.
 					MessageBox.Show(
 						"The destination key already exists. Handling this is not yet implemented.",
-						"Error",
+						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
 					return;
@@ -1209,7 +1419,7 @@ namespace TxEditor.ViewModel
 
 				TextKeyViewModel destKey = FindOrCreateTextKey(newKey, false);
 
-				if (destExists)
+				if (!destExists)
 				{
 					// Key was entirely empty or is newly created.
 					// Replace it with the source key.
@@ -1248,6 +1458,7 @@ namespace TxEditor.ViewModel
 				}
 	
 				FileModified = true;
+				StatusText = Tx.T("statusbar.text key renamed");
 
 				// Fix an issue with MultiSelectTreeView: It can only know that an item is selected
 				// when its TreeViewItem property IsSelected is set through a binding defined in
@@ -1282,20 +1493,24 @@ namespace TxEditor.ViewModel
 
 		private bool CanNavigateBack()
 		{
-			return false;
+			return viewHistoryIndex > 0;
 		}
 
 		private void OnNavigateBack()
 		{
+			ViewHistoryBack();
+			UpdateNavigationButtons();
 		}
 
 		private bool CanNavigateForward()
 		{
-			return false;
+			return viewHistoryIndex < viewHistory.Count - 1;
 		}
 
 		private void OnNavigateForward()
 		{
+			ViewHistoryForward();
+			UpdateNavigationButtons();
 		}
 
 		private bool CanGotoDefinition()
@@ -1305,6 +1520,12 @@ namespace TxEditor.ViewModel
 
 		private void OnGotoDefinition()
 		{
+		}
+
+		private void UpdateNavigationButtons()
+		{
+			NavigateBackCommand.RaiseCanExecuteChanged();
+			NavigateForwardCommand.RaiseCanExecuteChanged();
 		}
 
 		#endregion View section
@@ -1375,8 +1596,8 @@ namespace TxEditor.ViewModel
 				LoadFromXmlFile(fileName);
 				count++;
 			}
-			ValidateTextKeys();
-			StatusText = count + " file(s) loaded, " + TextKeys.Count + " text keys defined.";
+			ValidateTextKeysDelayed();
+			StatusText = Tx.T("statusbar.n files loaded", count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 			FileModified = false;
 		}
 
@@ -1488,7 +1709,19 @@ namespace TxEditor.ViewModel
 					}
 				}
 
+				string comment = null;
+				XmlAttribute commentAttr = textNode.Attributes["comment"];
+				if (commentAttr != null)
+				{
+					comment = commentAttr.Value;
+					if (string.IsNullOrWhiteSpace(comment))
+						comment = null;
+				}
+
 				TextKeyViewModel tk = FindOrCreateTextKey(key);
+
+				if (comment != null)
+					tk.Comment = comment;
 
 				// Ensure that all loaded cultures exist in every text key so that they can be entered
 				foreach (string cn in LoadedCultureNames)
@@ -1572,8 +1805,8 @@ namespace TxEditor.ViewModel
 
 			if (create)
 			{
-				if (updateTextKeys && !TextKeys.Contains(textKey))
-					TextKeys.Add(textKey);
+				if (updateTextKeys && !TextKeys.ContainsKey(textKey))
+					TextKeys.Add(textKey, tk);
 				tk.IsFullKey = true;
 			}
 			return tk;
@@ -1699,6 +1932,19 @@ namespace TxEditor.ViewModel
 						keyAttr.Value = textKeyVM.TextKey;
 						textElement.Attributes.Append(keyAttr);
 						textElement.InnerText = cultureTextVM.Text;
+
+						// Add the text key comment to the primary culture
+						// (If no primary culture is set, the first-displayed is used to save the comments)
+						if (!string.IsNullOrWhiteSpace(textKeyVM.Comment))
+						{
+							if (PrimaryCulture != null && cultureName == PrimaryCulture ||
+								PrimaryCulture == null && cultureName == textKeyVM.CultureTextVMs[0].CultureName)
+							{
+								var commentAttr = xe.OwnerDocument.CreateAttribute("comment");
+								commentAttr.Value = textKeyVM.Comment;
+								textElement.Attributes.Append(commentAttr);
+							}
+						}
 					}
 					foreach (var quantifiedTextVM in cultureTextVM.QuantifiedTextVMs.OrderBy(qt => qt.Count).ThenBy(qt => qt.Modulo))
 					{
@@ -1745,9 +1991,24 @@ namespace TxEditor.ViewModel
 
 		#region Text validation
 
+		private DelayedCall validateDc;
+
+		public void ValidateTextKeysDelayed()
+		{
+			if (validateDc == null)
+			{
+				validateDc = DelayedCall.Start(ValidateTextKeys, 500);
+			}
+			else
+			{
+				validateDc.Reset();
+			}
+		}
+
 		public void ValidateTextKeys()
 		{
 			RootTextKey.Validate();
+			UpdateSuggestions();
 		}
 
 		#endregion Text validation
@@ -1780,7 +2041,7 @@ namespace TxEditor.ViewModel
 			DeletedCultureNames.Remove(cultureName);   // in case it's been deleted before
 			if (validate)
 			{
-				ValidateTextKeys();
+				ValidateTextKeysDelayed();
 			}
 		}
 
@@ -1802,7 +2063,7 @@ namespace TxEditor.ViewModel
 			}
 			if (validate)
 			{
-				ValidateTextKeys();
+				ValidateTextKeysDelayed();
 			}
 		}
 
@@ -1825,6 +2086,12 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		public static string CultureInfoName(CultureInfo ci, bool includeCode = true)
+		{
+			return Tx.U(App.Settings.NativeCultureNames ? ci.NativeName : ci.DisplayName) +
+				(includeCode ? " [" + ci.IetfLanguageTag + "]" : "");
+		}
+
 		#endregion Culture management
 
 		#region Window management
@@ -1845,10 +2112,118 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private void SelectTextKey(TextKeyViewModel tk, bool async = false)
+		{
+			if (tk != null)
+			{
+				bool wasExpanded = tk.IsExpanded;
+				tk.IsExpanded = true;   // Expands all parents
+				if (!wasExpanded)
+					tk.IsExpanded = false;   // Collapses the item again like it was before
+			}
+			if (async)
+				ViewCommandManager.InvokeLoaded("SelectTextKey", tk);
+			else
+				ViewCommandManager.Invoke("SelectTextKey", tk);
+		}
+
+		private void SelectTextKey(string textKey, bool async = false)
+		{
+			TextKeyViewModel tk;
+			if (TextKeys.TryGetValue(textKey, out tk))
+			{
+				SelectTextKey(tk, async);
+			}
+		}
+
+		private void SelectCultureText(TextKeyViewModel tk, string cultureName)
+		{
+			if (tk != null &&
+				tk.CultureTextVMs != null)
+			{
+				var ct = tk.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
+				if (ct != null)
+				{
+					ct.ViewCommandManager.InvokeLoaded("FocusText");
+				}
+			}
+		}
+
+		private void ClearViewHistory()
+		{
+			viewHistory.Clear();
+			if (selectedTextKeys != null && selectedTextKeys.Count > 0)
+				viewHistory.Add(selectedTextKeys[0] as TextKeyViewModel);
+			else
+				viewHistory.Add(null);
+			viewHistoryIndex = 0;
+		}
+
+		private void AppendViewHistory()
+		{
+			if (navigatingHistory.IsSet)
+			{
+				// Currently navigating through the history, don't interfer that
+				return;
+			}
+			if (selectedTextKeys != null &&
+				selectedTextKeys.Count > 0 &&
+				selectedTextKeys[0] == viewHistory[viewHistory.Count - 1])
+			{
+				// First selected item has not changed, do nothing
+				return;
+			}
+			if (selectedTextKeys != null &&
+				selectedTextKeys.Count == 0)
+			{
+				// Nothing selected, nothing to remember
+				return;
+			}
+
+			// Clear any future history
+			while (viewHistory.Count > viewHistoryIndex + 1)
+			{
+				viewHistory.RemoveAt(viewHistory.Count - 1);
+			}
+
+			if (selectedTextKeys != null && selectedTextKeys.Count > 0)
+				viewHistory.Add(selectedTextKeys[0] as TextKeyViewModel);
+			else
+				viewHistory.Add(null);
+			viewHistoryIndex++;
+		}
+
+		private void ViewHistoryBack()
+		{
+			if (viewHistoryIndex > 0)
+			{
+				using (new OpLock(navigatingHistory))
+				{
+					viewHistoryIndex--;
+					SelectTextKey(viewHistory[viewHistoryIndex]);
+					SelectCultureText(viewHistory[viewHistoryIndex], LastSelectedCulture);
+				}
+			}
+		}
+
+		private void ViewHistoryForward()
+		{
+			if (viewHistoryIndex < viewHistory.Count - 1)
+			{
+				using (new OpLock(navigatingHistory))
+				{
+					viewHistoryIndex++;
+					SelectTextKey(viewHistory[viewHistoryIndex]);
+					SelectCultureText(viewHistory[viewHistoryIndex], LastSelectedCulture);
+				}
+			}
+		}
+
 		#endregion Window management
 
 		#region Text search
 
+		private DelayedCall searchDc;
 		private string searchText;
 		public string SearchText
 		{
@@ -1862,7 +2237,24 @@ namespace TxEditor.ViewModel
 				{
 					searchText = value;
 					OnPropertyChanged("SearchText");
-					UpdateSearch();
+					searchDc.Reset();
+				}
+			}
+		}
+
+		private string shadowSearchText;
+		public string ShadowSearchText
+		{
+			get
+			{
+				return shadowSearchText;
+			}
+			set
+			{
+				if (value != shadowSearchText)
+				{
+					shadowSearchText = value;
+					OnPropertyChanged("ShadowSearchText");
 				}
 			}
 		}
@@ -1872,23 +2264,34 @@ namespace TxEditor.ViewModel
 		/// </summary>
 		public void UpdateSearch()
 		{
+			ShadowSearchText = SearchText;
+
 			bool isSearch = !string.IsNullOrWhiteSpace(searchText);
-			UpdateTextKeyVisibility(RootTextKey, isSearch);
+			int count = UpdateTextKeyVisibility(RootTextKey, isSearch);
+			if (isSearch)
+				StatusText = Tx.T("statusbar.n results", count);
+			else
+				StatusText = "";
 		}
 
-		private void UpdateTextKeyVisibility(TextKeyViewModel tk, bool isSearch)
+		private int UpdateTextKeyVisibility(TextKeyViewModel tk, bool isSearch)
 		{
+			int count = 0;
 			foreach (TextKeyViewModel child in tk.Children)
 			{
-				bool isVisible = !isSearch || child.TextKey.ToLower().Contains(searchText.ToLower());
+				bool isVisible =
+					!isSearch ||
+					child.TextKey.ToLower().Contains(searchText.ToLower()) ||
+					child.CultureTextVMs.Any(ct => ct.Text != null && ct.Text.ToLower().Contains(searchText.ToLower()));
 				if (problemFilterActive)
 				{
-					isVisible &= child.HasProblem;
+					isVisible &= child.HasOwnProblem;
 				}
 
 				child.IsVisible = isVisible;
 				if (isVisible)
 				{
+					count++;
 					TreeViewItemViewModel parent = child.Parent;
 					while (parent != null)
 					{
@@ -1898,12 +2301,403 @@ namespace TxEditor.ViewModel
 				}
 				if (child.Children.Count > 0)
 				{
-					UpdateTextKeyVisibility(child, isSearch);
+					count += UpdateTextKeyVisibility(child, isSearch);
 				}
 			}
+			return count;
 		}
 
 		#endregion Text search
+
+		#region Suggestions
+
+		private void AddDummySuggestion()
+		{
+			SuggestionViewModel suggestion = new SuggestionViewModel(this);
+			suggestion.BaseText = Tx.T("suggestions.none");
+			suggestions.Add(suggestion);
+		}
+
+		private void UpdateSuggestions()
+		{
+			Match m;
+
+			suggestions.Clear();
+
+			if (string.IsNullOrEmpty(lastSelectedCulture))
+			{
+				AddDummySuggestion();
+				return;
+			}
+			if (!LoadedCultureNames.Contains(lastSelectedCulture))
+			{
+				AddDummySuggestion();
+				return;
+			}
+			SuggestionsCulture = CultureInfoName(new CultureInfo(lastSelectedCulture), false);
+			//if (lastSelectedCulture == primaryCulture) return;
+
+			TextKeyViewModel tk = selectedTextKeys != null && selectedTextKeys.Count > 0 ? selectedTextKeys[0] as TextKeyViewModel : null;
+			if (tk == null || tk.CultureTextVMs.Count < 1)
+			{
+				AddDummySuggestion();
+				return;
+			}
+
+			// The text we're finding translation suggestions for
+			string refText = tk.CultureTextVMs[0].Text;
+			if (refText == null)
+			{
+				AddDummySuggestion();
+				return;
+			}
+
+			//// Find the most common words to filter them out
+			//Dictionary<string, int> wordCount = new Dictionary<string, int>();
+			//foreach (var kvp in TextKeys)
+			//{
+			//    string otherBaseText = kvp.Value.CultureTextVMs[0].Text;
+			//    if (string.IsNullOrEmpty(otherBaseText)) continue;
+
+			//    // Remove all placeholders and key references
+			//    string otherText = Regex.Replace(otherBaseText, @"(?<!\{)\{[^{]*?\}", "");
+
+			//    // Extract all words
+			//    m = Regex.Match(otherText, @"(\w{2,})");
+			//    while (m.Success)
+			//    {
+			//        string lcWord = m.Groups[1].Value.ToLowerInvariant();
+
+			//        int count;
+			//        if (wordCount.TryGetValue(lcWord, out count))
+			//        {
+			//            wordCount[lcWord] = count + 1;
+			//        }
+			//        else
+			//        {
+			//            wordCount[lcWord] = 1;
+			//        }
+
+			//        m = m.NextMatch();
+			//    }
+			//}
+
+			//HashSet<string> commonWords = new HashSet<string>();
+			//if (wordCount.Count > 0)
+			//{
+			//    int maxCount = wordCount.Select(kvp => kvp.Value).Max();
+			//    foreach (var kvp in wordCount.OrderByDescending(kvp => kvp.Value))
+			//    {
+			//        if (commonWords.Count < (int) (wordCount.Count * 0.05) ||
+			//            kvp.Value >= (int) (maxCount * 0.8))
+			//        {
+			//            commonWords.Add(kvp.Key);
+			//        }
+			//    }
+			//}
+
+			//commonWords.Clear();
+			//commonWords.Add("all");
+			//commonWords.Add("also");
+			//commonWords.Add("an");
+			//commonWords.Add("and");
+			//commonWords.Add("are");
+			//commonWords.Add("as");
+			//commonWords.Add("at");
+			//commonWords.Add("be");
+			//commonWords.Add("but");
+			//commonWords.Add("by");
+			//commonWords.Add("can");
+			//commonWords.Add("cannot");
+			//commonWords.Add("do");
+			//commonWords.Add("don");
+			//commonWords.Add("each");
+			//commonWords.Add("for");
+			//commonWords.Add("from");
+			//commonWords.Add("have");
+			//commonWords.Add("if");
+			//commonWords.Add("in");
+			//commonWords.Add("into");
+			//commonWords.Add("is");
+			//commonWords.Add("it");
+			//commonWords.Add("its");
+			//commonWords.Add("may");
+			//commonWords.Add("must");
+			//commonWords.Add("no");
+			//commonWords.Add("not");
+			//commonWords.Add("of");
+			//commonWords.Add("on");
+			//commonWords.Add("please");
+			//commonWords.Add("that");
+			//commonWords.Add("the");
+			//commonWords.Add("there");
+			//commonWords.Add("this");
+			//commonWords.Add("those");
+			//commonWords.Add("to");
+			//commonWords.Add("were");
+			//commonWords.Add("will");
+			//commonWords.Add("with");
+			//commonWords.Add("would");
+			//commonWords.Add("you");
+			//commonWords.Add("your");
+
+			HashSet<string> commonWords;
+			if (lastSelectedCulture.StartsWith("de"))
+			{
+				// GERMAN STOPWORDS 
+				// Zusammmengetragen von Marco Götze, Steffen Geyer
+				// Last update: 2011-01-15
+				// Source: http://solariz.de/649/deutsche-stopwords.htm
+				// Via: http://en.wikipedia.org/wiki/Stop_words
+				commonWords = new HashSet<string>(new string[]
+				{
+					"ab", "aber", "abgerufen", "abgerufene", "abgerufener", "abgerufenes", "acht", "ähnlich", "alle", "allein", "allem",
+					"allen", "aller", "allerdings", "allerlei", "alles", "allgemein", "allmählich", "allzu", "als", "alsbald", "also",
+					"am", "an", "ander", "andere", "anderem", "anderen", "anderer", "andererseits", "anderes", "anderm", "andern",
+					"andernfalls", "anders", "anerkannt", "anerkannte", "anerkannter", "anerkanntes", "anfangen", "anfing", "angefangen",
+					"angesetze", "angesetzt", "angesetzten", "angesetzter", "ansetzen", "anstatt", "arbeiten", "auch", "auf", "aufgehört",
+					"aufgrund", "aufhören", "aufhörte", "aufzusuchen", "aus", "ausdrücken", "ausdrückt", "ausdrückte", "ausgenommen",
+					"außen", "ausser", "außer", "ausserdem", "außerdem", "außerhalb", "author", "autor", "bald", "bearbeite",
+					"bearbeiten", "bearbeitete", "bearbeiteten", "bedarf", "bedürfen", "bedurfte", "befragen", "befragte", "befragten",
+					"befragter", "begann", "beginnen", "begonnen", "behalten", "behielt", "bei", "beide", "beiden", "beiderlei", "beides",
+					"beim", "beinahe", "beitragen", "beitrugen", "bekannt", "bekannte", "bekannter", "bekennen", "benutzt", "bereits",
+					"berichten", "berichtet", "berichtete", "berichteten", "besonders", "besser", "bestehen", "besteht", "beträchtlich",
+					"bevor", "bezüglich", "bietet", "bin", "bis", "bis", "bisher", "bislang", "bist", "bleiben", "blieb", "bloß", "bloss",
+					"böden", "brachte", "brachten", "brauchen", "braucht", "bräuchte", "bringen", "bsp", "bzw", "ca", "da", "dabei",
+					"dadurch", "dafür", "dagegen", "daher", "dahin", "damals", "damit", "danach", "daneben", "dank", "danke", "danken",
+					"dann", "dannen", "daran", "darauf", "daraus", "darf", "darfst", "darin", "darüber", "darüberhinaus", "darum",
+					"darunter", "das", "daß", "dass", "dasselbe", "davon", "davor", "dazu", "dein", "deine", "deinem", "deinen", "deiner",
+					"deines", "dem", "demnach", "demselben", "den", "denen", "denn", "dennoch", "denselben", "der", "derart", "derartig",
+					"derem", "deren", "derer", "derjenige", "derjenigen", "derselbe", "derselben", "derzeit", "des", "deshalb",
+					"desselben", "dessen", "desto", "deswegen", "dich", "die", "diejenige", "dies", "diese", "dieselbe", "dieselben",
+					"diesem", "diesen", "dieser", "dieses", "diesseits", "dinge", "dir", "direkt", "direkte", "direkten", "direkter",
+					"doch", "doppelt", "dort", "dorther", "dorthin", "drauf", "drei", "dreißig", "drin", "dritte", "drüber", "drunter",
+					"du", "dunklen", "durch", "durchaus", "dürfen", "durfte", "dürfte", "durften", "eben", "ebenfalls", "ebenso", "ehe",
+					"eher", "eigenen", "eigenes", "eigentlich", "ein", "einbaün", "eine", "einem", "einen", "einer", "einerseits",
+					"eines", "einfach", "einführen", "einführte", "einführten", "eingesetzt", "einig", "einige", "einigem", "einigen",
+					"einiger", "einigermaßen", "einiges", "einmal", "eins", "einseitig", "einseitige", "einseitigen", "einseitiger",
+					"einst", "einstmals", "einzig", "ende", "entsprechend", "entweder", "er", "ergänze", "ergänzen", "ergänzte",
+					"ergänzten", "erhält", "erhalten", "erhielt", "erhielten", "erneut", "eröffne", "eröffnen", "eröffnet", "eröffnete",
+					"eröffnetes", "erst", "erste", "ersten", "erster", "es", "etc", "etliche", "etwa", "etwas", "euch", "euer", "eure",
+					"eurem", "euren", "eurer", "eures", "fall", "falls", "fand", "fast", "ferner", "finden", "findest", "findet",
+					"folgende", "folgenden", "folgender", "folgendes", "folglich", "fordern", "fordert", "forderte", "forderten",
+					"fortsetzen", "fortsetzt", "fortsetzte", "fortsetzten", "fragte", "frau", "frei", "freie", "freier", "freies", "fuer",
+					"fünf", "für", "gab", "gängig", "gängige", "gängigen", "gängiger", "gängiges", "ganz", "ganze", "ganzem", "ganzen",
+					"ganzer", "ganzes", "gänzlich", "gar", "gbr", "geb", "geben", "geblieben", "gebracht", "gedurft", "geehrt", "geehrte",
+					"geehrten", "geehrter", "gefallen", "gefälligst", "gefällt", "gefiel", "gegeben", "gegen", "gehabt", "gehen", "geht",
+					"gekommen", "gekonnt", "gemacht", "gemäss", "gemocht", "genommen", "genug", "gern", "gesagt", "gesehen", "gestern",
+					"gestrige", "getan", "geteilt", "geteilte", "getragen", "gewesen", "gewissermaßen", "gewollt", "geworden", "ggf",
+					"gib", "gibt", "gleich", "gleichwohl", "gleichzeitig", "glücklicherweise", "gmbh", "gratulieren", "gratuliert",
+					"gratulierte", "gute", "guten", "hab", "habe", "haben", "haette", "halb", "hallo", "hast", "hat", "hätt", "hatte",
+					"hätte", "hatten", "hätten", "hattest", "hattet", "heraus", "herein", "heute", "heutige", "hier", "hiermit",
+					"hiesige", "hin", "hinein", "hinten", "hinter", "hinterher", "hoch", "höchstens", "hundert", "ich", "igitt", "ihm",
+					"ihn", "ihnen", "ihr", "ihre", "ihrem", "ihren", "ihrer", "ihres", "im", "immer", "immerhin", "important", "in",
+					"indem", "indessen", "info", "infolge", "innen", "innerhalb", "ins", "insofern", "inzwischen", "irgend", "irgendeine",
+					"irgendwas", "irgendwen", "irgendwer", "irgendwie", "irgendwo", "ist", "ja", "jährig", "jährige", "jährigen",
+					"jähriges", "je", "jede", "jedem", "jeden", "jedenfalls", "jeder", "jederlei", "jedes", "jedoch", "jemand", "jene",
+					"jenem", "jenen", "jener", "jenes", "jenseits", "jetzt", "kam", "kann", "kannst", "kaum", "kein", "keine", "keinem",
+					"keinen", "keiner", "keinerlei", "keines", "keines", "keineswegs", "klar", "klare", "klaren", "klares", "klein",
+					"kleinen", "kleiner", "kleines", "koennen", "koennt", "koennte", "koennten", "komme", "kommen", "kommt", "konkret",
+					"konkrete", "konkreten", "konkreter", "konkretes", "könn", "können", "könnt", "konnte", "könnte", "konnten",
+					"könnten", "künftig", "lag", "lagen", "langsam", "längst", "längstens", "lassen", "laut", "lediglich", "leer",
+					"legen", "legte", "legten", "leicht", "leider", "lesen", "letze", "letzten", "letztendlich", "letztens", "letztes",
+					"letztlich", "lichten", "liegt", "liest", "links", "mache", "machen", "machst", "macht", "machte", "machten", "mag",
+					"magst", "mal", "man", "manche", "manchem", "manchen", "mancher", "mancherorts", "manches", "manchmal", "mann",
+					"margin", "mehr", "mehrere", "mein", "meine", "meinem", "meinen", "meiner", "meines", "meist", "meiste", "meisten",
+					"meta", "mich", "mindestens", "mir", "mit", "mithin", "mochte", "möchte", "möchten", "möchtest", "mögen", "möglich",
+					"mögliche", "möglichen", "möglicher", "möglicherweise", "morgen", "morgige", "muessen", "muesst", "muesste", "muss",
+					"muß", "müssen", "mußt", "musst", "müßt", "musste", "müßte", "müsste", "mussten", "müssten", "nach", "nachdem",
+					"nacher", "nachhinein", "nächste", "nacht", "nahm", "nämlich", "natürlich", "neben", "nebenan", "nehmen", "nein",
+					"neu", "neue", "neuem", "neuen", "neuer", "neues", "neun", "nicht", "nichts", "nie", "niemals", "niemand", "nimm",
+					"nimmer", "nimmt", "nirgends", "nirgendwo", "noch", "nötigenfalls", "nun", "nur", "nutzen", "nutzt", "nützt",
+					"nutzung", "ob", "oben", "oberhalb", "obgleich", "obschon", "obwohl", "oder", "oft", "ohne", "per", "pfui",
+					"plötzlich", "pro", "reagiere", "reagieren", "reagiert", "reagierte", "rechts", "regelmäßig", "rief", "rund", "sage",
+					"sagen", "sagt", "sagte", "sagten", "sagtest", "sämtliche", "sang", "sangen", "schätzen", "schätzt", "schätzte",
+					"schätzten", "schlechter", "schließlich", "schnell", "schon", "schreibe", "schreiben", "schreibens", "schreiber",
+					"schwierig", "sechs", "sect", "sehe", "sehen", "sehr", "sehrwohl", "seht", "sei", "seid", "sein", "seine", "seinem",
+					"seinen", "seiner", "seines", "seit", "seitdem", "seite", "seiten", "seither", "selber", "selbst", "senke", "senken",
+					"senkt", "senkte", "senkten", "setzen", "setzt", "setzte", "setzten", "sich", "sicher", "sicherlich", "sie", "sieben",
+					"siebte", "siehe", "sieht", "sind", "singen", "singt", "so", "sobald", "sodaß", "soeben", "sofern", "sofort", "sog",
+					"sogar", "solange", "solc hen", "solch", "solche", "solchem", "solchen", "solcher", "solches", "soll", "sollen",
+					"sollst", "sollt", "sollte", "sollten", "solltest", "somit", "sondern", "sonst", "sonstwo", "sooft", "soviel",
+					"soweit", "sowie", "sowohl", "später", "spielen", "startet", "startete", "starteten", "statt", "stattdessen", "steht",
+					"steige", "steigen", "steigt", "stets", "stieg", "stiegen", "such", "suchen", "tages", "tat", "tät", "tatsächlich",
+					"tatsächlichen", "tatsächlicher", "tatsächliches", "tausend", "teile", "teilen", "teilte", "teilten", "titel",
+					"total", "trage", "tragen", "trägt", "trotzdem", "trug", "tun", "tust", "tut", "txt", "übel", "über", "überall",
+					"überallhin", "überdies", "übermorgen", "übrig", "übrigens", "ueber", "um", "umso", "unbedingt", "und", "ungefähr",
+					"unmöglich", "unmögliche", "unmöglichen", "unmöglicher", "unnötig", "uns", "unse", "unsem", "unsen", "unser", "unser",
+					"unsere", "unserem", "unseren", "unserer", "unseres", "unserm", "unses", "unten", "unter", "unterbrach",
+					"unterbrechen", "unterhalb", "unwichtig", "usw", "vergangen", "vergangene", "vergangener", "vergangenes", "vermag",
+					"vermögen", "vermutlich", "veröffentlichen", "veröffentlicher", "veröffentlicht", "veröffentlichte",
+					"veröffentlichten", "veröffentlichtes", "verrate", "verraten", "verriet", "verrieten", "version", "versorge",
+					"versorgen", "versorgt", "versorgte", "versorgten", "versorgtes", "viel", "viele", "vielen", "vieler", "vieles",
+					"vielleicht", "vielmals", "vier", "völlig", "vollständig", "vom", "von", "vor", "voran", "vorbei", "vorgestern",
+					"vorher", "vorne", "vorüber", "wachen", "waere", "während", "während", "währenddessen", "wann", "war", "wär", "wäre",
+					"waren", "wären", "warst", "warum", "was", "weder", "weg", "wegen", "weil", "weiß", "weiter", "weitere", "weiterem",
+					"weiteren", "weiterer", "weiteres", "weiterhin", "welche", "welchem", "welchen", "welcher", "welches", "wem", "wen",
+					"wenig", "wenige", "weniger", "wenigstens", "wenn", "wenngleich", "wer", "werde", "werden", "werdet", "weshalb",
+					"wessen", "wichtig", "wie", "wieder", "wieso", "wieviel", "wiewohl", "will", "willst", "wir", "wird", "wirklich",
+					"wirst", "wo", "wodurch", "wogegen", "woher", "wohin", "wohingegen", "wohl", "wohlweislich", "wolle", "wollen",
+					"wollt", "wollte", "wollten", "wolltest", "wolltet", "womit", "woraufhin", "woraus", "worin", "wurde", "würde",
+					"wurden", "würden", "zahlreich", "zehn", "zeitweise", "ziehen", "zieht", "zog", "zogen", "zu", "zudem", "zuerst",
+					"zufolge", "zugleich", "zuletzt", "zum", "zumal", "zur", "zurück", "zusammen", "zuviel", "zwanzig", "zwar", "zwei",
+					"zwischen", "zwölf"
+				});
+			}
+			else if (lastSelectedCulture.StartsWith("en"))
+			{
+				// English stop words
+				// Source: http://norm.al/2009/04/14/list-of-english-stop-words/ (MySQL fulltext, from 2009-10-03)
+				// Via: http://en.wikipedia.org/wiki/Stop_words
+				commonWords = new HashSet<string>(new string[]
+				{
+					"able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against",
+					"ain", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", "am", "among",
+					"amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", "anywhere",
+					"apart", "appear", "appreciate", "appropriate", "are", "aren", "around", "as", "aside", "ask", "asking", "associated",
+					"at", "available", "away", "awfully", "be", "became", "because", "become", "becomes", "becoming", "been", "before",
+					"beforehand", "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond",
+					"both", "brief", "but", "by", "mon", "came", "can", "cannot", "cause", "causes", "certain", "certainly", "changes",
+					"clearly", "co", "com", "come", "comes", "concerning", "consequently", "consider", "considering", "contain",
+					"containing", "contains", "corresponding", "could", "couldn", "course", "currently", "definitely", "described",
+					"despite", "did", "didn", "different", "do", "does", "doesn", "doing", "don", "done", "down", "downwards", "during",
+					"each", "edu", "eg", "eight", "either", "else", "elsewhere", "enough", "entirely", "especially", "et", "etc", "even",
+					"ever", "every", "everybody", "everyone", "everything", "everywhere", "ex", "exactly", "example", "except", "far",
+					"few", "fifth", "first", "five", "followed", "following", "follows", "for", "former", "formerly", "forth", "four",
+					"from", "further", "furthermore", "get", "gets", "getting", "given", "gives", "go", "goes", "going", "gone", "got",
+					"gotten", "greetings", "had", "hadn", "happens", "hardly", "has", "hasn", "have", "haven", "having", "he", "hello",
+					"help", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "hi", "him",
+					"himself", "his", "hither", "hopefully", "how", "howbeit", "however", "if", "ignored", "immediate", "in", "inasmuch",
+					"inc", "indeed", "indicate", "indicated", "indicates", "inner", "insofar", "instead", "into", "inward", "is", "isn",
+					"it", "its", "itself", "just", "keep", "keeps", "kept", "know", "knows", "known", "last", "lately", "later", "latter",
+					"latterly", "least", "less", "lest", "let", "like", "liked", "likely", "little", "ll", "look", "looking", "looks",
+					"ltd", "mainly", "many", "may", "maybe", "me", "mean", "meanwhile", "merely", "might", "more", "moreover", "most",
+					"mostly", "much", "must", "my", "myself", "name", "namely", "nd", "near", "nearly", "necessary", "need", "needs",
+					"neither", "never", "nevertheless", "new", "next", "nine", "no", "nobody", "non", "none", "noone", "nor", "normally",
+					"not", "nothing", "novel", "now", "nowhere", "obviously", "of", "off", "often", "oh", "ok", "okay", "old", "on",
+					"once", "one", "ones", "only", "onto", "or", "other", "others", "otherwise", "ought", "our", "ours", "ourselves",
+					"out", "outside", "over", "overall", "own", "particular", "particularly", "per", "perhaps", "placed", "please",
+					"plus", "possible", "presumably", "probably", "provides", "que", "quite", "qv", "rather", "rd", "re", "really",
+					"reasonably", "regarding", "regardless", "regards", "relatively", "respectively", "right", "said", "same", "saw",
+					"say", "saying", "says", "second", "secondly", "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self",
+					"selves", "sensible", "sent", "serious", "seriously", "seven", "several", "shall", "she", "should", "shouldn",
+					"since", "six", "so", "some", "somebody", "somehow", "someone", "something", "sometime", "sometimes", "somewhat",
+					"somewhere", "soon", "sorry", "specified", "specify", "specifying", "still", "sub", "such", "sup", "sure", "take",
+					"taken", "tell", "tends", "th", "than", "thank", "thanks", "thanx", "that", "thats", "the", "their", "theirs", "them",
+					"themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "theres", "thereupon",
+					"these", "they", "think", "third", "this", "thorough", "thoroughly", "those", "though", "three", "through",
+					"throughout", "thru", "thus", "to", "together", "too", "took", "toward", "towards", "tried", "tries", "truly", "try",
+					"trying", "twice", "two", "un", "under", "unfortunately", "unless", "unlikely", "until", "unto", "up", "upon", "us",
+					"use", "used", "useful", "uses", "using", "usually", "value", "various", "ve", "very", "via", "viz", "vs", "want",
+					"wants", "was", "wasn", "way", "we", "welcome", "well", "went", "were", "weren", "what", "whatever", "when", "whence",
+					"whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which",
+					"while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "willing", "wish", "with", "within",
+					"without", "won", "wonder", "would", "would", "wouldn", "yes", "yet", "you", "your", "yours", "yourself",
+					"yourselves", "zero"
+				});
+			}
+			else
+			{
+				commonWords = new HashSet<string>();
+			}
+
+			// Remove all placeholders and key references
+			refText = Regex.Replace(refText, @"(?<!\{)\{[^{]*?\}", "");
+			
+			// Extract all words
+			List<string> refWords = new List<string>();
+			m = Regex.Match(refText, @"(\w{2,})");
+			while (m.Success)
+			{
+				if (!commonWords.Contains(m.Groups[1].Value.ToLowerInvariant()))   // Skip common words
+					refWords.Add(m.Groups[1].Value);
+				m = m.NextMatch();
+			}
+
+			// Find other text keys that contain these words in their primary culture text
+			Dictionary<TextKeyViewModel, float> otherKeys = new Dictionary<TextKeyViewModel, float>();
+			foreach (var kvp in TextKeys)
+			{
+				if (kvp.Value.TextKey == tk.TextKey) continue;   // Skip currently selected item
+				if (kvp.Value.TextKey.StartsWith("Tx:")) continue;   // Skip system keys
+
+				float score = 0;
+				string otherBaseText = kvp.Value.CultureTextVMs[0].Text;
+				string otherTranslatedText = kvp.Value.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
+
+				if (string.IsNullOrEmpty(otherBaseText)) continue;
+				if (string.IsNullOrEmpty(otherTranslatedText)) continue;
+
+				// Remove all placeholders and key references
+				string otherText = Regex.Replace(otherBaseText, @"(?<!\{)\{[^{]*?\}", "");
+
+				// Extract all words
+				List<string> otherWords = new List<string>();
+				m = Regex.Match(otherText, @"(\w{2,})");
+				while (m.Success)
+				{
+					if (!commonWords.Contains(m.Groups[1].Value.ToLowerInvariant()))   // Skip common words
+						otherWords.Add(m.Groups[1].Value);
+					m = m.NextMatch();
+				}
+
+				// Increase score by 1 for each case-insensitively matching word
+				foreach (string word in refWords)
+				{
+					if (otherWords.Any(w => string.Equals(w, word, StringComparison.InvariantCultureIgnoreCase)))
+						score += 1;
+				}
+				// Increase score by 2 for each case-sensitively matching word
+				foreach (string word in refWords)
+				{
+					if (otherWords.Any(w => string.Equals(w, word, StringComparison.InvariantCulture)))
+						score += 2;
+				}
+
+				// Divide by the square root of the number of relevant words. (Using the square
+				// root to reduce the effect for very long texts.)
+				if (otherWords.Count > 0)
+				{
+					score /= (float) Math.Sqrt(otherWords.Count);
+				}
+				else
+				{
+					score = 0;   // Should not happen
+				}
+
+				// Accept every text key with a threshold score
+				if (score >= 0.5f)
+				{
+					otherKeys.Add(kvp.Value, score);
+				}
+			}
+
+			// Sort all matches by their score
+			foreach (var kvp in otherKeys.OrderByDescending(kvp => kvp.Value))
+			{
+				try
+				{
+					SuggestionViewModel suggestion = new SuggestionViewModel(this);
+					suggestion.TextKey = kvp.Key.TextKey;
+					suggestion.BaseText = kvp.Key.CultureTextVMs[0].Text;
+					if (lastSelectedCulture != primaryCulture)
+						suggestion.TranslatedText = kvp.Key.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
+					suggestion.Score = kvp.Value.ToString("0.00");
+					suggestions.Add(suggestion);
+				}
+				catch
+				{
+					// Something's missing (probably a LINQ-related exception), ignore that item
+				}
+			}
+
+			if (suggestions.Count == 0)
+			{
+				AddDummySuggestion();
+			}
+		}
+
+		#endregion Suggestions
 
 		#region IViewCommandSource members
 

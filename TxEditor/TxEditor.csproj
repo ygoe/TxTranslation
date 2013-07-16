@@ -79,6 +79,7 @@
     <Compile Include="Unclassified\MyEnvironment.cs" />
     <Compile Include="Unclassified\NaturalSort.cs" />
     <Compile Include="Unclassified\ObservableHashSet.cs" />
+    <Compile Include="Unclassified\OpLock.cs" />
     <Compile Include="Unclassified\Settings.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
@@ -94,14 +95,19 @@
       <DependentUpon>IconToggleButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Unclassified\UI\EmptyIntegerConverter.cs" />
+    <Compile Include="Unclassified\UI\NegationConverter.cs" />
     <Compile Include="Unclassified\UI\OpenFolderDialog.cs" />
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
+    <Compile Include="Unclassified\HotKey.cs" />
     <Compile Include="Unclassified\ULog.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
+    <Compile Include="Unclassified\WinApi_Input.cs" />
+    <Compile Include="Unclassified\WinApi_Windows.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
     <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
+    <Compile Include="ViewModel\SuggestionViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
     <Compile Include="ViewModel\TextKeyViewModel.cs" />
@@ -346,6 +352,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\diag_32_full.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_time.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\globe_change.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_q.png" />
+    <Resource Include="Images\key_q_error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

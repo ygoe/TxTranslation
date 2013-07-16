@@ -116,7 +116,7 @@ namespace Unclassified.UI
 					tipGrid.MaxWidth = 250;
 
 					TextBlock contentText = new TextBlock();
-					contentText.Text = Content.ToString();
+					contentText.Text = Content as string;
 					if (!string.IsNullOrEmpty(HotkeyText))
 					{
 						contentText.Text += " (" + HotkeyText + ")";

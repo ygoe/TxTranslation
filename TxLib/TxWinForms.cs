@@ -177,8 +177,15 @@ namespace TxLib
 
 		#region INotifyPropertyChanged members
 
+		/// <summary>
+		/// Occurs when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
+		/// <summary>
+		/// Invoked whenever the value of any property on this instance has been updated.
+		/// </summary>
+		/// <param name="propertyName">The name of the specific property that changed.</param>
 		protected void OnPropertyChanged(string propertyName)
 		{
 			PropertyChangedEventHandler handler = PropertyChanged;
@@ -226,6 +233,9 @@ namespace TxLib
 
 		#region IDisposable members
 
+		/// <summary>
+		/// Releases the resources that are used by the TxDictionaryBinding object.
+		/// </summary>
 		public void Dispose()
 		{
 			// Deregister the event to avoid memory leaks

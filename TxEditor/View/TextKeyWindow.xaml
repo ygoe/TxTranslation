@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
 	mc:Ignorable="d" 
 	d:DesignHeight="200" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -63,7 +64,7 @@
 			Grid.Row="1"
 			Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Name="OKButton" Padding="12,1" MinWidth="75" Content="OKButton" Click="OKButton_Click" IsDefault="True" />
-			<Button Margin="8,0,0,0" Padding="12,1" MinWidth="75" Content="Cancel" Click="CancelButton_Click" IsCancel="True" />
+			<Button Margin="8,0,0,0" Padding="12,1" MinWidth="75" Content="{Tx:T 'window.text key.button.cancel', Default='Cancel'}" Click="CancelButton_Click" IsCancel="True" />
 		</StackPanel>
 	</Grid>
 </Window>

@@ -9,14 +9,14 @@
 	mc:Ignorable="d" 
 	d:DesignHeight="300" d:DesignWidth="500"
 	ResizeMode="NoResize"
-	ShowInTaskbar="True"
+	ShowInTaskbar="False"
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
 	Icon="/Images/TxFlag.ico"
 	Title="TxEditor wizard"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
-	LocationChanged="Window_LocationChanged">
+	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
 	<Window.Resources>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</Window.Resources>
@@ -36,31 +36,60 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			
+
 			<TextBlock
 				Grid.Row="0" Grid.Column="0"
 				VerticalAlignment="Center"
+				Text="Source code:"/>
+			<ComboBox
+				Name="SourceCodeCombobox"
+				Grid.Row="0" Grid.Column="1"
+				Margin="8,0,0,0" HorizontalAlignment="Left" Width="60"
+				SelectionChanged="SourceCodeCombobox_SelectionChanged"/>
+
+			<TextBlock
+				Name="OtherKeysLabel"
+				Grid.Row="1" Grid.Column="0"
+				Margin="0,7,0,0" VerticalAlignment="Top"
+				Text="Similar keys:"/>
+			<ListBox
+				Name="OtherKeysList"
+				Grid.Row="1" Grid.Column="1"
+				Margin="8,4,0,0" MinHeight="60"/>
+
+			<TextBlock
+				Grid.Row="2" Grid.Column="0"
+				Margin="0,4,0,0" VerticalAlignment="Center"
 				Text="Text key:"/>
 			<TextBox
 				Name="TextKeyText"
-				Grid.Row="0" Grid.Column="1"
-				Margin="8,0,0,0"/>
+				Grid.Row="2" Grid.Column="1"
+				Margin="8,4,0,0"
+				TextChanged="TextKeyText_TextChanged"/>
 
 			<TextBlock
-				Grid.Row="1" Grid.Column="0"
-				Margin="0,4,0,0" VerticalAlignment="Center"
+				Grid.Row="3" Grid.Column="0"
+				Margin="0,7,0,0" VerticalAlignment="Top"
 				Text="Translated text:"/>
 			<my:DecoratedTextBox
 				x:Name="TranslationText"
-				Grid.Row="1" Grid.Column="1"
+				Grid.Row="3" Grid.Column="1"
 				InnerBorderThickness="1" InnerPadding="1" Margin="8,4,0,0"
 				PlaceholderText="Enter text"
 				ValidateKey="DecoratedTextBox_ValidateKey"/>
+			
+			<CheckBox
+				Name="SetDefaultCheckbox"
+				Grid.Row="4" Grid.Column="1"
+				Margin="8,4,0,0" HorizontalAlignment="Left"
+				IsChecked="True"
+				Content="Include _default text for design time"/>
 		</Grid>
 
 		<Rectangle

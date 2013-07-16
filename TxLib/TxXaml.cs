@@ -11,6 +11,9 @@ namespace TxLib
 {
 	#region Text translation markup extensions
 
+	/// <summary>
+	/// Markup extension providing the Tx.T method functionality.
+	/// </summary>
 	public class TExtension : MarkupExtension
 	{
 		#region Constructors
@@ -84,6 +87,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected virtual Func<string, int, string> GetTFunc()
 		{
 			return Tx.T;
@@ -93,6 +100,11 @@ namespace TxLib
 
 		#region MarkupExtension overrides
 
+		/// <summary>
+		/// Provides the value of the converter.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (string.IsNullOrEmpty(Key))
@@ -130,25 +142,45 @@ namespace TxLib
 		#endregion MarkupExtension overrides
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.UT method functionality.
+	/// </summary>
 	public class UTExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
 		public UTExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public UTExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public UTExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public UTExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -158,6 +190,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.UT;
@@ -166,25 +202,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.TC method functionality.
+	/// </summary>
 	public class TCExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
 		public TCExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public TCExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public TCExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public TCExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -194,6 +250,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.TC;
@@ -202,25 +262,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.UTC method functionality.
+	/// </summary>
 	public class UTCExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
 		public UTCExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public UTCExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public UTCExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public UTCExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -230,6 +310,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.UTC;
@@ -238,25 +322,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.QT method functionality.
+	/// </summary>
 	public class QTExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
 		public QTExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public QTExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public QTExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public QTExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -266,6 +370,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.QT;
@@ -274,25 +382,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.QTC method functionality.
+	/// </summary>
 	public class QTCExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
 		public QTCExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public QTCExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public QTCExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public QTCExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -302,6 +430,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.QTC;
@@ -310,25 +442,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.QUT method functionality.
+	/// </summary>
 	public class QUTExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
 		public QUTExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public QUTExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public QUTExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public QUTExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -338,6 +490,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.QUT;
@@ -346,25 +502,45 @@ namespace TxLib
 		#endregion Converter action
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.QUTC method functionality.
+	/// </summary>
 	public class QUTCExtension : TExtension
 	{
 		#region Constructors
 
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
 		public QUTCExtension()
 			: base()
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
 		public QUTCExtension(string key)
 			: base(key)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
 		public QUTCExtension(string key, int count)
 			: base(key, count)
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="countBinding">Binding that provides the count value to consider when selecting the text value.</param>
 		public QUTCExtension(string key, Binding countBinding)
 			: base(key, countBinding)
 		{
@@ -374,6 +550,10 @@ namespace TxLib
 
 		#region Converter action
 
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
 		protected override Func<string, int, string> GetTFunc()
 		{
 			return Tx.QUTC;
@@ -386,6 +566,9 @@ namespace TxLib
 
 	#region Number formatting markup extensions
 
+	/// <summary>
+	/// Markup extension providing the Tx.Number method functionality.
+	/// </summary>
 	public class NumberExtension : MarkupExtension
 	{
 		#region Constructors
@@ -442,6 +625,11 @@ namespace TxLib
 
 		#region MarkupExtension overrides
 
+		/// <summary>
+		/// Provides the value of the converter.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (NumberBinding == null)
@@ -467,6 +655,9 @@ namespace TxLib
 		#endregion MarkupExtension overrides
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.DataSize method functionality.
+	/// </summary>
 	public class DataSizeExtension : MarkupExtension
 	{
 		#region Constructors
@@ -500,6 +691,11 @@ namespace TxLib
 
 		#region MarkupExtension overrides
 
+		/// <summary>
+		/// Provides the value of the converter.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (NumberBinding == null)
@@ -529,6 +725,9 @@ namespace TxLib
 
 	#region Date and time formatting markup extensions
 
+	/// <summary>
+	/// Markup extension providing the Tx.Time method functionality.
+	/// </summary>
 	public class TimeExtension : MarkupExtension
 	{
 		#region Constructors
@@ -580,6 +779,11 @@ namespace TxLib
 
 		#region MarkupExtension overrides
 
+		/// <summary>
+		/// Provides the value of the converter.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (TimeBinding == null)
@@ -605,6 +809,9 @@ namespace TxLib
 		#endregion MarkupExtension overrides
 	}
 
+	/// <summary>
+	/// Markup extension providing the Tx.RelativeTime method functionality.
+	/// </summary>
 	public class RelativeTimeExtension : MarkupExtension
 	{
 		#region Constructors
@@ -614,6 +821,7 @@ namespace TxLib
 		/// </summary>
 		public RelativeTimeExtension()
 		{
+			RelativeTimeKind = TxLib.RelativeTimeKind.PointInTime;
 		}
 
 		/// <summary>
@@ -623,6 +831,7 @@ namespace TxLib
 		public RelativeTimeExtension(Binding timeBinding)
 		{
 			TimeBinding = timeBinding;
+			RelativeTimeKind = TxLib.RelativeTimeKind.PointInTime;
 		}
 
 		#endregion Constructors
@@ -639,10 +848,20 @@ namespace TxLib
 		/// </summary>
 		public bool UpperCase { get; set; }
 
+		/// <summary>
+		/// Gets or sets the relative time kind.
+		/// </summary>
+		public RelativeTimeKind RelativeTimeKind { get; set; }
+
 		#endregion Properties
 
 		#region MarkupExtension overrides
 
+		/// <summary>
+		/// Provides the value of the converter.
+		/// </summary>
+		/// <param name="serviceProvider"></param>
+		/// <returns></returns>
 		public override object ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (TimeBinding == null)
@@ -666,7 +885,7 @@ namespace TxLib
 			multiBinding.Bindings.Add(TimeBinding);
 
 			// The converter will invoke the actual formatting of the value.
-			multiBinding.Converter = new TimeConverter(RelativeTimeKind.PointInTime, UpperCase);
+			multiBinding.Converter = new TimeConverter(RelativeTimeKind, UpperCase);
 			return multiBinding.ProvideValue(serviceProvider);
 		}
 
@@ -1042,8 +1261,15 @@ namespace TxLib
 						text = Tx.TimeSpan(dt);
 						break;
 					case RelativeTimeKind.TimeSpan:
-						ts = (TimeSpan) values[2];
-						text = Tx.TimeSpan(ts);
+						if (values[2] is TimeSpan)
+						{
+							ts = (TimeSpan) values[2];
+							text = Tx.TimeSpan(ts);
+						}
+						else
+						{
+							text = "";
+						}
 						break;
 					default:
 						text = "{Error: Invalid relKind}";   // Should not happen
@@ -1127,11 +1353,26 @@ namespace TxLib
 		#endregion Properties
 	}
 
-	enum RelativeTimeKind
+	/// <summary>
+	/// Values that specify a kind of relative time.
+	/// </summary>
+	public enum RelativeTimeKind
 	{
+		/// <summary>
+		/// No relative time.
+		/// </summary>
 		None,
+		/// <summary>
+		/// Point in time.
+		/// </summary>
 		PointInTime,
+		/// <summary>
+		/// Time span starting at the current time.
+		/// </summary>
 		CurrentTimeSpan,
+		/// <summary>
+		/// Independent time span.
+		/// </summary>
 		TimeSpan
 	}
 

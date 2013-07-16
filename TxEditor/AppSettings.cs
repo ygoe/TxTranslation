@@ -1,5 +1,5 @@
-﻿using Unclassified;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Unclassified;
 
 namespace TxEditor
 {
@@ -17,6 +17,10 @@ namespace TxEditor
 		public AppSettings(string fileName)
 			: base(fileName)
 		{
+			base.AddHandler("app-culture", delegate() { OnPropertyChanged("AppCulture"); });
+
+			base.AddHandler("file.ask-save-upgrade", delegate() { OnPropertyChanged("AskSaveUpgrade"); });
+
 			base.AddHandler("input.charmap", delegate() { OnPropertyChanged("CharacterMap"); });
 			
 			base.AddHandler("view.comments", delegate() { OnPropertyChanged("ShowComments"); });
@@ -25,8 +29,11 @@ namespace TxEditor
 			base.AddHandler("view.charmap", delegate() { OnPropertyChanged("ShowCharacterMap"); });
 			base.AddHandler("view.font-scale", delegate() { OnPropertyChanged("FontScale"); });
 			base.AddHandler("view.native-culture-names", delegate() { OnPropertyChanged("NativeCultureNames"); });
+			base.AddHandler("view.suggestions", delegate() { OnPropertyChanged("ShowSuggestions"); });
+			base.AddHandler("view.suggestions.horizontal-layout", delegate() { OnPropertyChanged("SuggestionsHorizontalLayout"); });
 
-			base.AddHandler("file.ask-save-upgrade", delegate() { OnPropertyChanged("AskSaveUpgrade"); });
+			base.AddHandler("wizard.source-code", delegate() { OnPropertyChanged("WizardSourceCode"); });
+			base.AddHandler("wizard.remember-location", delegate() { OnPropertyChanged("WizardRememberLocation"); });
 		}
 
 		#endregion Constructors
@@ -45,6 +52,29 @@ namespace TxEditor
 		}
 
 		#endregion INotifyPropertyChanged members
+
+		/// <summary>
+		/// Gets or sets the culture to use for the application user interface. Empty for default.
+		/// </summary>
+		public string AppCulture
+		{
+			get { return GetString("app-culture", null); }
+			set { Set("app-culture", value); }
+		}
+
+		#region Section: file
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to ask for upgrading the format when saving a
+		/// file that was loaded in an older format.
+		/// </summary>
+		public bool AskSaveUpgrade
+		{
+			get { return GetBool("file.ask-save-upgrade", true); }
+			set { Set("file.ask-save-upgrade", value); }
+		}
+
+		#endregion Section: file
 
 		#region Section: input
 
@@ -116,20 +146,46 @@ namespace TxEditor
 			set { Set("view.native-culture-names", value); }
 		}
 
-		#endregion Section: view
-
-		#region Section: file
-
 		/// <summary>
-		/// Gets or sets a value indicating whether to ask for upgrading the format when saving a
-		/// file that was loaded in an older format.
+		/// Gets or sets a value indicating whether the text suggestions are visible.
 		/// </summary>
-		public bool AskSaveUpgrade
+		public bool ShowSuggestions
 		{
-			get { return GetBool("file.ask-save-upgrade", true); }
-			set { Set("file.ask-save-upgrade", value); }
+			get { return GetBool("view.suggestions", false); }
+			set { Set("view.suggestions", value); }
 		}
 
-		#endregion Section: file
+		/// <summary>
+		/// Gets or sets a value indicating whether the text suggestions layout is horizontal.
+		/// </summary>
+		public bool SuggestionsHorizontalLayout
+		{
+			get { return GetBool("view.suggestions.horizontal-layout", true); }
+			set { Set("view.suggestions.horizontal-layout", value); }
+		}
+
+		#endregion Section: view
+
+		#region Section: wizard
+
+		/// <summary>
+		/// Gets or sets the source code mode for the text key wizard.
+		/// </summary>
+		public string WizardSourceCode
+		{
+			get { return GetString("wizard.source-code", "C#"); }
+			set { Set("wizard.source-code", value); }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key wizard window location is restored.
+		/// </summary>
+		public bool WizardRememberLocation
+		{
+			get { return GetBool("wizard.remember-location", false); }
+			set { Set("wizard.remember-location", value); }
+		}
+
+		#endregion Section: wizard
 	}
 }

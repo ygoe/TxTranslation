@@ -16,7 +16,7 @@
 	<DockPanel>
 		<TextBlock
 			DockPanel.Dock="Top" Margin="13,12,13,12"
-			Text="{Binding TextKey, FallbackValue='Abc def ghi jkl mn opq rst uvw xyz 123 456 7890'}"
+			Text="{Binding TextKey, FallbackValue='TextKey'}"
 			FontSize="26" FontWeight="Light" TextOptions.TextFormattingMode="Ideal"/>
 
 		<Grid
@@ -31,10 +31,11 @@
 			</Grid.ColumnDefinitions>
 			
 			<Image
-				Grid.Column="0" VerticalAlignment="Top" Margin="0,3,0,0"
+				Grid.Column="0" VerticalAlignment="Top" Margin="0,1,0,0"
 				Source="/Images/balloon.png"/>
 			<TextBox
 				Grid.Column="1" Margin="6,0,0,0"
+				BorderThickness="0" Padding="1"
 				TextWrapping="Wrap" AcceptsReturn="True"
 				VerticalScrollBarVisibility="Auto" MaxLines="4"
 				Background="LemonChiffon"

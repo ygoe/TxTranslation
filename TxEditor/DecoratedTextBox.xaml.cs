@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -58,7 +59,7 @@ namespace TxEditor
 			"Text",
 			typeof(string),
 			typeof(DecoratedTextBox),
-			new FrameworkPropertyMetadata("", TextChanged));
+			new FrameworkPropertyMetadata(TextChanged));
 		public string Text
 		{
 			get { return (string) GetValue(TextProperty); }
@@ -84,11 +85,20 @@ namespace TxEditor
 			set { SetValue(CursorCharProperty, value); }   // Should be private, but somehow cannot be. Giving up.
 		}
 
+		public static DependencyProperty TextKeyReferencesProperty = DependencyProperty.Register(
+			"TextKeyReferences",
+			typeof(StringCollection),
+			typeof(DecoratedTextBox));
+		public StringCollection TextKeyReferences
+		{
+			get { return (StringCollection) GetValue(TextKeyReferencesProperty); }
+			set { SetValue(TextKeyReferencesProperty, value); }   // Should be private, but somehow cannot be. Giving up.
+		}
+
 		public static DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
 			"PlaceholderText",
 			typeof(string),
-			typeof(DecoratedTextBox),
-			new FrameworkPropertyMetadata("", null));
+			typeof(DecoratedTextBox));
 		public string PlaceholderText
 		{
 			get { return (string) GetValue(PlaceholderTextProperty); }
@@ -125,6 +135,25 @@ namespace TxEditor
 			}
 		}
 
+		public static DependencyProperty SearchTextProperty = DependencyProperty.Register(
+			"SearchText",
+			typeof(string),
+			typeof(DecoratedTextBox),
+			new FrameworkPropertyMetadata(SearchTextChanged));
+		public string SearchText
+		{
+			get { return (string) GetValue(SearchTextProperty); }
+			set { SetValue(SearchTextProperty, value); }
+		}
+		private static void SearchTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			DecoratedTextBox dt = d as DecoratedTextBox;
+			if (dt != null)
+			{
+				dt.UpdateDecorations();
+			}
+		}
+
 		#endregion Dependency properties
 
 		#region Properties
@@ -142,7 +171,7 @@ namespace TxEditor
 				isEditing = value;
 				if (editTimer != null && editTimer.IsEnabled)
 					editTimer.Stop();
-				editTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Input, EditTimeout, Dispatcher);
+				editTimer = new DispatcherTimer(TimeSpan.FromSeconds(0.5), DispatcherPriority.Input, EditTimeout, Dispatcher);
 				editTimer.Start();
 			}
 		}
@@ -166,6 +195,8 @@ namespace TxEditor
 		public DecoratedTextBox()
 		{
 			InitializeComponent();
+
+			PlaceholderVisibility = string.IsNullOrEmpty(Text) ? Visibility.Visible : Visibility.Collapsed;
 
 			//var scrollViewer = textBox1.Template.FindName("PART_ContentHost", textBox1) as ScrollViewer;
 		}
@@ -259,7 +290,7 @@ namespace TxEditor
 			}
 			decos.Clear();
 
-			Match m = Regex.Match(textBox1.Text, @"\{(?!=).*?\}");
+			Match m = Regex.Match(textBox1.Text, @"(?<!\{)\{(?!=)[^{]*?\}");
 			while (m.Success)
 			{
 				Rect startRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index);
@@ -290,15 +321,22 @@ namespace TxEditor
 				m = m.NextMatch();
 			}
 
-			m = Regex.Match(textBox1.Text, @"\{=([^#]*?)(?:#(.*?))?\}");
+			if (TextKeyReferences == null)
+				TextKeyReferences = new StringCollection();
+			TextKeyReferences.Clear();
+			m = Regex.Match(textBox1.Text, @"(?<!\{)\{=([^{#]*?)(?:#([^{]*?))?\}");
 			while (m.Success)
 			{
 				Rect startRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index);
 				Rect endRect = textBox1.GetRectFromCharacterIndex(m.Groups[0].Index + m.Groups[0].Length);
 
+				string refKey = m.Groups[1].Value;
+				if (!TextKeyReferences.Contains(refKey))
+					TextKeyReferences.Add(refKey);
+				
 				bool isValidKey = true;
 				if (!IsEditing)
-					isValidKey = DoValidateKey(m.Groups[1].Value);
+					isValidKey = DoValidateKey(refKey);
 
 				if (!startRect.IsEmpty && !endRect.IsEmpty)
 				{
@@ -341,6 +379,40 @@ namespace TxEditor
 					}
 				}
 				m = m.NextMatch();
+			}
+			//OnPropertyChanged(new DependencyPropertyChangedEventArgs(TextKeyReferencesProperty, null, TextKeyReferences));
+
+			if (!string.IsNullOrEmpty(SearchText))
+			{
+				int start = -1;
+				while ((start = textBox1.Text.ToLower().IndexOf(SearchText.ToLower(), start + 1)) != -1)
+				{
+					Rect startRect = textBox1.GetRectFromCharacterIndex(start);
+					Rect endRect = textBox1.GetRectFromCharacterIndex(start + SearchText.Length);
+
+					if (!startRect.IsEmpty && !endRect.IsEmpty)
+					{
+						if ((int) startRect.Top == (int) endRect.Top)
+						{
+							// Single line
+							Rectangle rect = new Rectangle();
+							rect.HorizontalAlignment = HorizontalAlignment.Left;
+							rect.VerticalAlignment = VerticalAlignment.Top;
+							rect.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+							rect.Width = endRect.Left - startRect.Left;
+							rect.Height = startRect.Height;
+							rect.Fill = new SolidColorBrush(Color.FromArgb(128, 255, 255, 0));
+							grid1.Children.Insert(0, rect);
+							decos.Add(rect);
+						}
+						else
+						{
+							// Spanning multiple lines
+							// Need more rectangles
+							// TODO
+						}
+					}
+				}
 			}
 
 			if (HiddenChars)

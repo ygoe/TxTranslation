@@ -44,7 +44,9 @@ namespace TxEditor.View
 		{
 			QuantifiedTextViewModel vm = DataContext as QuantifiedTextViewModel;
 			if (vm != null)
-				e.IsValid = vm.CultureTextVM.TextKeyVM.MainWindowVM.TextKeys.Contains(e.TextKey);
+				e.IsValid =
+					e.TextKey != vm.CultureTextVM.TextKeyVM.TextKey &&
+					vm.CultureTextVM.TextKeyVM.MainWindowVM.TextKeys.ContainsKey(e.TextKey);
 		}
 	}
 }

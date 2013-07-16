@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
 	xmlns:u="clr-namespace:Unclassified.UI"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
@@ -61,6 +62,7 @@
 			InnerBorderThickness="0" InnerPadding="0" Margin="6,2,0,0" VerticalAlignment="Top"
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
+			TextKeyReferences="{Binding TextKeyReferences, Mode=OneWayToSource}"
 			PlaceholderText="Enter text"
 			HiddenChars="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
 			FontSize="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontSize}"
@@ -82,7 +84,7 @@
 			<Button
 				Padding="6,0"
 				Content="×"
-				ToolTip="Delete this quantified text."
+				ToolTip="{Tx:T 'tooltip.delete quantified text'}"
 				Command="{Binding DeleteCommand}"
 				Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 		</StackPanel>

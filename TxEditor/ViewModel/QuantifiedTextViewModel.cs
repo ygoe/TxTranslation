@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using Unclassified.UI;
@@ -23,7 +24,7 @@ namespace TxEditor.ViewModel
 				{
 					count = value;
 					OnPropertyChanged("Count");
-					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -39,7 +40,7 @@ namespace TxEditor.ViewModel
 				{
 					modulo = value;
 					OnPropertyChanged("Modulo");
-					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -55,7 +56,7 @@ namespace TxEditor.ViewModel
 				{
 					text = value;
 					OnPropertyChanged("Text");
-					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -67,6 +68,21 @@ namespace TxEditor.ViewModel
 			set
 			{
 				CultureTextVM.TextKeyVM.MainWindowVM.CursorChar = value;
+			}
+		}
+
+		private StringCollection textKeyReferences;
+		public StringCollection TextKeyReferences
+		{
+			get { return textKeyReferences; }
+			set
+			{
+				if (value != textKeyReferences)
+				{
+					textKeyReferences = value;
+					OnPropertyChanged("TextKeyReferences");
+					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
+				}
 			}
 		}
 
@@ -102,7 +118,7 @@ namespace TxEditor.ViewModel
 		private void OnDelete()
 		{
 			CultureTextVM.QuantifiedTextVMs.Remove(this);
-			CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeys();
+			CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 		}
 

@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
 	xmlns:u="clr-namespace:Unclassified.UI" 
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -65,25 +66,25 @@
 				<Button
 					Padding="7,0"
 					Content="0"
-					ToolTip="Add quantified text for count 0."
+					ToolTip="{Tx:T 'tooltip.add quantified text 0'}"
 					Command="{Binding AddCount0Command}"
 					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 				<Button
 					Padding="7,0"
 					Content="1"
-					ToolTip="Add quantified text for count 1."
+					ToolTip="{Tx:T 'tooltip.add quantified text 1'}"
 					Command="{Binding AddCount1Command}"
 					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 				<Button
 					Padding="6,0"
 					Content="+"
-					ToolTip="Add quantified text."
+					ToolTip="{Tx:T 'tooltip.add quantified text'}"
 					Command="{Binding AddCommand}"
 					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 				<Button
 					Padding="5,0"
 					Content="↻"
-					ToolTip="Refresh sort order of the quantified texts."
+					ToolTip="{Tx:T 'tooltip.refresh quantified text order'}"
 					Command="{Binding RefreshCommand}"
 					Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 			</StackPanel>
@@ -94,8 +95,10 @@
 			InnerBorderThickness="0" InnerPadding="0" Margin="-1,4,0,0"
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
+			TextKeyReferences="{Binding TextKeyReferences, Mode=OneWayToSource}"
 			PlaceholderText="Enter text"
 			HiddenChars="{Binding TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
+			SearchText="{Binding TextKeyVM.MainWindowVM.SearchText}"
 			FontSize="{Binding TextKeyVM.MainWindowVM.FontSize}"
 			FontFamily="{Binding TextKeyVM.MainWindowVM.Settings.MonospaceFont, Converter={StaticResource monospaceFontConverter}}"
 			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"

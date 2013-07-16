@@ -29,22 +29,34 @@
 				TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center"/>
 		</StackPanel>
 
-		<Path Name="ArrowIcon" Visibility="{Binding ArrowIconVisibility}"
-			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,150"
-			Data="M0,16 L16,0 L24,0 L11,13 L50,13 L50,19 L11,19 L24,33 L16,33z"
-			Fill="#14000000" StrokeThickness="0">
+		<Path Name="ArrowLeftIcon" Visibility="{Binding ArrowLeftIconVisibility}"
+			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,150"
+			Data="M0,16 L16,0 L24,0 L11,13 L50,13 L50,19 L11,19 L24,32 L16,32z"
+			Fill="#0c000000" StrokeThickness="0">
 			<Path.LayoutTransform>
-				<ScaleTransform ScaleX="4" ScaleY="4"/>
+				<ScaleTransform ScaleX="5" ScaleY="5"/>
 			</Path.LayoutTransform>
 		</Path>
 
-		<Path Name="FlashIcon" Visibility="{Binding FlashIconVisibility}"
-			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,100"
-			Data="M6,0 L12,10 L0,10z  M6.25,3.75 L4.75,6.25 L6.75,6.25 L5.25,8.75"
-			Stroke="#0a000000" StrokeThickness="1" StrokeLineJoin="Miter">
+		<Path Name="ArrowUpIcon" Visibility="{Binding ArrowUpIconVisibility}"
+			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,20,0,0"
+			Data="M0,16 L16,0 L24,0 L11,13 L50,13 L50,19 L11,19 L24,32 L16,32z"
+			Fill="#0c000000" StrokeThickness="0">
 			<Path.LayoutTransform>
-				<ScaleTransform ScaleX="20" ScaleY="20"/>
+				<TransformGroup>
+					<ScaleTransform ScaleX="5" ScaleY="5"/>
+					<RotateTransform Angle="90"/>
+				</TransformGroup>
 			</Path.LayoutTransform>
 		</Path>
+
+		<!--Path Name="FlashIcon" Visibility="{Binding FlashIconVisibility}"
+			Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,0,0,130"
+			Data="M6,0 L12,10 L0,10z  M6.25,3.75 L4.75,6.25 L6.75,6.25 L5.25,8.75"
+			Stroke="#0c000000" StrokeThickness="1" StrokeLineJoin="Miter">
+			<Path.LayoutTransform>
+				<ScaleTransform ScaleX="17" ScaleY="17"/>
+			</Path.LayoutTransform>
+		</Path-->
 	</Grid>
 </UserControl>

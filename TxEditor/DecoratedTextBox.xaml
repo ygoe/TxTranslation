@@ -22,19 +22,38 @@
 	
 	<Grid Name="grid1">
 		<TextBox
-			Name="textBox1" AcceptsReturn="True"
+			Name="textBox1"
 			BorderThickness="{Binding InnerBorderThickness, ElementName=root}"
+			Background="Transparent"
 			Padding="{Binding InnerPadding, ElementName=root}"
 			Text="{Binding Text, ElementName=root, UpdateSourceTrigger=PropertyChanged}"
+			AcceptsReturn="True" TextWrapping="Wrap"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
-			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"
-			TextWrapping="Wrap"
-			Background="Transparent"/>
-		<TextBlock
-			Name="placeholder"
-			Text="{Binding PlaceholderText, ElementName=root, FallbackValue='Placeholder text'}"
-			Visibility="{Binding PlaceholderVisibility, ElementName=root}"
-			HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" IsHitTestVisible="False"
-			Opacity="0.4" FontStyle="Italic"/>
+			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"/>
+		<Border
+			Name="TextBoxExtraBorderCompensation">
+			<Border.Style>
+				<Style TargetType="Border">
+					<Setter Property="BorderThickness" Value="1"/>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding InnerBorderThickness, ElementName=root}" Value="0">
+							<Setter Property="BorderThickness" Value="0"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Border.Style>
+			<Border
+				Name="TextBoxBorderEquivalent"
+				BorderThickness="{Binding InnerBorderThickness, ElementName=root}">
+				<TextBlock
+					Name="placeholder"
+					HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0" IsHitTestVisible="False"
+					Visibility="{Binding PlaceholderVisibility, ElementName=root}"
+					Opacity="0.4"
+					Padding="{Binding InnerPadding, ElementName=root}"
+					Text="{Binding PlaceholderText, ElementName=root, FallbackValue='Placeholder text'}"
+					FontStyle="Italic"/>
+			</Border>
+		</Border>
 	</Grid>
 </UserControl>

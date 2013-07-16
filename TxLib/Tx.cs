@@ -11,6 +11,9 @@ using System.Xml;
 
 namespace TxLib
 {
+	/// <summary>
+	/// Provides translation and localisation methods.
+	/// </summary>
 	public static class Tx
 	{
 		#region Constants
@@ -42,88 +45,171 @@ namespace TxLib
 		/// </summary>
 		public static class SystemKeys
 		{
+			/// <summary>The system text key for a colon.</summary>
 			public const string Colon = "Tx:colon";
+			/// <summary>The system text key for an opening parenthesis.</summary>
 			public const string ParenthesisBegin = "Tx:parenthesis begin";
+			/// <summary>The system text key for a closing parenthesis.</summary>
 			public const string ParenthesisEnd = "Tx:parenthesis end";
+			/// <summary>The system text key for an opening quotation mark.</summary>
 			public const string QuoteBegin = "Tx:quote begin";
+			/// <summary>The system text key for a closing quotation mark.</summary>
 			public const string QuoteEnd = "Tx:quote end";
+			/// <summary>The system text key for an opening nested quotation mark.</summary>
 			public const string QuoteNestedBegin = "Tx:quote nested begin";
+			/// <summary>The system text key for a closing nested quotation mark.</summary>
 			public const string QuoteNestedEnd = "Tx:quote nested end";
+			/// <summary>The system text key for a negative number indicator.</summary>
 			public const string NumberNegative = "Tx:number.negative";
+			/// <summary>The system text key for a number decimal separator.</summary>
 			public const string NumberDecimalSeparator = "Tx:number.decimal separator";
+			/// <summary>The system text key for a number thousands group separator.</summary>
 			public const string NumberGroupSeparator = "Tx:number.group separator";
+			/// <summary>The system text key for the threshold value from which on to use the thousands group separator.</summary>
 			public const string NumberGroupSeparatorThreshold = "Tx:number.group separator threshold";
+			/// <summary>The system text key for a separator between a number and a unit name.</summary>
 			public const string NumberUnitSeparator = "Tx:number.unit separator";
+			/// <summary>The system text key for an ordinal number suffix.</summary>
 			public const string NumberOrdinal = "Tx:number.ordinal";
+			/// <summary>The system text key for a female ordinal number suffix.</summary>
 			public const string NumberOrdinalFeminin = "Tx:number.ordinal f";
+			/// <summary>The system text key for the unit name of a byte.</summary>
 			public const string ByteUnit = "Tx:byte unit";
+			/// <summary>The system text key for the date format containing a year only.</summary>
 			public const string DateYear = "Tx:date.year";
+			/// <summary>The system text key for the date format containing a year and month.</summary>
 			public const string DateYearMonth = "Tx:date.year month";
+			/// <summary>The system text key for the date format containing a year and abbreviated month.</summary>
 			public const string DateYearMonthAbbr = "Tx:date.year month abbr";
+			/// <summary>The system text key for the date format containing a year and long month.</summary>
 			public const string DateYearMonthLong = "Tx:date.year month long";
+			/// <summary>The system text key for the date format containing a year, month and day.</summary>
 			public const string DateYearMonthDay = "Tx:date.year month day";
+			/// <summary>The system text key for the date format containing a year, abbreviated month and day.</summary>
 			public const string DateYearMonthDayAbbr = "Tx:date.year month day abbr";
+			/// <summary>The system text key for the date format containing a year, long month and day.</summary>
 			public const string DateYearMonthDayLong = "Tx:date.year month day long";
+			/// <summary>The system text key for the date format containing a month only.</summary>
 			public const string DateMonth = "Tx:date.month";
+			/// <summary>The system text key for the date format containing an abbreviated month only.</summary>
 			public const string DateMonthAbbr = "Tx:date.month abbr";
+			/// <summary>The system text key for the date format containing a long month only.</summary>
 			public const string DateMonthLong = "Tx:date.month long";
+			/// <summary>The system text key for the date format containing a month and day.</summary>
 			public const string DateMonthDay = "Tx:date.month day";
+			/// <summary>The system text key for the date format containing an abbreviated month and day.</summary>
 			public const string DateMonthDayAbbr = "Tx:date.month day abbr";
+			/// <summary>The system text key for the date format containing a long month and day.</summary>
 			public const string DateMonthDayLong = "Tx:date.month day long";
+			/// <summary>The system text key for the date format containing a day only.</summary>
 			public const string DateDay = "Tx:date.day";
+			/// <summary>The system text key for the date format containing a year and quarter.</summary>
 			public const string DateYearQuarter = "Tx:date.year quarter";
+			/// <summary>The system text key for the date format containing a quarter only.</summary>
 			public const string DateQuarter = "Tx:date.quarter";
+			/// <summary>The system text key for the date format containing a day of week with date.</summary>
 			public const string DateDowWithDate = "Tx:date.dow with date";
+			/// <summary>The system text key for the time format containing an hour, minute, second and millisecond.</summary>
 			public const string TimeHourMinuteSecondMs = "Tx:time.hour minute second ms";
+			/// <summary>The system text key for the time format containing an hour, minute and second.</summary>
 			public const string TimeHourMinuteSecond = "Tx:time.hour minute second";
+			/// <summary>The system text key for the time format containing an hour and minute.</summary>
 			public const string TimeHourMinute = "Tx:time.hour minute";
+			/// <summary>The system text key for the time format containing an hour only.</summary>
 			public const string TimeHour = "Tx:time.hour";
+			/// <summary>The system text key for the time AM indicator.</summary>
 			public const string TimeAM = "Tx:time.am";
+			/// <summary>The system text key for the time PM indicator.</summary>
 			public const string TimePM = "Tx:time.pm";
+			/// <summary>The system text key for the separator between two levels of a relative time.</summary>
 			public const string TimeRelativeSeparator = "Tx:time.relative separator";
+			/// <summary>The system text key for the current time.</summary>
 			public const string TimeNow = "Tx:time.now";
+			/// <summary>The system text key for the unset time.</summary>
 			public const string TimeNever = "Tx:time.never";
+			/// <summary>The system text key for a relative point in time in the future. Uses the {interval} placeholder.</summary>
 			public const string TimeRelative = "Tx:time.relative";
+			/// <summary>The system text key for a relative point in time in the past. Uses the {interval} placeholder.</summary>
 			public const string TimeRelativeNeg = "Tx:time.relative neg";
+			/// <summary>The system text key for years of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeYears = "Tx:time.relative.years";
+			/// <summary>The system text key for months of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeMonths = "Tx:time.relative.months";
+			/// <summary>The system text key for days of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeDays = "Tx:time.relative.days";
+			/// <summary>The system text key for hours of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeHours = "Tx:time.relative.hours";
+			/// <summary>The system text key for minutes of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeMinutes = "Tx:time.relative.minutes";
+			/// <summary>The system text key for seconds of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeSeconds = "Tx:time.relative.seconds";
+			/// <summary>The system text key for years of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegYears = "Tx:time.relative neg.years";
+			/// <summary>The system text key for months of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegMonths = "Tx:time.relative neg.months";
+			/// <summary>The system text key for days of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegDays = "Tx:time.relative neg.days";
+			/// <summary>The system text key for hours of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegHours = "Tx:time.relative neg.hours";
+			/// <summary>The system text key for minutes of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegMinutes = "Tx:time.relative neg.minutes";
+			/// <summary>The system text key for seconds of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegSeconds = "Tx:time.relative neg.seconds";
+			/// <summary>The system text key for a relative time span into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpanRelative = "Tx:time.relative span";
+			/// <summary>The system text key for a relative time span into the past. Uses the {interval} placeholder.</summary>
 			public const string TimeSpanRelativeNeg = "Tx:time.relative span neg";
+			/// <summary>The system text key for years of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeYears = "Tx:time.relative span.years";
+			/// <summary>The system text key for months of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeMonths = "Tx:time.relative span.months";
+			/// <summary>The system text key for days of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeDays = "Tx:time.relative span.days";
+			/// <summary>The system text key for hours of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeHours = "Tx:time.relative span.hours";
+			/// <summary>The system text key for minutes of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeMinutes = "Tx:time.relative span.minutes";
+			/// <summary>The system text key for seconds of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeSeconds = "Tx:time.relative span.seconds";
+			/// <summary>The system text key for years of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegYears = "Tx:time.relative span neg.years";
+			/// <summary>The system text key for months of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegMonths = "Tx:time.relative span neg.months";
+			/// <summary>The system text key for days of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegDays = "Tx:time.relative span neg.days";
+			/// <summary>The system text key for hours of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegHours = "Tx:time.relative span neg.hours";
+			/// <summary>The system text key for minutes of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegMinutes = "Tx:time.relative span neg.minutes";
+			/// <summary>The system text key for seconds of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegSeconds = "Tx:time.relative span neg.seconds";
+			/// <summary>The system text key for a relative time span going into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpan = "Tx:time.span";
+			/// <summary>The system text key for a relative time span going into the past. Uses the {interval} placeholder.</summary>
 			public const string TimeSpanNeg = "Tx:time.span neg";
+			/// <summary>The system text key for years of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanYears = "Tx:time.span.years";
+			/// <summary>The system text key for months of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanMonths = "Tx:time.span.months";
+			/// <summary>The system text key for days of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanDays = "Tx:time.span.days";
+			/// <summary>The system text key for hours of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanHours = "Tx:time.span.hours";
+			/// <summary>The system text key for minutes of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanMinutes = "Tx:time.span.minutes";
+			/// <summary>The system text key for seconds of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanSeconds = "Tx:time.span.seconds";
+			/// <summary>The system text key for years of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegYears = "Tx:time.span neg.years";
+			/// <summary>The system text key for months of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegMonths = "Tx:time.span neg.months";
+			/// <summary>The system text key for days of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegDays = "Tx:time.span neg.days";
+			/// <summary>The system text key for hours of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegHours = "Tx:time.span neg.hours";
+			/// <summary>The system text key for minutes of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegMinutes = "Tx:time.span neg.minutes";
+			/// <summary>The system text key for seconds of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegSeconds = "Tx:time.span neg.seconds";
 		}
 
@@ -234,7 +320,11 @@ namespace TxLib
 
 		#region Events
 
+		/// <summary>
+		/// Fired when the dictionary has changed.
+		/// </summary>
 		public static event EventHandler DictionaryChanged;
+
 		private static void RaiseDictionaryChanged()
 		{
 			EventHandler handler = DictionaryChanged;
@@ -1795,7 +1885,7 @@ namespace TxLib
 		/// Calculates a DateTimeInterval from two DateTime values and rounds it to a resolution of
 		/// not more than 2 levels.
 		/// </summary>
-		/// <param name="time">Start time of the interval.</param>
+		/// <param name="start">Start time of the interval.</param>
 		/// <param name="end">End time of the interval.</param>
 		/// <returns></returns>
 		private static DateTimeInterval GetRoundedInterval(DateTime start, DateTime end)
@@ -1939,7 +2029,7 @@ namespace TxLib
 		#region T overloads
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string)"/> method.
 		/// </summary>
 		public static string T(string key)
 		{
@@ -1947,7 +2037,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,int)"/> method.
 		/// </summary>
 		public static string T(string key, int count)
 		{
@@ -1955,7 +2045,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,decimal)"/> method.
 		/// </summary>
 		public static string T(string key, decimal count)
 		{
@@ -1963,7 +2053,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,string[])"/> method.
 		/// </summary>
 		public static string T(string key, params string[] data)
 		{
@@ -1971,7 +2061,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,Dictionary{string,string})"/> method.
 		/// </summary>
 		public static string T(string key, Dictionary<string, string> data)
 		{
@@ -1979,7 +2069,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,int,string[])"/> method.
 		/// </summary>
 		public static string T(string key, int count, params string[] data)
 		{
@@ -1987,7 +2077,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,int,Dictionary{string,string})"/> method.
 		/// </summary>
 		public static string T(string key, int count, Dictionary<string, string> data)
 		{
@@ -1995,7 +2085,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,decimal,string[])"/> method.
 		/// </summary>
 		public static string T(string key, decimal count, params string[] data)
 		{
@@ -2003,7 +2093,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Text method.
+		/// Abbreviation for the <see cref="Text(string,decimal,Dictionary{string,string})"/> method.
 		/// </summary>
 		public static string T(string key, decimal count, Dictionary<string, string> data)
 		{
@@ -2013,7 +2103,7 @@ namespace TxLib
 		#endregion T overloads
 
 		/// <summary>
-		/// Abbreviation for the Quote method.
+		/// Abbreviation for the <see cref="Quote"/> method.
 		/// </summary>
 		public static string Q(string text)
 		{
@@ -2021,7 +2111,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Parentheses method.
+		/// Abbreviation for the <see cref="Parentheses"/> method.
 		/// </summary>
 		public static string P(string text)
 		{
@@ -2029,7 +2119,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Colon method.
+		/// Abbreviation for the <see cref="Colon"/> method.
 		/// </summary>
 		public static string C()
 		{
@@ -2037,7 +2127,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the UpperCase method.
+		/// Abbreviation for the <see cref="UpperCase"/> method.
 		/// </summary>
 		public static string U(string text)
 		{
@@ -2047,7 +2137,7 @@ namespace TxLib
 		#region N overloads
 
 		/// <summary>
-		/// Abbreviation for the Number method.
+		/// Abbreviation for the <see cref="Number(long)"/> method.
 		/// </summary>
 		public static string N(long number)
 		{
@@ -2055,7 +2145,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Number method.
+		/// Abbreviation for the <see cref="Number(decimal)"/> method.
 		/// </summary>
 		public static string N(decimal number)
 		{
@@ -2063,7 +2153,7 @@ namespace TxLib
 		}
 
 		/// <summary>
-		/// Abbreviation for the Number method.
+		/// Abbreviation for the <see cref="Number(decimal,int)"/> method.
 		/// </summary>
 		public static string N(decimal number, int decimals)
 		{

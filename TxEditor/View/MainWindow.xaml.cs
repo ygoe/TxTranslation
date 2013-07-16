@@ -11,8 +11,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Unclassified.UI;
 using TxEditor.ViewModel;
+using Unclassified;
+using Unclassified.UI;
 
 namespace TxEditor.View
 {
@@ -33,6 +34,15 @@ namespace TxEditor.View
 
 		#endregion Static data
 
+		#region Private data
+
+		/// <summary>
+		/// Reference to all HotKey instances to prevent garbage collection.
+		/// </summary>
+		private List<HotKey> hotKeys = new List<HotKey>();
+
+		#endregion Private data
+
 		#region Constructors
 
 		public MainWindow()
@@ -51,9 +61,32 @@ namespace TxEditor.View
 
 		#endregion Constructors
 
+		#region Window event handlers
+
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			hotKeys.Add(new HotKey(Key.T, HotKeyModifier.Ctrl | HotKeyModifier.Shift, OnHotKey));
+
 			TextKeysTreeView.Focus();
+		}
+
+		private void OnHotKey(HotKey hotKey)
+		{
+			var vm = DataContext as MainWindowViewModel;
+			if (vm != null)
+			{
+				vm.TextKeyWizardFromHotKey();
+			}
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			MainWindowViewModel vm = DataContext as MainWindowViewModel;
+			if (vm != null && !vm.CheckModifiedSaved())
+			{
+				e.Cancel = true;
+				return;
+			}
 		}
 
 		private void Window_Closed(object sender, EventArgs e)
@@ -97,6 +130,8 @@ namespace TxEditor.View
 				(DataContext as MainWindowViewModel).RenameTextKeyCommand.TryExecute();
 			}
 		}
+
+		#endregion Window event handlers
 
 		#region Tool grid layouting
 
@@ -196,6 +231,8 @@ namespace TxEditor.View
 
 		#endregion Tool grid layouting
 
+		#region Toolbar event handlers
+
 		private void CultureToolsButton_Click(object sender, RoutedEventArgs e)
 		{
 			CultureToolsButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
@@ -227,6 +264,10 @@ namespace TxEditor.View
 			);
 		}
 
+		#endregion Toolbar event handlers
+
+		#region Tree event handlers
+
 		private void TextKeysTreeView_SelectionChanged(object sender, EventArgs e)
 		{
 			var vm = DataContext as MainWindowViewModel;
@@ -245,12 +286,29 @@ namespace TxEditor.View
 			}
 		}
 
+		#endregion Tree event handlers
+
+		#region View commands
+
 		[ViewCommand]
 		public void SelectTextKey(object textKey)
 		{
 			TextKeysTreeView.SelectedItems.Clear();
-			TextKeysTreeView.SelectedItems.Add(textKey);
-			TextKeysTreeView.FocusItem(textKey, true);
+			if (textKey != null)
+			{
+				TextKeysTreeView.SelectedItems.Add(textKey);
+				TextKeysTreeView.FocusItem(textKey, true);
+			}
+			else if (TextKeysTreeView.Items.Count > 0)
+			{
+				TextKeysTreeView.FocusItem(TextKeysTreeView.Items[0], true);
+			}
+			else
+			{
+				TextKeysTreeView.Focus();
+			}
 		}
+
+		#endregion View commands
 	}
 }

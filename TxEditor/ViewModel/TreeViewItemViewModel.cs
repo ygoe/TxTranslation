@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Threading;
+using System.Windows.Data;
 
 namespace TxEditor.ViewModel
 {
@@ -16,6 +17,7 @@ namespace TxEditor.ViewModel
 		private static readonly TreeViewItemViewModel DummyChild = new TreeViewItemViewModel();
 
 		private ObservableCollection<TreeViewItemViewModel> children;
+		private ListCollectionView visibleChildren;
 		private TreeViewItemViewModel parent;
 
 		private bool isExpanded;
@@ -33,6 +35,9 @@ namespace TxEditor.ViewModel
 			this.parent = parent;
 
 			children = new ObservableCollection<TreeViewItemViewModel>();
+
+			visibleChildren = new ListCollectionView(children);
+			visibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
 
 			if (lazyLoadChildren)
 				children.Add(DummyChild);
@@ -60,7 +65,18 @@ namespace TxEditor.ViewModel
 			{
 				children = value;
 				OnPropertyChanged("Children");
+
+				visibleChildren = new ListCollectionView(children);
+				OnPropertyChanged("VisibleChildren");
 			}
+		}
+
+		/// <summary>
+		/// Returns the visible child items of this object.
+		/// </summary>
+		public CollectionView VisibleChildren
+		{
+			get { return visibleChildren; }
 		}
 
 		/// <summary>
@@ -174,6 +190,8 @@ namespace TxEditor.ViewModel
 				{
 					isVisible = value;
 					OnPropertyChanged("IsVisible");
+					if (parent != null)
+						parent.visibleChildren.Refresh();
 				}
 			}
 		}

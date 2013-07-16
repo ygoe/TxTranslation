@@ -1,9 +1,11 @@
-﻿<Window x:Class="WpfDemo.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
-		TextOptions.TextFormattingMode="Display"
-        Title="TxTranslator Demo" Height="350" Width="525">
+﻿<Window
+	x:Class="WpfDemo.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+	TextOptions.TextFormattingMode="Display"
+	Title="TxTranslator Demo" Height="350" Width="525">
+	
 	<Grid Margin="12">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -24,12 +26,12 @@
 		<Slider Grid.Row="4" Name="Counter2" Margin="0,12,0,0" Value="12" Minimum="-10000" Maximum="10000" TickFrequency="1000" TickPlacement="BottomRight" />
 
 		<!--TextBlock Grid.Row="5" Text="{Tx:Time {Binding SelectedDate, ElementName=DatePicker1}, Details='DowLong,YearMonthDayLong'}"/-->
-		<!--TextBlock Grid.Row="5" Text="{Tx:RelativeTime {Binding SelectedDate, ElementName=DatePicker1}, UpperCase=True}"/-->
-		<TextBlock Grid.Row="5">
+		<TextBlock Grid.Row="5" Text="{Tx:RelativeTime {Binding SelectedDate, ElementName=DatePicker1}, UpperCase=True, RelativeTimeKind=CurrentTimeSpan}"/>
+		<!--TextBlock Grid.Row="5">
 			<TextBlock.Text>
 				<Tx:RelativeTime TimeBinding="{Binding SelectedDate, ElementName=DatePicker1}" UpperCase="True"/>
 			</TextBlock.Text>
-		</TextBlock>
+		</TextBlock-->
 		<DatePicker Grid.Row="6" Name="DatePicker1" SelectedDateFormat="Short" />
 
 		<TextBlock Grid.Row="7" Name="Info2Text"/>

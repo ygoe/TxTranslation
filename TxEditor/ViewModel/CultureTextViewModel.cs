@@ -7,6 +7,7 @@ using System.Globalization;
 using TxLib;
 using System.Windows.Media;
 using Unclassified.UI;
+using System.Collections.Specialized;
 
 namespace TxEditor.ViewModel
 {
@@ -39,7 +40,7 @@ namespace TxEditor.ViewModel
 				{
 					text = value;
 					OnPropertyChanged("Text");
-					TextKeyVM.MainWindowVM.ValidateTextKeys();
+					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
@@ -51,6 +52,21 @@ namespace TxEditor.ViewModel
 			set
 			{
 				TextKeyVM.MainWindowVM.CursorChar = value;
+			}
+		}
+
+		private StringCollection textKeyReferences;
+		public StringCollection TextKeyReferences
+		{
+			get { return textKeyReferences; }
+			set
+			{
+				if (value != textKeyReferences)
+				{
+					textKeyReferences = value;
+					OnPropertyChanged("TextKeyReferences");
+					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
+				}
 			}
 		}
 
@@ -112,9 +128,15 @@ namespace TxEditor.ViewModel
 				if (quantifiedTextVMs == null)
 				{
 					quantifiedTextVMs = new ObservableCollection<QuantifiedTextViewModel>();
+					quantifiedTextVMs.CollectionChanged += quantifiedTextVMs_CollectionChanged;
 				}
 				return quantifiedTextVMs;
 			}
+		}
+
+		private void quantifiedTextVMs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			TextKeyVM.UpdateIcon();
 		}
 
 		public CultureTextViewModel(string cultureName, TextKeyViewModel textKeyVM)
@@ -207,7 +229,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = 0;
 			QuantifiedTextVMs.Add(newVM);
-			TextKeyVM.MainWindowVM.ValidateTextKeys();
+			TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusText");
 		}
@@ -217,7 +239,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = 1;
 			QuantifiedTextVMs.Add(newVM);
-			TextKeyVM.MainWindowVM.ValidateTextKeys();
+			TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusText");
 		}
@@ -227,7 +249,7 @@ namespace TxEditor.ViewModel
 			QuantifiedTextViewModel newVM = new QuantifiedTextViewModel(this);
 			newVM.Count = -1;
 			QuantifiedTextVMs.Add(newVM);
-			TextKeyVM.MainWindowVM.ValidateTextKeys();
+			TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			TextKeyVM.MainWindowVM.FileModified = true;
 			newVM.ViewCommandManager.InvokeLoaded("FocusCount");
 		}

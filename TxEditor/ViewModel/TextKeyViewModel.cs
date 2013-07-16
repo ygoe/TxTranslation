@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 using Unclassified;
+using TxLib;
+using System.Text.RegularExpressions;
 
 namespace TxEditor.ViewModel
 {
@@ -19,7 +21,43 @@ namespace TxEditor.ViewModel
 			get { return textKey; }
 		}
 
+		private bool hasOwnProblem;
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key item itself or any of its child
+		/// items has a problem. This does not count towards the text keys with problems counter.
+		/// </summary>
+		public bool HasOwnProblem
+		{
+			get { return hasOwnProblem; }
+			set
+			{
+				if (value != hasOwnProblem)
+				{
+					// Remove from previous list
+					if (hasOwnProblem)
+					{
+						MainWindowVM.ProblemKeys.Remove(this);
+					}
+
+					hasOwnProblem = value;
+					UpdateIcon();
+
+					// Add to new list
+					if (hasOwnProblem && IsFullKey)
+					{
+						MainWindowVM.ProblemKeys.Add(this);
+					}
+
+					OnPropertyChanged("HasOwnProblem");
+				}
+			}
+		}
+
 		private bool hasProblem;
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key item itself has a problem. This
+		/// is explained in the Remarks property and such keys are counted in the problems counter.
+		/// </summary>
 		public bool HasProblem
 		{
 			get { return hasProblem; }
@@ -27,27 +65,17 @@ namespace TxEditor.ViewModel
 			{
 				if (value != hasProblem)
 				{
-					// Remove from previous list
-					if (hasProblem)
-					{
-						MainWindowVM.ProblemKeys.Remove(this);
-					}
-
 					hasProblem = value;
 					UpdateIcon();
-
-					// Add to new list
-					if (hasProblem && IsFullKey)
-					{
-						MainWindowVM.ProblemKeys.Add(this);
-					}
-
 					OnPropertyChanged("HasProblem");
 				}
 			}
 		}
 
 		bool isNamespace;
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key represents a namespace node.
+		/// </summary>
 		public bool IsNamespace
 		{
 			get { return isNamespace; }
@@ -63,6 +91,10 @@ namespace TxEditor.ViewModel
 		}
 
 		bool isFullKey;
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key represents a full text key or
+		/// only a key segment node.
+		/// </summary>
 		public bool IsFullKey
 		{
 			get { return isFullKey; }
@@ -121,6 +153,7 @@ namespace TxEditor.ViewModel
 				{
 					comment = value;
 					OnPropertyChanged("Comment");
+					MainWindowVM.FileModified = true;
 				}
 			}
 		}
@@ -169,6 +202,7 @@ namespace TxEditor.ViewModel
 			// Partial keys can only indicate problems in the subtree
 			if (!IsFullKey)
 			{
+				HasOwnProblem = false;
 				HasProblem = anyChildError;
 				Remarks = null;
 				return !anyChildError;
@@ -178,6 +212,7 @@ namespace TxEditor.ViewModel
 			// TODO: This shall only apply to missing translations, not to content/format errors
 			if (TextKey.StartsWith("Tx:"))
 			{
+				HasOwnProblem = false;
 				HasProblem = anyChildError;
 				Remarks = null;
 				return !anyChildError;
@@ -190,8 +225,9 @@ namespace TxEditor.ViewModel
 				ct.QuantifiedTextVMs.Any(qt =>
 					qt.Count < 0 || qt.Count >= 0xFFFF)))
 			{
+				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = "Invalid count";
+				Remarks = Tx.T("validation.content.invalid count");
 				return false;
 			}
 			// Check for invalid modulo values in any CultureText
@@ -199,8 +235,9 @@ namespace TxEditor.ViewModel
 				ct.QuantifiedTextVMs.Any(qt =>
 					qt.Modulo != 0 && (qt.Modulo < 2 || qt.Modulo > 1000))))
 			{
+				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = "Invalid modulo";
+				Remarks = Tx.T("validation.content.invalid modulo");
 				return false;
 			}
 			// Check for duplicate count/modulo values in any CultureText
@@ -209,8 +246,9 @@ namespace TxEditor.ViewModel
 					qt.Count << 16 | qt.Modulo).Any(grp =>
 						grp.Count() > 1)))
 			{
+				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = "Duplicate count/modulo";
+				Remarks = Tx.T("validation.content.duplicate count modulo");
 				return false;
 			}
 
@@ -219,8 +257,9 @@ namespace TxEditor.ViewModel
 			// First check that every non-region culture has a text set
 			if (CultureTextVMs.Any(vm => vm.CultureName.Length == 2 && string.IsNullOrEmpty(vm.Text)))
 			{
+				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = "Missing translations";
+				Remarks = Tx.T("validation.content.missing translation");
 				return false;
 			}
 			// Then check that every region-culture with no text has a non-region culture with a
@@ -230,13 +269,104 @@ namespace TxEditor.ViewModel
 				string.IsNullOrEmpty(vm.Text) &&
 				!CultureTextVMs.Any(vm2 => vm2.CultureName == vm.CultureName.Substring(0, 2))))
 			{
+				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = "Missing translations";
+				Remarks = Tx.T("validation.content.missing translation");
 				return false;
 			}
 
+			// ----- Check referenced keys -----
+
+			if (CultureTextVMs.Any(ct =>
+				ct.TextKeyReferences != null &&
+				ct.TextKeyReferences.OfType<string>().Any(key => key == TextKey)))
+			{
+				HasOwnProblem = true;
+				HasProblem = true;
+				Remarks = Tx.T("validation.content.referenced key loop");
+				return false;
+			}
+
+			if (CultureTextVMs.Any(ct =>
+				ct.QuantifiedTextVMs.Any(qt =>
+					qt.TextKeyReferences != null &&
+					qt.TextKeyReferences.OfType<string>().Any(key => key == TextKey))))
+			{
+				HasOwnProblem = true;
+				HasProblem = true;
+				Remarks = Tx.T("validation.content.referenced key loop");
+				return false;
+			}
+
+			if (CultureTextVMs.Any(ct =>
+				ct.TextKeyReferences != null &&
+				ct.TextKeyReferences.OfType<string>().Any(key => !MainWindowVM.TextKeys.ContainsKey(key))))
+			{
+				HasOwnProblem = true;
+				HasProblem = true;
+				Remarks = Tx.T("validation.content.missing referenced key");
+				return false;
+			}
+
+			if (CultureTextVMs.Any(ct =>
+				ct.QuantifiedTextVMs.Any(qt =>
+					qt.TextKeyReferences != null &&
+					qt.TextKeyReferences.OfType<string>().Any(key => !MainWindowVM.TextKeys.ContainsKey(key)))))
+			{
+				HasOwnProblem = true;
+				HasProblem = true;
+				Remarks = Tx.T("validation.content.missing referenced key");
+				return false;
+			}
+
+			// ----- Check translations consistency -----
+
+			if (CultureTextVMs.Count > 1)
+			{
+				string primaryText = CultureTextVMs[0].Text;
+
+				for (int i = 0; i < CultureTextVMs.Count; i++)
+				{
+					// Skip main text of primary culture
+					if (i > 0)
+					{
+						string transText = CultureTextVMs[i].Text;
+						// Ignore any empty text. If that's a problem, it'll be found as missing above.
+						if (!string.IsNullOrEmpty(transText))
+						{
+							string message;
+							if (!CheckTextConsistency(primaryText, transText, out message))
+							{
+								HasOwnProblem = true;
+								HasProblem = true;
+								Remarks = message;
+								return false;
+							}
+						}
+					}
+
+					foreach (var qt in CultureTextVMs[i].QuantifiedTextVMs)
+					{
+						string transText = qt.Text;
+						// Ignore any empty text. If that's a problem, it'll be found as missing above.
+						if (!string.IsNullOrEmpty(transText))
+						{
+							string message;
+							if (!CheckTextConsistency(primaryText, transText, out message, false))   // Ignore count placeholder here
+							{
+								HasOwnProblem = true;
+								HasProblem = true;
+								Remarks = message;
+								return false;
+							}
+						}
+					}
+				}
+			}
+			
 			// ----- No (new) problem -----
 			
+			HasOwnProblem = false;
 			HasProblem = anyChildError;
 			Remarks = null;
 			return !anyChildError;
@@ -253,7 +383,7 @@ namespace TxEditor.ViewModel
 			}
 		}
 
-		private void UpdateIcon()
+		public void UpdateIcon()
 		{
 			if (IsNamespace)
 			{
@@ -261,13 +391,27 @@ namespace TxEditor.ViewModel
 			}
 			else if (IsFullKey)
 			{
-				if (HasProblem)
+				if (CultureTextVMs.Any(ct => ct.QuantifiedTextVMs.Count > 0))
 				{
-					ImageSource = "/Images/key_error.png";
+					if (HasProblem)
+					{
+						ImageSource = "/Images/key_q_error.png";
+					}
+					else
+					{
+						ImageSource = "/Images/key_q.png";
+					}
 				}
 				else
 				{
-					ImageSource = "/Images/key.png";
+					if (HasProblem)
+					{
+						ImageSource = "/Images/key_error.png";
+					}
+					else
+					{
+						ImageSource = "/Images/key.png";
+					}
 				}
 			}
 			else
@@ -287,7 +431,7 @@ namespace TxEditor.ViewModel
 		/// Sets a new text key value and updates the prefix for all children.
 		/// </summary>
 		/// <param name="newKey">New text key.</param>
-		public void SetKeyRecursive(string newKey, HashSet<string> textKeys)
+		public void SetKeyRecursive(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			int i = newKey.LastIndexOfAny(new char[] { ':', '.' });
 			if (i >= 0)
@@ -300,10 +444,10 @@ namespace TxEditor.ViewModel
 				child.ReplaceKeyRecursive(textKey, newKey, textKeys);
 			}
 
-			if (textKeys.Contains(textKey))
+			if (textKeys.ContainsKey(textKey))
 			{
 				textKeys.Remove(textKey);
-				textKeys.Add(newKey);
+				textKeys.Add(newKey, this);
 			}
 			textKey = newKey;
 			OnPropertyChanged("TextKey");
@@ -314,15 +458,15 @@ namespace TxEditor.ViewModel
 		/// </summary>
 		/// <param name="oldKey">Old text key prefix to delete.</param>
 		/// <param name="newKey">New text key prefix to insert.</param>
-		private void ReplaceKeyRecursive(string oldKey, string newKey, HashSet<string> textKeys)
+		private void ReplaceKeyRecursive(string oldKey, string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			string oldTextKey = textKey;
 			textKey = textKey.ReplaceStart(oldKey, newKey);
 			OnPropertyChanged("TextKey");
-			if (textKeys.Contains(oldTextKey))
+			if (textKeys.ContainsKey(oldTextKey))
 			{
 				textKeys.Remove(oldTextKey);
-				textKeys.Add(textKey);
+				textKeys.Add(textKey, this);
 			}
 
 			foreach (TextKeyViewModel child in Children)
@@ -387,41 +531,113 @@ namespace TxEditor.ViewModel
 
 			if (string.IsNullOrWhiteSpace(keyName))
 			{
-				message = "Key is empty or only white-space.";
+				message = Tx.T("validation.key name.empty");
 				return false;
 			}
 			if (keyName.IndexOf(':') != keyName.LastIndexOf(':'))
 			{
-				message = "Key contains multiple colons (:).";
+				message = Tx.T("validation.key name.contains multiple colons");
 				return false;
 			}
 			if (keyName.StartsWith(":"))
 			{
-				message = "Key starts with a colon (:).";
+				message = Tx.T("validation.key name.starts with colon");
 				return false;
 			}
 			if (keyName.EndsWith(":"))
 			{
-				message = "Key ends with a colon (:).";
+				message = Tx.T("validation.key name.ends with colon");
 				return false;
 			}
 			if (keyName.StartsWith("."))
 			{
-				message = "Key starts with a point (.).";
+				message = Tx.T("validation.key name.starts with point");
 				return false;
 			}
 			if (keyName.EndsWith("."))
 			{
-				message = "Key ends with a point (.).";
+				message = Tx.T("validation.key name.ends with point");
 				return false;
 			}
 			if (keyName.Contains(".."))
 			{
-				message = "Key contains multiple consecutive points (.).";
+				message = Tx.T("validation.key name.contains consecutive points");
 				return false;
 			}
 
 			// All checks passed
+			message = null;
+			return true;
+		}
+
+		public static bool CheckTextConsistency(string a, string b, out string message, bool includeCount = true)
+		{
+			string pattern;
+			Match m1, m2;
+
+			if (a == null) a = "";
+			if (b == null) b = "";
+
+			// ----- Compare placeholders -----
+
+			string placeholderPattern;
+			if (includeCount)
+				placeholderPattern = @"(?<!\{)\{(#|[^{=#]+)\}";
+			else
+				placeholderPattern = @"(?<!\{)\{([^{=#]+)\}";
+			
+			List<string> varNamesA = new List<string>();
+			Match m = Regex.Match(a, placeholderPattern);
+			while (m.Success)
+			{
+				if (!varNamesA.Contains(m.Groups[1].Value))
+					varNamesA.Add(m.Groups[1].Value);
+				m = m.NextMatch();
+			}
+
+			List<string> varNamesB = new List<string>();
+			m = Regex.Match(b, placeholderPattern);
+			while (m.Success)
+			{
+				if (!varNamesB.Contains(m.Groups[1].Value))
+					varNamesB.Add(m.Groups[1].Value);
+				m = m.NextMatch();
+			}
+
+			foreach (string n in varNamesA)
+			{
+				if (!varNamesB.Remove(n))
+				{
+					message = Tx.T("validation.content.missing placeholder", "name", n);
+					return false;
+				}
+			}
+			if (varNamesB.Count > 0)
+			{
+				message = Tx.T("validation.content.additional placeholder", "name", varNamesB[0]);
+				return false;
+			}
+
+			// ----- Compare spacing/punctuation -----
+
+			pattern = "^([ \t\r\n]*)";
+			m1 = Regex.Match(a, pattern);
+			m2 = Regex.Match(b, pattern);
+			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+			{
+				message = Tx.T("validation.content.inconsistent punctuation");
+				return false;
+			}
+
+			pattern = "([ \t\r\n!%,.:;?]*)$";
+			m1 = Regex.Match(a, pattern);
+			m2 = Regex.Match(b, pattern);
+			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+			{
+				message = Tx.T("validation.content.inconsistent punctuation");
+				return false;
+			}
+
 			message = null;
 			return true;
 		}

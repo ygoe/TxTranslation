@@ -71,6 +71,19 @@ namespace TxEditor
 				Tx.UseFileSystemWatcher = true;
 				Tx.LoadFromXmlFile("Dictionary.txd");
 			}
+
+			string appCulture = Settings.AppCulture;
+			if (!string.IsNullOrWhiteSpace(appCulture))
+			{
+				try
+				{
+					Tx.SetCulture(appCulture);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
 		}
 
 		#endregion Constructors

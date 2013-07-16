@@ -56,6 +56,13 @@ Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignorev
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "..\...\TxEditor-Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}"; Flags: ignoreversion
+
+Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+Source: "..\TxLib\TxXaml.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 
 [Registry]
 Root: HKCR; Subkey: ".txd"; ValueType: string; ValueName: ""; ValueData: "TxDictionary"; Flags: uninsdeletevalue 
