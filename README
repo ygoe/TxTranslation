@@ -23,3 +23,7 @@ The .NET framework uses the concept of cultures to specify a combination of lang
 TxEditor
 
 The TxLib solution also comes with a graphical translation file editor that provides all the functionality for translating personnel that don’t necessarily have any programming experience. The TxEditor application can load a dictionary file, list all the text keys that it defines and allows viewing and editing the translation texts. It performs consistency checks to point the user to potential errors and highlight missing translations. TxEditor also makes use of TxLib itself so it is fully localisable and can be used to translate itself into other languages.
+
+Licence
+
+This software is released under the terms of the GNU GPL licence, version 3. You can find the detailed terms and conditions in the download or on the GNU website <http://www.gnu.org/licenses/gpl-3.0.html>.
