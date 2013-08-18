@@ -91,6 +91,10 @@ namespace TxEditor.ViewModel
 			CultureTextVM = cultureTextVM;
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether any data was entered for this text item.
+		/// </summary>
+		/// <returns></returns>
 		public bool IsEmpty()
 		{
 			return string.IsNullOrEmpty(Text);

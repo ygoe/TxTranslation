@@ -64,6 +64,9 @@ namespace TxEditor.ViewModel
 
 		#region Public properties
 
+		/// <summary>
+		/// Dictionary of all loaded text keys, associating a text key string with its TextKeyViewModel instance.
+		/// </summary>
 		public Dictionary<string, TextKeyViewModel> TextKeys { get; private set; }
 		public HashSet<string> LoadedCultureNames { get; private set; }
 		public HashSet<string> DeletedCultureNames { get; private set; }
@@ -1384,20 +1387,28 @@ namespace TxEditor.ViewModel
 
 			if (selKey.Children.Count > 0)
 			{
+				// There are other keys below the selected key
+				// Initially indicate that all subkeys will also be renamed
 				win.IncludeSubitemsCheckbox.Visibility = Visibility.Visible;
 				win.IncludeSubitemsCheckbox.IsChecked = true;
 				win.IncludeSubitemsCheckbox.IsEnabled = false;
 
 				if (selKey.IsFullKey)
 				{
-					// TODO: win.IncludeSubitemsCheckbox.IsEnabled = true;
+					// The selected key is a full key
+					// Allow it to be renamed independently of the subkeys
+					//win.IncludeSubitemsCheckbox.IsEnabled = true;
+					// TODO: This requires to keep the current tree item and create a new one, if the parent would change (see Duplicate function)
 				}
 			}
 
 			if (win.ShowDialog() == true)
 			{
+				// The dialog was confirmed
 				string newKey = win.TextKey;
+				bool includeSubitems = win.IncludeSubitemsCheckbox.IsChecked == true;
 
+				// Test whether the entered text key already exists with content or subkeys
 				TextKeyViewModel tryDestKey = FindOrCreateTextKey(newKey, false, false);
 				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
 				if (destExists)
@@ -1417,15 +1428,24 @@ namespace TxEditor.ViewModel
 				// Remove the selected key from its original tree position
 				oldParent.Children.Remove(selKey);
 
+				// Create the new text key if needed
 				TextKeyViewModel destKey = FindOrCreateTextKey(newKey, false);
 
 				if (!destExists)
 				{
 					// Key was entirely empty or is newly created.
 					// Replace it with the source key.
-		
-					selKey.SetKeyRecursive(newKey, TextKeys);
 
+					if (includeSubitems)
+					{
+						selKey.SetKeyRecursive(newKey, TextKeys);
+					}
+					else
+					{
+						selKey.SetKey(newKey, TextKeys);
+					}
+
+					// TODO: Verify and test the below code in this block
 					if (selKey.IsNamespace)
 					{
 						// Namespace entries are sorted differently, which was not known when
@@ -1447,7 +1467,7 @@ namespace TxEditor.ViewModel
 				}
 				else
 				{
-					// TODO
+					// TODO, see above (this block is currently not reached)
 				}
 
 				if (oldParent != selKey.Parent)
@@ -1749,6 +1769,13 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Finds an existing TextKeyViewModel or creates a new one in the correct place.
+		/// </summary>
+		/// <param name="textKey">The full text key to find or create.</param>
+		/// <param name="updateTextKeys">true to add the new text key to the TextKeys dictionary. (Only if <paramref name="create"/> is set.)</param>
+		/// <param name="create">true to create a new full text key if it doesn't exist yet, false to return null or partial TextKeyViewModels instead.</param>
+		/// <returns></returns>
 		private TextKeyViewModel FindOrCreateTextKey(string textKey, bool updateTextKeys = true, bool create = true)
 		{
 			// Tokenize text key to find the tree node

@@ -156,6 +156,10 @@ namespace TxEditor.ViewModel
 				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).DisplayName);
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether any data was entered for this text key culture.
+		/// </summary>
+		/// <returns></returns>
 		public bool IsEmpty()
 		{
 			if (!string.IsNullOrEmpty(Text)) return false;

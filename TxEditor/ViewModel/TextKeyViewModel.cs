@@ -176,6 +176,10 @@ namespace TxEditor.ViewModel
 			return "{TextKeyViewModel " + textKey + "}";
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether any data was entered for this text key.
+		/// </summary>
+		/// <returns></returns>
 		public bool IsEmpty()
 		{
 			if (!string.IsNullOrEmpty(Comment)) return false;
@@ -425,6 +429,27 @@ namespace TxEditor.ViewModel
 					ImageSource = "/Images/textkey_segment.png";
 				}
 			}
+		}
+
+		/// <summary>
+		/// Sets a new text key value but does not update any children.
+		/// </summary>
+		/// <param name="newKey">New text key.</param>
+		public void SetKey(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
+		{
+			int i = newKey.LastIndexOfAny(new char[] { ':', '.' });
+			if (i >= 0)
+				DisplayName = newKey.Substring(i + 1);
+			else
+				DisplayName = newKey;
+
+			if (textKeys.ContainsKey(textKey))
+			{
+				textKeys.Remove(textKey);
+				textKeys.Add(newKey, this);
+			}
+			textKey = newKey;
+			OnPropertyChanged("TextKey");
 		}
 
 		/// <summary>
