@@ -103,6 +103,13 @@ namespace TxEditor.ViewModel
 				if (value != isFullKey)
 				{
 					isFullKey = value;
+
+					if (!isFullKey)
+					{
+						Comment = null;
+						CultureTextVMs.Clear();
+					}
+					
 					UpdateIcon();
 					OnPropertyChanged("IsFullKey");
 				}
@@ -456,17 +463,19 @@ namespace TxEditor.ViewModel
 		/// Sets a new text key value and updates the prefix for all children.
 		/// </summary>
 		/// <param name="newKey">New text key.</param>
-		public void SetKeyRecursive(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
+		/// <returns>Number of affected keys.</returns>
+		public int SetKeyRecursive(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			int i = newKey.LastIndexOfAny(new char[] { ':', '.' });
 			if (i >= 0)
 				DisplayName = newKey.Substring(i + 1);
 			else
 				DisplayName = newKey;
+			int affectedKeys = 1;
 
 			foreach (TextKeyViewModel child in Children)
 			{
-				child.ReplaceKeyRecursive(textKey, newKey, textKeys);
+				affectedKeys += child.ReplaceKeyRecursive(textKey, newKey, textKeys);
 			}
 
 			if (textKeys.ContainsKey(textKey))
@@ -476,6 +485,7 @@ namespace TxEditor.ViewModel
 			}
 			textKey = newKey;
 			OnPropertyChanged("TextKey");
+			return affectedKeys;
 		}
 
 		/// <summary>
@@ -483,7 +493,8 @@ namespace TxEditor.ViewModel
 		/// </summary>
 		/// <param name="oldKey">Old text key prefix to delete.</param>
 		/// <param name="newKey">New text key prefix to insert.</param>
-		private void ReplaceKeyRecursive(string oldKey, string newKey, Dictionary<string, TextKeyViewModel> textKeys)
+		/// <returns>Number of affected keys.</returns>
+		private int ReplaceKeyRecursive(string oldKey, string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			string oldTextKey = textKey;
 			textKey = textKey.ReplaceStart(oldKey, newKey);
@@ -493,10 +504,32 @@ namespace TxEditor.ViewModel
 				textKeys.Remove(oldTextKey);
 				textKeys.Add(textKey, this);
 			}
+			int affectedKeys = 1;
 
 			foreach (TextKeyViewModel child in Children)
 			{
-				child.ReplaceKeyRecursive(oldKey, newKey, textKeys);
+				affectedKeys += child.ReplaceKeyRecursive(oldKey, newKey, textKeys);
+			}
+			return affectedKeys;
+		}
+
+		/// <summary>
+		/// Copies all contents from another TextKeyViewModel instance to this one, replacing all
+		/// data.
+		/// </summary>
+		/// <param name="other"></param>
+		public void CopyFrom(TextKeyViewModel other)
+		{
+			Comment = other.Comment;
+			IsFullKey = other.IsFullKey;
+
+			CultureTextVMs.Clear();
+			if (IsFullKey)
+			{
+				foreach (CultureTextViewModel ctVM in other.CultureTextVMs)
+				{
+					CultureTextVMs.Add(ctVM.Clone(this));
+				}
 			}
 		}
 

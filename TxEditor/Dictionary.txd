@@ -45,7 +45,10 @@
 		<text key="statusbar.primary culture set">Primary culture set to {name}.</text>
 		<text key="statusbar.text key added">New text key added.</text>
 		<text key="statusbar.text key already exists">The text key already exists and is now selected.</text>
-		<text key="statusbar.text key renamed">Text key renamed.</text>
+		<text key="statusbar.text keys duplicated">{#} text keys duplicated.</text>
+		<text key="statusbar.text keys duplicated" count="1">Text key duplicated.</text>
+		<text key="statusbar.text keys renamed">{#} text keys renamed.</text>
+		<text key="statusbar.text keys renamed" count="1">Text key renamed.</text>
 		<text key="statusbar.text size">Text size</text>
 		<text key="suggestions.caption">Suggestions</text>
 		<text key="suggestions.caption for">Suggestions for {name}</text>
@@ -325,7 +328,10 @@
 		<text key="statusbar.primary culture set">Hauptkultur auf {name} gesetzt.</text>
 		<text key="statusbar.text key added">Neuer Textschlüssel hinzugefügt.</text>
 		<text key="statusbar.text key already exists">Der Textschlüssel existiert bereits und wurde jetzt ausgewählt.</text>
-		<text key="statusbar.text key renamed">Textschlüssel umbenannt.</text>
+		<text key="statusbar.text keys duplicated">{#} Textschlüssel dupliziert.</text>
+		<text key="statusbar.text keys duplicated" count="1">Textschlüssel dupliziert.</text>
+		<text key="statusbar.text keys renamed">{#} Textschlüssel umbenannt.</text>
+		<text key="statusbar.text keys renamed" count="1">Textschlüssel umbenannt.</text>
 		<text key="statusbar.text size">Textgröße</text>
 		<text key="suggestions.caption">Vorschläge</text>
 		<text key="suggestions.caption for">Vorschläge für {name}</text>

@@ -271,6 +271,22 @@ namespace TxEditor.ViewModel
 		#endregion Command handlers
 
 		/// <summary>
+		/// Creates a new CultureTextViewModel instance with all contents of this instance.
+		/// </summary>
+		/// <param name="textKeyVM">New TextKeyViewModel instance to connect the clone with.</param>
+		/// <returns></returns>
+		public CultureTextViewModel Clone(TextKeyViewModel textKeyVM)
+		{
+			CultureTextViewModel clone = new CultureTextViewModel(CultureName, textKeyVM);
+			clone.Text = Text;
+			foreach (QuantifiedTextViewModel qtVM in QuantifiedTextVMs)
+			{
+				clone.QuantifiedTextVMs.Add(qtVM.Clone(clone));
+			}
+			return clone;
+		}
+
+		/// <summary>
 		/// Compares this CultureTextViewModel instance with another instance to determine the sort
 		/// order in the editor view.
 		/// </summary>

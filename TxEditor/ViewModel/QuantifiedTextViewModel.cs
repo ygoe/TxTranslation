@@ -128,6 +128,20 @@ namespace TxEditor.ViewModel
 
 		#endregion Command handlers
 
+		/// <summary>
+		/// Creates a new QuantifiedTextViewModel instance with all contents of this instance.
+		/// </summary>
+		/// <param name="ctVM">New CultureTextViewModel instance to connect the clone with.</param>
+		/// <returns></returns>
+		public QuantifiedTextViewModel Clone(CultureTextViewModel ctVM)
+		{
+			QuantifiedTextViewModel clone = new QuantifiedTextViewModel(ctVM);
+			clone.Count = Count;
+			clone.Modulo = Modulo;
+			clone.Text = Text;
+			return clone;
+		}
+
 		public static int Compare(object a, object b)
 		{
 			QuantifiedTextViewModel qa = a as QuantifiedTextViewModel;

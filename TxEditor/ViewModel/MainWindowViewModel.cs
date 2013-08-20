@@ -1397,8 +1397,153 @@ namespace TxEditor.ViewModel
 				{
 					// The selected key is a full key
 					// Allow it to be renamed independently of the subkeys
-					//win.IncludeSubitemsCheckbox.IsEnabled = true;
-					// TODO: This requires to keep the current tree item and create a new one, if the parent would change (see Duplicate function)
+					win.IncludeSubitemsCheckbox.IsEnabled = true;
+				}
+			}
+
+			if (win.ShowDialog() == true)
+			{
+				// The dialog was confirmed
+				string newKey = win.TextKey;
+				bool needDuplicate = win.IncludeSubitemsCheckbox.IsChecked == false && selKey.Children.Count > 0;
+
+				// Test whether the entered text key already exists with content or subkeys
+				TextKeyViewModel tryDestKey = FindOrCreateTextKey(newKey, false, false);
+				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
+				if (destExists)
+				{
+					// TODO: What to consider if the destination key already has children?
+					// TODO: Ask user to merge, overwrite or cancel.
+					MessageBox.Show(
+						"The destination key already exists. Handling this is not yet implemented.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				
+				var oldParent = selKey.Parent;
+				int affectedKeys = 1;
+
+				if (!needDuplicate)
+				{
+					// Remove the selected key from its original tree position
+					oldParent.Children.Remove(selKey);
+				}
+
+				// Create the new text key if needed
+				TextKeyViewModel destKey = FindOrCreateTextKey(newKey, false);
+
+				if (!destExists)
+				{
+					// Key was entirely empty or is newly created.
+					if (needDuplicate)
+					{
+						// Keep new key but copy all data from the source key
+						destKey.CopyFrom(selKey);
+
+						// The source key is now no longer a full key
+						selKey.IsFullKey = false;
+					}
+					else
+					{
+						// Replace it with the source key
+						affectedKeys = selKey.SetKeyRecursive(newKey, TextKeys);
+
+						// TODO: Document, verify and test the below code in this block
+						if (selKey.IsNamespace)
+						{
+							// Namespace entries are sorted differently, which was not known when
+							// creating the key because it was no namespace at that time. Remove the
+							// newly created key entry (all of its possibly created parent keys are
+							// still useful though!) and insert the selected key at the correct
+							// position in that tree level.
+							destKey.Parent.Children.Remove(destKey);
+							destKey.Parent.Children.InsertSorted(selKey, (a, b) => TextKeyViewModel.Compare(a, b));
+						}
+						else
+						{
+							// The sort order is already good for normal keys so we can simply replace
+							// the created item with the selected key at the same position.
+							destKey.Parent.Children.Replace(destKey, selKey);
+						}
+						// Update the key's parent reference to represent the (possible) new tree location.
+						selKey.Parent = destKey.Parent;
+					}
+				}
+				else
+				{
+					// TODO, see above (this block is currently not reached)
+				}
+
+				if (!needDuplicate && oldParent != selKey.Parent)
+				{
+					// The key has moved to another subtree.
+					// Clean up possible unused partial keys at the old position.
+					DeletePartialParentKeys(oldParent as TextKeyViewModel);
+				}
+	
+				FileModified = true;
+				StatusText = Tx.T("statusbar.text keys renamed", affectedKeys);
+
+				// Fix an issue with MultiSelectTreeView: It can only know that an item is selected
+				// when its TreeViewItem property IsSelected is set through a binding defined in
+				// this application. The already-selected item was removed from the SelectedItems
+				// list when it was removed from the tree (to be re-inserted later). Not sure how
+				// to fix this right.
+				selKey.IsSelected = true;
+
+				if (needDuplicate)
+				{
+					bool wasExpanded = selKey.IsExpanded;
+					destKey.IsExpanded = true;   // Expands all parents
+					if (!wasExpanded)
+						destKey.IsExpanded = false;   // Collapses the item again like it was before
+					ViewCommandManager.InvokeLoaded("SelectTextKey", destKey);
+				}
+				else
+				{
+					bool wasExpanded = selKey.IsExpanded;
+					selKey.IsExpanded = true;   // Expands all parents
+					if (!wasExpanded)
+						selKey.IsExpanded = false;   // Collapses the item again like it was before
+					ViewCommandManager.InvokeLoaded("SelectTextKey", selKey);
+				}
+			}
+		}
+
+		private bool CanDuplicateTextKey()
+		{
+			return selectedTextKeys != null && selectedTextKeys.Count == 1;
+		}
+
+		private void OnDuplicateTextKey()
+		{
+			var selKey = MainWindow.Instance.TextKeysTreeView.LastSelectedItem as TextKeyViewModel;
+			if (selKey == null)
+				return;   // No key selected, something is wrong
+
+			var win = new TextKeyWindow();
+			win.Owner = MainWindow.Instance;
+			win.Title = "Duplicate text key";
+			win.CaptionLabel.Text = "Enter the new name of the selected text key:";
+			win.TextKey = selKey.TextKey;
+			win.OKButton.Content = "Duplicate";
+			win.RenameSelectMode = true;
+
+			if (selKey.Children.Count > 0)
+			{
+				// There are other keys below the selected key
+				// Initially indicate that all subkeys will also be duplicated
+				win.IncludeSubitemsCheckbox.Visibility = Visibility.Visible;
+				win.IncludeSubitemsCheckbox.IsChecked = true;
+				win.IncludeSubitemsCheckbox.IsEnabled = false;
+
+				if (selKey.IsFullKey)
+				{
+					// The selected key is a full key
+					// Allow it to be duplicated independently of the subkeys
+					win.IncludeSubitemsCheckbox.IsEnabled = true;
 				}
 			}
 
@@ -1422,89 +1567,55 @@ namespace TxEditor.ViewModel
 						MessageBoxImage.Warning);
 					return;
 				}
-				
-				var oldParent = selKey.Parent;
 
-				// Remove the selected key from its original tree position
-				oldParent.Children.Remove(selKey);
+				int affectedKeys = 1;
 
 				// Create the new text key if needed
-				TextKeyViewModel destKey = FindOrCreateTextKey(newKey, false);
+				TextKeyViewModel destKey = FindOrCreateTextKey(newKey);
 
 				if (!destExists)
 				{
 					// Key was entirely empty or is newly created.
-					// Replace it with the source key.
+					// Copy all data from the source key.
+					destKey.CopyFrom(selKey);
 
 					if (includeSubitems)
 					{
-						selKey.SetKeyRecursive(newKey, TextKeys);
+						foreach (TextKeyViewModel child in selKey.Children)
+						{
+							affectedKeys += DuplicateTextKeyRecursive(child, destKey);
+						}
 					}
-					else
-					{
-						selKey.SetKey(newKey, TextKeys);
-					}
-
-					// TODO: Verify and test the below code in this block
-					if (selKey.IsNamespace)
-					{
-						// Namespace entries are sorted differently, which was not known when
-						// creating the key because it was no namespace at that time. Remove the
-						// newly created key entry (all of its possibly created parent keys are
-						// still useful though!) and insert the selected key at the correct
-						// position in that tree level.
-						destKey.Parent.Children.Remove(destKey);
-						destKey.Parent.Children.InsertSorted(selKey, (a, b) => TextKeyViewModel.Compare(a, b));
-					}
-					else
-					{
-						// The sort order is already good for normal keys so we can simply replace
-						// the created item with the selected key at the same position.
-						destKey.Parent.Children.Replace(destKey, selKey);
-					}
-					// Update the key's parent reference to represent the (possible) new tree location.
-					selKey.Parent = destKey.Parent;
 				}
 				else
 				{
 					// TODO, see above (this block is currently not reached)
 				}
 
-				if (oldParent != selKey.Parent)
-				{
-					// The key has moved to another subtree.
-					// Clean up possible unused partial keys at the old position.
-					DeletePartialParentKeys(oldParent as TextKeyViewModel);
-				}
-	
 				FileModified = true;
-				StatusText = Tx.T("statusbar.text key renamed");
+				StatusText = Tx.T("statusbar.text keys duplicated", affectedKeys);
 
-				// Fix an issue with MultiSelectTreeView: It can only know that an item is selected
-				// when its TreeViewItem property IsSelected is set through a binding defined in
-				// this application. The already-selected item was removed from the SelectedItems
-				// list when it was removed from the tree (to be re-inserted later). Not sure how
-				// to fix this right.
-				selKey.IsSelected = true;
+				// TODO: Check whether the tree view selection is good now, maybe the original item needs to be deselected
+				destKey.IsSelected = true;
 
-				bool wasExpanded = selKey.IsExpanded;
-				selKey.IsExpanded = true;   // Expands all parents
-				if (!wasExpanded)
-					selKey.IsExpanded = false;   // Collapses the item again like it was before
-				ViewCommandManager.InvokeLoaded("SelectTextKey", selKey);
+				destKey.IsExpanded = true;   // Expands all parents
+				destKey.IsExpanded = false;   // Collapses the item again
+				ViewCommandManager.InvokeLoaded("SelectTextKey", destKey);
 			}
 		}
 
-		private bool CanDuplicateTextKey()
+		private int DuplicateTextKeyRecursive(TextKeyViewModel srcTextKey, TextKeyViewModel destParent)
 		{
-			return false;
-			// TODO
-			//return selectedTextKeys != null && selectedTextKeys.Count == 1;
-		}
+			string destKeyName = destParent.TextKey + "." + srcTextKey.DisplayName;
+			TextKeyViewModel destKey = FindOrCreateTextKey(destKeyName);
+			destKey.CopyFrom(srcTextKey);
+			int affectedKeys = 1;
 
-		private void OnDuplicateTextKey()
-		{
-			// TODO
+			foreach (TextKeyViewModel child in srcTextKey.Children)
+			{
+				affectedKeys += DuplicateTextKeyRecursive(child, destKey);
+			}
+			return affectedKeys;
 		}
 
 		#endregion Text key section
