@@ -54,7 +54,7 @@
 				<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
 					<TextBlock Name="VersionLabel">VersionLabel</TextBlock>
 					<TextBlock Name="CopyrightLabel">CopyrightLabel</TextBlock>
-					<TextBlock><Hyperlink Click="Hyperlink_Click">dev.unclassified.de</Hyperlink></TextBlock>
+					<TextBlock><Hyperlink Click="Hyperlink_Click">dev.unclassified.de/source/txlib</Hyperlink></TextBlock>
 				</StackPanel>
 
 				<Button

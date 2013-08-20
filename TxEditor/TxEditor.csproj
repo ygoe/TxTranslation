@@ -41,6 +41,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MultiSelectTreeView">
       <HintPath>.\MultiSelectTreeView.dll</HintPath>
@@ -365,11 +368,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)\tools\GitRevisionTool.exe" -si "$(ProjectDir)"
+
+"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

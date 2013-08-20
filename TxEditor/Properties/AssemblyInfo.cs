@@ -19,7 +19,11 @@ using System.Windows;
 // Informational version string, used for the About dialog, error reports and the setup script.
 // Can be any freely formatted string containing punctuation, letters and revision codes.
 // Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
-[assembly: AssemblyInformationalVersion("1.0")]
+#if DEBUG
+[assembly: AssemblyInformationalVersion("1.0 ({!:modified }commit {commit:8} on {date:ymd-} {time:hm:} debug)")]
+#else
+[assembly: AssemblyInformationalVersion("1.0 ({!:modified }commit {commit:8} on {date:ymd-} {time:hm:})")]
+#endif
 
 [assembly: ComVisible(false)]
 [assembly: ThemeInfo(

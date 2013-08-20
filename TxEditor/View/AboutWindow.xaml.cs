@@ -31,7 +31,7 @@ namespace TxEditor.View
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://dev.unclassified.de/");
+			Process.Start("http://dev.unclassified.de/source/txlib");
 		}
 
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
