@@ -20,9 +20,9 @@ using System.Windows;
 // Can be any freely formatted string containing punctuation, letters and revision codes.
 // Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
 #if DEBUG
-[assembly: AssemblyInformationalVersion("1.0 ({!:modified }commit {commit:8} on {date:ymd-} {time:hm:} debug)")]
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}-{commit:6}{!:+}-d")]
 #else
-[assembly: AssemblyInformationalVersion("1.0 ({!:modified }commit {commit:8} on {date:ymd-} {time:hm:})")]
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}-{commit:6}{!:+}")]
 #endif
 
 [assembly: ComVisible(false)]

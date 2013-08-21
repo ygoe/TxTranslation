@@ -16,7 +16,7 @@
 [Setup]
 AppCopyright=© Yves Goergen
 AppPublisher=Yves Goergen
-AppPublisherURL=http://dev.unclassified.de/
+AppPublisherURL=http://dev.unclassified.de/source/txlib
 AppName=TxEditor
 AppVersion={#RevId}
 AppMutex=Unclassified.TxEditor
@@ -30,6 +30,11 @@ DefaultDirName={pf}\Unclassified\TxTranslation
 AllowUNCPath=False
 DefaultGroupName=TxTranslation
 
+WizardImageFile=TxFlag.bmp
+WizardImageBackColor=$ffffff
+WizardImageStretch=no
+WizardSmallImageFile=TxFlagSmall.bmp
+
 UninstallDisplayName=TxEditor
 UninstallDisplayIcon={app}\TxEditor.exe
 
@@ -37,25 +42,36 @@ OutputDir=.
 OutputBaseFilename=TxEditor-Setup-{#RevId}
 SolidCompression=True
 InternalCompressLevel=max
-VersionInfoVersion={#RevId}
+VersionInfoVersion=1.0
 VersionInfoCompany=Yves Goergen
-VersionInfoDescription=TxEditor installation package
+VersionInfoDescription=TxEditor {#RevId} setup
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
 
-;[LangOptions]
+[LangOptions]
 ;de.LanguageName=Deutsch
 ;de.LanguageID=$0407
-;DialogFontName=Tahoma
-;WelcomeFontName=Tahoma
+DialogFontName=Segoe UI
+DialogFontSize=9
+WelcomeFontName=Segoe UI
+WelcomeFontSize=12
+
+[Messages]
+WelcomeLabel1=%n%n%n%nWelcome to the Tx setup wizard
+WelcomeLabel2=TxTranslation is a simple yet powerful translation and localisation library for .NET applications. It supports XAML binding, language fallbacks, count-specific translations, placeholders, and number and time formatting.%n%nVersion: {#RevId}
+ClickNext=Click Next to continue installing TxEditor, documentation, the TxLib library and source code, or Cancel to exit the setup.
+
+de.WelcomeLabel1=%n%n%n%nWillkommen zum Tx-Setup-Assistenten
+de.WelcomeLabel2=TxTranslation ist eine einfache aber mächtige Bibliothek für Übersetzungen und Lokalisierung in .NET-Anwendungen. Sie unterstützt XAML-Binding, Ersatzsprachen, Anzahl-abhängige Übersetzungen, Platzhalter und Zeitformatierung.%n%nVersion: {#RevId}
+de.ClickNext=Klicken Sie auf Weiter, um den TxEditor, die Dokumentation und die TxLib-Bibliothek mit Quelltext zu installieren, oder auf Abbrechen zum Beenden des Setups.
 
 [Files]
 Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "..\...\TxEditor-Dokumentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}"; Flags: ignoreversion
 
@@ -72,10 +88,11 @@ Root: HKCR; Subkey: "TxDictionary\shell\open\command"; ValueType: string; ValueN
 
 [Icons]
 Name: "{group}\TxEditor"; Filename: "{app}\TxEditor.exe"; IconFilename: "{app}\TxEditor.exe"
-;Name: "{group}\TxEditor-Dokumentation"; Filename: "{app}\TxEditor-Dokumentation.pdf"
+Name: "{group}\Tx Documentation"; Filename: "{app}\Tx Documentation.pdf"
 
 [CustomMessages]
-en.NgenMessage=Optimising application performance
+NgenMessage=Optimising application performance
+
 de.NgenMessage=Anwendungs-Performance optimieren
 
 [Run]

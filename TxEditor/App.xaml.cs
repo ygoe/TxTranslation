@@ -54,7 +54,7 @@ namespace TxEditor
 			//ULog.SetDataBindingLog();
 
 			// Setup logging
-			Tx.LogFileName = "tx.log";
+			//Tx.LogFileName = "tx.log";
 			//Tx.LogFileName = "";
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", "1", EnvironmentVariableTarget.User);
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", null, EnvironmentVariableTarget.User);

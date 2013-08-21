@@ -25,8 +25,8 @@ $sourcePath = $MyInvocation.MyCommand.Definition | split-path -parent | split-pa
 # Set the application version number. Disable for Git repository revision.
 #
 #$revId = "1.0"
-$revId = (gc $sourcePath\TxEditor\Properties\AssemblyInfo.cs | `
-    select-string -pattern "AssemblyInformationalVersion\(""(.+?)""\)").Matches[0].Groups[1].Value
+#$revId = (gc $sourcePath\TxEditor\Properties\AssemblyInfo.cs | `
+#    select-string -pattern "AssemblyInformationalVersion\(""(.+?)""\)").Matches[0].Groups[1].Value
 
 # ---------------------------------------------------------------------------------
 
@@ -223,7 +223,7 @@ if ($doSetup)
 if ($revId -eq $null)
 {
     # Determine current repository revision
-    #$revId = & .\GitRevisionTool --format "{bmin:2012}.{commit:8}{!:+}" "$sourcePath"
+    $revId = & .\GitRevisionTool --format "{bmin:2013:4}-{commit:6}{!:+}" "$sourcePath"
     if ($revId -eq $null)
     {
 	    WaitError "Repository revision could not be determined"
