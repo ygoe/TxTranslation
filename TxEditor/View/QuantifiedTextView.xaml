@@ -40,7 +40,8 @@
 				Width="40" BorderThickness="0" Padding="0"
 				Background="Transparent"
 				TextAlignment="Right"
-				Text="{Binding Count, Converter={StaticResource EmptyIntConv}, ConverterParameter=-1}"/>
+				Text="{Binding Count, Converter={StaticResource EmptyIntConv}, ConverterParameter=-1}"
+				my:Extensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<TextBlock
@@ -53,7 +54,8 @@
 				Width="40" BorderThickness="0" Padding="0"
 				Background="Transparent"
 				TextAlignment="Right"
-				Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"/>
+				Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"
+				my:Extensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<my:DecoratedTextBox

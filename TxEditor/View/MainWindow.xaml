@@ -275,7 +275,11 @@
 				<StackPanel Grid.Row="1" Grid.Column="11" Orientation="Horizontal">
 					<TextBlock VerticalAlignment="Center" Margin="3,0,0,0" Text="Search term:"/>
 					<Grid Margin="4,0,0,0">
-						<TextBox Name="SearchText" Width="150" Margin="0" Padding="2,2,14,2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+						<TextBox
+							Name="SearchText"
+							Width="150" Margin="0" Padding="2,2,14,2"
+							Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+							my:Extensions.DisableInsertKey="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}">
 									<Setter Property="BorderBrush" Value="#1C000000"/>

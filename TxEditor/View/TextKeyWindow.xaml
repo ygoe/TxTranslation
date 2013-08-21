@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+	xmlns:my="clr-namespace:TxEditor"
 	mc:Ignorable="d" 
 	d:DesignHeight="200" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -44,7 +45,8 @@
 			<TextBox
 				Name="TextKeyText"
 				Grid.Row="1" Grid.Column="0"
-				Width="350" Margin="0,6,0,0"/>
+				Width="350" Margin="0,6,0,0"
+				my:Extensions.DisableInsertKey="True"/>
 			
 			<CheckBox
 				Name="IncludeSubitemsCheckbox"

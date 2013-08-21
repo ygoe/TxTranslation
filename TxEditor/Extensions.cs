@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using TxEditor.ViewModel;
 
@@ -224,6 +227,48 @@ namespace TxEditor
 		}
 
 		#endregion Color maths
+
+		#region TextBox no-overwrite attached property
+
+		// Source: http://stackoverflow.com/a/18345524/143684
+
+		public static bool GetDisableInsertKey(DependencyObject obj)
+		{
+			return (bool) obj.GetValue(DisableInsertKeyProperty);
+		}
+
+		public static void SetDisableInsertKey(DependencyObject obj, bool value)
+		{
+			obj.SetValue(DisableInsertKeyProperty, value);
+		}
+
+		public static readonly DependencyProperty DisableInsertKeyProperty =
+			DependencyProperty.RegisterAttached("DisableInsertKey", typeof(bool), typeof(Extensions), new PropertyMetadata(false, OnDisableInsertChanged));
+
+		private static void OnDisableInsertChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			if (d is TextBox && e != null)
+			{
+				if ((bool) e.NewValue)
+				{
+					(d as TextBox).PreviewKeyDown += TextBox_PreviewKeyDown;
+				}
+				else
+				{
+					(d as TextBox).PreviewKeyDown -= TextBox_PreviewKeyDown;
+				}
+			}
+		}
+
+		static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Insert && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+			{
+				e.Handled = true;
+			}
+		}
+
+		#endregion TextBox no-overwrite attached property
 
 		public static string ReplaceStart(this string str, string search, string replacement)
 		{

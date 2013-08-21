@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+	xmlns:my="clr-namespace:TxEditor"
 	xmlns:u="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d" 
 	d:DesignHeight="240" d:DesignWidth="700"
@@ -54,7 +55,8 @@
 				<TextBox
 					Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="8,4,0,0"
 					Width="300" AcceptsReturn="True" TextWrapping="Wrap"
-					Text="{Binding CharacterMap, UpdateSourceTrigger=PropertyChanged}"/>
+					Text="{Binding CharacterMap, UpdateSourceTrigger=PropertyChanged}"
+					my:Extensions.DisableInsertKey="True"/>
 
 				<CheckBox
 					Grid.Row="2" Grid.ColumnSpan="3"
@@ -87,7 +89,8 @@
 				<TextBox
 					Grid.Row="4" Grid.Column="1" Margin="8,4,0,0"
 					HorizontalAlignment="Left" Width="60"
-					Text="{Binding AppCulture, UpdateSourceTrigger=PropertyChanged}"/>
+					Text="{Binding AppCulture, UpdateSourceTrigger=PropertyChanged}"
+					my:Extensions.DisableInsertKey="True"/>
 				<TextBlock
 					Grid.Row="4" Grid.Column="2"
 					Margin="8,6,0,0"

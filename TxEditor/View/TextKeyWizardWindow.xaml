@@ -71,7 +71,8 @@
 				Name="TextKeyText"
 				Grid.Row="2" Grid.Column="1"
 				Margin="8,4,0,0"
-				TextChanged="TextKeyText_TextChanged"/>
+				TextChanged="TextKeyText_TextChanged"
+				my:Extensions.DisableInsertKey="True"/>
 
 			<TextBlock
 				Grid.Row="3" Grid.Column="0"
