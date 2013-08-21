@@ -283,7 +283,7 @@ if ($doSetup)
 	echo ""
 	Write-Host -ForegroundColor DarkCyan "Compiling setup..."
 
-    & $innosetupBin /q "$sourcePath\Setup\TxEditor.iss" /dRevId=$revId
+    & $innosetupBin /q "$sourcePath\Setup\Tx.iss" /dRevId=$revId
 	if (-not $?)
     {
 		WaitError "Creating setup failed"

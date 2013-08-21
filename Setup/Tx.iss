@@ -35,16 +35,16 @@ WizardImageBackColor=$ffffff
 WizardImageStretch=no
 WizardSmallImageFile=TxFlagSmall.bmp
 
-UninstallDisplayName=TxEditor
+UninstallDisplayName=TxTranslation
 UninstallDisplayIcon={app}\TxEditor.exe
 
 OutputDir=.
-OutputBaseFilename=TxEditor-Setup-{#RevId}
+OutputBaseFilename=TxSetup-{#RevId}
 SolidCompression=True
 InternalCompressLevel=max
 VersionInfoVersion=1.0
 VersionInfoCompany=Yves Goergen
-VersionInfoDescription=TxEditor {#RevId} setup
+VersionInfoDescription=TxTranslation {#RevId} setup
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"

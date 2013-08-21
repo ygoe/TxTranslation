@@ -74,7 +74,7 @@
 		<text key="toolbar.culture.new.tooltip">Adds a new culture to this dictionary.</text>
 		<text key="toolbar.culture.replace">Replace culture</text>
 		<text key="toolbar.culture.set primary">Set primary</text>
-		<text key="toolbar.culture.set primary.tooltip">Sets the selected culture as the dictionary's primary culture. Focus a text box to select a culture.</text>
+		<text key="toolbar.culture.set primary.tooltip">Sets the selected culture as the dictionary’s primary culture. Focus a text box to select a culture.</text>
 		<text key="toolbar.culture.view date and time formats">View date and time formats</text>
 		<text key="toolbar.file">File</text>
 		<text key="toolbar.file.export">Export keys</text>
@@ -546,6 +546,7 @@
 		<text key="Tx:number.group separator threshold">1</text>
 	</culture>
 	<culture name="de-CH">
+		<text key="statusbar.text size">Textgrösse</text>
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">‹</text>
