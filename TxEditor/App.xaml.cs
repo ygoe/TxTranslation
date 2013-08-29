@@ -196,7 +196,10 @@ namespace TxEditor
 			view.DataContext = viewModel;
 
 			// Load selected files
-			viewModel.LoadFiles(filesToLoad.Distinct());
+			if (filesToLoad.Count > 0)
+			{
+				viewModel.LoadFiles(filesToLoad);
+			}
 
 			// Show the main window
 			view.Show();

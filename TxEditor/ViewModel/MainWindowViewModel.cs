@@ -56,6 +56,7 @@ namespace TxEditor.ViewModel
 			searchDc = DelayedCall.Create(UpdateSearch, 250);
 			SearchText = "";   // Change value once to set the clear button visibility
 			ClearViewHistory();
+			UpdateTitle();
 
 			FontScale = App.Settings.FontScale;
 		}
