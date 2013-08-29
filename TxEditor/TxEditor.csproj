@@ -84,6 +84,7 @@
     <Compile Include="Unclassified\ObservableHashSet.cs" />
     <Compile Include="Unclassified\OpLock.cs" />
     <Compile Include="Unclassified\Settings.cs" />
+    <Compile Include="Unclassified\TaskHelper.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
     <Compile Include="Unclassified\UI\ColorMath.cs" />

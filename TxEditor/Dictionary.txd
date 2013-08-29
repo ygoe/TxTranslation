@@ -4,6 +4,9 @@
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
+		<text key="msg.cannot write to read-only file">The file you are trying to save to is marked read-only.
+
+Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>
 		<text key="msg.caption.error">Error</text>
 		<text key="msg.caption.warning">Warning</text>
 		<text key="msg.delete culture">Are you sure to delete the culture {name}?</text>
@@ -20,6 +23,12 @@
 		<text key="msg.nothing available.desc">Currently no text keys are available. Either add a new text key to the dictionary or adjust your search or filter to see existing text keys.</text>
 		<text key="msg.nothing selected">Nothing selected</text>
 		<text key="msg.nothing selected.desc">Select a text key from the list to display and edit it.</text>
+		<text key="msg.read-only files loaded">The files that you have loaded are marked read-only. It may not be possible to save the changes you make.
+
+Please check the access rights on the loaded files. Also consider version control systems that may first need to check out the file.</text>
+		<text key="msg.read-only files loaded" count="1">The file that you have loaded is marked read-only. It may not be possible to save the changes you make.
+
+Please check the access rights on the loaded file. Also consider version control systems that may first need to check out the file.</text>
 		<text key="msg.save.incompatible with format 1">Incompatible features used for file format version 1.</text>
 		<text key="msg.save.incompatible with format 1.desc">You are about to save the dictionary in a format 1 file but have used features that are not supported by this format. If you save in this format anyway, modulo specifications will be lost and advanced placeholders may not work at runtime.</text>
 		<text key="msg.save.save changes">Would you like to save the changes to the loaded dictionary?</text>
@@ -287,6 +296,9 @@
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="msg.cannot write to read-only file">Die Datei, in die gespeichert werden soll, ist als schreibgeschützt markiert.
+
+Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
 		<text key="msg.caption.error">Fehler</text>
 		<text key="msg.caption.warning">Warnung</text>
 		<text key="msg.delete culture">Möchten Sie die Kultur {name} wirklich löschen?</text>
@@ -303,6 +315,12 @@
 		<text key="msg.nothing available.desc">Derzeit sind keine Textschlüssel verfügbar. Fügen Sie einen neuen Textschlüssel zum Wörterbuch hinzu oder passen Sie die Suche oder den Filter an, um vorhandene Textschlüssel zu sehen.</text>
 		<text key="msg.nothing selected">Nichts ausgewählt</text>
 		<text key="msg.nothing selected.desc">Wählen Sie einen Textschlüssel aus der Liste aus, um ihn anzuzeigen und zu bearbeiten.</text>
+		<text key="msg.read-only files loaded">Die geladenen Dateien sind als schreibgeschützt markiert. Änderungen können möglicherweise nicht gespeichert werden.
+
+Bitte prüfen Sie die Zugriffsberechtigungen auf die geladenen Dateien. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
+		<text key="msg.read-only files loaded" count="1">Die geladene Datei ist als schreibgeschützt markiert. Änderungen können möglicherweise nicht gespeichert werden.
+
+Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
 		<text key="msg.save.incompatible with format 1">Es wurden Funktionen genutzt, die nicht mit der Dateiformatversion 1 kompatibel sind.</text>
 		<text key="msg.save.incompatible with format 1.desc">Sie sind dabei, das Wörterbuch in der Dateiformatversion 1 zu speichern, haben aber Funktionen genutzt, die von diesem Format nicht unterstützt werden. Wenn Sie trotzdem in diesem Format speichern, gehen Modulo-Angaben verloren und erweiterte Platzhalter funktionieren möglicherweise nicht korrekt.</text>
 		<text key="msg.save.save changes">Möchten Sie die Änderungen am geladenen Wörterbuch speichern?</text>

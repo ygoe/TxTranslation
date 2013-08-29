@@ -34,6 +34,7 @@ namespace TxEditor.ViewModel
 		private int fileVersion;
 		private string loadedFilePath;
 		private string loadedFilePrefix;
+		private int readonlyFilesCount;
 		private IList selectedTextKeys;
 		private List<TextKeyViewModel> viewHistory = new List<TextKeyViewModel>();
 		private int viewHistoryIndex;
@@ -661,6 +662,7 @@ namespace TxEditor.ViewModel
 		{
 			if (!CheckModifiedSaved()) return;
 
+			ClearReadonlyFiles();
 			var d = new OpenFolderDialog();
 			d.Title = Tx.T("msg.load folder.title");
 			if (d.ShowDialog(new Wpf32Window(MainWindow.Instance)) == true)
@@ -738,6 +740,7 @@ namespace TxEditor.ViewModel
 					StatusText = Tx.T("statusbar.n files loaded", fileCount) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 					FileModified = false;
 					ClearViewHistory();
+					CheckNotifyReadonlyFiles();
 				}
 				else
 				{
@@ -750,6 +753,7 @@ namespace TxEditor.ViewModel
 		{
 			if (!CheckModifiedSaved()) return;
 
+			ClearReadonlyFiles();
 			var dlg = new OpenFileDialog();
 			dlg.CheckFileExists = true;
 			dlg.Filter = "Tx dictionary files (*.txd)|*.txd|XML files (*.xml)|*.xml|All files (*.*)|*.*";
@@ -806,6 +810,7 @@ namespace TxEditor.ViewModel
 				StatusText = Tx.T("statusbar.n files loaded", dlg.FileNames.Length) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 				FileModified = false;
 				ClearViewHistory();
+				CheckNotifyReadonlyFiles();
 			}
 		}
 
@@ -921,13 +926,15 @@ namespace TxEditor.ViewModel
 
 			if (newFilePath != null)
 			{
-				WriteToXmlFile(Path.Combine(newFilePath, newFilePrefix));
+				if (!WriteToXmlFile(Path.Combine(newFilePath, newFilePrefix)))
+					return false;
 				loadedFilePath = newFilePath;
 				loadedFilePrefix = newFilePrefix;
 			}
 			else
 			{
-				WriteToXmlFile(Path.Combine(loadedFilePath, loadedFilePrefix));
+				if (!WriteToXmlFile(Path.Combine(loadedFilePath, loadedFilePrefix)))
+					return false;
 			}
 			UpdateTitle();
 			StatusText = Tx.T("statusbar.file saved");
@@ -1718,6 +1725,7 @@ namespace TxEditor.ViewModel
 		public void LoadFiles(IEnumerable<string> fileNames)
 		{
 			int count = 0;
+			ClearReadonlyFiles();
 			foreach (string _fileName in fileNames.Distinct())
 			{
 				string fileName = _fileName;
@@ -1731,10 +1739,17 @@ namespace TxEditor.ViewModel
 			ValidateTextKeysDelayed();
 			StatusText = Tx.T("statusbar.n files loaded", count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 			FileModified = false;
+			// CheckNotifyReadonlyFiles will be called with the InitCommand
 		}
 
 		private void LoadFromXmlFile(string fileName)
 		{
+			FileInfo fi = new FileInfo(fileName);
+			if (fi.Exists && fi.IsReadOnly)
+			{
+				SetReadonlyFiles();
+			}
+
 			// First load the XML file into an XmlDocument for further processing
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(fileName);
@@ -1951,6 +1966,38 @@ namespace TxEditor.ViewModel
 			return tk;
 		}
 
+		/// <summary>
+		/// Clears the flag about loaded files that are read-only.
+		/// </summary>
+		private void ClearReadonlyFiles()
+		{
+			readonlyFilesCount = 0;
+		}
+
+		/// <summary>
+		/// Sets the flag about loaded files that are read-only. Call CheckNotifyReadonlyFiles()
+		/// after loading all files to notify the user about read-only files.
+		/// </summary>
+		private void SetReadonlyFiles()
+		{
+			readonlyFilesCount++;
+		}
+
+		/// <summary>
+		/// Notifies the user about read-only files, if any were loaded.
+		/// </summary>
+		private void CheckNotifyReadonlyFiles()
+		{
+			if (readonlyFilesCount > 0)
+			{
+				MessageBox.Show(
+					Tx.T("msg.read-only files loaded", readonlyFilesCount),
+					Tx.T("msg.caption.warning"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+			}
+		}
+
 		#endregion XML loading methods
 
 		#region XML saving methods
@@ -1959,10 +2006,27 @@ namespace TxEditor.ViewModel
 		/// Writes all loaded text keys to a file.
 		/// </summary>
 		/// <param name="fileNamePrefix">Path and file name prefix, without culture name and extension.</param>
-		private void WriteToXmlFile(string fileNamePrefix)
+		/// <returns>true, if the file was saved successfully, false otherwise.</returns>
+		private bool WriteToXmlFile(string fileNamePrefix)
 		{
 			if (fileVersion == 1)
 			{
+				// Check all files for read-only attribute
+				foreach (var cultureName in LoadedCultureNames.Union(DeletedCultureNames).Distinct())
+				{
+					string cultureFileName = fileNamePrefix + "." + cultureName + ".xml";
+					FileInfo fi = new FileInfo(cultureFileName);
+					if (fi.Exists && fi.IsReadOnly)
+					{
+						MessageBox.Show(
+							Tx.T("msg.cannot write to read-only file"),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+						return false;
+					}
+				}
+
 				// Delete previous backups and move current files to backup
 				foreach (var cultureName in LoadedCultureNames.Union(DeletedCultureNames).Distinct())
 				{
@@ -2002,6 +2066,17 @@ namespace TxEditor.ViewModel
 			}
 			else if (fileVersion == 2)
 			{
+				FileInfo fi = new FileInfo(fileNamePrefix + ".txd");
+				if (fi.Exists && fi.IsReadOnly)
+				{
+					MessageBox.Show(
+						Tx.T("msg.cannot write to read-only file"),
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Error);
+					return false;
+				}
+
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.AppendChild(xmlDoc.CreateElement("translation"));
 				var spaceAttr = xmlDoc.CreateAttribute("xml:space");
@@ -2030,9 +2105,10 @@ namespace TxEditor.ViewModel
 			else
 			{
 				MessageBox.Show("Unsupported file version " + fileVersion + " cannot be saved. How was that loaded?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
+				return false;
 			}
 			FileModified = false;
+			return true;
 		}
 
 		private void WriteXmlToFile(XmlDocument xmlDoc, string fileName)
@@ -2356,6 +2432,26 @@ namespace TxEditor.ViewModel
 					SelectCultureText(viewHistory[viewHistoryIndex], LastSelectedCulture);
 				}
 			}
+		}
+
+		private DelegateCommand initCommand;
+		public DelegateCommand InitCommand
+		{
+			get
+			{
+				if (initCommand == null)
+				{
+					initCommand = new DelegateCommand(OnInit);
+				}
+				return initCommand;
+			}
+		}
+
+		private void OnInit()
+		{
+			// Wait more than 300 ms for the splash screen to fade out and close.
+			// Otherwise, dialog windows would be closed automatically.
+			DelayedCall.Start(CheckNotifyReadonlyFiles, 500);
 		}
 
 		#endregion Window management

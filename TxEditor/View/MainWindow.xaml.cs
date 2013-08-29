@@ -68,6 +68,9 @@ namespace TxEditor.View
 			hotKeys.Add(new HotKey(Key.T, HotKeyModifier.Ctrl | HotKeyModifier.Shift, OnHotKey));
 
 			TextKeysTreeView.Focus();
+
+			// Let all other contents load
+			TaskHelper.WhenLoaded(MainWindowViewModel.Instance.InitCommand.Execute);
 		}
 
 		private void OnHotKey(HotKey hotKey)
