@@ -2083,7 +2083,7 @@ namespace TxEditor.ViewModel
 				spaceAttr.Value = "preserve";
 				xmlDoc.DocumentElement.Attributes.Append(spaceAttr);
 
-				foreach (var cultureName in LoadedCultureNames)
+				foreach (var cultureName in LoadedCultureNames.OrderBy(cn => cn))
 				{
 					var cultureElement = xmlDoc.CreateElement("culture");
 					xmlDoc.DocumentElement.AppendChild(cultureElement);
@@ -2139,7 +2139,8 @@ namespace TxEditor.ViewModel
 				var cultureTextVM = textKeyVM.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
 				if (cultureTextVM != null)
 				{
-					if (!string.IsNullOrEmpty(cultureTextVM.Text))
+					if (!string.IsNullOrEmpty(cultureTextVM.Text) ||
+						textKeyVM.IsEmpty() && cultureName == PrimaryCulture)   // Save empty text keys in the primary culture at least
 					{
 						var textElement = xe.OwnerDocument.CreateElement("text");
 						xe.AppendChild(textElement);
