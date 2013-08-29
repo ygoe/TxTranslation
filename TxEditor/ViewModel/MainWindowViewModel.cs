@@ -241,7 +241,21 @@ namespace TxEditor.ViewModel
 				{
 					lastSelectedCulture = value;
 					OnPropertyChanged("LastSelectedCulture");
-					UpdateSuggestions();
+					UpdateSuggestionsLater();
+				}
+			}
+		}
+
+		private bool haveComment;
+		public bool HaveComment
+		{
+			get { return haveComment; }
+			set
+			{
+				if (value != haveComment)
+				{
+					haveComment = value;
+					OnPropertyChanged("HaveComment");
 				}
 			}
 		}
@@ -250,6 +264,20 @@ namespace TxEditor.ViewModel
 		public ObservableCollection<SuggestionViewModel> Suggestions
 		{
 			get { return suggestions; }
+		}
+
+		private bool haveSuggestions;
+		public bool HaveSuggestions
+		{
+			get { return haveSuggestions; }
+			set
+			{
+				if (value != haveSuggestions)
+				{
+					haveSuggestions = value;
+					OnPropertyChanged("HaveSuggestions");
+				}
+			}
 		}
 
 		private string suggestionsCulture;
@@ -1106,7 +1134,13 @@ namespace TxEditor.ViewModel
 			DuplicateTextKeyCommand.RaiseCanExecuteChanged();
 			AppendViewHistory();
 			UpdateNavigationButtons();
-			UpdateSuggestions();
+			UpdateSuggestionsLater();
+
+			HaveComment = false;
+			foreach (TextKeyViewModel tk in selectedTextKeys)
+			{
+				HaveComment |= !string.IsNullOrWhiteSpace(tk.Comment);
+			}
 		}
 
 		private bool CanDeleteTextKey()
@@ -1724,6 +1758,7 @@ namespace TxEditor.ViewModel
 
 		public void LoadFiles(IEnumerable<string> fileNames)
 		{
+			OnNewFile();
 			int count = 0;
 			ClearReadonlyFiles();
 			foreach (string _fileName in fileNames.Distinct())
@@ -1766,6 +1801,7 @@ namespace TxEditor.ViewModel
 				if (primaryAttr != null && primaryAttr.Value == "true")
 				{
 					PrimaryCulture = ci.Name;
+					SortCulturesInTextKey(RootTextKey);
 				}
 				if (fileVersion == 0)
 				{
@@ -1777,18 +1813,19 @@ namespace TxEditor.ViewModel
 				return;
 			}
 
+			// Find primary culture and set it already so that all loaded keys can be generated in
+			// the final order already
+			foreach (XmlElement xe in xmlDoc.DocumentElement.SelectNodes("culture[@primary='true']"))
+			{
+				PrimaryCulture = xe.Attributes["name"].Value;
+				break;
+			}
+
 			// Try to find the culture name inside a combined XML document
 			foreach (XmlElement xe in xmlDoc.DocumentElement.SelectNodes("culture[@name]"))
 			{
 				CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
 				LoadFromXml(ci.Name, xe);
-
-				// Set the primary culture if a culture in the file claims to be it
-				XmlAttribute primaryAttr = xe.Attributes["primary"];
-				if (primaryAttr != null && primaryAttr.Value == "true")
-				{
-					PrimaryCulture = ci.Name;
-				}
 			}
 			if (fileVersion == 0)
 			{
@@ -2224,7 +2261,7 @@ namespace TxEditor.ViewModel
 		public void ValidateTextKeys()
 		{
 			RootTextKey.Validate();
-			UpdateSuggestions();
+			UpdateSuggestionsLater();
 		}
 
 		#endregion Text validation
@@ -2550,8 +2587,14 @@ namespace TxEditor.ViewModel
 		private void AddDummySuggestion()
 		{
 			SuggestionViewModel suggestion = new SuggestionViewModel(this);
+			suggestion.IsDummy = true;
 			suggestion.BaseText = Tx.T("suggestions.none");
 			suggestions.Add(suggestion);
+		}
+
+		private void UpdateSuggestionsLater()
+		{
+			TaskHelper.WhenLoaded(UpdateSuggestions);
 		}
 
 		private void UpdateSuggestions()
@@ -2559,6 +2602,7 @@ namespace TxEditor.ViewModel
 			Match m;
 
 			suggestions.Clear();
+			HaveSuggestions = false;
 
 			if (string.IsNullOrEmpty(lastSelectedCulture))
 			{
@@ -2930,6 +2974,10 @@ namespace TxEditor.ViewModel
 			if (suggestions.Count == 0)
 			{
 				AddDummySuggestion();
+			}
+			else
+			{
+				HaveSuggestions = true;
 			}
 		}
 

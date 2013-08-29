@@ -233,11 +233,22 @@
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="90"/>
 					<u:IconToggleButton
-						Content="{Tx:T 'toolbar.view.comment', Default='Comment'}" IconSource="/Images/balloon.png"
+						Content="{Tx:T 'toolbar.view.comment', Default='Comment'}"
 						ExtendedToolTipText="{Tx:T 'toolbar.view.comment.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
-						IsChecked="{Binding Settings.ShowComments}" CollapsePriority="90"/>
+						Focusable="False"
+						IsChecked="{Binding Settings.ShowComments}" CollapsePriority="90">
+						<u:IconToggleButton.Style>
+							<Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}">
+								<Setter Property="u:IconToggleButton.IconSource" Value="/Images/comment.png"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding HaveComment}" Value="True">
+										<Setter Property="u:IconToggleButton.IconSource" Value="/Images/comment_yellow.png"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</u:IconToggleButton.Style>
+					</u:IconToggleButton>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="9" Margin="0,1,0,0" Orientation="Horizontal">
 					<u:IconToggleButton
@@ -259,11 +270,22 @@
 						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
 						IsChecked="{Binding Settings.ShowCharacterMap}" CollapsePriority="90"/>
 					<u:IconToggleButton
-						Content="{Tx:T 'toolbar.view.suggestions', Default='Sugg'}" IconSource="/Images/gear.png"
+						Content="{Tx:T 'toolbar.view.suggestions', Default='Sugg'}"
 						ExtendedToolTipText="{Tx:T 'toolbar.view.suggestions.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False"
-						IsChecked="{Binding Settings.ShowSuggestions}" CollapsePriority="90"/>
+						Focusable="False"
+						IsChecked="{Binding Settings.ShowSuggestions}" CollapsePriority="90">
+						<u:IconToggleButton.Style>
+							<Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}">
+								<Setter Property="u:IconToggleButton.IconSource" Value="/Images/lightbulb.png"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding HaveSuggestions}" Value="True">
+										<Setter Property="u:IconToggleButton.IconSource" Value="/Images/lightbulb_green.png"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</u:IconToggleButton.Style>
+					</u:IconToggleButton>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="9" Grid.ColumnSpan="1" HorizontalAlignment="Center"
@@ -683,6 +705,16 @@
 											<Run Text="{Binding BaseText}"/>
 											<Run Text=" "/>
 											<Run Text="{Binding TextKey}" Foreground="#80000000"/>
+											<TextBlock.Style>
+												<Style TargetType="TextBlock">
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding IsDummy}" Value="True">
+															<Setter Property="FontStyle" Value="Italic"/>
+															<Setter Property="Opacity" Value="0.4"/>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</TextBlock.Style>
 										</TextBlock>
 										<TextBlock Margin="12,4,0,0" Text="{Binding TranslatedText}" TextWrapping="Wrap" Foreground="#3560df">
 											<TextBlock.Style>

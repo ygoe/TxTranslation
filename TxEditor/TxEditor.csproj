@@ -313,9 +313,6 @@
     <Resource Include="Images\noise.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\balloon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\key_error.png" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +363,14 @@
   <ItemGroup>
     <Resource Include="Images\key_q.png" />
     <Resource Include="Images\key_q_error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\lightbulb.png" />
+    <Resource Include="Images\lightbulb_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\comment.png" />
+    <Resource Include="Images\comment_yellow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -22,6 +22,7 @@
 
 		<Grid
 			DockPanel.Dock="Top" Margin="12,0,12,12"
+			Background="LemonChiffon"
 			Visibility="{Binding MainWindowVM.Settings.ShowComments, Converter={StaticResource boolVis}}">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
@@ -32,14 +33,14 @@
 			</Grid.ColumnDefinitions>
 			
 			<Image
-				Grid.Column="0" VerticalAlignment="Top" Margin="0,1,0,0"
-				Source="/Images/balloon.png"/>
+				Grid.Column="0" VerticalAlignment="Top" Margin="3,1,0,1"
+				Source="/Images/comment.png"/>
 			<TextBox
-				Grid.Column="1" Margin="6,0,0,0"
-				BorderThickness="0" Padding="1"
+				Grid.Column="1" Margin="4,0,0,0"
+				BorderThickness="0" Padding="2"
 				TextWrapping="Wrap" AcceptsReturn="True"
 				VerticalScrollBarVisibility="Auto" MaxLines="4"
-				Background="LemonChiffon"
+				Background="Transparent"
 				Text="{Binding Comment}"
 				my:Extensions.DisableInsertKey="True"/>
 		</Grid>

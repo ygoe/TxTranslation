@@ -160,6 +160,7 @@ namespace TxEditor.ViewModel
 				{
 					comment = value;
 					OnPropertyChanged("Comment");
+					MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(comment);
 					MainWindowVM.FileModified = true;
 				}
 			}

@@ -71,6 +71,20 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private bool isDummy;
+		public bool IsDummy
+		{
+			get { return isDummy; }
+			set
+			{
+				if (value != isDummy)
+				{
+					isDummy = value;
+					OnPropertyChanged("IsDummy");
+				}
+			}
+		}
+
 		public SuggestionViewModel(MainWindowViewModel mainWindowVM)
 		{
 			MainWindowVM = mainWindowVM;
