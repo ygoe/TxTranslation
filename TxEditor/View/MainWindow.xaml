@@ -187,7 +187,7 @@
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>
 					<u:IconButton
 						Command="{Binding TextKeyWizardCommand}"
-						Content="{Tx:T 'toolbar.text key.wizard', Default='Wiz'}" IconSource="/Images/gear.png"
+						Content="{Tx:T 'toolbar.text key.wizard', Default='Wiz'}" IconSource="/Images/wizard.png"
 						ExtendedToolTipText="{Tx:T 'toolbar.text key.wizard.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="60"/>

@@ -12,7 +12,7 @@
 	ShowInTaskbar="False"
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
-	Icon="/Images/TxFlag.ico"
+	Icon="/Images/TxFlag_wizard.ico"
 	Title="TxEditor wizard"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
