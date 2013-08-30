@@ -121,9 +121,24 @@ namespace TxEditor.ViewModel
 
 		private void OnDelete()
 		{
+			int myIndex = CultureTextVM.QuantifiedTextVMs.IndexOf(this);
+			
 			CultureTextVM.QuantifiedTextVMs.Remove(this);
 			CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
+			
+			if (CultureTextVM.QuantifiedTextVMs.Count == 0)
+			{
+				CultureTextVM.ViewCommandManager.InvokeLoaded("FocusText");
+			}
+			else if (myIndex < CultureTextVM.QuantifiedTextVMs.Count)
+			{
+				CultureTextVM.QuantifiedTextVMs[myIndex].ViewCommandManager.InvokeLoaded("FocusText");
+			}
+			else
+			{
+				CultureTextVM.QuantifiedTextVMs[myIndex - 1].ViewCommandManager.InvokeLoaded("FocusText");
+			}
 		}
 
 		#endregion Command handlers

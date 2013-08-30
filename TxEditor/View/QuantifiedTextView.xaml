@@ -15,7 +15,10 @@
 		<u:EmptyIntegerConverter x:Key="EmptyIntConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
-	
+	<UserControl.InputBindings>
+		<KeyBinding Key="Minus" Modifiers="Control" Command="{Binding DeleteCommand}" />
+	</UserControl.InputBindings>
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>

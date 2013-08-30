@@ -17,7 +17,12 @@
 		<u:ComparerConverter x:Key="CmpConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
-	
+	<UserControl.InputBindings>
+		<KeyBinding Key="D0" Modifiers="Control" Command="{Binding AddCount0Command}" />
+		<KeyBinding Key="D1" Modifiers="Control" Command="{Binding AddCount1Command}" />
+		<KeyBinding Key="Plus" Modifiers="Control" Command="{Binding AddCommand}" />
+	</UserControl.InputBindings>
+
 	<StackPanel>
 		<Grid>
 			<Grid.RowDefinitions>

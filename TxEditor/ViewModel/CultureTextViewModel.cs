@@ -266,6 +266,7 @@ namespace TxEditor.ViewModel
 			{
 				QuantifiedTextVMs.InsertSorted(item, (a, b) => QuantifiedTextViewModel.Compare(a, b));
 			}
+			ViewCommandManager.InvokeLoaded("FocusText");
 		}
 
 		#endregion Command handlers
