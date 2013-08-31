@@ -177,7 +177,8 @@ namespace TxEditor.View
 
 		private void SourceCodeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			SetDefaultCheckbox.IsEnabled = SourceCodeCombobox.SelectedItem as string == "XAML";
+			SetDefaultCheckbox.Visibility =
+				SourceCodeCombobox.SelectedItem as string == "XAML" ? Visibility.Visible : Visibility.Hidden;
 		}
 
 		private void TextKeyText_TextChanged(object sender, TextChangedEventArgs e)

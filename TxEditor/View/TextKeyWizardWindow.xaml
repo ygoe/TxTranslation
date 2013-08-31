@@ -81,6 +81,7 @@
 			<my:DecoratedTextBox
 				x:Name="TranslationText"
 				Grid.Row="3" Grid.Column="1"
+				MaxHeight="500"
 				InnerBorderThickness="1" InnerPadding="1" Margin="8,4,0,0"
 				PlaceholderText="Enter text"
 				ValidateKey="DecoratedTextBox_ValidateKey"/>
