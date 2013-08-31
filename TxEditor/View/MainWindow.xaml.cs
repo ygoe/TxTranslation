@@ -312,6 +312,44 @@ namespace TxEditor.View
 			}
 		}
 
+		private DelayedCall statusTextAnimationDc;
+
+		[ViewCommand]
+		public void AnimateStatusText(string newText)
+		{
+			int durationMs = 300;
+			TimeSpan duration = TimeSpan.FromMilliseconds(durationMs);
+			double offset = Math.Max(15, StatusText.ActualHeight);
+
+			// Prepare animation
+			if (statusTextAnimationDc != null)
+			{
+				statusTextAnimationDc.Fire();
+			}
+			StatusTextShadow.Text = newText;
+			
+			// Animate both text blocks
+			AnimationHelper.AnimateEaseOut(StatusTextTranslateTransform, TranslateTransform.YProperty, 0, -offset, duration);
+			AnimationHelper.AnimateEaseOut(StatusText, TextBlock.OpacityProperty, 1, 0, duration);
+			AnimationHelper.AnimateEaseOut(StatusTextShadowTranslateTransform, TranslateTransform.YProperty, offset, 0, duration);
+			AnimationHelper.AnimateEaseOut(StatusTextShadow, TextBlock.OpacityProperty, 0, 1, duration);
+			
+			// Finish up animation
+			statusTextAnimationDc = DelayedCall.Start(StatusTextAnimationFinished, durationMs);
+		}
+
+		private void StatusTextAnimationFinished()
+		{
+			StatusText.Text = StatusTextShadow.Text;
+
+			StatusTextShadowTranslateTransform.Y = -StatusTextTranslateTransform.Y;
+			StatusTextShadow.Opacity = 0;
+			StatusTextTranslateTransform.Y = 0;
+			StatusText.Opacity = 1;
+
+			statusTextAnimationDc = null;
+		}
+
 		#endregion View commands
 	}
 }

@@ -206,6 +206,7 @@ namespace TxEditor.ViewModel
 				if (value != statusText)
 				{
 					statusText = value;
+					ViewCommandManager.Invoke("AnimateStatusText", statusText);
 					OnPropertyChanged("StatusText");
 				}
 			}
@@ -1754,6 +1755,37 @@ namespace TxEditor.ViewModel
 
 		#endregion Toolbar command handlers
 
+		#region Other commands
+
+		private DelegateCommand copyTextKeyCommand;
+		public DelegateCommand CopyTextKeyCommand
+		{
+			get
+			{
+				if (copyTextKeyCommand == null)
+				{
+					copyTextKeyCommand = new DelegateCommand(OnCopyTextKey);
+				}
+				return copyTextKeyCommand;
+			}
+		}
+
+		#endregion Other commands
+
+		#region Other command handlers
+
+		private void OnCopyTextKey()
+		{
+			string str = selectedTextKeys
+				.OfType<TextKeyViewModel>()
+				.Select(tk => tk.TextKey)
+				.Aggregate((a, b) => a + Environment.NewLine + b);
+			Clipboard.SetText(str);
+			StatusText = Tx.T("statusbar.text key copied");
+		}
+
+		#endregion Other command handlers
+
 		#region XML loading methods
 
 		public void LoadFiles(IEnumerable<string> fileNames)
@@ -2497,7 +2529,7 @@ namespace TxEditor.ViewModel
 		#region Text search
 
 		private DelayedCall searchDc;
-		private string searchText;
+		private string searchText = "";   // Initialise so that it's not changed at startup
 		public string SearchText
 		{
 			get
