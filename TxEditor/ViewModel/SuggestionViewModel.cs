@@ -71,6 +71,36 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private bool isExactMatch;
+		public bool IsExactMatch
+		{
+			get { return isExactMatch; }
+			set
+			{
+				if (value != isExactMatch)
+				{
+					isExactMatch = value;
+					OnPropertyChanged("IsExactMatch");
+					OnPropertyChanged("BaseWeight");
+				}
+			}
+		}
+
+		public FontWeight BaseWeight
+		{
+			get
+			{
+				if (isExactMatch)
+				{
+					return FontWeights.Bold;
+				}
+				else
+				{
+					return FontWeights.Normal;
+				}
+			}
+		}
+
 		private bool isDummy;
 		public bool IsDummy
 		{

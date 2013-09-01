@@ -62,6 +62,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.text size">Textgröße</text>
 		<text key="suggestions.caption">Vorschläge</text>
 		<text key="suggestions.caption for">Vorschläge für {name}</text>
+		<text key="suggestions.exact match">Genaue Übereinstimmung</text>
 		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
 		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
 		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
@@ -341,6 +342,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.text size">Text size</text>
 		<text key="suggestions.caption">Suggestions</text>
 		<text key="suggestions.caption for">Suggestions for {name}</text>
+		<text key="suggestions.exact match">Exact match</text>
 		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
 		<text key="task dialog.button.cancel">&amp;Cancel</text>
 		<text key="task dialog.button.dont save">Do&amp;n’t save</text>

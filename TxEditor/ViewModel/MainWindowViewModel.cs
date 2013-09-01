@@ -2810,6 +2810,7 @@ namespace TxEditor.ViewModel
 
 			// The text we're finding translation suggestions for
 			string refText = tk.CultureTextVMs[0].Text;
+			string origRefText = refText;
 			if (refText == null)
 			{
 				AddDummySuggestion();
@@ -3086,12 +3087,19 @@ namespace TxEditor.ViewModel
 				if (kvp.Value.TextKey.StartsWith("Tx:")) continue;   // Skip system keys
 
 				float score = 0;
+				bool isExactMatch = false;
 				string otherBaseText = kvp.Value.CultureTextVMs[0].Text;
 				string otherTranslatedText = kvp.Value.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
 
 				if (string.IsNullOrEmpty(otherBaseText)) continue;
 				if (string.IsNullOrEmpty(otherTranslatedText)) continue;
 
+				if (otherBaseText == origRefText)
+				{
+					// Both keys' primary translation matches exactly
+					isExactMatch = true;
+				}
+				
 				// Remove all placeholders and key references
 				string otherText = Regex.Replace(otherBaseText, @"(?<!\{)\{[^{]*?\}", "");
 
@@ -3129,6 +3137,11 @@ namespace TxEditor.ViewModel
 					score = 0;   // Should not happen
 				}
 
+				if (isExactMatch)
+				{
+					score = 100000;
+				}
+
 				// Accept every text key with a threshold score
 				if (score >= 0.5f)
 				{
@@ -3146,7 +3159,11 @@ namespace TxEditor.ViewModel
 					suggestion.BaseText = kvp.Key.CultureTextVMs[0].Text;
 					if (lastSelectedCulture != primaryCulture)
 						suggestion.TranslatedText = kvp.Key.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
-					suggestion.Score = kvp.Value.ToString("0.00");
+					suggestion.IsExactMatch = kvp.Value >= 100000;
+					if (suggestion.IsExactMatch)
+						suggestion.Score = Tx.T("suggestions.exact match");
+					else
+						suggestion.Score = kvp.Value.ToString("0.00");
 					suggestions.Add(suggestion);
 				}
 				catch
