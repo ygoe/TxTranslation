@@ -68,10 +68,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </Page>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Converters\CharacterMapConverter.cs" />
     <Compile Include="Converters\DoubleGridLengthConverter.cs" />
