@@ -1,0 +1,24 @@
+﻿<UserControl
+	x:Class="Unclassified.UI.ProgressSpinner"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	mc:Ignorable="d" 
+	d:DesignHeight="100" d:DesignWidth="100">
+
+	<Grid Name="MainGrid">
+		<Grid.RenderTransform>
+			<RotateTransform x:Name="MainGridRotateTransform"/>
+		</Grid.RenderTransform>
+		<Grid.Triggers>
+			<EventTrigger RoutedEvent="Loaded">
+				<BeginStoryboard>
+					<Storyboard>
+						<DoubleAnimation Storyboard.TargetProperty="(Grid.RenderTransform).(RotateTransform.Angle)" To="360" Duration="0:0:1" RepeatBehavior="Forever"/>
+					</Storyboard>
+				</BeginStoryboard>
+			</EventTrigger>
+		</Grid.Triggers>
+	</Grid>
+</UserControl>

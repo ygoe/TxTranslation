@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using System.Xml;
 using TxEditor.View;
 using TxEditor.ViewModel;
 using TxLib;
@@ -23,6 +24,12 @@ namespace TxEditor
 		/// </summary>
 		public static AppSettings Settings { get; private set; }
 
+		private static SplashScreen splashScreen;
+		/// <summary>
+		/// Gets the application splash screen.
+		/// </summary>
+		public static SplashScreen SplashScreen { get { return splashScreen; } }
+
 		#endregion Static properties
 
 		#region Setup detection mutex
@@ -30,6 +37,25 @@ namespace TxEditor
 		private Mutex appMutex = new Mutex(false, "Unclassified.TxEditor");
 
 		#endregion Setup detection mutex
+
+		#region Application entry point
+
+		/// <summary>
+		/// Application entry point.
+		/// </summary>
+		[STAThread]
+		public static void Main()
+		{
+			// Set the image file's build action to "Resource" and "Never copy" for this to work.
+			splashScreen = new SplashScreen("Images/TxFlag_256.png");
+			splashScreen.Show(false, true);
+
+			App app = new App();
+			app.InitializeComponent();
+			app.Run();
+		}
+
+		#endregion Application entry point
 
 		#region Constructors
 
@@ -79,9 +105,10 @@ namespace TxEditor
 				{
 					Tx.SetCulture(appCulture);
 				}
-				catch (Exception ex)
+				catch (Exception /*ex*/)
 				{
-					MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					//MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					// Doing this leads to a XAML exception in the main window! o_O
 				}
 			}
 		}
@@ -111,51 +138,46 @@ namespace TxEditor
 
 			// Initialise and show the main window
 
+			CommandLineParser clp = new CommandLineParser();
+
+			clp.AddKnownOption("s", "scan", true);
+
 			List<string> filesToLoad = new List<string>();
-			foreach (string argv in e.Args)
+			for (int argIndex = 0; argIndex < clp.GetArgumentCount(); argIndex++)
 			{
-				if (argv.Length > 1 && argv[0] == '/')
-				{
-					// Option
-					// (No options supported yet, ignore unknown)
-				}
-				else
+				string fileNameArg = clp.GetArgument(argIndex);
+				if (!string.IsNullOrWhiteSpace(fileNameArg))
 				{
 					// File name
-					if (File.Exists(argv))
+					if (File.Exists(fileNameArg))
 					{
 						// File exists, open it
-						string fileName = argv;
+						string fileName = fileNameArg;
 						if (!Path.IsPathRooted(fileName))
 						{
 							fileName = Path.GetFullPath(fileName);
 						}
 						filesToLoad.Add(fileName);
 					}
-					else if (Directory.Exists(argv))
+					else if (Directory.Exists(fileNameArg))
 					{
 						// Directory specified, collect all files
-						foreach (string fileName in Directory.GetFiles(argv, "*.txd"))
+						foreach (string fileName in Directory.GetFiles(fileNameArg, "*.txd"))
 						{
 							filesToLoad.Add(fileName);
 						}
 						if (filesToLoad.Count == 0)
 						{
 							// Nothing found, try older XML file names
-							foreach (string fileName in Directory.GetFiles(argv, "*.xml"))
+							foreach (string fileName in Directory.GetFiles(fileNameArg, "*.xml"))
 							{
-								Match m = Regex.Match(fileName, @"\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
+								Match m = Regex.Match(fileName, @"[^.]\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
 								if (m.Success)
 								{
 									filesToLoad.Add(fileName);
 								}
 							}
 						}
-					}
-					else if (argv.Contains('?') || argv.Contains('*'))
-					{
-						// File name with wildcards, find matching files
-						// (Not implemented yet)
 					}
 					// Ignore anything else
 				}
@@ -193,6 +215,12 @@ namespace TxEditor
 			// Create main window and view model
 			var view = new MainWindow();
 			var viewModel = new MainWindowViewModel();
+
+			if (filesToLoad.Count == 0 && clp.IsOptionSet("s"))
+			{
+				viewModel.ScanDirectory = clp.GetOptionValue("s");
+			}
+
 			view.DataContext = viewModel;
 
 			// Load selected files

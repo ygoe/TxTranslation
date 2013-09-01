@@ -98,7 +98,10 @@ namespace TxEditor
 		/// <param name="vm">New item to insert into the collection.</param>
 		public static void InsertSorted<T>(this ObservableCollection<T> collection, T vm) where T : ViewModelBase
 		{
-			InsertSorted(collection, vm, null);
+			InsertSorted(
+				collection,
+				vm,
+				(a, b) => string.Compare(a.DisplayName, b.DisplayName, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		/// <summary>
@@ -108,7 +111,7 @@ namespace TxEditor
 		/// <typeparam name="T"></typeparam>
 		/// <param name="collection">Collection to insert the new item to.</param>
 		/// <param name="vm">New item to insert into the collection.</param>
-		public static void InsertSorted<T>(this ObservableCollection<T> collection, T vm, Comparison<T> comparison) where T : ViewModelBase
+		public static void InsertSorted<T>(this ObservableCollection<T> collection, T vm, Comparison<T> comparison)
 		{
 			if (collection.Count == 0)
 			{
@@ -125,16 +128,8 @@ namespace TxEditor
 			while (lower <= upper)
 			{
 				// As long as lower <= upper, index is valid and can be used for comparison
-				int cmp;
-				if (comparison != null)
-				{
-					cmp = comparison(collection[index], vm);
-				}
-				else
-				{
-					cmp = string.Compare(collection[index].DisplayName, vm.DisplayName, StringComparison.InvariantCultureIgnoreCase);
-				}
-				
+				int cmp = comparison(collection[index], vm);
+
 				if (cmp == 0)
 				{
 					// Direct hit, insert after this existing (undefined behaviour for multiple equal items...)

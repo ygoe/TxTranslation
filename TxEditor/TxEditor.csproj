@@ -78,6 +78,7 @@
     <Compile Include="Converters\MonospaceFontConverter.cs" />
     <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Unclassified\CommandLineParser.cs" />
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />
     <Compile Include="Unclassified\MyEnvironment.cs" />
@@ -102,6 +103,9 @@
     <Compile Include="Unclassified\UI\EmptyIntegerConverter.cs" />
     <Compile Include="Unclassified\UI\NegationConverter.cs" />
     <Compile Include="Unclassified\UI\OpenFolderDialog.cs" />
+    <Compile Include="Unclassified\UI\ProgressSpinner.xaml.cs">
+      <DependentUpon>ProgressSpinner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
@@ -112,6 +116,7 @@
     <Compile Include="Unclassified\WinApi_Windows.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
     <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
+    <Compile Include="ViewModel\SelectFileViewModel.cs" />
     <Compile Include="ViewModel\SuggestionViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
@@ -130,6 +135,9 @@
     </Compile>
     <Compile Include="View\DetailsMessage.xaml.cs">
       <DependentUpon>DetailsMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SelectFileWindow.xaml.cs">
+      <DependentUpon>SelectFileWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -154,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Unclassified\UI\ProgressSpinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CultureWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +173,10 @@
     <Page Include="View\DetailsMessage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SelectFileWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SettingsWindow.xaml">
       <SubType>Designer</SubType>
@@ -338,7 +354,7 @@
     <Resource Include="Images\key_16.ico" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Images\TxFlag_256.png" />
+    <Resource Include="Images\TxFlag_256.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\charmap.png" />

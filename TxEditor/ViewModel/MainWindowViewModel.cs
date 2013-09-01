@@ -82,6 +82,8 @@ namespace TxEditor.ViewModel
 		public TextKeyViewModel RootTextKey { get; private set; }
 		public ObservableHashSet<TextKeyViewModel> ProblemKeys { get; private set; }
 
+		public string ScanDirectory { get; set; }
+
 		#endregion Public properties
 
 		#region Data properties
@@ -2590,9 +2592,24 @@ namespace TxEditor.ViewModel
 
 		private void OnInit()
 		{
-			// Wait more than 300 ms for the splash screen to fade out and close.
-			// Otherwise, dialog windows would be closed automatically.
-			DelayedCall.Start(CheckNotifyReadonlyFiles, 500);
+			App.SplashScreen.Close(TimeSpan.FromMilliseconds(300));
+			// Work-around for implementation bug in SplashScreen.Close that steals the focus
+			MainWindow.Instance.Focus();
+
+			CheckNotifyReadonlyFiles();
+
+			if (!string.IsNullOrWhiteSpace(ScanDirectory))
+			{
+				SelectFileViewModel sfVM = new SelectFileViewModel(ScanDirectory);
+				SelectFileWindow sfw = new SelectFileWindow();
+				sfw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+				sfw.Owner = MainWindow.Instance;
+				sfw.DataContext = sfVM;
+				if (sfw.ShowDialog() == true)
+				{
+					LoadFiles(sfVM.SelectedFileNames);
+				}
+			}
 		}
 
 		#endregion Window management
