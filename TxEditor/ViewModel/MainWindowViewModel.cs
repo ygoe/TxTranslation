@@ -60,6 +60,13 @@ namespace TxEditor.ViewModel
 			UpdateTitle();
 
 			FontScale = App.Settings.FontScale;
+
+			App.Settings.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler((o, e) =>
+			{
+				if (e.PropertyName == "ShowSuggestions") UpdateSuggestionsLayout();
+				if (e.PropertyName == "SuggestionsHorizontalLayout") UpdateSuggestionsLayout();
+			});
+			UpdateSuggestionsLayout();
 		}
 
 		#endregion Constructors
@@ -257,6 +264,70 @@ namespace TxEditor.ViewModel
 				{
 					haveComment = value;
 					OnPropertyChanged("HaveComment");
+				}
+			}
+		}
+
+		private double suggestionsPanelWidth;
+		public double SuggestionsPanelWidth
+		{
+			get { return suggestionsPanelWidth; }
+			set
+			{
+				if (value != suggestionsPanelWidth)
+				{
+					suggestionsPanelWidth = value;
+					if (App.Settings.ShowSuggestions && App.Settings.SuggestionsHorizontalLayout)
+					{
+						App.Settings.SuggestionsWidth = suggestionsPanelWidth;
+					}
+					OnPropertyChanged("SuggestionsPanelWidth");
+				}
+			}
+		}
+
+		private double suggestionsPanelHeight;
+		public double SuggestionsPanelHeight
+		{
+			get { return suggestionsPanelHeight; }
+			set
+			{
+				if (value != suggestionsPanelHeight)
+				{
+					suggestionsPanelHeight = value;
+					if (App.Settings.ShowSuggestions && !App.Settings.SuggestionsHorizontalLayout)
+					{
+						App.Settings.SuggestionsHeight = suggestionsPanelHeight;
+					}
+					OnPropertyChanged("SuggestionsPanelHeight");
+				}
+			}
+		}
+
+		private double suggestionsSplitterWidth;
+		public double SuggestionsSplitterWidth
+		{
+			get { return suggestionsSplitterWidth; }
+			set
+			{
+				if (value != suggestionsSplitterWidth)
+				{
+					suggestionsSplitterWidth = value;
+					OnPropertyChanged("SuggestionsSplitterWidth");
+				}
+			}
+		}
+
+		private double suggestionsSplitterHeight;
+		public double SuggestionsSplitterHeight
+		{
+			get { return suggestionsSplitterHeight; }
+			set
+			{
+				if (value != suggestionsSplitterHeight)
+				{
+					suggestionsSplitterHeight = value;
+					OnPropertyChanged("SuggestionsSplitterHeight");
 				}
 			}
 		}
@@ -2615,6 +2686,34 @@ namespace TxEditor.ViewModel
 		#endregion Text search
 
 		#region Suggestions
+
+		private void UpdateSuggestionsLayout()
+		{
+			if (App.Settings.ShowSuggestions)
+			{
+				if (App.Settings.SuggestionsHorizontalLayout)
+				{
+					SuggestionsSplitterHeight = 0;
+					SuggestionsPanelHeight = 0;
+					SuggestionsSplitterWidth = 6;
+					SuggestionsPanelWidth = App.Settings.SuggestionsWidth;
+				}
+				else
+				{
+					SuggestionsSplitterHeight = 6;
+					SuggestionsPanelHeight = App.Settings.SuggestionsHeight;
+					SuggestionsSplitterWidth = 0;
+					SuggestionsPanelWidth = 0;
+				}
+			}
+			else
+			{
+				SuggestionsSplitterHeight = 0;
+				SuggestionsPanelHeight = 0;
+				SuggestionsSplitterWidth = 0;
+				SuggestionsPanelWidth = 0;
+			}
+		}
 
 		private void AddDummySuggestion()
 		{

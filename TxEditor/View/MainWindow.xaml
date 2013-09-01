@@ -25,6 +25,7 @@
 		<u:BoolToVisibilityConverter x:Key="boolVisConverter"/>
 		<c:CharacterMapConverter x:Key="characterMapConverter"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
+		<c:DoubleGridLengthConverter x:Key="doubleGridLengthConverter"/>
 	</Window.Resources>
 	<Window.InputBindings>
 		<KeyBinding Key="D" Modifiers="Control" Command="{Binding DuplicateTextKeyCommand}" />
@@ -38,6 +39,7 @@
 	</Window.InputBindings>
 
 	<DockPanel>
+		<!-- region ToolGrid -->
 		<Grid Name="ToolGrid" DockPanel.Dock="Top">
 			<Grid Name="InnerToolGrid" Style="{StaticResource ToolGridStyle}" LayoutUpdated="InnerToolGrid_LayoutUpdated">
 				<Grid.RowDefinitions>
@@ -383,7 +385,9 @@
 				<ContentControl Grid.Row="0" Grid.Column="14" Grid.RowSpan="5" Template="{StaticResource ToolGridLargeSeparator}" Focusable="False"/>
 			</Grid>
 		</Grid>
+		<!-- endregion ToolGrid -->
 
+		<!-- region Character map -->
 		<Grid
 			DockPanel.Dock="Top"
 			Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
@@ -435,7 +439,9 @@
 				Grid.Row="1" Grid.ColumnSpan="2"
 				BorderThickness="0,0,0,1" BorderBrush="#20000000"/>
 		</Grid>
+		<!-- endregion Character map -->
 
+		<!-- region Status bar -->
 		<Grid DockPanel.Dock="Bottom" Style="{StaticResource StatusGridStyle}" UseLayoutRounding="True">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="1"/>
@@ -486,7 +492,9 @@
 				</Slider>
 			</StackPanel>
 		</Grid>
-		
+		<!-- endregion Status bar -->
+
+		<!-- region Content area -->
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
@@ -497,6 +505,7 @@
 				<ColumnDefinition Width="2*"/>
 			</Grid.ColumnDefinitions>
 
+			<!-- region Tree view -->
 			<Controls:MultiSelectTreeView
 				Name="TextKeysTreeView"
 				Grid.Row="0" Grid.Column="0"
@@ -562,77 +571,23 @@
 					</HierarchicalDataTemplate>
 				</Controls:MultiSelectTreeView.Resources>
 			</Controls:MultiSelectTreeView>
+			<!-- endregion Tree view -->
 
 			<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" TabIndex="9991"/>
 			<Path Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"
 				Fill="#50000000" Data="M0,0 H2 V2 H0z M0,4 H2 V6 H0z M0,8 H2 V10 H0z M0,12 H2 V14 H0z M0,16 H2 V18 H0z"/>
 
-			<Grid Grid.Column="2">
+			<!-- region ContentLayoutGrid -->
+			<Grid Name="ContentLayoutGrid" Grid.Column="2">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="2*"/>
-					<RowDefinition>
-						<RowDefinition.Style>
-							<Style TargetType="RowDefinition">
-								<Setter Property="Height" Value="6"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="True">
-										<Setter Property="Height" Value="0"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
-										<Setter Property="Height" Value="0"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</RowDefinition.Style>
-					</RowDefinition>
-					<RowDefinition>
-						<RowDefinition.Style>
-							<Style TargetType="RowDefinition">
-								<Setter Property="Height" Value="1*"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="True">
-										<Setter Property="Height" Value="0"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
-										<Setter Property="Height" Value="0"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</RowDefinition.Style>
-					</RowDefinition>
+					<RowDefinition Height="*" MinHeight="120"/>
+					<RowDefinition Height="{Binding SuggestionsSplitterHeight, FallbackValue=6, Mode=TwoWay, Converter={StaticResource doubleGridLengthConverter}}"/>
+					<RowDefinition Height="{Binding SuggestionsPanelHeight, FallbackValue=40, Mode=TwoWay, Converter={StaticResource doubleGridLengthConverter}}"/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="3*"/>
-					<ColumnDefinition>
-						<ColumnDefinition.Style>
-							<Style TargetType="ColumnDefinition">
-								<Setter Property="Width" Value="6"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
-										<Setter Property="Width" Value="0"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
-										<Setter Property="Width" Value="0"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</ColumnDefinition.Style>
-					</ColumnDefinition>
-					<ColumnDefinition>
-						<ColumnDefinition.Style>
-							<Style TargetType="ColumnDefinition">
-								<Setter Property="Width" Value="2*"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding Settings.SuggestionsHorizontalLayout}" Value="False">
-										<Setter Property="Width" Value="0"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding Settings.ShowSuggestions}" Value="False">
-										<Setter Property="Width" Value="0"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</ColumnDefinition.Style>
-					</ColumnDefinition>
+					<ColumnDefinition Width="*" MinWidth="250"/>
+					<ColumnDefinition Width="{Binding SuggestionsSplitterWidth, FallbackValue=6, Mode=TwoWay, Converter={StaticResource doubleGridLengthConverter}}"/>
+					<ColumnDefinition Width="{Binding SuggestionsPanelWidth, FallbackValue=100, Mode=TwoWay, Converter={StaticResource doubleGridLengthConverter}}"/>
 				</Grid.ColumnDefinitions>
 
 				<ContentControl Focusable="False">
@@ -748,6 +703,8 @@
 					</ScrollViewer>
 				</Grid>
 			</Grid>
+			<!-- endregion ContentLayoutGrid -->
 		</Grid>
+		<!-- endregion Content area -->
 	</DockPanel>
 </Window>

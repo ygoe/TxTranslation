@@ -74,6 +74,7 @@
     </ApplicationDefinition>
     <Compile Include="AppSettings.cs" />
     <Compile Include="Converters\CharacterMapConverter.cs" />
+    <Compile Include="Converters\DoubleGridLengthConverter.cs" />
     <Compile Include="Converters\MonospaceFontConverter.cs" />
     <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Extensions.cs" />

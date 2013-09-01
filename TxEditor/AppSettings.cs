@@ -31,6 +31,8 @@ namespace TxEditor
 			base.AddHandler("view.native-culture-names", delegate() { OnPropertyChanged("NativeCultureNames"); });
 			base.AddHandler("view.suggestions", delegate() { OnPropertyChanged("ShowSuggestions"); });
 			base.AddHandler("view.suggestions.horizontal-layout", delegate() { OnPropertyChanged("SuggestionsHorizontalLayout"); });
+			base.AddHandler("view.suggestions.width", delegate() { OnPropertyChanged("SuggestionsWidth"); });
+			base.AddHandler("view.suggestions.height", delegate() { OnPropertyChanged("SuggestionsHeight"); });
 
 			base.AddHandler("wizard.source-code", delegate() { OnPropertyChanged("WizardSourceCode"); });
 			base.AddHandler("wizard.remember-location", delegate() { OnPropertyChanged("WizardRememberLocation"); });
@@ -162,6 +164,24 @@ namespace TxEditor
 		{
 			get { return GetBool("view.suggestions.horizontal-layout", true); }
 			set { Set("view.suggestions.horizontal-layout", value); }
+		}
+
+		/// <summary>
+		/// Gets or sets the width of the suggestions panel (only used in horizontal layout).
+		/// </summary>
+		public double SuggestionsWidth
+		{
+			get { return GetDouble("view.suggestions.width", 180); }
+			set { Set("view.suggestions.width", value); }
+		}
+
+		/// <summary>
+		/// Gets or sets the height of the suggestions panel (only used in vertical layout).
+		/// </summary>
+		public double SuggestionsHeight
+		{
+			get { return GetDouble("view.suggestions.height", 150); }
+			set { Set("view.suggestions.height", value); }
 		}
 
 		#endregion Section: view
