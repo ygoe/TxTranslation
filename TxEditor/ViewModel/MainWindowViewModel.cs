@@ -2043,6 +2043,15 @@ namespace TxEditor.ViewModel
 						comment = null;
 				}
 
+				XmlAttribute acceptMissingAttr = textNode.Attributes["acceptmissing"];
+				bool acceptMissing = acceptMissingAttr != null && acceptMissingAttr.Value == "true";
+
+				XmlAttribute acceptPlaceholdersAttr = textNode.Attributes["acceptplaceholders"];
+				bool acceptPlaceholders = acceptPlaceholdersAttr != null && acceptPlaceholdersAttr.Value == "true";
+
+				XmlAttribute acceptPunctuationAttr = textNode.Attributes["acceptpunctuation"];
+				bool acceptPunctuation = acceptPunctuationAttr != null && acceptPunctuationAttr.Value == "true";
+
 				TextKeyViewModel tk = FindOrCreateTextKey(key);
 
 				if (comment != null)
@@ -2061,6 +2070,9 @@ namespace TxEditor.ViewModel
 				{
 					// Default text, store it directly in the item
 					ct.Text = text;
+					ct.AcceptMissing = acceptMissing;
+					ct.AcceptPlaceholders = acceptPlaceholders;
+					ct.AcceptPunctuation = acceptPunctuation;
 				}
 				else
 				{
@@ -2069,6 +2081,9 @@ namespace TxEditor.ViewModel
 					qt.Count = count;
 					qt.Modulo = modulo;
 					qt.Text = text;
+					qt.AcceptMissing = acceptMissing;
+					qt.AcceptPlaceholders = acceptPlaceholders;
+					qt.AcceptPunctuation = acceptPunctuation;
 					ct.QuantifiedTextVMs.InsertSorted(qt, (a, b) => QuantifiedTextViewModel.Compare(a, b));
 				}
 			}
@@ -2327,6 +2342,25 @@ namespace TxEditor.ViewModel
 						textElement.Attributes.Append(keyAttr);
 						textElement.InnerText = cultureTextVM.Text;
 
+						if (cultureTextVM.AcceptMissing)
+						{
+							var acceptMissingAttr = xe.OwnerDocument.CreateAttribute("acceptmissing");
+							acceptMissingAttr.Value = "true";
+							textElement.Attributes.Append(acceptMissingAttr);
+						}
+						if (cultureTextVM.AcceptPlaceholders)
+						{
+							var acceptPlaceholdersAttr = xe.OwnerDocument.CreateAttribute("acceptplaceholders");
+							acceptPlaceholdersAttr.Value = "true";
+							textElement.Attributes.Append(acceptPlaceholdersAttr);
+						}
+						if (cultureTextVM.AcceptPunctuation)
+						{
+							var acceptPunctuationAttr = xe.OwnerDocument.CreateAttribute("acceptpunctuation");
+							acceptPunctuationAttr.Value = "true";
+							textElement.Attributes.Append(acceptPunctuationAttr);
+						}
+
 						// Add the text key comment to the primary culture
 						// (If no primary culture is set, the first-displayed is used to save the comments)
 						if (!string.IsNullOrWhiteSpace(textKeyVM.Comment))
@@ -2370,7 +2404,26 @@ namespace TxEditor.ViewModel
 							modAttr.Value = quantifiedTextVM.Modulo.ToString();
 							textElement.Attributes.Append(modAttr);
 						}
-						
+
+						if (quantifiedTextVM.AcceptMissing)
+						{
+							var acceptMissingAttr = xe.OwnerDocument.CreateAttribute("acceptmissing");
+							acceptMissingAttr.Value = "true";
+							textElement.Attributes.Append(acceptMissingAttr);
+						}
+						if (quantifiedTextVM.AcceptPlaceholders)
+						{
+							var acceptPlaceholdersAttr = xe.OwnerDocument.CreateAttribute("acceptplaceholders");
+							acceptPlaceholdersAttr.Value = "true";
+							textElement.Attributes.Append(acceptPlaceholdersAttr);
+						}
+						if (quantifiedTextVM.AcceptPunctuation)
+						{
+							var acceptPunctuationAttr = xe.OwnerDocument.CreateAttribute("acceptpunctuation");
+							acceptPunctuationAttr.Value = "true";
+							textElement.Attributes.Append(acceptPunctuationAttr);
+						}
+
 						textElement.InnerText = quantifiedTextVM.Text;
 					}
 				}

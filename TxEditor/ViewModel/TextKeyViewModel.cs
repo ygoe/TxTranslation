@@ -267,7 +267,10 @@ namespace TxEditor.ViewModel
 			// ----- Check for missing translations -----
 
 			// First check that every non-region culture has a text set
-			if (CultureTextVMs.Any(vm => vm.CultureName.Length == 2 && string.IsNullOrEmpty(vm.Text)))
+			if (CultureTextVMs.Any(vm =>
+				vm.CultureName.Length == 2 &&
+				string.IsNullOrEmpty(vm.Text) &&
+				!vm.AcceptMissing))
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
@@ -279,6 +282,7 @@ namespace TxEditor.ViewModel
 			if (CultureTextVMs.Any(vm =>
 				vm.CultureName.Length == 5 &&
 				string.IsNullOrEmpty(vm.Text) &&
+				!vm.AcceptMissing &&
 				!CultureTextVMs.Any(vm2 => vm2.CultureName == vm.CultureName.Substring(0, 2))))
 			{
 				HasOwnProblem = true;
@@ -347,7 +351,8 @@ namespace TxEditor.ViewModel
 						if (!string.IsNullOrEmpty(transText))
 						{
 							string message;
-							if (!CheckTextConsistency(primaryText, transText, out message))
+							if (!CheckTextConsistency(primaryText, transText, out message, true,
+									CultureTextVMs[i].AcceptPlaceholders, CultureTextVMs[i].AcceptPunctuation))
 							{
 								HasOwnProblem = true;
 								HasProblem = true;
@@ -364,7 +369,8 @@ namespace TxEditor.ViewModel
 						if (!string.IsNullOrEmpty(transText))
 						{
 							string message;
-							if (!CheckTextConsistency(primaryText, transText, out message, false))   // Ignore count placeholder here
+							if (!CheckTextConsistency(primaryText, transText, out message, false,
+									qt.AcceptPlaceholders, qt.AcceptPunctuation))   // Ignore count placeholder here
 							{
 								HasOwnProblem = true;
 								HasProblem = true;
@@ -629,7 +635,7 @@ namespace TxEditor.ViewModel
 			return true;
 		}
 
-		public static bool CheckTextConsistency(string a, string b, out string message, bool includeCount = true)
+		public static bool CheckTextConsistency(string a, string b, out string message, bool includeCount = true, bool acceptPlaceholders = false, bool acceptPunctuation = false)
 		{
 			string pattern;
 			Match m1, m2;
@@ -663,38 +669,44 @@ namespace TxEditor.ViewModel
 				m = m.NextMatch();
 			}
 
-			foreach (string n in varNamesA)
+			if (!acceptPlaceholders)
 			{
-				if (!varNamesB.Remove(n))
+				foreach (string n in varNamesA)
 				{
-					message = Tx.T("validation.content.missing placeholder", "name", n);
+					if (!varNamesB.Remove(n))
+					{
+						message = Tx.T("validation.content.missing placeholder", "name", n);
+						return false;
+					}
+				}
+				if (varNamesB.Count > 0)
+				{
+					message = Tx.T("validation.content.additional placeholder", "name", varNamesB[0]);
 					return false;
 				}
-			}
-			if (varNamesB.Count > 0)
-			{
-				message = Tx.T("validation.content.additional placeholder", "name", varNamesB[0]);
-				return false;
 			}
 
 			// ----- Compare spacing/punctuation -----
 
-			pattern = "^([ \t\r\n]*)";
-			m1 = Regex.Match(a, pattern);
-			m2 = Regex.Match(b, pattern);
-			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+			if (!acceptPunctuation)
 			{
-				message = Tx.T("validation.content.inconsistent punctuation");
-				return false;
-			}
+				pattern = "^([ \t\r\n]*)";
+				m1 = Regex.Match(a, pattern);
+				m2 = Regex.Match(b, pattern);
+				if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+				{
+					message = Tx.T("validation.content.inconsistent punctuation");
+					return false;
+				}
 
-			pattern = "([ \t\r\n!%,.:;?]*)$";
-			m1 = Regex.Match(a, pattern);
-			m2 = Regex.Match(b, pattern);
-			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
-			{
-				message = Tx.T("validation.content.inconsistent punctuation");
-				return false;
+				pattern = "([ \t\r\n!%,.:;?]*)$";
+				m1 = Regex.Match(a, pattern);
+				m2 = Regex.Match(b, pattern);
+				if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+				{
+					message = Tx.T("validation.content.inconsistent punctuation");
+					return false;
+				}
 			}
 
 			message = null;

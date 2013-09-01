@@ -46,6 +46,54 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private bool acceptMissing;
+		public bool AcceptMissing
+		{
+			get { return acceptMissing; }
+			set
+			{
+				if (value != acceptMissing)
+				{
+					acceptMissing = value;
+					OnPropertyChanged("AcceptMissing");
+					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
+					TextKeyVM.MainWindowVM.FileModified = true;
+				}
+			}
+		}
+
+		private bool acceptPlaceholders;
+		public bool AcceptPlaceholders
+		{
+			get { return acceptPlaceholders; }
+			set
+			{
+				if (value != acceptPlaceholders)
+				{
+					acceptPlaceholders = value;
+					OnPropertyChanged("AcceptPlaceholders");
+					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
+					TextKeyVM.MainWindowVM.FileModified = true;
+				}
+			}
+		}
+
+		private bool acceptPunctuation;
+		public bool AcceptPunctuation
+		{
+			get { return acceptPunctuation; }
+			set
+			{
+				if (value != acceptPunctuation)
+				{
+					acceptPunctuation = value;
+					OnPropertyChanged("AcceptPunctuation");
+					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
+					TextKeyVM.MainWindowVM.FileModified = true;
+				}
+			}
+		}
+
 		public string CursorChar
 		{
 			get { return null; }
