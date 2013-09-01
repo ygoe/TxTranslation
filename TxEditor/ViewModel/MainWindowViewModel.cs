@@ -1843,6 +1843,32 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private DelegateCommand selectPreviousTextKeyCommand;
+		public DelegateCommand SelectPreviousTextKeyCommand
+		{
+			get
+			{
+				if (selectPreviousTextKeyCommand == null)
+				{
+					selectPreviousTextKeyCommand = new DelegateCommand(OnSelectPreviousTextKey);
+				}
+				return selectPreviousTextKeyCommand;
+			}
+		}
+
+		private DelegateCommand selectNextTextKeyCommand;
+		public DelegateCommand SelectNextTextKeyCommand
+		{
+			get
+			{
+				if (selectNextTextKeyCommand == null)
+				{
+					selectNextTextKeyCommand = new DelegateCommand(OnSelectNextTextKey);
+				}
+				return selectNextTextKeyCommand;
+			}
+		}
+
 		#endregion Other commands
 
 		#region Other command handlers
@@ -1855,6 +1881,16 @@ namespace TxEditor.ViewModel
 				.Aggregate((a, b) => a + Environment.NewLine + b);
 			Clipboard.SetText(str);
 			StatusText = Tx.T("statusbar.text key copied");
+		}
+
+		private void OnSelectPreviousTextKey()
+		{
+			ViewCommandManager.Invoke("SelectPreviousTextKey", LastSelectedCulture);
+		}
+
+		private void OnSelectNextTextKey()
+		{
+			ViewCommandManager.Invoke("SelectNextTextKey", LastSelectedCulture);
 		}
 
 		#endregion Other command handlers
@@ -2742,7 +2778,7 @@ namespace TxEditor.ViewModel
 
 		private void UpdateSuggestionsLater()
 		{
-			TaskHelper.WhenLoaded(UpdateSuggestions);
+			TaskHelper.Background(UpdateSuggestions);
 		}
 
 		private void UpdateSuggestions()

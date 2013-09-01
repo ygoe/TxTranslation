@@ -312,6 +312,44 @@ namespace TxEditor.View
 			}
 		}
 
+		[ViewCommand]
+		public void SelectPreviousTextKey(string cultureName)
+		{
+			TextKeysTreeView.Focus();
+			Dispatcher.BeginInvoke(
+				new Action(delegate
+					{
+						TextKeysTreeView.SelectPreviousItem();
+						var tkVM = TextKeysTreeView.LastSelectedItem as TextKeyViewModel;
+						if (tkVM != null && tkVM.IsFullKey)
+						{
+							var ctVM = tkVM.CultureTextVMs.Where(ct => ct.CultureName == cultureName).FirstOrDefault();
+							if (ctVM != null)
+								ctVM.ViewCommandManager.InvokeLoaded("FocusText");
+						}
+					}),
+				System.Windows.Threading.DispatcherPriority.Loaded);
+		}
+
+		[ViewCommand]
+		public void SelectNextTextKey(string cultureName)
+		{
+			TextKeysTreeView.Focus();
+			Dispatcher.BeginInvoke(
+				new Action(delegate
+				{
+					TextKeysTreeView.SelectNextItem();
+					var tkVM = TextKeysTreeView.LastSelectedItem as TextKeyViewModel;
+					if (tkVM != null && tkVM.IsFullKey)
+					{
+						var ctVM = tkVM.CultureTextVMs.Where(ct => ct.CultureName == cultureName).FirstOrDefault();
+						if (ctVM != null)
+							ctVM.ViewCommandManager.InvokeLoaded("FocusText");
+					}
+				}),
+				System.Windows.Threading.DispatcherPriority.Loaded);
+		}
+
 		private DelayedCall statusTextAnimationDc;
 
 		[ViewCommand]

@@ -39,6 +39,15 @@ namespace Unclassified
 			Dispatcher.CurrentDispatcher.BeginInvoke(action, DispatcherPriority.Loaded);
 		}
 
+		/// <summary>
+		/// Posts an Action to the Dispatcher queue for execution with Background priority.
+		/// </summary>
+		/// <param name="action">Action to post to the queue.</param>
+		public static void Background(Action action)
+		{
+			Dispatcher.CurrentDispatcher.BeginInvoke(action, DispatcherPriority.Background);
+		}
+
 		// Source: http://msdn.microsoft.com/de-de/library/system.windows.threading.dispatcher.pushframe.aspx
 		/// <summary>
 		/// Enters the message loop to process all pending messages down to the specified priority.

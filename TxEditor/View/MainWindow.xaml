@@ -36,6 +36,8 @@
 		<KeyBinding Key="F12" Command="{Binding GotoDefinitionCommand}" />
 		<KeyBinding Key="Left" Modifiers="Alt" Command="{Binding NavigateBackCommand}" />
 		<KeyBinding Key="Right" Modifiers="Alt" Command="{Binding NavigateForwardCommand}" />
+		<KeyBinding Key="Up" Modifiers="Alt" Command="{Binding SelectPreviousTextKeyCommand}" />
+		<KeyBinding Key="Down" Modifiers="Alt" Command="{Binding SelectNextTextKeyCommand}" />
 	</Window.InputBindings>
 
 	<DockPanel>
