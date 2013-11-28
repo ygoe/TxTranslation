@@ -108,8 +108,9 @@
     </Compile>
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
-    <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\HotKey.cs" />
+    <Compile Include="Unclassified\UI\Wpf32Window.cs" />
+    <Compile Include="Unclassified\UI\WpfWindowExtensions.cs" />
     <Compile Include="Unclassified\ULog.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />
     <Compile Include="Unclassified\WinApi_Input.cs" />
@@ -161,6 +162,14 @@
     <Page Include="Resources\MenuStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Aero2.NormalColor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\RealWindows8.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Unclassified\UI\ProgressSpinner.xaml">
       <SubType>Designer</SubType>
@@ -397,12 +406,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)\tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\_tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\tools\GitRevisionTool.exe" -si "$(ProjectDir)"
+    <PostBuildEvent>"$(SolutionDir)\_tools\GitRevisionTool.exe" -si "$(ProjectDir)"
 
-"$(SolutionDir)\tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
+"$(SolutionDir)\_tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

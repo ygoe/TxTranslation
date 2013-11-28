@@ -1,36 +1,28 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
 
-// Allgemeine Informationen über eine Assembly werden über die folgenden 
-// Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
-// die mit einer Assembly verknüpft sind.
-[assembly: AssemblyTitle("TxLib")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TxLib")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle("TxLib")]
+[assembly: AssemblyDescription("TxTranslation library")]
 
-// Durch Festlegen von ComVisible auf "false" werden die Typen in dieser Assembly unsichtbar 
-// für COM-Komponenten. Wenn Sie auf einen Typ in dieser Assembly von 
-// COM zugreifen müssen, legen Sie das ComVisible-Attribut für diesen Typ auf "true" fest.
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("© Yves Goergen")]
+
+// Assembly version, also used for Win32 file version resource.
+// Must be a plain numeric version definition:
+// 1. Major version number, should be increased with major new versions or rewrites of the application
+// 2. Minor version number, should ne increased with minor feature changes or new features
+// 3. Bugfix number, should be set or increased for bugfix releases of a previous version
+// 4. Unused
+[assembly: AssemblyVersion("1.0.0")]
+// Informational version string, used for the About dialog, error reports and the setup script.
+// Can be any freely formatted string containing punctuation, letters and revision codes.
+// Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
+#if DEBUG
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}-d")]
+#else
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}")]
+#endif
+
 [assembly: ComVisible(false)]
-
-// Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
-[assembly: Guid("4dfe4162-213c-4873-8179-c54a8c35b343")]
-
-// Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
-//
-//      Hauptversion
-//      Nebenversion 
-//      Buildnummer
-//      Revision
-//
-// Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
-// übernehmen, indem Sie "*" eingeben:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -200,6 +200,8 @@ namespace TxEditor.ViewModel
 		
 		public bool Validate()
 		{
+			string message = null;
+			
 			// First validate all children recursively and remember whether there was a problem
 			// somewhere down the tree
 			bool anyChildError = false;
@@ -266,29 +268,43 @@ namespace TxEditor.ViewModel
 
 			// ----- Check for missing translations -----
 
-			// First check that every non-region culture has a text set
-			if (CultureTextVMs.Any(vm =>
-				vm.CultureName.Length == 2 &&
-				string.IsNullOrEmpty(vm.Text) &&
-				!vm.AcceptMissing))
+			foreach (var ctVM in CultureTextVMs)
 			{
-				HasOwnProblem = true;
-				HasProblem = true;
-				Remarks = Tx.T("validation.content.missing translation");
-				return false;
-			}
-			// Then check that every region-culture with no text has a non-region culture with a
-			// text set (as fallback)
-			if (CultureTextVMs.Any(vm =>
-				vm.CultureName.Length == 5 &&
-				string.IsNullOrEmpty(vm.Text) &&
-				!vm.AcceptMissing &&
-				!CultureTextVMs.Any(vm2 => vm2.CultureName == vm.CultureName.Substring(0, 2))))
-			{
-				HasOwnProblem = true;
-				HasProblem = true;
-				Remarks = Tx.T("validation.content.missing translation");
-				return false;
+				if (ctVM.CultureName.Length == 2)
+				{
+					// Check that every non-region culture has a text set
+					if (string.IsNullOrEmpty(ctVM.Text) && !ctVM.AcceptMissing)
+					{
+						ctVM.IsMissing = true;
+						if (message != null)
+							message = "validation.content.multiple errors";
+						else
+							message = "validation.content.missing translation";
+					}
+					else
+					{
+						ctVM.IsMissing = false;
+					}
+				}
+				else if (ctVM.CultureName.Length == 5)
+				{
+					// Check that every region-culture with no text has a non-region culture with a
+					// text set (as fallback)
+					if (string.IsNullOrEmpty(ctVM.Text) &&
+						!ctVM.AcceptMissing &&
+						!CultureTextVMs.Any(vm2 => vm2.CultureName == ctVM.CultureName.Substring(0, 2)))
+					{
+						ctVM.IsMissing = true;
+						if (message != null)
+							message = "validation.content.multiple errors";
+						else
+							message = "validation.content.missing translation";
+					}
+					else
+					{
+						ctVM.IsMissing = false;
+					}
+				}
 			}
 
 			// ----- Check referenced keys -----
@@ -350,7 +366,7 @@ namespace TxEditor.ViewModel
 						// Ignore any empty text. If that's a problem, it'll be found as missing above.
 						if (!string.IsNullOrEmpty(transText))
 						{
-							string message;
+							//string message;
 							if (!CheckTextConsistency(primaryText, transText, out message, true,
 									CultureTextVMs[i].AcceptPlaceholders, CultureTextVMs[i].AcceptPunctuation))
 							{
@@ -368,7 +384,7 @@ namespace TxEditor.ViewModel
 						// Ignore any empty text. If that's a problem, it'll be found as missing above.
 						if (!string.IsNullOrEmpty(transText))
 						{
-							string message;
+							//string message;
 							if (!CheckTextConsistency(primaryText, transText, out message, false,
 									qt.AcceptPlaceholders, qt.AcceptPunctuation))   // Ignore count placeholder here
 							{
@@ -381,7 +397,15 @@ namespace TxEditor.ViewModel
 					}
 				}
 			}
-			
+
+			if (message != null)
+			{
+				HasOwnProblem = true;
+				HasProblem = true;
+				Remarks = Tx.T(message);
+				return false;
+			}
+
 			// ----- No (new) problem -----
 			
 			HasOwnProblem = false;

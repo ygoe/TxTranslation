@@ -1,20 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
-using Unclassified;
 using System.Text.RegularExpressions;
+using System.Windows;
 using TxEditor.ViewModel;
+using Unclassified.UI;
 
 namespace TxEditor.View
 {
@@ -23,6 +11,12 @@ namespace TxEditor.View
 		public TextKeyWindow()
 		{
 			InitializeComponent();
+		}
+
+		protected override void OnSourceInitialized(EventArgs e)
+		{
+			this.HideIcon();
+			base.OnSourceInitialized(e);
 		}
 
 		public string TextKey

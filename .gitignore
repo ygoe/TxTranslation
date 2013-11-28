@@ -1,32 +1,106 @@
+# Project-specific files
+Setup/TxSetup-*.exe
 
-Thumbs.db
-*.obj
-*.exe
-*.pdb
+# User-specific files
+*.suo
 *.user
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Visual C++ cache files
+ipch/
 *.aps
-*.pch
-*.vspscc
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# Windows Store app package directory
+AppPackages/
+
+# SQL Server files
+App_Data/*.mdf
+App_Data/*.ldf
+
+# Others
 *_i.c
 *_p.c
-*.ncb
-*.suo
-*.sln.docstates
-*.tlb
-*.tlh
-*.bak
-*.cache
+*_i.h
 *.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.lib
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
 *.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/
-[Tt]est[Rr]esult*
-.local/
-tmp/
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+sql/
+*.[Cc]ache
+ClientBin/
+[Ss]tyle[Cc]op.*
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.[Pp]ublish.xml
+*.pfx
+*.publishsettings
+*.bak
+.internal
+.local
+.tmp
 
-!tools/*
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity is a build add-in
+_TeamCity*
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# NCrunch
+*.ncrunch*
+_NCrunch_*
+.*crunch*.local.xml
+
+# Dotfuscator
+Dotfuscated/
+
+# Windows/other detritus
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

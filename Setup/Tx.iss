@@ -1,6 +1,9 @@
 #ifndef RevId
 	#define RevId "0.1"
 #endif
+#ifndef ShortRevId
+	#define ShortRevId Copy(RevId, 1, Pos(".", RevId) - 1)
+#endif
 
 #include "scripts\products.iss"
 #include "scripts\products\stringversion.iss"
@@ -18,7 +21,7 @@ AppCopyright=© Yves Goergen
 AppPublisher=Yves Goergen
 AppPublisherURL=http://dev.unclassified.de/source/txlib
 AppName=TxEditor
-AppVersion={#RevId}
+AppVersion={#ShortRevId}
 AppMutex=Unclassified.TxEditor
 AppId={{99B66B72-FF8D-4169-ADE6-062A9EF0EB13}
 MinVersion=0,5.01sp3
@@ -44,7 +47,7 @@ SolidCompression=True
 InternalCompressLevel=max
 VersionInfoVersion=1.0
 VersionInfoCompany=Yves Goergen
-VersionInfoDescription=TxTranslation {#RevId} setup
+VersionInfoDescription=TxTranslation Setup
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
@@ -62,17 +65,25 @@ WelcomeFontSize=12
 WelcomeLabel1=%n%n%n%nWelcome to the Tx setup wizard
 WelcomeLabel2=TxTranslation is a simple yet powerful translation and localisation library for .NET applications. It supports XAML binding, language fallbacks, count-specific translations, placeholders, and number and time formatting.%n%nVersion: {#RevId}
 ClickNext=Click Next to continue installing TxEditor, documentation, the TxLib library and source code, or Cancel to exit the setup.
+FinishedHeadingLabel=%n%n%n%nTxTranslation is now installed.
+FinishedLabelNoIcons=
+FinishedLabel=The application may be launched by selecting the installed start menu icon.
+ClickFinish=Click Finish to exit the setup.
 
 de.WelcomeLabel1=%n%n%n%nWillkommen zum Tx-Setup-Assistenten
 de.WelcomeLabel2=TxTranslation ist eine einfache aber mächtige Bibliothek für Übersetzungen und Lokalisierung in .NET-Anwendungen. Sie unterstützt XAML-Binding, Ersatzsprachen, Anzahl-abhängige Übersetzungen, Platzhalter und Zeitformatierung.%n%nVersion: {#RevId}
 de.ClickNext=Klicken Sie auf Weiter, um den TxEditor, die Dokumentation und die TxLib-Bibliothek mit Quelltext zu installieren, oder auf Abbrechen zum Beenden des Setups.
+de.FinishedHeadingLabel=%n%n%n%nTxTranslation ist jetzt installiert.
+de.FinishedLabelNoIcons=
+de.FinishedLabel=Die Anwendung kann über die installierte Startmenü-Verknüpfung gestartet werden.
+de.ClickFinish=Klicken Sie auf Fertigstellen, um das Setup zu beenden.
 
 [CustomMessages]
 Task_VSTool=Register as External Tool in Visual Studio
-NgenMessage=Optimising application performance
+NgenMessage=Optimising application performance (this may take a moment)
 
 de.Task_VSTool=In Visual Studio als Externes Tool eintragen
-de.NgenMessage=Anwendungs-Performance optimieren
+de.NgenMessage=Anwendungs-Performance optimieren (kann einen Moment dauern)
 
 [Tasks]
 Name: VSTool; Description: "{cm:Task_VSTool}"
@@ -91,14 +102,23 @@ Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ign
 Source: "..\TxLib\TxXaml.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 
 [Registry]
+; Register .txd file name extension
 Root: HKCR; Subkey: ".txd"; ValueType: string; ValueName: ""; ValueData: "TxDictionary"; Flags: uninsdeletevalue 
 Root: HKCR; Subkey: "TxDictionary"; ValueType: string; ValueName: ""; ValueData: "Tx dictionary"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "TxDictionary\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\TxEditor.exe,1"
 Root: HKCR; Subkey: "TxDictionary\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\TxEditor.exe"" ""%1"""
 
+; Add to .txd "Open with" menu
+Root: HKCR; Subkey: ".txd\OpenWithList\TxEditor.exe"; ValueType: string; ValueName: ""; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: ".txd\OpenWithList\notepad.exe"; ValueType: string; ValueName: ""; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Applications\TxEditor.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "TxEditor"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Applications\TxEditor.exe\shell\open"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "TxEditor"
+Root: HKCR; Subkey: "Applications\TxEditor.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\TxEditor.exe"" ""%1"""
+
 [Icons]
 Name: "{group}\TxEditor"; Filename: "{app}\TxEditor.exe"; IconFilename: "{app}\TxEditor.exe"
 Name: "{group}\Tx Documentation"; Filename: "{app}\Tx Documentation.pdf"
+Name: "{group}\TxLib source code"; Filename: "{app}\TxLib source code\"
 
 [Run]
 Filename: {app}\TxEditor.exe; WorkingDir: {app}; Flags: nowait postinstall

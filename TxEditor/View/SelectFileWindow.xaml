@@ -10,7 +10,6 @@
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
 	TextOptions.TextFormattingMode="Display"
-	Icon="/Images/TxFlag.ico"
 	Title="TxEditor">
 
 	<Grid>

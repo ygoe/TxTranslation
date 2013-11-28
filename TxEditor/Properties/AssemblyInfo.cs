@@ -20,17 +20,17 @@ using System.Windows;
 // Can be any freely formatted string containing punctuation, letters and revision codes.
 // Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
 #if DEBUG
-[assembly: AssemblyInformationalVersion("{bmin:2013:4}-{commit:6}{!:+}-d")]
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}-d")]
 #else
-[assembly: AssemblyInformationalVersion("{bmin:2013:4}-{commit:6}{!:+}")]
+[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}")]
 #endif
 
 [assembly: ComVisible(false)]
 [assembly: ThemeInfo(
-	ResourceDictionaryLocation.None, //Speicherort der designspezifischen Ressourcenwörterbücher
-	//(wird verwendet, wenn eine Ressource auf der Seite
-	// oder in den Anwendungsressourcen-Wörterbüchern nicht gefunden werden kann.)
-	ResourceDictionaryLocation.SourceAssembly //Speicherort des generischen Ressourcenwörterbuchs
-	//(wird verwendet, wenn eine Ressource auf der Seite, in der Anwendung oder einem 
-	// designspezifischen Ressourcenwörterbuch nicht gefunden werden kann.)
+	// Where theme specific resource dictionaries are located
+	// (used if a resource is not found in the page, or application resource dictionaries)
+	ResourceDictionaryLocation.SourceAssembly,
+	// Where the generic resource dictionary is located
+	// (used if a resource is not found in the page, app, or any theme specific resource dictionaries)
+	ResourceDictionaryLocation.SourceAssembly
 )]

@@ -46,6 +46,20 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private bool isMissing;
+		public bool IsMissing
+		{
+			get { return isMissing; }
+			set
+			{
+				if (value != isMissing)
+				{
+					isMissing = value;
+					OnPropertyChanged("IsMissing");
+				}
+			}
+		}
+
 		private bool acceptMissing;
 		public bool AcceptMissing
 		{

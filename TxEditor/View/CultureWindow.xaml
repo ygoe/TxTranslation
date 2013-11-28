@@ -13,7 +13,6 @@
 	ShowInTaskbar="False"
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
-	Icon="/Images/culture_16.ico"
 	Title="{Tx:T 'window.new culture.title', Default='Add new culture'}"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight">

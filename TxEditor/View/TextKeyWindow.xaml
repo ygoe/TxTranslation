@@ -13,7 +13,6 @@
 	ShowInTaskbar="False"
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
-	Icon="/Images/key_16.ico"
 	Title="Text key"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight">

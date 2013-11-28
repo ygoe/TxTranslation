@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Unclassified.UI;
 
 namespace TxEditor.View
 {
@@ -21,5 +12,11 @@ namespace TxEditor.View
 
 			DataContext = App.Settings;
 		}
+
+		protected override void OnSourceInitialized(EventArgs e)
+		{
+			this.HideIcon();
+			base.OnSourceInitialized(e);
+		}	
 	}
 }
