@@ -89,13 +89,16 @@ de.NgenMessage=Anwendungs-Performance optimieren (kann einen Moment dauern)
 Name: VSTool; Description: "{cm:Task_VSTool}"
 
 [Files]
+; TxEditor application files
 Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}"; Flags: ignoreversion
 
+; TxLib assembly and source code
+Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion

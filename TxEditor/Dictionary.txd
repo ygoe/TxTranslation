@@ -75,6 +75,10 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="toolbar.app">Anwendung</text>
 		<text key="toolbar.app.about">Über</text>
 		<text key="toolbar.app.about.tooltip">Zeigt Versions- und Copyright-Informationen zur Anwendung an.</text>
+		<text key="toolbar.app.help">Hilfe</text>
+		<text key="toolbar.app.help.tooltip">Zeigt die TxTranslation-Dokumentation (PDF) an.</text>
+		<text key="toolbar.app.lib folder">TxLib-Ordner</text>
+		<text key="toolbar.app.lib folder.tooltip">Öffnet den Ordner, der das TxLib-Assembly und den Quelltext enthält.</text>
 		<text key="toolbar.app.settings">Einstellungen</text>
 		<text key="toolbar.app.settings.tooltip">Öffnet den Anwendungseinstellungen-Dialog.</text>
 		<text key="toolbar.culture">Kultur</text>
@@ -355,6 +359,10 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="toolbar.app">Application</text>
 		<text key="toolbar.app.about">About</text>
 		<text key="toolbar.app.about.tooltip">Shows version and copyright information about the application.</text>
+		<text key="toolbar.app.help">Help</text>
+		<text key="toolbar.app.help.tooltip">Shows the TxTranslation documentation (PDF).</text>
+		<text key="toolbar.app.lib folder">TxLib folder</text>
+		<text key="toolbar.app.lib folder.tooltip">Opens the folder that contains the TxLib assembly and source code.</text>
 		<text key="toolbar.app.settings">Settings</text>
 		<text key="toolbar.app.settings.tooltip">Opens the application settings dialog.</text>
 		<text key="toolbar.culture">Culture</text>

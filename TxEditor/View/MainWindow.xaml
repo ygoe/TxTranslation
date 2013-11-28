@@ -377,7 +377,19 @@
 						Content="{Tx:T 'toolbar.app.about', Default='About'}" IconSource="/Images/info.png"
 						ExtendedToolTipText="{Tx:T 'toolbar.app.about.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False"/>
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="100"/>
+					<u:IconButton
+						Command="{Binding HelpCommand}"
+						Content="{Tx:T 'toolbar.app.help', Default='Help'}" IconSource="/Images/help.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.app.help.tooltip'}"
+						ToolTipService.ShowOnDisabled="True"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="100"/>
+					<u:IconButton
+						Command="{Binding LibFolderCommand}"
+						Content="{Tx:T 'toolbar.app.lib folder', Default='Lib folder'}" IconSource="/Images/lib_folder.png"
+						ExtendedToolTipText="{Tx:T 'toolbar.app.lib folder.tooltip'}"
+						ToolTipService.ShowOnDisabled="True"
+						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="100"/>
 				</StackPanel>
 				<TextBlock
 					Grid.Row="3" Grid.Column="13" Grid.ColumnSpan="1" HorizontalAlignment="Center"

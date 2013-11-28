@@ -710,6 +710,32 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		private DelegateCommand helpCommand;
+		public DelegateCommand HelpCommand
+		{
+			get
+			{
+				if (helpCommand == null)
+				{
+					helpCommand = new DelegateCommand(OnHelp);
+				}
+				return helpCommand;
+			}
+		}
+
+		private DelegateCommand libFolderCommand;
+		public DelegateCommand LibFolderCommand
+		{
+			get
+			{
+				if (libFolderCommand == null)
+				{
+					libFolderCommand = new DelegateCommand(OnLibFolder);
+				}
+				return libFolderCommand;
+			}
+		}
+
 		#endregion Application section
 
 		#endregion Toolbar commands
@@ -1822,6 +1848,38 @@ namespace TxEditor.ViewModel
 			{
 				root.Effect = null;
 			}, 500);
+		}
+
+		private void OnHelp()
+		{
+			string docFileName = Path.Combine(
+				Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
+				"Tx Documentation.pdf");
+
+			try
+			{
+				System.Diagnostics.Process.Start(docFileName);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, Tx.T("msg.caption.error"), MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		private void OnLibFolder()
+		{
+			string libFolder = Path.Combine(
+				Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location),
+				"TxLib source code");
+
+			try
+			{
+				System.Diagnostics.Process.Start(libFolder);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, Tx.T("msg.caption.error"), MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		#endregion Application section
