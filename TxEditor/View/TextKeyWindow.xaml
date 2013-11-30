@@ -50,7 +50,7 @@
 			<CheckBox
 				Name="IncludeSubitemsCheckbox"
 				Grid.Row="2" Grid.Column="0"
-				Margin="0,6,0,0" Visibility="Collapsed"
+				Margin="0,6,0,0" Visibility="Collapsed" HorizontalAlignment="Left"
 				Content="Include subitems"/>
 		</Grid>
 

@@ -1278,7 +1278,7 @@ namespace TxEditor.ViewModel
 			bool onlyFullKeysSelected = true;
 			foreach (TextKeyViewModel tk in selectedTextKeys)
 			{
-				// TODO: Check whether any selected key is a child of another selected key -> don't count them additionally
+				// TODO: Check whether any selected key is a child of another selected key -> don't count them additionally - collect all selected keys in a HashSet, then count
 				count += CountTextKeys(tk);
 				if (!tk.IsFullKey)
 					onlyFullKeysSelected = false;
@@ -1330,6 +1330,7 @@ namespace TxEditor.ViewModel
 					DeletePartialParentKeys(tk.Parent as TextKeyViewModel);
 					FileModified = true;
 				}
+				ValidateTextKeysDelayed();
 
 				StatusText = Tx.T("statusbar.n text keys deleted", count);
 			}
@@ -1650,7 +1651,7 @@ namespace TxEditor.ViewModel
 				}
 				
 				var oldParent = selKey.Parent;
-				int affectedKeyCount = 1;
+				int affectedKeyCount = selKey.IsFullKey ? 1 : 0;
 
 				if (!needDuplicateForChildren)
 				{
@@ -1756,6 +1757,7 @@ namespace TxEditor.ViewModel
 						selKey.IsExpanded = false;   // Collapses the item again like it was before
 					ViewCommandManager.InvokeLoaded("SelectTextKey", selKey);
 				}
+				ValidateTextKeysDelayed();
 			}
 		}
 
@@ -1815,7 +1817,7 @@ namespace TxEditor.ViewModel
 				TextKeyViewModel tryDestKey;
 				try
 				{
-					tryDestKey = FindOrCreateTextKey(newKey, false, false);
+					tryDestKey = FindOrCreateTextKey(newKey, false, false, selKey.IsNamespace);
 				}
 				catch (NonNamespaceExistsException)
 				{
@@ -1856,39 +1858,35 @@ namespace TxEditor.ViewModel
 					}
 				}
 
-				int affectedKeys = 1;
+				int affectedKeys = selKey.IsFullKey ? 1 : 0;
 
 				// Create the new text key if needed
-				TextKeyViewModel destKey = FindOrCreateTextKey(newKey);
+				TextKeyViewModel destKey = FindOrCreateTextKey(newKey, true, true, selKey.IsNamespace);
 
-				if (!destExists)
+				// Restore original full key state first
+				destKey.IsFullKey = destWasFullKey;
+				if (!destWasFullKey)
 				{
-					// Key was entirely empty or is newly created.
+					TextKeys.Remove(destKey.TextKey);
+				}
+				// Merge data into destKey, overwriting conflicts
+				destKey.MergeFrom(selKey);
 
-					// Restore original full key state first
-					destKey.IsFullKey = destWasFullKey;
-					// Copy all data from the source key.
-					destKey.MergeFrom(selKey);
-
-					if (includeChildren)
+				if (includeChildren)
+				{
+					if (!destExists)
 					{
+						// Key was entirely empty or is newly created.
+
 						foreach (TextKeyViewModel child in selKey.Children)
 						{
 							affectedKeys += DuplicateTextKeyRecursive(child, destKey);
 						}
 					}
-				}
-				else
-				{
-					// Key already has some text or child keys.
-
-					// Restore original full key state first
-					destKey.IsFullKey = destWasFullKey;
-					// Merge data into destKey, overwriting conflicts
-					destKey.MergeFrom(selKey);
-
-					if (includeChildren)
+					else
 					{
+						// Key already has some text or child keys.
+
 						// Add/merge all subkeys as well
 						destKey.MergeChildrenRecursive(selKey);
 					}
@@ -1904,15 +1902,16 @@ namespace TxEditor.ViewModel
 				if (!wasExpanded)
 					destKey.IsExpanded = false;   // Collapses the item again like it was before
 				ViewCommandManager.InvokeLoaded("SelectTextKey", destKey);
+				ValidateTextKeysDelayed();
 			}
 		}
 
 		private int DuplicateTextKeyRecursive(TextKeyViewModel srcTextKey, TextKeyViewModel destParent)
 		{
-			string destKeyName = destParent.TextKey + "." + srcTextKey.DisplayName;
+			string destKeyName = destParent.TextKey + (destParent.IsNamespace ? ":" : ".") + srcTextKey.DisplayName;
 			TextKeyViewModel destKey = FindOrCreateTextKey(destKeyName);
 			destKey.MergeFrom(srcTextKey);
-			int affectedKeys = 1;
+			int affectedKeys = srcTextKey.IsFullKey ? 1 : 0;
 
 			foreach (TextKeyViewModel child in srcTextKey.Children)
 			{
@@ -2315,12 +2314,18 @@ namespace TxEditor.ViewModel
 		/// <param name="textKey">The full text key to find or create.</param>
 		/// <param name="updateTextKeys">true to add the new text key to the TextKeys dictionary. (Only if <paramref name="create"/> is set.)</param>
 		/// <param name="create">true to create a new full text key if it doesn't exist yet, false to return null or partial TextKeyViewModels instead.</param>
+		/// <param name="isNamespace">true to indicate that a single key segment is meant to be a namespace key.</param>
 		/// <returns></returns>
-		private TextKeyViewModel FindOrCreateTextKey(string textKey, bool updateTextKeys = true, bool create = true)
+		private TextKeyViewModel FindOrCreateTextKey(string textKey, bool updateTextKeys = true, bool create = true, bool isNamespace = false)
 		{
 			// Tokenize text key to find the tree node
 			string partialKey = "";
 			TextKeyViewModel tk = RootTextKey;
+			if (!textKey.Contains(':') && isNamespace)
+			{
+				// Fake the separator to use existing code; clean up later
+				textKey += ":";
+			}
 			string[] nsParts = textKey.Split(':');
 			string localKey;
 			if (nsParts.Length > 1)
@@ -2353,29 +2358,32 @@ namespace TxEditor.ViewModel
 				localKey = textKey;
 			}
 
-			string[] keySegments = localKey.Split('.');
-			for (int i = 0; i < keySegments.Length; i++)
+			if (localKey != "")
 			{
-				string keySegment = keySegments[i];
-				partialKey += keySegment;
+				string[] keySegments = localKey.Split('.');
+				for (int i = 0; i < keySegments.Length; i++)
+				{
+					string keySegment = keySegments[i];
+					partialKey += keySegment;
 
-				// Search for tree item
-				var subtk = tk.Children.OfType<TextKeyViewModel>()
-					.SingleOrDefault(vm => vm.DisplayName == keySegment);
-				if (subtk != null && subtk.IsNamespace)
-				{
-					throw new NamespaceExistsException();
+					// Search for tree item
+					var subtk = tk.Children.OfType<TextKeyViewModel>()
+						.SingleOrDefault(vm => vm.DisplayName == keySegment);
+					if (subtk != null && subtk.IsNamespace)
+					{
+						throw new NamespaceExistsException();
+					}
+					if (subtk == null)
+					{
+						// This level of text key item does not exist yet, create it
+						if (!create) return null;
+						subtk = new TextKeyViewModel(partialKey, i == keySegments.Length - 1, tk, tk.MainWindowVM);
+						subtk.DisplayName = keySegment;
+						tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
+					}
+					tk = subtk;
+					partialKey += ".";
 				}
-				if (subtk == null)
-				{
-					// This level of text key item does not exist yet, create it
-					if (!create) return null;
-					subtk = new TextKeyViewModel(partialKey, i == keySegments.Length - 1, tk, tk.MainWindowVM);
-					subtk.DisplayName = keySegment;
-					tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
-				}
-				tk = subtk;
-				partialKey += ".";
 			}
 
 			if (create)
@@ -2668,6 +2676,9 @@ namespace TxEditor.ViewModel
 
 		private DelayedCall validateDc;
 
+		/// <summary>
+		/// Validates all text keys and updates the suggestions later.
+		/// </summary>
 		public void ValidateTextKeysDelayed()
 		{
 			if (validateDc == null)
@@ -2680,6 +2691,9 @@ namespace TxEditor.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Validates all text keys now and updates the suggestions later.
+		/// </summary>
 		public void ValidateTextKeys()
 		{
 			RootTextKey.Validate();

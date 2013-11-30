@@ -263,6 +263,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="validation.key name.ends with point">Schlüssel endet mit einem Punkt (.).</text>
 		<text key="validation.key name.starts with colon">Schlüssel beginnt mit einem Doppelpunkt (:).</text>
 		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
+		<text key="validation.more">, weitere Fehler</text>
 		<text key="window.new culture.button.add culture">Kultur hinzufügen</text>
 		<text key="window.new culture.button.cancel">Abbrechen</text>
 		<text key="window.new culture.intro">Bitte wählen Sie die hinzuzufügende Kultur aus der Liste aus oder geben Sie ihren Code ein</text>
@@ -554,6 +555,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="validation.key name.ends with point">Key ends with a point (.).</text>
 		<text key="validation.key name.starts with colon">Key starts with a colon (:).</text>
 		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
+		<text key="validation.more">, more errors</text>
 		<text key="window.new culture.button.add culture">Add culture</text>
 		<text key="window.new culture.button.cancel">Cancel</text>
 		<text key="window.new culture.intro">Please select the culture to add from the list, or type its code</text>

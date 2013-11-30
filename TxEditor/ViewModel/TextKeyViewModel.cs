@@ -212,11 +212,34 @@ namespace TxEditor.ViewModel
 			}
 			return true;
 		}
+
+		/// <summary>
+		/// Adds something to the Remarks value. If Remarks is currently empty, the new text is
+		/// set. Otherwise, a "more errors" text is added (only once).
+		/// </summary>
+		/// <param name="str">Remarks text to add</param>
+		public void AddRemarks(string str)
+		{
+			if (Remarks != str)
+			{
+				if (string.IsNullOrEmpty(Remarks))
+				{
+					Remarks = str;
+				}
+				else if (!Remarks.EndsWith(Tx.T("validation.more")))
+				{
+					Remarks += Tx.T("validation.more");
+				}
+			}
+		}
 		
 		public bool Validate()
 		{
-			string message = null;
-			
+			// NOTE: All checks are performed in their decreasing order of significance. The most-
+			//       severe errors come first, proceeding to more informational problems. The first
+			//       determined error generates the visible message and quits the method so that
+			//       no other checks are performed or could overwrite the message.
+
 			// First validate all children recursively and remember whether there was a problem
 			// somewhere down the tree
 			bool anyChildError = false;
@@ -247,6 +270,10 @@ namespace TxEditor.ViewModel
 				return !anyChildError;
 			}
 
+			HasOwnProblem = false;
+			HasProblem = anyChildError;
+			Remarks = null;
+
 			// ----- Check for count/modulo errors -----
 
 			// Check for invalid count values in any CultureText
@@ -256,8 +283,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.invalid count");
-				return false;
+				AddRemarks(Tx.T("validation.content.invalid count"));
 			}
 			// Check for invalid modulo values in any CultureText
 			if (CultureTextVMs.Any(ct =>
@@ -266,8 +292,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.invalid modulo");
-				return false;
+				AddRemarks(Tx.T("validation.content.invalid modulo"));
 			}
 			// Check for duplicate count/modulo values in any CultureText
 			if (CultureTextVMs.Any(ct =>
@@ -277,49 +302,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.duplicate count modulo");
-				return false;
-			}
-
-			// ----- Check for missing translations -----
-
-			foreach (var ctVM in CultureTextVMs)
-			{
-				if (ctVM.CultureName.Length == 2)
-				{
-					// Check that every non-region culture has a text set
-					if (string.IsNullOrEmpty(ctVM.Text) && !ctVM.AcceptMissing)
-					{
-						ctVM.IsMissing = true;
-						if (message != null)
-							message = "validation.content.multiple errors";
-						else
-							message = "validation.content.missing translation";
-					}
-					else
-					{
-						ctVM.IsMissing = false;
-					}
-				}
-				else if (ctVM.CultureName.Length == 5)
-				{
-					// Check that every region-culture with no text has a non-region culture with a
-					// text set (as fallback)
-					if (string.IsNullOrEmpty(ctVM.Text) &&
-						!ctVM.AcceptMissing &&
-						!CultureTextVMs.Any(vm2 => vm2.CultureName == ctVM.CultureName.Substring(0, 2)))
-					{
-						ctVM.IsMissing = true;
-						if (message != null)
-							message = "validation.content.multiple errors";
-						else
-							message = "validation.content.missing translation";
-					}
-					else
-					{
-						ctVM.IsMissing = false;
-					}
-				}
+				AddRemarks(Tx.T("validation.content.duplicate count modulo"));
 			}
 
 			// ----- Check referenced keys -----
@@ -330,8 +313,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.referenced key loop");
-				return false;
+				AddRemarks(Tx.T("validation.content.referenced key loop"));
 			}
 
 			if (CultureTextVMs.Any(ct =>
@@ -341,8 +323,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.referenced key loop");
-				return false;
+				AddRemarks(Tx.T("validation.content.referenced key loop"));
 			}
 
 			if (CultureTextVMs.Any(ct =>
@@ -351,8 +332,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.missing referenced key");
-				return false;
+				AddRemarks(Tx.T("validation.content.missing referenced key"));
 			}
 
 			if (CultureTextVMs.Any(ct =>
@@ -362,8 +342,7 @@ namespace TxEditor.ViewModel
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
-				Remarks = Tx.T("validation.content.missing referenced key");
-				return false;
+				AddRemarks(Tx.T("validation.content.missing referenced key"));
 			}
 
 			// ----- Check translations consistency -----
@@ -381,14 +360,13 @@ namespace TxEditor.ViewModel
 						// Ignore any empty text. If that's a problem, it'll be found as missing above.
 						if (!string.IsNullOrEmpty(transText))
 						{
-							//string message;
+							string message;
 							if (!CheckTextConsistency(primaryText, transText, out message, true,
 									CultureTextVMs[i].AcceptPlaceholders, CultureTextVMs[i].AcceptPunctuation))
 							{
 								HasOwnProblem = true;
 								HasProblem = true;
-								Remarks = message;
-								return false;
+								AddRemarks(message);
 							}
 						}
 					}
@@ -399,34 +377,61 @@ namespace TxEditor.ViewModel
 						// Ignore any empty text. If that's a problem, it'll be found as missing above.
 						if (!string.IsNullOrEmpty(transText))
 						{
-							//string message;
+							string message;
 							if (!CheckTextConsistency(primaryText, transText, out message, false,
 									qt.AcceptPlaceholders, qt.AcceptPunctuation))   // Ignore count placeholder here
 							{
 								HasOwnProblem = true;
 								HasProblem = true;
-								Remarks = message;
-								return false;
+								AddRemarks(message);
 							}
 						}
 					}
 				}
 			}
 
-			if (message != null)
+			// ----- Check for missing translations -----
+
+			foreach (var ctVM in CultureTextVMs)
 			{
-				HasOwnProblem = true;
-				HasProblem = true;
-				Remarks = Tx.T(message);
-				return false;
+				if (ctVM.CultureName.Length == 2)
+				{
+					// Check that every non-region culture has a text set
+					if (string.IsNullOrEmpty(ctVM.Text) && !ctVM.AcceptMissing)
+					{
+						ctVM.IsMissing = true;
+
+						HasOwnProblem = true;
+						HasProblem = true;
+						AddRemarks(Tx.T("validation.content.missing translation"));
+					}
+					else
+					{
+						ctVM.IsMissing = false;
+					}
+				}
+				else if (ctVM.CultureName.Length == 5)
+				{
+					// Check that every region-culture with no text has a non-region culture with a
+					// text set (as fallback)
+					if (string.IsNullOrEmpty(ctVM.Text) &&
+						!ctVM.AcceptMissing &&
+						!CultureTextVMs.Any(vm2 => vm2.CultureName == ctVM.CultureName.Substring(0, 2)))
+					{
+						ctVM.IsMissing = true;
+
+						HasOwnProblem = true;
+						HasProblem = true;
+						AddRemarks(Tx.T("validation.content.missing translation"));
+					}
+					else
+					{
+						ctVM.IsMissing = false;
+					}
+				}
 			}
 
-			// ----- No (new) problem -----
-			
-			HasOwnProblem = false;
-			HasProblem = anyChildError;
-			Remarks = null;
-			return !anyChildError;
+			return !HasProblem;
 		}
 
 		public void UpdateCultureTextSeparators()
@@ -518,7 +523,7 @@ namespace TxEditor.ViewModel
 				DisplayName = newKey.Substring(i + 1);
 			else
 				DisplayName = newKey;
-			int affectedKeys = 1;
+			int affectedKeys = IsFullKey ? 1 : 0;
 
 			foreach (TextKeyViewModel child in Children)
 			{
@@ -551,7 +556,7 @@ namespace TxEditor.ViewModel
 				textKeys.Remove(oldTextKey);
 				textKeys.Add(textKey, this);
 			}
-			int affectedKeys = 1;
+			int affectedKeys = IsFullKey ? 1 : 0;
 
 			foreach (TextKeyViewModel child in Children)
 			{
