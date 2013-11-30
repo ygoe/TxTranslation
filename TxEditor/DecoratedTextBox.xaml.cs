@@ -290,6 +290,7 @@ namespace TxEditor
 			}
 			decos.Clear();
 
+			// Find placeholders (named or count #)
 			Match m = Regex.Match(textBox1.Text, @"(?<!\{)\{(?!=)[^{]*?\}");
 			while (m.Success)
 			{
@@ -321,6 +322,7 @@ namespace TxEditor
 				m = m.NextMatch();
 			}
 
+			// Find key references
 			if (TextKeyReferences == null)
 				TextKeyReferences = new StringCollection();
 			TextKeyReferences.Clear();
