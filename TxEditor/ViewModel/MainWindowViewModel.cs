@@ -1192,7 +1192,29 @@ namespace TxEditor.ViewModel
 			{
 				string newKey = win.TextKey;
 
-				TextKeyViewModel tk = FindOrCreateTextKey(newKey);
+				TextKeyViewModel tk;
+				try
+				{
+					tk = FindOrCreateTextKey(newKey);
+				}
+				catch (NonNamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				catch (NamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
 
 				bool alreadyExists = !tk.IsEmpty();
 
@@ -1449,9 +1471,7 @@ namespace TxEditor.ViewModel
 			bool ok = false;
 			if (win.ShowDialog() == true)
 			{
-				HandleWizardInput(win.TextKeyText.Text, win.TranslationText.Text);
-
-				ok = true;
+				ok = HandleWizardInput(win.TextKeyText.Text, win.TranslationText.Text);
 			}
 
 			MainWindow.Instance.Show();
@@ -1473,9 +1493,31 @@ namespace TxEditor.ViewModel
 			}
 		}
 
-		private void HandleWizardInput(string keyName, string text)
+		private bool HandleWizardInput(string keyName, string text)
 		{
-			TextKeyViewModel tk = FindOrCreateTextKey(keyName);
+			TextKeyViewModel tk;
+			try
+			{
+				tk = FindOrCreateTextKey(keyName);
+			}
+			catch (NonNamespaceExistsException)
+			{
+				MessageBox.Show(
+					"You cannot create the namespace text key '" + keyName + "' because the root key already exists as regular key.",
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return false;
+			}
+			catch (NamespaceExistsException)
+			{
+				MessageBox.Show(
+					"You cannot create the text key '" + keyName + "' because the root key already exists as namespace.",
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return false;
+			}
 
 			bool alreadyExists = !tk.IsEmpty();
 
@@ -1506,6 +1548,7 @@ namespace TxEditor.ViewModel
 			if (!wasExpanded)
 				tk.IsExpanded = false;   // Collapses the item again like it was before
 			ViewCommandManager.InvokeLoaded("SelectTextKey", tk);
+			return true;
 		}
 
 		private bool CanRenameTextKey()
@@ -1547,27 +1590,69 @@ namespace TxEditor.ViewModel
 			{
 				// The dialog was confirmed
 				string newKey = win.TextKey;
-				bool needDuplicate = win.IncludeSubitemsCheckbox.IsChecked == false && selKey.Children.Count > 0;
 
-				// Test whether the entered text key already exists with content or subkeys
-				TextKeyViewModel tryDestKey = FindOrCreateTextKey(newKey, false, false);
-				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
-				if (destExists)
+				// Don't allow namespace nodes to be moved elsewhere
+				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
-					// TODO: What to consider if the destination key already has children?
-					// TODO: Ask user to merge, overwrite or cancel.
 					MessageBox.Show(
-						"The destination key already exists. Handling this is not yet implemented.",
+						"A namespace cannot be nested or moved to another tree position. Please enter a normal name for the namespace.",
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
 					return;
 				}
 				
-				var oldParent = selKey.Parent;
-				int affectedKeys = 1;
+				bool needDuplicateForChildren = win.IncludeSubitemsCheckbox.IsChecked == false && selKey.Children.Count > 0;
 
-				if (!needDuplicate)
+				// Test whether the entered text key already exists with content or subkeys
+				TextKeyViewModel tryDestKey;
+				try
+				{
+					tryDestKey = FindOrCreateTextKey(newKey, false, false);
+				}
+				catch (NonNamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				catch (NamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
+				bool destWasFullKey = false;
+				if (destExists)
+				{
+					// FindOrCreateTextKey below will make it a full key, no matter whether it
+					// should be one. Remember this state to reset it afterwards.
+					destWasFullKey = tryDestKey.IsFullKey;
+
+					TaskDialogResult result = TaskDialog.Show(
+						owner: MainWindow.Instance,
+						allowDialogCancellation: true,
+						title: "TxEditor",
+						mainInstruction: "The text key " + Tx.Q(newKey) + " already exists.",
+						content: "If you continue, the existing text and all subkeys will be overwritten with data from the selected key. No text will be deleted where the source has no data set.",
+						customButtons: new string[] { "&Merge", "Cancel" });
+					if (result.CustomButtonResult != 0)
+					{
+						return;
+					}
+				}
+				
+				var oldParent = selKey.Parent;
+				int affectedKeyCount = 1;
+
+				if (!needDuplicateForChildren)
 				{
 					// Remove the selected key from its original tree position
 					oldParent.Children.Remove(selKey);
@@ -1579,22 +1664,23 @@ namespace TxEditor.ViewModel
 				if (!destExists)
 				{
 					// Key was entirely empty or is newly created.
-					if (needDuplicate)
+
+					if (needDuplicateForChildren)
 					{
 						// Keep new key but copy all data from the source key
-						destKey.CopyFrom(selKey);
-
+						destKey.MergeFrom(selKey);
 						// The source key is now no longer a full key
 						selKey.IsFullKey = false;
 					}
 					else
 					{
 						// Replace it with the source key
-						affectedKeys = selKey.SetKeyRecursive(newKey, TextKeys);
+						affectedKeyCount = selKey.SetKeyRecursive(newKey, TextKeys);
 
-						// TODO: Document, verify and test the below code in this block
 						if (selKey.IsNamespace)
 						{
+							// We're renaming a namespace item. But we've created a temporary
+							// normal key (destKey) which is now at the wrong position.
 							// Namespace entries are sorted differently, which was not known when
 							// creating the key because it was no namespace at that time. Remove the
 							// newly created key entry (all of its possibly created parent keys are
@@ -1615,10 +1701,29 @@ namespace TxEditor.ViewModel
 				}
 				else
 				{
-					// TODO, see above (this block is currently not reached)
+					// Key already has some text or child keys.
+
+					// Restore original full key state first
+					destKey.IsFullKey = destWasFullKey;
+					// Merge data into destKey, overwriting conflicts
+					destKey.MergeFrom(selKey);
+
+					if (win.IncludeSubitemsCheckbox.IsChecked == true)
+					{
+						// Add/merge all subkeys as well
+						destKey.MergeChildrenRecursive(selKey);
+						// Delete the source key after it has been merged into destKey
+						DeleteTextKey(selKey);
+					}
+					else
+					{
+						// The source key will be kept but is now no longer a full key
+						selKey.IsFullKey = false;
+						TextKeys.Remove(selKey.TextKey);
+					}
 				}
 
-				if (!needDuplicate && oldParent != selKey.Parent)
+				if (!needDuplicateForChildren && oldParent != selKey.Parent)
 				{
 					// The key has moved to another subtree.
 					// Clean up possible unused partial keys at the old position.
@@ -1626,7 +1731,7 @@ namespace TxEditor.ViewModel
 				}
 	
 				FileModified = true;
-				StatusText = Tx.T("statusbar.text keys renamed", affectedKeys);
+				StatusText = Tx.T("statusbar.text keys renamed", affectedKeyCount);
 
 				// Fix an issue with MultiSelectTreeView: It can only know that an item is selected
 				// when its TreeViewItem property IsSelected is set through a binding defined in
@@ -1635,7 +1740,7 @@ namespace TxEditor.ViewModel
 				// to fix this right.
 				selKey.IsSelected = true;
 
-				if (needDuplicate)
+				if (needDuplicateForChildren || destExists)
 				{
 					bool wasExpanded = selKey.IsExpanded;
 					destKey.IsExpanded = true;   // Expands all parents
@@ -1693,21 +1798,62 @@ namespace TxEditor.ViewModel
 			{
 				// The dialog was confirmed
 				string newKey = win.TextKey;
-				bool includeSubitems = win.IncludeSubitemsCheckbox.IsChecked == true;
+				bool includeChildren = win.IncludeSubitemsCheckbox.IsChecked == true;
 
-				// Test whether the entered text key already exists with content or subkeys
-				TextKeyViewModel tryDestKey = FindOrCreateTextKey(newKey, false, false);
-				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
-				if (destExists)
+				// Don't allow namespace nodes to be copied elsewhere
+				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
-					// TODO: What to consider if the destination key already has children?
-					// TODO: Ask user to merge, overwrite or cancel.
 					MessageBox.Show(
-						"The destination key already exists. Handling this is not yet implemented.",
+						"A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.",
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
 					return;
+				}
+
+				// Test whether the entered text key already exists with content or subkeys
+				TextKeyViewModel tryDestKey;
+				try
+				{
+					tryDestKey = FindOrCreateTextKey(newKey, false, false);
+				}
+				catch (NonNamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				catch (NamespaceExistsException)
+				{
+					MessageBox.Show(
+						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+					return;
+				}
+				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
+				bool destWasFullKey = false;
+				if (destExists)
+				{
+					// FindOrCreateTextKey below will make it a full key, no matter whether it
+					// should be one. Remember this state to reset it afterwards.
+					destWasFullKey = tryDestKey.IsFullKey;
+
+					TaskDialogResult result = TaskDialog.Show(
+						owner: MainWindow.Instance,
+						allowDialogCancellation: true,
+						title: "TxEditor",
+						mainInstruction: "The text key " + Tx.Q(newKey) + " already exists.",
+						content: "If you continue, the existing text and all subkeys will be overwritten with data from the selected key. No text will be deleted where the source has no data set.",
+						customButtons: new string[] { "&Merge", "Cancel" });
+					if (result.CustomButtonResult != 0)
+					{
+						return;
+					}
 				}
 
 				int affectedKeys = 1;
@@ -1718,10 +1864,13 @@ namespace TxEditor.ViewModel
 				if (!destExists)
 				{
 					// Key was entirely empty or is newly created.
-					// Copy all data from the source key.
-					destKey.CopyFrom(selKey);
 
-					if (includeSubitems)
+					// Restore original full key state first
+					destKey.IsFullKey = destWasFullKey;
+					// Copy all data from the source key.
+					destKey.MergeFrom(selKey);
+
+					if (includeChildren)
 					{
 						foreach (TextKeyViewModel child in selKey.Children)
 						{
@@ -1731,17 +1880,29 @@ namespace TxEditor.ViewModel
 				}
 				else
 				{
-					// TODO, see above (this block is currently not reached)
+					// Key already has some text or child keys.
+
+					// Restore original full key state first
+					destKey.IsFullKey = destWasFullKey;
+					// Merge data into destKey, overwriting conflicts
+					destKey.MergeFrom(selKey);
+
+					if (includeChildren)
+					{
+						// Add/merge all subkeys as well
+						destKey.MergeChildrenRecursive(selKey);
+					}
 				}
 
 				FileModified = true;
 				StatusText = Tx.T("statusbar.text keys duplicated", affectedKeys);
 
-				// TODO: Check whether the tree view selection is good now, maybe the original item needs to be deselected
 				destKey.IsSelected = true;
 
+				bool wasExpanded = selKey.IsExpanded;
 				destKey.IsExpanded = true;   // Expands all parents
-				destKey.IsExpanded = false;   // Collapses the item again
+				if (!wasExpanded)
+					destKey.IsExpanded = false;   // Collapses the item again like it was before
 				ViewCommandManager.InvokeLoaded("SelectTextKey", destKey);
 			}
 		}
@@ -1750,7 +1911,7 @@ namespace TxEditor.ViewModel
 		{
 			string destKeyName = destParent.TextKey + "." + srcTextKey.DisplayName;
 			TextKeyViewModel destKey = FindOrCreateTextKey(destKeyName);
-			destKey.CopyFrom(srcTextKey);
+			destKey.MergeFrom(srcTextKey);
 			int affectedKeys = 1;
 
 			foreach (TextKeyViewModel child in srcTextKey.Children)
@@ -2110,6 +2271,7 @@ namespace TxEditor.ViewModel
 				XmlAttribute acceptPunctuationAttr = textNode.Attributes["acceptpunctuation"];
 				bool acceptPunctuation = acceptPunctuationAttr != null && acceptPunctuationAttr.Value == "true";
 
+				// TODO: Catch exceptions NonNamespaceExistsException and NamespaceExistsException for invalid files
 				TextKeyViewModel tk = FindOrCreateTextKey(key);
 
 				if (comment != null)
@@ -2166,7 +2328,11 @@ namespace TxEditor.ViewModel
 				// Namespace set
 				partialKey = nsParts[0];
 				var subtk = tk.Children.OfType<TextKeyViewModel>()
-					.SingleOrDefault(vm => vm.DisplayName == nsParts[0] && vm.IsNamespace);
+					.SingleOrDefault(vm => vm.DisplayName == nsParts[0]);
+				if (subtk != null && !subtk.IsNamespace)
+				{
+					throw new NonNamespaceExistsException();
+				}
 				if (subtk == null)
 				{
 					// Namespace tree item does not exist yet, create it
@@ -2195,7 +2361,11 @@ namespace TxEditor.ViewModel
 
 				// Search for tree item
 				var subtk = tk.Children.OfType<TextKeyViewModel>()
-					.SingleOrDefault(vm => vm.DisplayName == keySegment && !vm.IsNamespace);
+					.SingleOrDefault(vm => vm.DisplayName == keySegment);
+				if (subtk != null && subtk.IsNamespace)
+				{
+					throw new NamespaceExistsException();
+				}
 				if (subtk == null)
 				{
 					// This level of text key item does not exist yet, create it

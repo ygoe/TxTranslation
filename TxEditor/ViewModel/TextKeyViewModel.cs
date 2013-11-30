@@ -13,6 +13,21 @@ namespace TxEditor.ViewModel
 {
 	class TextKeyViewModel : TreeViewItemViewModel
 	{
+		/// <summary>
+		/// Determines the root key of the specified text key.
+		/// </summary>
+		/// <param name="textKey"></param>
+		/// <returns></returns>
+		public static string GetRootKey(string textKey)
+		{
+			int index = textKey.IndexOfAny(new char[] { '.', ':' });
+			if (index >= 0)
+			{
+				return textKey.Substring(0, index);
+			}
+			return textKey;
+		}
+
 		public MainWindowViewModel MainWindowVM { get; private set; }
 
 		private string textKey;
@@ -473,6 +488,7 @@ namespace TxEditor.ViewModel
 		/// Sets a new text key value but does not update any children.
 		/// </summary>
 		/// <param name="newKey">New text key.</param>
+		/// <param name="textKeys">Text keys dictionary to update, if not null</param>
 		public void SetKey(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			int i = newKey.LastIndexOfAny(new char[] { ':', '.' });
@@ -481,7 +497,7 @@ namespace TxEditor.ViewModel
 			else
 				DisplayName = newKey;
 
-			if (textKeys.ContainsKey(textKey))
+			if (textKeys != null && textKeys.ContainsKey(textKey))
 			{
 				textKeys.Remove(textKey);
 				textKeys.Add(newKey, this);
@@ -545,22 +561,83 @@ namespace TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Copies all contents from another TextKeyViewModel instance to this one, replacing all
-		/// data.
+		/// Creates a new TextKeyViewModel instance with all contents of this instance.
 		/// </summary>
-		/// <param name="other"></param>
-		public void CopyFrom(TextKeyViewModel other)
+		/// <returns></returns>
+		public TextKeyViewModel Clone()
 		{
-			Comment = other.Comment;
-			IsFullKey = other.IsFullKey;
-
-			CultureTextVMs.Clear();
-			if (IsFullKey)
+			TextKeyViewModel clone = new TextKeyViewModel(this.textKey, this.isFullKey, this.Parent, this.MainWindowVM);
+			clone.comment = this.comment;
+			clone.isNamespace = this.isNamespace;
+			foreach (CultureTextViewModel ctVM in CultureTextVMs)
 			{
-				foreach (CultureTextViewModel ctVM in other.CultureTextVMs)
+				clone.CultureTextVMs.Add(ctVM.Clone(clone));
+			}
+			return clone;
+		}
+
+		/// <summary>
+		/// Copies all contents from another TextKeyViewModel instance to this one, merging all
+		/// data, overwriting conflicts. Subitems are not copied to the new item.
+		/// </summary>
+		/// <param name="sourceKey"></param>
+		public void MergeFrom(TextKeyViewModel sourceKey)
+		{
+			// Set or append comment
+			if (!string.IsNullOrWhiteSpace(sourceKey.Comment))
+			{
+				if (!string.IsNullOrWhiteSpace(Comment))
 				{
-					CultureTextVMs.Add(ctVM.Clone(this));
+					Comment += Environment.NewLine;
 				}
+				Comment += sourceKey.Comment;
+			}
+
+			// Set or keep full key state
+			IsFullKey |= sourceKey.IsFullKey;
+
+			if (sourceKey.IsFullKey)
+			{
+				foreach (CultureTextViewModel otherctVM in sourceKey.CultureTextVMs)
+				{
+					var ctVM = CultureTextVMs.FirstOrDefault(c => c.CultureName == otherctVM.CultureName);
+					if (ctVM == null)
+					{
+						// Culture doesn't exist here, just copy-add it
+						CultureTextVMs.Add(otherctVM.Clone(this));
+					}
+					else
+					{
+						// Merge culture text data
+						ctVM.MergeFrom(otherctVM);
+					}
+				}
+				UpdateCultureTextSeparators();
+			}
+		}
+
+		/// <summary>
+		/// Copies all child keys recursively from another TextKeyViewModel instance to this one,
+		/// also merging all text data, overwriting conflicts.
+		/// </summary>
+		/// <param name="sourceKey"></param>
+		public void MergeChildrenRecursive(TextKeyViewModel sourceKey)
+		{
+			foreach (TextKeyViewModel sourceChild in sourceKey.Children)
+			{
+				var myChild = Children.FirstOrDefault(c => c.DisplayName == sourceChild.DisplayName) as TextKeyViewModel;
+				if (myChild != null)
+				{
+					myChild.MergeFrom(sourceChild);
+				}
+				else
+				{
+					myChild = sourceChild.Clone();
+					myChild.Parent = this;
+					myChild.SetKey(this.textKey + "." + sourceChild.DisplayName, null);
+					Children.Add(myChild);
+				}
+				myChild.MergeChildrenRecursive(sourceChild);
 			}
 		}
 

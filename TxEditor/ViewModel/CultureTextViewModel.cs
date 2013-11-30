@@ -350,6 +350,26 @@ namespace TxEditor.ViewModel
 		}
 
 		/// <summary>
+		/// Copies all contents from another CultureTextViewModel instance to this one, merging all
+		/// data.
+		/// </summary>
+		/// <param name="other"></param>
+		public void MergeFrom(CultureTextViewModel other)
+		{
+			if (!string.IsNullOrEmpty(other.Text))
+			{
+				// Overwrite text AND quantified texts IF set
+				this.Text = other.Text;
+
+				this.QuantifiedTextVMs.Clear();
+				foreach (QuantifiedTextViewModel qtVM in this.QuantifiedTextVMs)
+				{
+					this.QuantifiedTextVMs.Add(qtVM.Clone(this));
+				}
+			}
+		}
+
+		/// <summary>
 		/// Compares this CultureTextViewModel instance with another instance to determine the sort
 		/// order in the editor view.
 		/// </summary>
