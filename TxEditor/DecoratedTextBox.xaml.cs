@@ -446,7 +446,7 @@ namespace TxEditor
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
-								if (width != double.NaN)
+								if (!double.IsNaN(width))
 								{
 									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
 									tb.Width = width + 20;
@@ -475,7 +475,7 @@ namespace TxEditor
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
-								if (width != double.NaN)
+								if (!double.IsNaN(width))
 								{
 									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
 									tb.Width = width + 20;
@@ -496,7 +496,7 @@ namespace TxEditor
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
-								if (width != double.NaN)
+								if (!double.IsNaN(width))
 								{
 									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
 									tb.Width = width + 20;
