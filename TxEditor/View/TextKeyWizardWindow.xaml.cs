@@ -29,9 +29,10 @@ namespace TxEditor.View
 
 		#region Private data
 
-		private string exactMatchTextKey;
+		private string exactMatchTextKey;   // TODO: remove
 		private string initialText;
-		private int keySuggestPhase;
+		private int keySuggestPhase;   // TODO: remove?
+		private List<SuggestionViewModel> suggestions = new List<SuggestionViewModel>();
 
 		#endregion Private data
 
@@ -54,6 +55,13 @@ namespace TxEditor.View
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			if (MainWindowViewModel.Instance.LoadedCultureNames.Count == 0)
+			{
+				MessageBox.Show("No culture added to the dictionary.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+				Close();
+				return;
+			}
+
 			TranslationText.HiddenChars = App.Settings.ShowHiddenChars;
 			TranslationText.FontSize = MainWindowViewModel.Instance.FontSize;
 			if (App.Settings.MonospaceFont)
@@ -63,57 +71,18 @@ namespace TxEditor.View
 			}
 			TextOptions.SetTextFormattingMode(TranslationText, MainWindowViewModel.Instance.TextFormattingMode);
 
-			string str = null;
-			int retryCount = 20;
-			while (true)
+			initialText = ReadClipboard();
+			if (initialText == null)
 			{
-				try
-				{
-					str = Clipboard.GetText();
-					break;
-				}
-				catch (COMException ex)
-				{
-					retryCount--;
-					if (retryCount > 0)
-					{
-						System.Threading.Thread.Sleep(50);
-						continue;
-					}
-					else
-					{
-						MessageBox.Show("Error reading the clipboard.\n\n" + ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-						Close();
-						return;
-					}
-				}
-			}
-			if (retryCount < 20)
-			{
-				MessageBox.Show("Tried reading the clipboard " + (20 - retryCount) + " times!");
-			}
-			
-			Match m = Regex.Match(str, @"^""(.*)""$");
-			if (m.Success)
-			{
-				TranslationText.Text = m.Groups[1].Value
-					.Replace("\\n", "\n")
-					.Replace("\\r", "")
-					.Replace("\\t", "    ")
-					.Replace("\\\"", "\"")
-					.Replace("\\\\", "\\");
-			}
-			else
-			{
-				TranslationText.Text = str;
-			}
-			initialText = TranslationText.Text;
-
-			if (MainWindowViewModel.Instance.LoadedCultureNames.Count > 0)
-			{
-				ScanAllTexts(MainWindowViewModel.Instance.RootTextKey);
+				Close();
+				return;
 			}
 
+			ResetButton_Click(null, null);
+
+			suggestions.Clear();
+			ScanAllTexts(MainWindowViewModel.Instance.RootTextKey);
+	
 			if (exactMatchTextKey != null)
 			{
 				TextKeyText.Text = exactMatchTextKey;
@@ -266,6 +235,11 @@ namespace TxEditor.View
 			Close();
 		}
 
+		private void ResetButton_Click(object sender, RoutedEventArgs e)
+		{
+			TranslationText.Text = initialText;
+		}
+
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
 		{
 			DialogResult = false;
@@ -275,6 +249,50 @@ namespace TxEditor.View
 		#endregion Control event handlers
 
 		#region Support functions
+
+		private string ReadClipboard()
+		{
+			string str = null;
+			int retryCount = 20;
+			while (true)
+			{
+				try
+				{
+					str = Clipboard.GetText();
+					break;
+				}
+				catch (COMException ex)
+				{
+					retryCount--;
+					if (retryCount > 0)
+					{
+						System.Threading.Thread.Sleep(50);
+						continue;
+					}
+					else
+					{
+						MessageBox.Show("Error reading the clipboard.\n\n" + ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+						return null;
+					}
+				}
+			}
+			if (retryCount < 20)
+			{
+				MessageBox.Show("Tried reading the clipboard " + (20 - retryCount) + " times!");
+			}
+
+			Match m = Regex.Match(str, @"^""(.*)""$");
+			if (m.Success)
+			{
+				str = m.Groups[1].Value
+					.Replace("\\n", "\n")
+					.Replace("\\r", "")
+					.Replace("\\t", "    ")
+					.Replace("\\\"", "\"")
+					.Replace("\\\\", "\\");
+			}
+			return str;
+		}
 
 		private void ScanAllTexts(TextKeyViewModel tk)
 		{

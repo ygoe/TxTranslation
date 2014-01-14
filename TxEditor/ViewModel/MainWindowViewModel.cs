@@ -884,7 +884,9 @@ namespace TxEditor.ViewModel
 			ClearReadonlyFiles();
 			var dlg = new OpenFileDialog();
 			dlg.CheckFileExists = true;
-			dlg.Filter = "Tx dictionary files (*.txd)|*.txd|XML files (*.xml)|*.xml|All files (*.*)|*.*";
+			dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" +
+				Tx.T("file filter.xml files") + " (*.xml)|*.xml|" +
+				Tx.T("file filter.all files") + " (*.*)|*.*";
 			dlg.Multiselect = true;
 			dlg.ShowReadOnly = false;
 			dlg.Title = Tx.T("msg.load file.title");
@@ -959,7 +961,9 @@ namespace TxEditor.ViewModel
 				dlg.AddExtension = true;
 				dlg.CheckPathExists = true;
 				dlg.DefaultExt = ".txd";
-				dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" + Tx.T("file filter.xml files") + " (*.xml)|*.xml|" + Tx.T("file filter.all files") + " (*.*)|*.*";
+				dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" +
+					Tx.T("file filter.xml files") + " (*.xml)|*.xml|" +
+					Tx.T("file filter.all files") + " (*.*)|*.*";
 				dlg.OverwritePrompt = true;
 				dlg.Title = Tx.T("msg.save.title");
 				if (dlg.ShowDialog(MainWindow.Instance) == true)
@@ -1178,9 +1182,9 @@ namespace TxEditor.ViewModel
 		{
 			var win = new TextKeyWindow();
 			win.Owner = MainWindow.Instance;
-			win.Title = "Add new text key";
-			win.CaptionLabel.Text = "Enter the new text key to add:";
-			win.OKButton.Content = "Add text key";
+			win.Title = Tx.T("window.text key.create.title");
+			win.CaptionLabel.Text = Tx.T("window.text key.create.caption");
+			win.OKButton.Content = Tx.T("window.text key.create.accept button");
 
 			var selKey = MainWindow.Instance.TextKeysTreeView.LastSelectedItem as TextKeyViewModel;
 			if (selKey != null)
@@ -1200,7 +1204,7 @@ namespace TxEditor.ViewModel
 				catch (NonNamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1209,7 +1213,7 @@ namespace TxEditor.ViewModel
 				catch (NamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1240,7 +1244,7 @@ namespace TxEditor.ViewModel
 				}
 				else
 				{
-					StatusText = Tx.T("statusbar.text key added");
+					StatusText = Tx.T("statusbar.text key created");
 				}
 
 				if (tk.CultureTextVMs.Count > 0)
@@ -1504,7 +1508,7 @@ namespace TxEditor.ViewModel
 			catch (NonNamespaceExistsException)
 			{
 				MessageBox.Show(
-					"You cannot create the namespace text key '" + keyName + "' because the root key already exists as regular key.",
+					Tx.T("msg.cannot create namespace key", "key", Tx.Q(keyName)),
 					Tx.T("msg.caption.error"),
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning);
@@ -1513,7 +1517,7 @@ namespace TxEditor.ViewModel
 			catch (NamespaceExistsException)
 			{
 				MessageBox.Show(
-					"You cannot create the text key '" + keyName + "' because the root key already exists as namespace.",
+					Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(keyName)),
 					Tx.T("msg.caption.error"),
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning);
@@ -1565,10 +1569,10 @@ namespace TxEditor.ViewModel
 
 			var win = new TextKeyWindow();
 			win.Owner = MainWindow.Instance;
-			win.Title = "Rename text key";
-			win.CaptionLabel.Text = "Enter the new name of the selected text key:";
+			win.Title = Tx.T("window.text key.rename.title");
+			win.CaptionLabel.Text = Tx.T("window.text key.rename.caption");
 			win.TextKey = selKey.TextKey;
-			win.OKButton.Content = "Rename";
+			win.OKButton.Content = Tx.T("window.text key.rename.accept button");
 			win.RenameSelectMode = true;
 
 			if (selKey.Children.Count > 0)
@@ -1614,7 +1618,7 @@ namespace TxEditor.ViewModel
 				catch (NonNamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1623,7 +1627,7 @@ namespace TxEditor.ViewModel
 				catch (NamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1774,10 +1778,10 @@ namespace TxEditor.ViewModel
 
 			var win = new TextKeyWindow();
 			win.Owner = MainWindow.Instance;
-			win.Title = "Duplicate text key";
-			win.CaptionLabel.Text = "Enter the new name of the selected text key:";
+			win.Title = Tx.T("window.text key.duplicate.title");
+			win.CaptionLabel.Text = Tx.T("window.text key.duplicate.caption");
 			win.TextKey = selKey.TextKey;
-			win.OKButton.Content = "Duplicate";
+			win.OKButton.Content = Tx.T("window.text key.duplicate.accept button");
 			win.RenameSelectMode = true;
 
 			if (selKey.Children.Count > 0)
@@ -1822,7 +1826,7 @@ namespace TxEditor.ViewModel
 				catch (NonNamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the namespace text key '" + newKey + "' because the root key already exists as regular key.",
+						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1831,7 +1835,7 @@ namespace TxEditor.ViewModel
 				catch (NamespaceExistsException)
 				{
 					MessageBox.Show(
-						"You cannot create the text key '" + newKey + "' because the root key already exists as namespace.",
+						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);

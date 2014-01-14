@@ -678,7 +678,7 @@
 					
 					<TextBlock FontSize="16" Margin="12,10,12,12" Text="{Binding SuggestionsCultureCaption, Mode=OneWay}"/>
 
-					<ScrollViewer Grid.Row="1">
+					<ScrollViewer Grid.Row="1" Focusable="False">
 						<ItemsControl ItemsSource="{Binding Suggestions}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>

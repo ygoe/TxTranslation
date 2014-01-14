@@ -4,6 +4,8 @@
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="msg.cannot create namespace key">Sie können den Namensraum-Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als normaler Schlüssel existiert.</text>
+		<text key="msg.cannot create non-namespace key">Sie können den Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als Namensraum existiert.</text>
 		<text key="msg.cannot write to read-only file">Die Datei, in die gespeichert werden soll, ist als schreibgeschützt markiert.
 
 Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
@@ -52,9 +54,9 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.n text keys deleted" count="1">Textschlüssel gelöscht.</text>
 		<text key="statusbar.new dictionary created">Neues Wörterbuch erstellt.</text>
 		<text key="statusbar.primary culture set">Hauptkultur auf {name} gesetzt.</text>
-		<text key="statusbar.text key added">Neuer Textschlüssel hinzugefügt.</text>
 		<text key="statusbar.text key already exists">Der Textschlüssel existiert bereits und wurde jetzt ausgewählt.</text>
 		<text key="statusbar.text key copied">Textschlüssel in die Zwischenablage kopiert.</text>
+		<text key="statusbar.text key created">Neuer Textschlüssel erstellt.</text>
 		<text key="statusbar.text keys duplicated">{#} Textschlüssel dupliziert.</text>
 		<text key="statusbar.text keys duplicated" count="1">Textschlüssel dupliziert.</text>
 		<text key="statusbar.text keys renamed">{#} Textschlüssel umbenannt.</text>
@@ -119,7 +121,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="toolbar.text key.duplicate.tooltip">Dupliziert den ausgewählten Textschlüssel mit einem neuen Schlüsselnamen.</text>
 		<text key="toolbar.text key.new">Neuer Schlüssel</text>
 		<text key="toolbar.text key.new.hotkey">Strg+N</text>
-		<text key="toolbar.text key.new.tooltip">Fügt dem Wörterbuch einen neuen Textschlüssel hinzu.</text>
+		<text key="toolbar.text key.new.tooltip">Erstellt einen neuen Textschlüssel im Wörterbuch.</text>
 		<text key="toolbar.text key.rename">Umbenennen</text>
 		<text key="toolbar.text key.rename.tooltip">Benennt den ausgewählten Textschlüssel und optional auch all seine Unterschlüssel um.</text>
 		<text key="toolbar.text key.wizard">Assistent</text>
@@ -274,6 +276,15 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="window.settings.view">Ansicht</text>
 		<text key="window.settings.view.character map selection">Auswahl der Zeichentabelle</text>
 		<text key="window.text key.button.cancel">Abbrechen</text>
+		<text key="window.text key.create.accept button">Textschlüssel erstellen</text>
+		<text key="window.text key.create.caption">Geben Sie den neuen Textschlüssel ein:</text>
+		<text key="window.text key.create.title">Neuen Textschlüssel erstellen</text>
+		<text key="window.text key.duplicate.accept button">Duplizieren</text>
+		<text key="window.text key.duplicate.caption">{=window.text key.rename.caption}</text>
+		<text key="window.text key.duplicate.title">Textschlüssel duplizieren</text>
+		<text key="window.text key.rename.accept button">Umbenennen</text>
+		<text key="window.text key.rename.caption">Geben Sie den neuen Namen des ausgewählten Textschlüssels an:</text>
+		<text key="window.text key.rename.title">Textschlüssel umbenennen</text>
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
@@ -289,6 +300,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
+		<text key="msg.cannot create namespace key">You cannot create the namespace text key {key} because the root key already exists as regular key.</text>
+		<text key="msg.cannot create non-namespace key">You cannot create the text key {key} because the root key already exists as namespace.</text>
 		<text key="msg.cannot write to read-only file">The file you are trying to save to is marked read-only.
 
 Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>
@@ -337,9 +350,9 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.n text keys deleted" count="1">Text key deleted.</text>
 		<text key="statusbar.new dictionary created">New dictionary created.</text>
 		<text key="statusbar.primary culture set">Primary culture set to {name}.</text>
-		<text key="statusbar.text key added">New text key added.</text>
 		<text key="statusbar.text key already exists">The text key already exists and is now selected.</text>
 		<text key="statusbar.text key copied">Text key copied to the clipboard.</text>
+		<text key="statusbar.text key created">New text key created.</text>
 		<text key="statusbar.text keys duplicated">{#} text keys duplicated.</text>
 		<text key="statusbar.text keys duplicated" count="1">Text key duplicated.</text>
 		<text key="statusbar.text keys renamed">{#} text keys renamed.</text>
@@ -404,7 +417,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="toolbar.text key.duplicate.tooltip">Duplicates the selected text key to a new key name.</text>
 		<text key="toolbar.text key.new">New key</text>
 		<text key="toolbar.text key.new.hotkey">Ctrl+N</text>
-		<text key="toolbar.text key.new.tooltip">Adds a new text key to the dictionary.</text>
+		<text key="toolbar.text key.new.tooltip">Creates a new text key in the dictionary.</text>
 		<text key="toolbar.text key.rename">Rename</text>
 		<text key="toolbar.text key.rename.tooltip">Renames the selected text key and optionally all its subkeys.</text>
 		<text key="toolbar.text key.wizard">Wizard</text>
@@ -566,6 +579,15 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="window.settings.view">View</text>
 		<text key="window.settings.view.character map selection">Character map selection</text>
 		<text key="window.text key.button.cancel">Cancel</text>
+		<text key="window.text key.create.accept button">Create text key</text>
+		<text key="window.text key.create.caption">Enter the new text key to create:</text>
+		<text key="window.text key.create.title">Create new text key</text>
+		<text key="window.text key.duplicate.accept button">Duplicate</text>
+		<text key="window.text key.duplicate.caption">{=window.text key.rename.caption}</text>
+		<text key="window.text key.duplicate.title">Duplicate text key</text>
+		<text key="window.text key.rename.accept button">Rename</text>
+		<text key="window.text key.rename.caption">Enter the new name of the selected text key:</text>
+		<text key="window.text key.rename.title">Rename text key</text>
 	</culture>
 	<culture name="en-AU">
 		<text key="Tx:time.am">am</text>
