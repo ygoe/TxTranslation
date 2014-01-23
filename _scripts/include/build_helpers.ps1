@@ -483,6 +483,12 @@ function Do-Sign-File($file, $keyFile, $password, $progressAfter)
 		WaitError "signtool binary not found"
 		exit 1
 	}
+	
+	# Check if the password is to be found in a separate file
+	if ($password.StartsWith("@"))
+	{
+		$password = gc ("$sourcePath\" + $password.SubString(1))
+	}
 
 	& $signtoolBin sign /f "$sourcePath\$keyFile" /p "$password" /t http://timestamp.verisign.com/scripts/timstamp.dll "$sourcePath\$file"
 	if (-not $?)
