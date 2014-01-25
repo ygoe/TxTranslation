@@ -199,6 +199,18 @@ namespace TxEditor.ViewModel
 			return "{TextKeyViewModel " + textKey + "}";
 		}
 
+		protected override void OnIsSelectedChanged()
+		{
+			if (IsSelected)
+			{
+				// Refresh the sort order of all quantified texts when selecting the key
+				foreach (var ct in CultureTextVMs)
+				{
+					ct.RefreshQuantifiedOrder();
+				}
+			}
+		}
+
 		/// <summary>
 		/// Returns a value indicating whether any data was entered for this text key.
 		/// </summary>

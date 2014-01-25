@@ -322,13 +322,18 @@ namespace TxEditor.ViewModel
 
 		private void OnRefresh()
 		{
+			RefreshQuantifiedOrder();
+			ViewCommandManager.InvokeLoaded("FocusText");
+		}
+
+		public void RefreshQuantifiedOrder()
+		{
 			var arr = QuantifiedTextVMs.ToArray();
 			QuantifiedTextVMs.Clear();
 			foreach (var item in arr)
 			{
 				QuantifiedTextVMs.InsertSorted(item, (a, b) => QuantifiedTextViewModel.Compare(a, b));
 			}
-			ViewCommandManager.InvokeLoaded("FocusText");
 		}
 
 		#endregion Command handlers
