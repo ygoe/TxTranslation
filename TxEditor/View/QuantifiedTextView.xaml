@@ -68,7 +68,7 @@
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
 			TextKeyReferences="{Binding TextKeyReferences, Mode=OneWayToSource}"
-			PlaceholderText="Enter text"
+			PlaceholderText="{Tx:T 'msg.enter text', Default='Enter text'}"
 			HiddenChars="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
 			FontSize="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontSize}"
 			FontFamily="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.MonospaceFont, Converter={StaticResource monospaceFontConverter}}"

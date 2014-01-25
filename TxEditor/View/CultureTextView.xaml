@@ -101,7 +101,7 @@
 			Text="{Binding Text, Mode=TwoWay}"
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
 			TextKeyReferences="{Binding TextKeyReferences, Mode=OneWayToSource}"
-			PlaceholderText="Enter text"
+			PlaceholderText="{Tx:T 'msg.enter text', Default='Enter text'}"
 			HiddenChars="{Binding TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
 			SearchText="{Binding TextKeyVM.MainWindowVM.SearchText}"
 			FontSize="{Binding TextKeyVM.MainWindowVM.FontSize}"

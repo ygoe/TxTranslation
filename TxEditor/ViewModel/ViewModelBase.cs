@@ -128,6 +128,7 @@ namespace TxEditor.ViewModel
 			}
 			else if (more > 0)
 			{
+				// I18N - TODO: Is this method used at all?
 				dict["zzz"] = "(" + more + " weitere Meldungen werden nicht angezeigt)";
 			}
 			return dict;

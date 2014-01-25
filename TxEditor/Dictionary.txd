@@ -4,8 +4,11 @@
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="msg.cannot copy namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum kopiert werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
 		<text key="msg.cannot create namespace key">Sie können den Namensraum-Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als normaler Schlüssel existiert.</text>
 		<text key="msg.cannot create non-namespace key">Sie können den Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als Namensraum existiert.</text>
+		<text key="msg.cannot move namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum verschoben werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
+		<text key="msg.cannot save unsupported file version">Nicht unterstützte Dateiversion {ver} kann nicht gespeichert werden. Wie wurde diese Datei geladen?</text>
 		<text key="msg.cannot write to read-only file">Die Datei, in die gespeichert werden soll, ist als schreibgeschützt markiert.
 
 Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
@@ -13,8 +16,17 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.caption.warning">Warnung</text>
 		<text key="msg.delete culture">Möchten Sie die Kultur {name} wirklich löschen?</text>
 		<text key="msg.delete culture.title">Kultur löschen</text>
+		<text key="msg.delete text key">Textschlüssel {key} löschen.</text>
+		<text key="msg.delete text key.content">Sind Sie sicher, dass Sie den ausgewählten Textschlüssel mit allen Texten für alle Kulturen löschen möchten? Dieser Vorgang kann nicht rückgängig gemacht werden.</text>
+		<text key="msg.delete text key.multiple">{#} Textschlüssel löschen.</text>
+		<text key="msg.delete text key.multiple.also subkeys">Auch alle Unterschlüssel löschen</text>
+		<text key="msg.delete text key.multiple.content">Sind Sie sicher, dass Sie die ausgewählten Textschlüssel mit allen Texten für alle Kulturen löschen möchten? Dieser Vorgang kann nicht rückgängig gemacht werden.</text>
+		<text key="msg.delete text key.multiple.content mixed">Sie haben vollständige Textschlüssel ausgewählt, die weitere Unterschlüssel enthalten. {=msg.delete text key.multiple.content}</text>
+		<text key="msg.delete text key.multiple.only selected">Nur ausgewählte Schlüssel löschen</text>
+		<text key="msg.enter text">Text hier eingeben</text>
 		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
+		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
 		<text key="msg.load file.title">Dateien zum Laden auswählen</text>
 		<text key="msg.load folder.multiple dictionaries in folder">Es gibt mehrere Wörterbücher im ausgewählten Ordner.</text>
@@ -31,6 +43,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladenen Dateien. Beachten
 		<text key="msg.read-only files loaded" count="1">Die geladene Datei ist als schreibgeschützt markiert. Änderungen können möglicherweise nicht gespeichert werden.
 
 Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
+		<text key="msg.rename text key.exists">Der Textschlüssel {key} existiert bereits.</text>
+		<text key="msg.rename text key.exists.content">Wenn Sie fortfahren, wird der existierende Text und alle Unterschlüssel mit den Angaben des ausgewählten Schlüssels überschrieben. Es wird kein Text gelöscht, wo der ursprüngliche Text nicht angegeben ist.</text>
 		<text key="msg.save.incompatible with format 1">Es wurden Funktionen genutzt, die nicht mit der Dateiformatversion 1 kompatibel sind.</text>
 		<text key="msg.save.incompatible with format 1.desc">Sie sind dabei, das Wörterbuch in der Dateiformatversion 1 zu speichern, haben aber Funktionen genutzt, die von diesem Format nicht unterstützt werden. Wenn Sie trotzdem in diesem Format speichern, gehen Modulo-Angaben verloren und erweiterte Platzhalter funktionieren möglicherweise nicht korrekt.</text>
 		<text key="msg.save.save changes">Möchten Sie die Änderungen am geladenen Wörterbuch speichern?</text>
@@ -67,8 +81,11 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="suggestions.exact match">Genaue Übereinstimmung</text>
 		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
 		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
+		<text key="task dialog.button.delete">&amp;Löschen</text>
 		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
 		<text key="task dialog.button.load">&amp;Laden</text>
+		<text key="task dialog.button.merge">&amp;Zusammenführen</text>
+		<text key="task dialog.button.overwrite">Ü&amp;berschreiben</text>
 		<text key="task dialog.button.save">&amp;Speichern</text>
 		<text key="task dialog.button.save anyway">Trotzdem &amp;speichern</text>
 		<text key="task dialog.button.save in original format">Im ursprünglichen Format &amp;speichern</text>
@@ -266,6 +283,9 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="validation.key name.starts with colon">Schlüssel beginnt mit einem Doppelpunkt (:).</text>
 		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
 		<text key="validation.more">, weitere Fehler</text>
+		<text key="window.load select file.button.cancel">Abbrechen</text>
+		<text key="window.load select file.button.load file">Datei laden</text>
+		<text key="window.load select file.intro">Wählen Sie eine Datei zum Laden aus:</text>
 		<text key="window.new culture.button.add culture">Kultur hinzufügen</text>
 		<text key="window.new culture.button.cancel">Abbrechen</text>
 		<text key="window.new culture.intro">Bitte wählen Sie die hinzuzufügende Kultur aus der Liste aus oder geben Sie ihren Code ein</text>
@@ -285,6 +305,20 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="window.text key.rename.accept button">Umbenennen</text>
 		<text key="window.text key.rename.caption">Geben Sie den neuen Namen des ausgewählten Textschlüssels an:</text>
 		<text key="window.text key.rename.title">Textschlüssel umbenennen</text>
+		<text key="window.title.in path">in</text>
+		<text key="window.wizard.button.cancel">Abbrechen</text>
+		<text key="window.wizard.button.reset">Zurücksetzen</text>
+		<text key="window.wizard.button.save">Text speichern</text>
+		<text key="window.wizard.error reading clipboard">Fehler beim Lesen der Zwischenablage.</text>
+		<text key="window.wizard.include default text">_Default-Text für Entwurfsansicht hinzufügen</text>
+		<text key="window.wizard.no culture added">Es wurde keine Kultur zum Wörterbuch hinzugefügt.</text>
+		<text key="window.wizard.parameters">Parameter:</text>
+		<text key="window.wizard.similar keys">Ähnliche Schlüssel:</text>
+		<text key="window.wizard.source code">Quelltext:</text>
+		<text key="window.wizard.text key">Textschlüssel:</text>
+		<text key="window.wizard.text key exists">Der Textschlüssel {key} existiert bereits.</text>
+		<text key="window.wizard.text key exists.content">Wenn Sie fortfahren, wird der vorhandene Text (in der Hauptkultur) mit dem in diesem Dialog eingegebenen Text überschrieben.</text>
+		<text key="window.wizard.translated text">Übersetzung:</text>
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
@@ -300,8 +334,11 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
+		<text key="msg.cannot copy namespace">A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.</text>
 		<text key="msg.cannot create namespace key">You cannot create the namespace text key {key} because the root key already exists as regular key.</text>
 		<text key="msg.cannot create non-namespace key">You cannot create the text key {key} because the root key already exists as namespace.</text>
+		<text key="msg.cannot move namespace">A namespace cannot be nested or moved to another tree position. Please enter a normal name for the namespace.</text>
+		<text key="msg.cannot save unsupported file version">Unsupported file version {ver} cannot be saved. How was that loaded?</text>
 		<text key="msg.cannot write to read-only file">The file you are trying to save to is marked read-only.
 
 Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>
@@ -309,8 +346,17 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.caption.warning">Warning</text>
 		<text key="msg.delete culture">Are you sure to delete the culture {name}?</text>
 		<text key="msg.delete culture.title">Delete culture</text>
+		<text key="msg.delete text key">Deleting text key {key}.</text>
+		<text key="msg.delete text key.content">Are you sure to delete the selected text key with the texts of all cultures? This cannot be undone.</text>
+		<text key="msg.delete text key.multiple">Deleting {#} text keys.</text>
+		<text key="msg.delete text key.multiple.also subkeys">Also delete all subkeys</text>
+		<text key="msg.delete text key.multiple.content">Are you sure to delete the selected text keys with the texts of all cultures? This cannot be undone.</text>
+		<text key="msg.delete text key.multiple.content mixed">You have selected full text keys that also contain other subkeys. {=msg.delete text key.multiple.content}</text>
+		<text key="msg.delete text key.multiple.only selected">Only delete selected keys</text>
+		<text key="msg.enter text">Enter text here</text>
 		<text key="msg.incomplete key selected">Incomplete text key selected</text>
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
+		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
 		<text key="msg.load file.title">Select files to load</text>
 		<text key="msg.load folder.multiple dictionaries in folder">There are multiple dictionaries in the selected folder.</text>
@@ -327,6 +373,8 @@ Please check the access rights on the loaded files. Also consider version contro
 		<text key="msg.read-only files loaded" count="1">The file that you have loaded is marked read-only. It may not be possible to save the changes you make.
 
 Please check the access rights on the loaded file. Also consider version control systems that may first need to check out the file.</text>
+		<text key="msg.rename text key.exists">The text key {key} already exists.</text>
+		<text key="msg.rename text key.exists.content">If you continue, the existing text and all subkeys will be overwritten with data from the selected key. No text will be deleted where the source has no data set.</text>
 		<text key="msg.save.incompatible with format 1">Incompatible features used for file format version 1.</text>
 		<text key="msg.save.incompatible with format 1.desc">You are about to save the dictionary in a format 1 file but have used features that are not supported by this format. If you save in this format anyway, modulo specifications will be lost and advanced placeholders may not work at runtime.</text>
 		<text key="msg.save.save changes">Would you like to save the changes to the loaded dictionary?</text>
@@ -363,8 +411,11 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="suggestions.exact match">Exact match</text>
 		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
 		<text key="task dialog.button.cancel">&amp;Cancel</text>
+		<text key="task dialog.button.delete">&amp;Delete</text>
 		<text key="task dialog.button.dont save">Do&amp;n’t save</text>
 		<text key="task dialog.button.load">&amp;Load</text>
+		<text key="task dialog.button.merge">&amp;Merge</text>
+		<text key="task dialog.button.overwrite">&amp;Overwrite</text>
 		<text key="task dialog.button.save">&amp;Save</text>
 		<text key="task dialog.button.save anyway">&amp;Save anyway</text>
 		<text key="task dialog.button.save in original format">&amp;Save in original format</text>
@@ -569,6 +620,9 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="validation.key name.starts with colon">Key starts with a colon (:).</text>
 		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
 		<text key="validation.more">, more errors</text>
+		<text key="window.load select file.button.cancel">Cancel</text>
+		<text key="window.load select file.button.load file">Load file</text>
+		<text key="window.load select file.intro">Select a file to load:</text>
 		<text key="window.new culture.button.add culture">Add culture</text>
 		<text key="window.new culture.button.cancel">Cancel</text>
 		<text key="window.new culture.intro">Please select the culture to add from the list, or type its code</text>
@@ -588,6 +642,20 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="window.text key.rename.accept button">Rename</text>
 		<text key="window.text key.rename.caption">Enter the new name of the selected text key:</text>
 		<text key="window.text key.rename.title">Rename text key</text>
+		<text key="window.title.in path">in</text>
+		<text key="window.wizard.button.cancel">Cancel</text>
+		<text key="window.wizard.button.reset">Reset</text>
+		<text key="window.wizard.button.save">Save text</text>
+		<text key="window.wizard.error reading clipboard">Error reading the clipboard.</text>
+		<text key="window.wizard.include default text">Include _default text for design time</text>
+		<text key="window.wizard.no culture added">No culture added to the dictionary.</text>
+		<text key="window.wizard.parameters">Parameters:</text>
+		<text key="window.wizard.similar keys">Similar keys:</text>
+		<text key="window.wizard.source code">Source code:</text>
+		<text key="window.wizard.text key">Text key:</text>
+		<text key="window.wizard.text key exists">The text key {key} already exists.</text>
+		<text key="window.wizard.text key exists.content">If you continue, the existing text (in the primary culture) will be overwritten with the text entered in this dialog.</text>
+		<text key="window.wizard.translated text">Translation:</text>
 	</culture>
 	<culture name="en-AU">
 		<text key="Tx:time.am">am</text>

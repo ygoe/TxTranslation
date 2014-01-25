@@ -134,6 +134,7 @@
 						ExtendedToolTipText="{Tx:T 'toolbar.culture.delete.tooltip'}"
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
+					<!-- I18N -->
 					<u:IconButton
 						x:Name="CultureToolsButton"
 						Content="Tools▾" IconSource="/Images/globe_config.png"
@@ -350,6 +351,7 @@
 							</Style>
 						</u:IconToggleButton.Style>
 					</u:IconToggleButton>
+					<!-- I18N -->
 					<u:IconButton
 						Content="Cultures" IconSource="/Images/globe_filter.png"
 						ExtendedToolTipText="Temporarily hides unused cultures from the editor fields."

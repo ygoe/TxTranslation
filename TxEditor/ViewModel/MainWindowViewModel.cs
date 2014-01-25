@@ -1297,9 +1297,9 @@ namespace TxEditor.ViewModel
 					owner: MainWindow.Instance,
 					allowDialogCancellation: true,
 					title: "TxEditor",
-					mainInstruction: "Deleting text key " + Tx.Q(lastCountedTextKey) + ".",
-					content: "Are you sure to delete the selected text key with the texts of all cultures? This cannot be undone.",
-					customButtons: new string[] { "Delete", "Cancel" });
+					mainInstruction: Tx.T("msg.delete text key", "key", Tx.Q(lastCountedTextKey)),
+					content: Tx.T("msg.delete text key.content"),
+					customButtons: new string[] { Tx.T("task dialog.button.delete"), Tx.T("task dialog.button.cancel") });
 			}
 			else if (onlyFullKeysSelected && selectedTextKeys.Count < count)
 			{
@@ -1307,10 +1307,10 @@ namespace TxEditor.ViewModel
 					owner: MainWindow.Instance,
 					allowDialogCancellation: true,
 					title: "TxEditor",
-					mainInstruction: "Deleting " + count + " text keys.",
-					content: "You have selected full text keys that also contain other subkeys. Are you sure to delete the selected text keys with the texts of all cultures? This cannot be undone.",
-					radioButtons: new string[] { "Also delete all subkeys", "Only delete selected keys" },
-					customButtons: new string[] { "Delete", "Cancel" });
+					mainInstruction: Tx.T("msg.delete text key.multiple", count),
+					content: Tx.T("msg.delete text key.multiple.content mixed"),
+					radioButtons: new string[] { Tx.T("msg.delete text key.multiple.also subkeys"), Tx.T("msg.delete text key.multiple.only selected") },
+					customButtons: new string[] { Tx.T("task dialog.button.delete"), Tx.T("task dialog.button.cancel") });
 				selectedOnlyOption = result.RadioButtonResult == 1;
 			}
 			else
@@ -1319,9 +1319,9 @@ namespace TxEditor.ViewModel
 					owner: MainWindow.Instance,
 					allowDialogCancellation: true,
 					title: "TxEditor",
-					mainInstruction: "Deleting " + count + " text keys.",
-					content: "Are you sure to delete the selected text keys with the texts of all cultures? This cannot be undone.",
-					customButtons: new string[] { "Delete", "Cancel" });
+					mainInstruction: Tx.T("msg.delete text key.multiple", count),
+					content: Tx.T("msg.delete text key.multiple.content"),
+					customButtons: new string[] { Tx.T("task dialog.button.delete"), Tx.T("task dialog.button.cancel") });
 			}
 			if (result.CustomButtonResult == 0)
 			{
@@ -1600,7 +1600,7 @@ namespace TxEditor.ViewModel
 				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
 					MessageBox.Show(
-						"A namespace cannot be nested or moved to another tree position. Please enter a normal name for the namespace.",
+						Tx.T("msg.cannot move namespace"),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1645,9 +1645,9 @@ namespace TxEditor.ViewModel
 						owner: MainWindow.Instance,
 						allowDialogCancellation: true,
 						title: "TxEditor",
-						mainInstruction: "The text key " + Tx.Q(newKey) + " already exists.",
-						content: "If you continue, the existing text and all subkeys will be overwritten with data from the selected key. No text will be deleted where the source has no data set.",
-						customButtons: new string[] { "&Merge", "Cancel" });
+						mainInstruction: Tx.T("msg.rename text key.exists", "key", Tx.Q(newKey)),
+						content: Tx.T("msg.rename text key.exists.content"),
+						customButtons: new string[] { Tx.T("task dialog.button.merge"), Tx.T("task dialog.button.cancel") });
 					if (result.CustomButtonResult != 0)
 					{
 						return;
@@ -1810,7 +1810,7 @@ namespace TxEditor.ViewModel
 				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
 					MessageBox.Show(
-						"A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.",
+						Tx.T("msg.cannot copy namespace"),
 						Tx.T("msg.caption.error"),
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
@@ -1853,9 +1853,9 @@ namespace TxEditor.ViewModel
 						owner: MainWindow.Instance,
 						allowDialogCancellation: true,
 						title: "TxEditor",
-						mainInstruction: "The text key " + Tx.Q(newKey) + " already exists.",
-						content: "If you continue, the existing text and all subkeys will be overwritten with data from the selected key. No text will be deleted where the source has no data set.",
-						customButtons: new string[] { "&Merge", "Cancel" });
+						mainInstruction: Tx.T("msg.rename text key.exists", "key", Tx.Q(newKey)),
+						content: Tx.T("msg.rename text key.exists.content"),
+						customButtons: new string[] { Tx.T("task dialog.button.merge"), Tx.T("task dialog.button.cancel") });
 					if (result.CustomButtonResult != 0)
 					{
 						return;
@@ -2537,7 +2537,11 @@ namespace TxEditor.ViewModel
 			}
 			else
 			{
-				MessageBox.Show("Unsupported file version " + fileVersion + " cannot be saved. How was that loaded?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show(
+					Tx.T("msg.cannot save unsupported file version", "ver", fileVersion.ToString()),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Error);
 				return false;
 			}
 			FileModified = false;
@@ -2797,7 +2801,7 @@ namespace TxEditor.ViewModel
 					loadedFilePrefix +
 					(fileModified ? "*" : "") +
 					(fileVersion == 1 ? " (v1)" : "") +
-					" in " + loadedFilePath + " – TxEditor";
+					" " + Tx.T("window.title.in path") + " " + loadedFilePath + " – TxEditor";
 			}
 			else
 			{

@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using TxEditor.ViewModel;
 using Unclassified.UI;
+using TxLib;
 
 namespace TxEditor.View
 {
@@ -57,8 +58,8 @@ namespace TxEditor.View
 			if (!TextKeyViewModel.ValidateName(TextKey, out errorMessage))
 			{
 				MessageBox.Show(
-					"Invalid text key entered: " + errorMessage,
-					"Input error",
+					Tx.T("msg.invalid text key entered", "msg", errorMessage),
+					Tx.T("msg.caption.error"),
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning);
 				return;

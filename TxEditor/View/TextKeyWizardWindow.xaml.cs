@@ -59,7 +59,11 @@ namespace TxEditor.View
 		{
 			if (MainWindowViewModel.Instance.LoadedCultureNames.Count == 0)
 			{
-				MessageBox.Show("No culture added to the dictionary.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show(
+					Tx.T("window.wizard.no culture added"),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
 				Close();
 				return;
 			}
@@ -188,8 +192,8 @@ namespace TxEditor.View
 			if (!TextKeyViewModel.ValidateName(textKey, out errorMessage))
 			{
 				MessageBox.Show(
-					"Invalid text key entered: " + errorMessage,
-					"Input error",
+					Tx.T("msg.invalid text key entered", "msg", errorMessage),
+					Tx.T("msg.caption.error"),
 					MessageBoxButton.OK,
 					MessageBoxImage.Warning);
 				return;
@@ -202,9 +206,9 @@ namespace TxEditor.View
 					owner: this,
 					allowDialogCancellation: true,
 					title: "TxEditor",
-					mainInstruction: "The text key " + Tx.Q(textKey) + " already exists.",
-					content: "If you continue, the existing text (in the primary culture) will be overwritten with the text entered in this dialog.",
-					customButtons: new string[] { "&Overwrite", "Cancel" });
+					mainInstruction: Tx.T("window.wizard.text key exists", "key", Tx.Q(textKey)),
+					content: Tx.T("window.wizard.text key exists.content"),
+					customButtons: new string[] { Tx.T("task dialog.button.overwrite"), Tx.T("task dialog.button.cancel") });
 				if (result.CustomButtonResult != 0)
 				{
 					return;
@@ -446,6 +450,7 @@ namespace TxEditor.View
 
 					TextBox nameText = new TextBox();
 					nameText.Text = pd.Name;
+					nameText.SelectAll();
 					nameText.Margin = new Thickness(0, row > 0 ? 4 : 0, 0, 0);
 					nameText.LostFocus += (s, e2) => { UpdatePlaceholderName(localPd, nameText.Text); };
 					ParametersGrid.Children.Add(nameText);
@@ -465,6 +470,8 @@ namespace TxEditor.View
 					quotedCheck.IsChecked = pd.IsQuoted;
 					quotedCheck.Margin = new Thickness(4, row > 0 ? 4 : 0, 0, 0);
 					quotedCheck.VerticalAlignment = VerticalAlignment.Center;
+					quotedCheck.Checked += (s, e2) => { localPd.IsQuoted = true; };
+					quotedCheck.Unchecked += (s, e2) => { localPd.IsQuoted = false; };
 					ParametersGrid.Children.Add(quotedCheck);
 					Grid.SetRow(quotedCheck, row);
 					Grid.SetColumn(quotedCheck, 2);
@@ -505,16 +512,26 @@ namespace TxEditor.View
 					}
 					else
 					{
-						MessageBox.Show("Error reading the clipboard.\n\n" + ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+						// TODO: Log exception
+						MessageBox.Show(
+							Tx.T("window.wizard.error reading clipboard"),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
 						return null;
 					}
 				}
 			}
+#if DEBUG
 			if (retryCount < 20)
 			{
-				// TODO: Debug message
-				MessageBox.Show("Tried reading the clipboard " + (20 - retryCount) + " times!");
+				MessageBox.Show(
+					"Tried reading the clipboard " + (20 - retryCount) + " times!",
+					Tx.T("msg.caption.warning"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
 			}
+#endif
 			return str;
 		}
 

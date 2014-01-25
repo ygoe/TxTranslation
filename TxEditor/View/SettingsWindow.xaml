@@ -21,6 +21,7 @@
 		<u:NegationConverter x:Key="NegationConverter"/>
 	</Window.Resources>
 
+	<!-- I18N -->
 	<TabControl Margin="10">
 		<TabItem Header="{Tx:T 'window.settings.view', Default='View'}">
 			<Grid Margin="4">

@@ -6,6 +6,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
+	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
 	mc:Ignorable="d" 
 	d:DesignHeight="403" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -17,6 +18,7 @@
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
 	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
+	
 	<Window.Resources>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</Window.Resources>
@@ -47,7 +49,7 @@
 			<TextBlock
 				Grid.Row="0" Grid.Column="0"
 				VerticalAlignment="Center"
-				Text="Source code:"/>
+				Text="{Tx:T 'window.wizard.source code', Default='Source code:'}"/>
 			<ComboBox
 				Name="SourceCodeCombobox"
 				Grid.Row="0" Grid.Column="1"
@@ -58,7 +60,7 @@
 				Name="OtherKeysLabel"
 				Grid.Row="1" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="Similar keys:"/>
+				Text="{Tx:T 'window.wizard.similar keys', Default='Similar keys:'}"/>
 			<ListBox
 				Name="OtherKeysList"
 				Grid.Row="1" Grid.Column="1"
@@ -67,7 +69,7 @@
 			<TextBlock
 				Grid.Row="2" Grid.Column="0"
 				Margin="0,4,0,0" VerticalAlignment="Center"
-				Text="Text key:"/>
+				Text="{Tx:T 'window.wizard.text key', Default='Text key:'}"/>
 			<TextBox
 				Name="TextKeyText"
 				Grid.Row="2" Grid.Column="1"
@@ -78,13 +80,13 @@
 			<TextBlock
 				Grid.Row="3" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="Translated text:"/>
+				Text="{Tx:T 'window.wizard.translated text', Default='Translated text:'}"/>
 			<my:DecoratedTextBox
 				x:Name="TranslationText"
 				Grid.Row="3" Grid.Column="1"
 				MaxHeight="500"
 				InnerBorderThickness="1" InnerPadding="1" Margin="8,4,0,0"
-				PlaceholderText="Enter text"
+				PlaceholderText="{Tx:T 'msg.enter text', Default='Enter text'}"
 				ValidateKey="DecoratedTextBox_ValidateKey"/>
 			
 			<CheckBox
@@ -92,13 +94,13 @@
 				Grid.Row="4" Grid.Column="1"
 				Margin="8,4,0,0" HorizontalAlignment="Left"
 				IsChecked="True"
-				Content="Include _default text for design time"/>
+				Content="{Tx:T 'window.wizard.include default text', Default='Include _default text for design time'}"/>
 
 			<TextBlock
 				x:Name="ParametersLabel"
 				Grid.Row="5" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="Parameters:"/>
+				Text="{Tx:T 'window.wizard.parameters', Default='Parameters:'}"/>
 			<Grid
 				x:Name="ParametersGrid"
 				Grid.Row="5" Grid.Column="1"
@@ -121,9 +123,21 @@
 		<StackPanel
 			Grid.Row="1"
 			Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
-			<Button Name="OKButton" Padding="12,1" MinWidth="75" Content="Save text" Click="OKButton_Click" IsDefault="True"/>
-			<Button Margin="8,0,0,0" Padding="12,1" MinWidth="75" Content="Reset" Click="ResetButton_Click"/>
-			<Button Margin="8,0,0,0" Padding="12,1" MinWidth="75" Content="Cancel" Click="CancelButton_Click" IsCancel="True"/>
+			<Button
+				Name="OKButton"
+				Padding="12,1" MinWidth="75"
+				IsDefault="True"
+				Content="{Tx:T 'window.wizard.button.save', Default='Save text'}"
+				Click="OKButton_Click"/>
+			<Button
+				Margin="8,0,0,0" Padding="12,1" MinWidth="75"
+				Content="{Tx:T 'window.wizard.button.reset', Default='Reset'}"
+				Click="ResetButton_Click"/>
+			<Button
+				Margin="8,0,0,0" Padding="12,1" MinWidth="75"
+				IsCancel="True"
+				Content="{Tx:T 'window.wizard.button.cancel', Default='Cancel'}"
+				Click="CancelButton_Click"/>
 		</StackPanel>
 	</Grid>
 </Window>
