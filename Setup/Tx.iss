@@ -32,6 +32,8 @@ ChangesAssociations=yes
 DefaultDirName={pf}\Unclassified\TxTranslation
 AllowUNCPath=False
 DefaultGroupName=TxTranslation
+DisableDirPage=auto
+DisableProgramGroupPage=auto
 
 WizardImageFile=TxFlag.bmp
 WizardImageBackColor=$ffffff
@@ -79,10 +81,14 @@ de.FinishedLabel=Die Anwendung kann über die installierte Startmenü-Verknüpfung 
 de.ClickFinish=Klicken Sie auf Fertigstellen, um das Setup zu beenden.
 
 [CustomMessages]
-Task_VSTool=Register as External Tool in Visual Studio
+Upgrade=&Upgrade
+UpdatedHeadingLabel=%n%n%n%nTxTranslation was upgraded.
+Task_VSTool=Register as External Tool in Visual Studio (2010/2012/2013)
 NgenMessage=Optimising application performance (this may take a moment)
 
-de.Task_VSTool=In Visual Studio als Externes Tool eintragen
+de.Upgrade=&Aktualisieren
+de.UpdatedHeadingLabel=%n%n%n%nTxTranslation wurde aktualisiert.
+de.Task_VSTool=In Visual Studio (2010/2012/2013) als Externes Tool eintragen
 de.NgenMessage=Anwendungs-Performance optimieren (kann einen Moment dauern)
 
 [Tasks]
@@ -136,6 +142,17 @@ Type: dirifempty; Name: "{userappdata}\Unclassified\TxTranslation"
 Type: dirifempty; Name: "{userappdata}\Unclassified"
 
 [Code]
+function IsUpgrade: Boolean;
+var
+	Value: string;
+	UninstallKey: string;
+begin
+	UninstallKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\' +
+		ExpandConstant('{#SetupSetting("AppId")}') + '_is1';
+	Result := (RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Value) or
+		RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value)) and (Value <> '');
+end;
+
 function InitializeSetup(): boolean;
 begin
 	//init windows version
@@ -246,6 +263,7 @@ begin
 	begin
 		RegisterVSTool('10.0');
 		RegisterVSTool('11.0');
+		RegisterVSTool('12.0');
 	end;
 end;
 
@@ -255,5 +273,23 @@ begin
 	begin
 		UnregisterVSTool('10.0');
 		UnregisterVSTool('11.0');
+		UnregisterVSTool('12.0');
+	end;
+end;
+
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+	Result := ((PageID = wpSelectTasks) or (PageID = wpReady)) and IsUpgrade;
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+	if CurPageID = wpWelcome then
+	begin
+		if IsUpgrade then
+		begin
+			WizardForm.NextButton.Caption := ExpandConstant('{cm:Upgrade}');
+			WizardForm.FinishedHeadingLabel.Caption := ExpandConstant('{cm:UpdatedHeadingLabel}');
+		end;
 	end;
 end;
