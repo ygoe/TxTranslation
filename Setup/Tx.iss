@@ -102,9 +102,11 @@ Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignor
 Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-; TxLib assembly and source code
-Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
-Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+; TxLib assembly
+Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+
+; TxLib source code
 Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
@@ -127,6 +129,8 @@ Root: HKCR; Subkey: "Applications\TxEditor.exe\shell\open\command"; ValueType: s
 [Icons]
 Name: "{group}\TxEditor"; Filename: "{app}\TxEditor.exe"; IconFilename: "{app}\TxEditor.exe"
 Name: "{group}\Tx Documentation"; Filename: "{app}\Tx Documentation.pdf"
+Name: "{group}\TxLib website"; Filename: "http://dev.unclassified.de/source/txlib"
+Name: "{group}\TxLib assembly"; Filename: "{app}\TxLib assembly\"
 Name: "{group}\TxLib source code"; Filename: "{app}\TxLib source code\"
 
 [Run]
