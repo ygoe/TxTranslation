@@ -37,6 +37,7 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
@@ -92,6 +93,22 @@
 				Margin="8,4,0,0" HorizontalAlignment="Left"
 				IsChecked="True"
 				Content="Include _default text for design time"/>
+
+			<TextBlock
+				x:Name="ParametersLabel"
+				Grid.Row="5" Grid.Column="0"
+				Margin="0,7,0,0" VerticalAlignment="Top"
+				Text="Parameters:"/>
+			<Grid
+				x:Name="ParametersGrid"
+				Grid.Row="5" Grid.Column="1"
+				Margin="8,4,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+			</Grid>
 		</Grid>
 
 		<Rectangle
