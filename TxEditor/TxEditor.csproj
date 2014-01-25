@@ -413,11 +413,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)\_tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
+    <PreBuildEvent>if not defined FASTBUILD "$(SolutionDir)\_tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)\_tools\GitRevisionTool.exe" -si "$(ProjectDir)"
-
+    <PostBuildEvent>if not defined FASTBUILD "$(SolutionDir)\_tools\GitRevisionTool.exe" -si "$(ProjectDir)"
 "$(SolutionDir)\_tools\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)\Images\TxDocument.ico";"$(ProjectDir)\Images\Tx.ico"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
