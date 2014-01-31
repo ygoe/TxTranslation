@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:u="clr-namespace:Unclassified.UI">
+	xmlns:ui="clr-namespace:Unclassified.UI">
 
 	<Style x:Key="StatusGridStyle" TargetType="Grid">
 		<Setter Property="Background">
@@ -10,12 +10,12 @@
 					<LinearGradientBrush.GradientStops>
 						<GradientStop Offset="0">
 							<GradientStop.Color>
-								<u:ColorMath Key="{x:Static SystemColors.ControlColorKey}" Lighten="0.3"/>
+								<ui:ColorMath Key="{x:Static SystemColors.ControlColorKey}" Lighten="0.3"/>
 							</GradientStop.Color>
 						</GradientStop>
 						<GradientStop Offset="1">
 							<GradientStop.Color>
-								<u:ColorMath Key="{x:Static SystemColors.ControlColorKey}" Darken="0.05"/>
+								<ui:ColorMath Key="{x:Static SystemColors.ControlColorKey}" Darken="0.05"/>
 							</GradientStop.Color>
 						</GradientStop>
 					</LinearGradientBrush.GradientStops>
@@ -53,7 +53,7 @@
 
 	<SolidColorBrush x:Key="StatusGridShadowBrush">
 		<SolidColorBrush.Color>
-			<u:ColorMath Key="{x:Static SystemColors.ControlDarkColorKey}" Lighten="0.2"/>
+			<ui:ColorMath Key="{x:Static SystemColors.ControlDarkColorKey}" Lighten="0.2"/>
 		</SolidColorBrush.Color>
 	</SolidColorBrush>
 

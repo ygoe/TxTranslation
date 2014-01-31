@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
 using TxEditor;
+using Unclassified;
 
 namespace TxEditor.ViewModel
 {

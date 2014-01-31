@@ -7,6 +7,7 @@
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
+	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d" 
 	d:DesignHeight="403" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -75,7 +76,7 @@
 				Grid.Row="2" Grid.Column="1"
 				Margin="8,4,0,0"
 				TextChanged="TextKeyText_TextChanged"
-				my:Extensions.DisableInsertKey="True"/>
+				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
 
 			<TextBlock
 				Grid.Row="3" Grid.Column="0"

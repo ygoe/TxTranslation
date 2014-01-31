@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Input;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Unclassified.UI
 {
 	/// <summary>
-	/// Provides an <see cref="ICommand"/> implementation which relays the <see cref="Execute"/> and <see cref="CanExecute"/> 
+	/// Provides an <see cref="ICommand"/> implementation which relays the <see cref="Execute"/> and <see cref="CanExecute"/>
 	/// method to the specified delegates.
 	/// </summary>
 	public class DelegateCommand : ICommand
@@ -27,7 +27,7 @@ namespace Unclassified.UI
 				return disabledCommand;
 			}
 		}
-		
+
 		private readonly Action<object> execute;
 		private readonly Func<object, bool> canExecute;
 		private List<WeakReference> weakHandlers;
@@ -38,14 +38,20 @@ namespace Unclassified.UI
 		/// </summary>
 		/// <param name="execute">Delegate to execute when Execute is called on the command.</param>
 		/// <exception cref="ArgumentNullException">The execute argument must not be null.</exception>
-		public DelegateCommand(Action execute) : this(execute, null) { }
+		public DelegateCommand(Action execute)
+			: this(execute, null)
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DelegateCommand"/> class.
 		/// </summary>
 		/// <param name="execute">Delegate to execute when Execute is called on the command.</param>
 		/// <exception cref="ArgumentNullException">The execute argument must not be null.</exception>
-		public DelegateCommand(Action<object> execute) : this(execute, null) { }
+		public DelegateCommand(Action<object> execute)
+			: this(execute, null)
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DelegateCommand"/> class.
@@ -54,8 +60,9 @@ namespace Unclassified.UI
 		/// <param name="canExecute">Delegate to execute when CanExecute is called on the command.</param>
 		/// <exception cref="ArgumentNullException">The execute argument must not be null.</exception>
 		public DelegateCommand(Action execute, Func<bool> canExecute)
-			: this(execute != null ? p => execute() : (Action<object>)null, canExecute != null ? p => canExecute() : (Func<object, bool>)null)
-		{ }
+			: this(execute != null ? p => execute() : (Action<object>) null, canExecute != null ? p => canExecute() : (Func<object, bool>) null)
+		{
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DelegateCommand"/> class.
@@ -163,6 +170,26 @@ namespace Unclassified.UI
 			OnCanExecuteChanged(EventArgs.Empty);
 		}
 
+		private bool raiseCanExecuteChangedPending;
+
+		/// <summary>
+		/// Raises the <see cref="E:CanExecuteChanged"/> event after all other processing has
+		/// finished. Multiple calls to this function before the asynchronous action has been
+		/// started are ignored.
+		/// </summary>
+		[DebuggerStepThrough]
+		public void RaiseCanExecuteChangedAsync()
+		{
+			if (!raiseCanExecuteChangedPending)
+			{
+				Dispatcher.CurrentDispatcher.BeginInvoke(
+					(Action<EventArgs>) OnCanExecuteChanged,
+					DispatcherPriority.Loaded,
+					EventArgs.Empty);
+				raiseCanExecuteChangedPending = true;
+			}
+		}
+
 		/// <summary>
 		/// Raises the <see cref="E:CanExecuteChanged"/> event.
 		/// </summary>
@@ -170,9 +197,24 @@ namespace Unclassified.UI
 		[DebuggerStepThrough]
 		protected virtual void OnCanExecuteChanged(EventArgs e)
 		{
-			PurgeWeakHandlers();
+			//var field = execute.Target.GetType().GetField("execute");
+			//Action a = null;
+			//if (field != null)
+			//{
+			//    a = field.GetValue(execute.Target) as Action;
+			//}
+			//if (a != null)
+			//    PerfLog.Enter("DelegateCommand.OnCanExecuteChanged()", a.Method.Name + "() on " + a.Target.ToString());
+			//else
+			//    PerfLog.Enter("DelegateCommand.OnCanExecuteChanged()", "(unknown)");
 
-			if (weakHandlers == null) { return; }
+			raiseCanExecuteChangedPending = false;
+			PurgeWeakHandlers();
+			if (weakHandlers == null)
+			{
+				//PerfLog.Leave("DelegateCommand.OnCanExecuteChanged()", "no active handlers");
+				return;
+			}
 
 			WeakReference[] handlers = weakHandlers.ToArray();
 			foreach (WeakReference reference in handlers)

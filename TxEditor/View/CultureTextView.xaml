@@ -6,7 +6,7 @@
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
-	xmlns:u="clr-namespace:Unclassified.UI" 
+	xmlns:ui="clr-namespace:Unclassified.UI" 
 	xmlns:v="clr-namespace:TxEditor.View" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
@@ -14,7 +14,7 @@
 	Focusable="False"
 	IsKeyboardFocusWithinChanged="UserControl_IsKeyboardFocusWithinChanged">
 	<UserControl.Resources>
-		<u:ComparerConverter x:Key="CmpConv"/>
+		<ui:ComparerConverter x:Key="CmpConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
 	<UserControl.InputBindings>

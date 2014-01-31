@@ -8,6 +8,7 @@ using TxLib;
 using System.Windows.Media;
 using Unclassified.UI;
 using System.Collections.Specialized;
+using Unclassified;
 
 namespace TxEditor.ViewModel
 {

@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
-	xmlns:u="clr-namespace:Unclassified.UI"
+	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d" 
 	Height="340" Width="450"
 	ResizeMode="NoResize"
@@ -32,7 +32,7 @@
 				Grid.Row="0"
 				Text="{Tx:T 'window.load select file.intro', Default='Select a file to load:'}"/>
 			
-			<u:ProgressSpinner
+			<ui:ProgressSpinner
 				Grid.Row="0" Grid.RowSpan="2"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Top"

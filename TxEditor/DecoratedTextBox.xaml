@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:my="clr-namespace:TxEditor"
+	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d"
 	Name="root"
 	d:DesignHeight="150" d:DesignWidth="358">
@@ -31,7 +32,7 @@
 			AcceptsReturn="True" TextWrapping="Wrap"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
 			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"
-			my:Extensions.DisableInsertKey="True"/>
+			ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
 		<Border
 			Name="TextBoxExtraBorderCompensation">
 			<Border.Style>

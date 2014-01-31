@@ -6,13 +6,13 @@
 	xmlns:c="clr-namespace:TxEditor.Converters"
 	xmlns:my="clr-namespace:TxEditor"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
-	xmlns:u="clr-namespace:Unclassified.UI"
+	xmlns:ui="clr-namespace:Unclassified.UI"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d" 
 	d:DesignHeight="66" d:DesignWidth="412"
 	Focusable="False">
 	<UserControl.Resources>
-		<u:EmptyIntegerConverter x:Key="EmptyIntConv"/>
+		<ui:EmptyIntegerConverter x:Key="EmptyIntConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
 	<UserControl.InputBindings>
@@ -44,7 +44,7 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Count, Converter={StaticResource EmptyIntConv}, ConverterParameter=-1}"
-				my:Extensions.DisableInsertKey="True"/>
+				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<TextBlock
@@ -58,7 +58,7 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"
-				my:Extensions.DisableInsertKey="True"/>
+				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<my:DecoratedTextBox

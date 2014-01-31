@@ -14,23 +14,23 @@ namespace Unclassified
 	/// <code>
 	/// // Variable to keep track of the instance. This is not required for normal operation.
 	/// private DelayedCall dc = null;
-	/// 
+	///
 	/// private void button1_Click(object sender, EventArgs e)
 	/// {
 	///     // Change button text in 2 seconds
 	///     dc = DelayedCall&lt;string&gt;.Start(SetButtonText, "I was clicked", 2000);
 	/// }
-	/// 
+	///
 	/// private void SetButtonText(string newText)
 	/// {
 	///     button1.Text = newText;
 	/// }
-	/// 
+	///
 	/// private void HurryUpButton_Click(object sender, EventArgs e)
 	/// {
 	///     // Invoke SetButtonText now, if the timeout isn't elapsed yet
 	///     if (dc != null) dc.Fire();
-	/// 
+	///
 	///     // Prepare a DelayedCall object for later use
 	///     DelayedCall exitDelay = DelayedCall.Create(Application.Exit, 0);
 	///     // Now start the timeout with 0.5 seconds
@@ -43,7 +43,10 @@ namespace Unclassified
 		// This class maintains compatibility with an older version of the DelayedCall class.
 		// See the "Compatibility code" regions for details. To remove the compatibility code,
 		// you just need to remove these regions.
-		
+
+		/// <summary>
+		/// Represents a callback method.
+		/// </summary>
 		public delegate void Callback();
 
 		/// <summary>
@@ -51,12 +54,34 @@ namespace Unclassified
 		/// </summary>
 		protected static List<DelayedCall> dcList = new List<DelayedCall>();
 
-		private bool disposed;
-		protected System.Timers.Timer timer;
-		protected object timerLock;
-		private Callback callback;
-		protected bool cancelled;
+		/// <summary>
+		/// Indicates whether the instance has been disposed.
+		/// </summary>
+		private bool isDisposed;
 
+		/// <summary>
+		/// Timer instance.
+		/// </summary>
+		protected System.Timers.Timer timer;
+
+		/// <summary>
+		/// Lock object for the timer instance.
+		/// </summary>
+		protected object timerLock;
+
+		/// <summary>
+		/// Callback method.
+		/// </summary>
+		private Callback callback;
+
+		/// <summary>
+		/// Indicates whether the delayed call has been cancelled.
+		/// </summary>
+		protected bool isCancelled;
+
+		/// <summary>
+		/// Synchronisation context to invoke the callback method in.
+		/// </summary>
 		protected SynchronizationContext context;
 		// More information on the SynchronizationContext thing: http://www.codeproject.com/cs/threads/SyncContextTutorial.asp
 
@@ -69,9 +94,14 @@ namespace Unclassified
 		}
 
 		#region Compatibility code
+
 		private DelayedCall<object>.Callback oldCallback = null;
 		private object oldData = null;
 
+		/// <summary>
+		/// Obsolete constructor.
+		/// </summary>
+		/// <param name="cb"></param>
 		[Obsolete("Use the static method DelayedCall.Create instead.")]
 		public DelayedCall(Callback cb)
 			: this()
@@ -80,6 +110,11 @@ namespace Unclassified
 			callback = cb;
 		}
 
+		/// <summary>
+		/// Obsolete constructor.
+		/// </summary>
+		/// <param name="cb"></param>
+		/// <param name="data"></param>
 		[Obsolete("Use the static method DelayedCall.Create instead.")]
 		public DelayedCall(DelayedCall<object>.Callback cb, object data)
 			: this()
@@ -89,6 +124,11 @@ namespace Unclassified
 			oldData = data;
 		}
 
+		/// <summary>
+		/// Obsolete constructor.
+		/// </summary>
+		/// <param name="cb"></param>
+		/// <param name="milliseconds"></param>
 		[Obsolete("Use the static method DelayedCall.Start instead.")]
 		public DelayedCall(Callback cb, int milliseconds)
 			: this()
@@ -98,6 +138,12 @@ namespace Unclassified
 			if (milliseconds > 0) Start();
 		}
 
+		/// <summary>
+		/// Obsolete constructor.
+		/// </summary>
+		/// <param name="cb"></param>
+		/// <param name="milliseconds"></param>
+		/// <param name="data"></param>
 		[Obsolete("Use the static method DelayedCall.Start instead.")]
 		public DelayedCall(DelayedCall<object>.Callback cb, int milliseconds, object data)
 			: this()
@@ -108,6 +154,10 @@ namespace Unclassified
 			if (milliseconds > 0) Start();
 		}
 
+		/// <summary>
+		/// Obsolete method.
+		/// </summary>
+		/// <param name="data"></param>
 		[Obsolete("Use the method Restart of the generic class instead.")]
 		public void Reset(object data)
 		{
@@ -116,6 +166,11 @@ namespace Unclassified
 			Start();
 		}
 
+		/// <summary>
+		/// Obsolete method.
+		/// </summary>
+		/// <param name="milliseconds"></param>
+		/// <param name="data"></param>
 		[Obsolete("Use the method Restart of the generic class instead.")]
 		public void Reset(int milliseconds, object data)
 		{
@@ -124,12 +179,17 @@ namespace Unclassified
 			Reset(milliseconds);
 		}
 
+		/// <summary>
+		/// Obsolete method.
+		/// </summary>
+		/// <param name="milliseconds"></param>
 		[Obsolete("Use the method Restart instead.")]
 		public void SetTimeout(int milliseconds)
 		{
 			Reset(milliseconds);
 		}
-		#endregion
+
+		#endregion Compatibility code
 
 		/// <summary>
 		/// Frees all resources of this instance.
@@ -145,14 +205,14 @@ namespace Unclassified
 		/// </summary>
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!disposed)
+			if (!isDisposed)
 			{
 				if (disposing)
 				{
 					Cancel();
 					timer.Dispose();
 				}
-				disposed = true;
+				isDisposed = true;
 			}
 		}
 
@@ -220,13 +280,19 @@ namespace Unclassified
 			return dc;
 		}
 
+		/// <summary>
+		/// Prepares the DelayedCall instance.
+		/// </summary>
+		/// <param name="dc"></param>
+		/// <param name="milliseconds"></param>
+		/// <param name="async"></param>
 		protected static void PrepareDCObject(DelayedCall dc, int milliseconds, bool async)
 		{
 			if (milliseconds < 0)
 			{
 				throw new ArgumentOutOfRangeException("milliseconds", "The new timeout must be 0 or greater.");
 			}
-			
+
 			// Get the current synchronization context if required, with dummy fallback
 			dc.context = null;
 			if (!async)
@@ -236,15 +302,19 @@ namespace Unclassified
 					throw new InvalidOperationException("Cannot delay calls synchronously on a non-UI thread. Use the *Async methods instead.");
 			}
 			if (dc.context == null) dc.context = new SynchronizationContext();   // Run asynchronously silently
-			
+
 			dc.timer = new System.Timers.Timer();
 			if (milliseconds > 0) dc.timer.Interval = milliseconds;
 			dc.timer.AutoReset = false;
 			dc.timer.Elapsed += dc.Timer_Elapsed;
-			
+
 			Register(dc);
 		}
 
+		/// <summary>
+		/// Registers the DelayedCall instance in the static list.
+		/// </summary>
+		/// <param name="dc"></param>
 		protected static void Register(DelayedCall dc)
 		{
 			lock (dcList)
@@ -255,6 +325,10 @@ namespace Unclassified
 			}
 		}
 
+		/// <summary>
+		/// Unregisters the DelayedCall instance in the static list.
+		/// </summary>
+		/// <param name="dc"></param>
 		protected static void Unregister(DelayedCall dc)
 		{
 			lock (dcList)
@@ -340,6 +414,11 @@ namespace Unclassified
 			}
 		}
 
+		/// <summary>
+		/// Called when the Timer has elapsed.
+		/// </summary>
+		/// <param name="o"></param>
+		/// <param name="e"></param>
 		protected virtual void Timer_Elapsed(object o, System.Timers.ElapsedEventArgs e)
 		{
 			// We're in the timer thread now.
@@ -355,7 +434,7 @@ namespace Unclassified
 		{
 			lock (timerLock)
 			{
-				cancelled = false;
+				isCancelled = false;
 				timer.Start();
 				Register(this);
 			}
@@ -368,7 +447,7 @@ namespace Unclassified
 		{
 			lock (timerLock)
 			{
-				cancelled = true;
+				isCancelled = true;
 				Unregister(this);
 				timer.Stop();
 			}
@@ -383,7 +462,7 @@ namespace Unclassified
 			{
 				lock (timerLock)
 				{
-					return timer.Enabled && !cancelled;
+					return timer.Enabled && !isCancelled;
 				}
 			}
 		}
@@ -415,11 +494,14 @@ namespace Unclassified
 		/// </remarks>
 		public void FireNow()
 		{
-			cancelled = false;
+			isCancelled = false;
 			OnFire();
 			Unregister(this);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected virtual void OnFire()
 		{
 			// We're in the timer thread now, if invoked through the timer.
@@ -437,20 +519,23 @@ namespace Unclassified
 					// target thread. So, checking the cancelled variable here leads to a more current
 					// and definitive decision (the target thread cannot call Cancel() between this
 					// check and the real invocation of the callback method.)
-					if (cancelled) return;
-					
+					if (isCancelled) return;
+
 					// Remember that we're now executing this event. If the caller calls
 					// Application.DoEvents inside this callback function, this timer event is
 					// triggered another time although it's currently being processed already. By
 					// setting cancelled to true, we won't pass the above test the second time we
 					// arrive here.
-					cancelled = true;
+					isCancelled = true;
 				}
 
 				if (callback != null) callback();
+
 				#region Compatibility code
+
 				if (oldCallback != null) oldCallback(oldData);
-				#endregion
+
+				#endregion Compatibility code
 			}, null);
 		}
 
@@ -529,6 +614,10 @@ namespace Unclassified
 	/// </summary>
 	public class DelayedCall<T> : DelayedCall
 	{
+		/// <summary>
+		/// Represents a callback method that accepts one argument.
+		/// </summary>
+		/// <param name="data"></param>
 		public new delegate void Callback(T data);
 
 		private Callback callback;
@@ -594,6 +683,9 @@ namespace Unclassified
 			return dc;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected override void OnFire()
 		{
 			context.Post(delegate
@@ -601,7 +693,7 @@ namespace Unclassified
 				lock (timerLock)
 				{
 					// Only fire the callback if the timer wasn't cancelled in this very moment
-					if (cancelled) return;
+					if (isCancelled) return;
 				}
 
 				if (callback != null) callback(data);
@@ -630,6 +722,11 @@ namespace Unclassified
 	/// </summary>
 	public class DelayedCall<T1, T2> : DelayedCall
 	{
+		/// <summary>
+		/// Represents a callback method that accepts 2 arguments.
+		/// </summary>
+		/// <param name="data1"></param>
+		/// <param name="data2"></param>
 		public new delegate void Callback(T1 data1, T2 data2);
 
 		private Callback callback;
@@ -702,6 +799,9 @@ namespace Unclassified
 			return dc;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected override void OnFire()
 		{
 			context.Post(delegate
@@ -709,7 +809,7 @@ namespace Unclassified
 				lock (timerLock)
 				{
 					// Only fire the callback if the timer wasn't cancelled in this very moment
-					if (cancelled) return;
+					if (isCancelled) return;
 				}
 
 				if (callback != null) callback(data1, data2);
@@ -740,6 +840,12 @@ namespace Unclassified
 	/// </summary>
 	public class DelayedCall<T1, T2, T3> : DelayedCall
 	{
+		/// <summary>
+		/// Represents a callback method that accepts 3 arguments.
+		/// </summary>
+		/// <param name="data1"></param>
+		/// <param name="data2"></param>
+		/// <param name="data3"></param>
 		public new delegate void Callback(T1 data1, T2 data2, T3 data3);
 
 		private Callback callback;
@@ -819,6 +925,9 @@ namespace Unclassified
 			return dc;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected override void OnFire()
 		{
 			context.Post(delegate
@@ -826,7 +935,7 @@ namespace Unclassified
 				lock (timerLock)
 				{
 					// Only fire the callback if the timer wasn't cancelled in this very moment
-					if (cancelled) return;
+					if (isCancelled) return;
 				}
 
 				if (callback != null) callback(data1, data2, data3);

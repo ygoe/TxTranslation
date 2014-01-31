@@ -5,11 +5,6 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
-/*
-TODO: Post the following comment at http://stackoverflow.com/a/8325206/143684 after publishing this code (include a link)
-Based on this suggestion, I've implemented my own ViewCommandManager that handles invoking commands in connected views. It's basically the other direction of regular Commands, for these cases when a ViewModel needs to do some action in its View. It uses reflection like data-bound commands and WeakReferences to avoid memory leaks.
-*/
-
 namespace Unclassified.UI
 {
 	/// <summary>
@@ -94,10 +89,32 @@ namespace Unclassified.UI
 					var method = view.GetType().GetMethod(commandName, BindingFlags.Instance | BindingFlags.Public);
 					if (method != null)
 					{
-						var attr = method.GetCustomAttributes(typeof(ViewCommandAttribute), false);
-						if (attr != null)
+						object[] attrs = method.GetCustomAttributes(typeof(ViewCommandAttribute), false);
+						if (attrs != null && attrs.Length > 0)
 						{
-							method.Invoke(view, args);
+							var attr = attrs[0] as ViewCommandAttribute;
+							if (attr.CommandName == null || attr.CommandName == commandName)
+							{
+								method.Invoke(view, args);
+							}
+						}
+					}
+					else
+					{
+						// Method not found by name, search by ViewCommand attribute
+						var methods = view.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public);
+						foreach (var method2 in methods)
+						{
+							object[] attrs = method2.GetCustomAttributes(typeof(ViewCommandAttribute), false);
+							if (attrs != null && attrs.Length > 0)
+							{
+								var attr = attrs[0] as ViewCommandAttribute;
+								if (attr.CommandName == commandName)
+								{
+									method2.Invoke(view, args);
+									continue;
+								}
+							}
 						}
 					}
 				}
@@ -147,5 +164,24 @@ namespace Unclassified.UI
 	[AttributeUsage(AttributeTargets.Method)]
 	public class ViewCommandAttribute : Attribute
 	{
+		/// <summary>
+		/// Gets the command name.
+		/// </summary>
+		public string CommandName { get; private set; }
+
+		/// <summary>
+		/// Initialises a new instance of the ViewCommandAttribute class.
+		/// </summary>
+		public ViewCommandAttribute()
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the ViewCommandAttribute class.
+		/// </summary>
+		public ViewCommandAttribute(string commandName)
+		{
+			CommandName = commandName;
+		}
 	}
 }

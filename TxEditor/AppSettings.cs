@@ -6,7 +6,7 @@ namespace TxEditor
 	/// <summary>
 	/// Provides properties to access the application settings.
 	/// </summary>
-	public class AppSettings : Settings, INotifyPropertyChanged
+	public class AppSettings : SettingsStore, INotifyPropertyChanged
 	{
 		#region Constructors
 

@@ -82,11 +82,14 @@
     <Compile Include="Unclassified\CommandLineParser.cs" />
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />
+    <Compile Include="Unclassified\ListExtensions.cs" />
     <Compile Include="Unclassified\MyEnvironment.cs" />
     <Compile Include="Unclassified\NaturalSort.cs" />
     <Compile Include="Unclassified\ObservableHashSet.cs" />
     <Compile Include="Unclassified\OpLock.cs" />
+    <Compile Include="Unclassified\PropertyExtensions.cs" />
     <Compile Include="Unclassified\Settings.cs" />
+    <Compile Include="Unclassified\StringExtensions.cs" />
     <Compile Include="Unclassified\TaskHelper.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
     <Compile Include="Unclassified\HotKey.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
+    <Compile Include="Unclassified\UI\WpfTextBoxExtensions.cs" />
     <Compile Include="Unclassified\UI\WpfWindowExtensions.cs" />
     <Compile Include="Unclassified\ULog.cs" />
     <Compile Include="Unclassified\UnicodeInfo.cs" />

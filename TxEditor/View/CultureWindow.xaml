@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="clr-namespace:TxLib;assembly=TxLib"
-	xmlns:my="clr-namespace:TxEditor"
+	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d" 
 	d:DesignHeight="340" d:DesignWidth="500"
 	ResizeMode="NoResize"
@@ -34,7 +34,7 @@
 			Grid.Column="1"
 			Margin="8,0,0,0" Width="50" HorizontalAlignment="Left"
 			TextChanged="CodeText_TextChanged"
-			my:Extensions.DisableInsertKey="True"/>
+			ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
 		
 		<ListBox
 			Name="CulturesList"
