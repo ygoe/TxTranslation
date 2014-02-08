@@ -85,11 +85,13 @@ Upgrade=&Upgrade
 UpdatedHeadingLabel=%n%n%n%nTxTranslation was upgraded.
 Task_VSTool=Register as External Tool in Visual Studio (2010/2012/2013)
 NgenMessage=Optimising application performance (this may take a moment)
+DowngradeUninstall=You are trying to install an older version than is currently installed on the system. The newer version must first be uninstalled. Would you like to do that now?
 
 de.Upgrade=&Aktualisieren
 de.UpdatedHeadingLabel=%n%n%n%nTxTranslation wurde aktualisiert.
 de.Task_VSTool=In Visual Studio (2010/2012/2013) als Externes Tool eintragen
 de.NgenMessage=Anwendungs-Performance optimieren (kann einen Moment dauern)
+de.DowngradeUninstall=Sie versuchen, eine ältere Version zu installieren, als bereits im System installiert ist. Die neuere Version muss zuerst deinstalliert werden. Möchten Sie das jetzt tun?
 
 [Tasks]
 Name: VSTool; Description: "{cm:Task_VSTool}"
@@ -157,18 +159,65 @@ begin
 		RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value)) and (Value <> '');
 end;
 
-function InitializeSetup(): boolean;
+function GetQuietUninstallString: String;
+var
+	Value: string;
+	UninstallKey: string;
 begin
-	//init windows version
-	initwinversion();
+	UninstallKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\' +
+		ExpandConstant('{#SetupSetting("AppId")}') + '_is1';
+	if not RegQueryStringValue(HKLM, UninstallKey, 'QuietUninstallString', Value) then
+		RegQueryStringValue(HKCU, UninstallKey, 'QuietUninstallString', Value);
+	Result := Value;
+end;
 
-	msi31('3.1');
+function GetInstalledVersion: String;
+var
+	Value: string;
+	UninstallKey: string;
+begin
+	UninstallKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\' +
+		ExpandConstant('{#SetupSetting("AppId")}') + '_is1';
+	if not RegQueryStringValue(HKLM, UninstallKey, 'DisplayVersion', Value) then
+		RegQueryStringValue(HKCU, UninstallKey, 'DisplayVersion', Value);
+	Result := Value;
+end;
 
-	// if no .netfx 4.0 is found, install the client (smallest)
-	if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
-		dotnetfx40client();
-
+function InitializeSetup(): boolean;
+var
+	ResultCode: Integer;
+begin
 	Result := true;
+
+	// Check for downgrade
+	if IsUpgrade then
+	begin
+		if '{#ShortRevId}' < GetInstalledVersion then
+		begin
+			if MsgBox(ExpandConstant('{cm:DowngradeUninstall}'), mbConfirmation, MB_YESNO) = IDYES then
+			begin
+				Exec('>', GetQuietUninstallString, '', SW_SHOW, ewWaitUntilTerminated, ResultCode);
+			end;
+
+			// Check again
+			if '{#ShortRevId}' < GetInstalledVersion then
+			begin
+				Result := false;
+			end;
+		end;
+	end;
+	
+	if Result then
+	begin
+		//init windows version
+		initwinversion();
+
+		msi31('3.1');
+
+		// if no .netfx 4.0 is found, install the client (smallest)
+		if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
+			dotnetfx40client();
+	end;
 end;
 
 procedure RegRenameStringValue(const RootKey: Integer; const SubKeyName, ValueName, NewValueName: String);
