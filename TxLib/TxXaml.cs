@@ -7,7 +7,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Threading;
 
-namespace TxLib
+namespace Unclassified.TxLib
 {
 	#region Text translation markup extensions
 

@@ -12,12 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TaskDialogInterop;
-using TxEditor.Converters;
-using TxEditor.ViewModel;
-using TxLib;
+using Unclassified.TxEditor.Converters;
+using Unclassified.TxEditor.ViewModel;
+using Unclassified.TxLib;
 using System.Runtime.InteropServices;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class TextKeyWizardWindow : Window
 	{

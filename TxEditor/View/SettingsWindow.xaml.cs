@@ -2,7 +2,7 @@
 using System.Windows;
 using Unclassified.UI;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class SettingsWindow : Window
 	{

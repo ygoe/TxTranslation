@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 
-namespace TxLib
+namespace Unclassified.TxLib
 {
 	/// <summary>
 	/// Provides translation and localisation methods.

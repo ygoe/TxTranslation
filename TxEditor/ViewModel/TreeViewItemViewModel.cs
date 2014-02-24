@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Threading;
 using System.Windows.Data;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class TreeViewItemViewModel : ViewModelBase
 	{

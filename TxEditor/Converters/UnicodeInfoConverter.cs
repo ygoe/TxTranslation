@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using Unclassified;
 
-namespace TxEditor.Converters
+namespace Unclassified.TxEditor.Converters
 {
 	class UnicodeInfoConverter : IValueConverter
 	{

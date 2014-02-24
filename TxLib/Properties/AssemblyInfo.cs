@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows;
+using System.Windows.Markup;
 
 [assembly: AssemblyProduct("TxLib")]
 [assembly: AssemblyTitle("TxLib")]
 [assembly: AssemblyDescription("TxTranslation library")]
 
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("© Yves Goergen")]
+[assembly: AssemblyCopyright("© Yves Goergen, GNU GPL v3")]
+[assembly: AssemblyCompany("unclassified software development")]
 
 // Assembly version, also used for Win32 file version resource.
 // Must be a plain numeric version definition:
@@ -26,3 +26,5 @@ using System.Windows;
 #endif
 
 [assembly: ComVisible(false)]
+
+[assembly: XmlnsDefinition("http://dev.unclassified.de/source/txlib", "Unclassified.TxLib")]

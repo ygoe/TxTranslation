@@ -8,7 +8,7 @@
     <ProjectGuid>{D85C66D9-569E-4C6C-AB9E-2F45CECB02A7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TxEditor</RootNamespace>
+    <RootNamespace>Unclassified.TxEditor</RootNamespace>
     <AssemblyName>TxEditor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>

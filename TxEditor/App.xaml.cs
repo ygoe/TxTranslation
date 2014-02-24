@@ -8,12 +8,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Xml;
-using TxEditor.View;
-using TxEditor.ViewModel;
-using TxLib;
+using Unclassified.TxEditor.View;
+using Unclassified.TxEditor.ViewModel;
+using Unclassified.TxLib;
 using Unclassified;
 
-namespace TxEditor
+namespace Unclassified.TxEditor
 {
 	public partial class App : Application
 	{
@@ -89,7 +89,7 @@ namespace TxEditor
 			try
 			{
 				// Set the XML file's build action to "Embedded Resource" and "Never copy" for this to work.
-				Tx.LoadFromEmbeddedResource("TxEditor.Dictionary.txd");
+				Tx.LoadFromEmbeddedResource("Unclassified.TxEditor.Dictionary.txd");
 			}
 			catch (ArgumentException)
 			{

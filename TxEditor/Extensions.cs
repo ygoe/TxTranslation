@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModel;
 using Unclassified;
 
-namespace TxEditor
+namespace Unclassified.TxEditor
 {
 	/// <summary>
 	/// Provides extension methods for the application.

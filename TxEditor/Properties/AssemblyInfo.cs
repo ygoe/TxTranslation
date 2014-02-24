@@ -6,8 +6,8 @@ using System.Windows;
 [assembly: AssemblyTitle("TxEditor")]
 [assembly: AssemblyDescription("TxTranslation Editor")]
 
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("© Yves Goergen")]
+[assembly: AssemblyCopyright("© Yves Goergen, GNU GPL v3")]
+[assembly: AssemblyCompany("unclassified software development")]
 
 // Assembly version, also used for Win32 file version resource.
 // Must be a plain numeric version definition:

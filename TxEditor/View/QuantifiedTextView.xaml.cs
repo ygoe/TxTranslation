@@ -12,9 +12,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Unclassified.UI;
-using TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModel;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class QuantifiedTextView : UserControl
 	{

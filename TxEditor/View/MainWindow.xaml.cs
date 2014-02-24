@@ -11,11 +11,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModel;
 using Unclassified;
 using Unclassified.UI;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class MainWindow : Window
 	{

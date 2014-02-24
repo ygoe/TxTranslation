@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class DetailsMessageViewModel : ViewModelBase
 	{

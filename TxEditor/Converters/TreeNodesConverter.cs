@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Data;
-using TxEditor.ViewModel;
-using TxLib;
+using Unclassified.TxEditor.ViewModel;
+using Unclassified.TxLib;
 
-namespace TxEditor.Converters
+namespace Unclassified.TxEditor.Converters
 {
 	class TreeNodesConverter : IMultiValueConverter
 	{

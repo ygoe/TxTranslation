@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Unclassified;
 
-namespace TxEditor
+namespace Unclassified.TxEditor
 {
 	/// <summary>
 	/// Provides properties to access the application settings.

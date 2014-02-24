@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace TxEditor
+namespace Unclassified.TxEditor
 {
 	public partial class DecoratedTextBox : UserControl
 	{

@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Unclassified.UI;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class TextKeyView : UserControl
 	{

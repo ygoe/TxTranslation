@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Windows;
-using TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModel;
 using Unclassified.UI;
-using TxLib;
+using Unclassified.TxLib;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class TextKeyWindow : Window
 	{

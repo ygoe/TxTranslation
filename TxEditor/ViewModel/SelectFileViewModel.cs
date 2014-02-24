@@ -9,10 +9,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
-using TxEditor;
+using Unclassified.TxEditor;
 using Unclassified;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class SelectFileViewModel : ViewModelBase
 	{

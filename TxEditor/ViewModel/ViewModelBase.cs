@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	/// <summary>
 	/// Provides common properties and methods supporting view model classes.

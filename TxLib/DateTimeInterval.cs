@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TxLib
+namespace Unclassified.TxLib
 {
 	/// <summary>
 	/// Represents an interval from a starting to an ending date and time.

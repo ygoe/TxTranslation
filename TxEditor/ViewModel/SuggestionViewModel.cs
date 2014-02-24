@@ -6,10 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
-using TxLib;
+using Unclassified.TxLib;
 using Unclassified;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class SuggestionViewModel : ViewModelBase
 	{

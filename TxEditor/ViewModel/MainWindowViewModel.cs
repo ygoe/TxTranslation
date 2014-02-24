@@ -14,12 +14,12 @@ using System.Windows.Media.Effects;
 using System.Xml;
 using Microsoft.Win32;
 using TaskDialogInterop;
-using TxEditor.View;
-using TxLib;
+using Unclassified.TxEditor.View;
+using Unclassified.TxLib;
 using Unclassified;
 using Unclassified.UI;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class MainWindowViewModel : ViewModelBase, IViewCommandSource
 	{

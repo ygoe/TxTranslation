@@ -2,7 +2,7 @@ param($config, $batchMode = "")
 
 . (($MyInvocation.MyCommand.Definition | split-path -parent) + "\build_helpers.ps1")
 
-Begin-BuildScript "TxTranslation" ($batchMode -eq "batch")
+Begin-BuildScript "TxTranslation" "$config" ($batchMode -eq "batch")
 
 # -----------------------------  SCRIPT CONFIGURATION  ----------------------------
 
@@ -14,6 +14,7 @@ $sourcePath = $MyInvocation.MyCommand.Definition | split-path -parent | split-pa
 #
 #$revId = "1.0"
 #$revId = Get-AssemblyInfoVersion "TxTranslation\Properties\AssemblyInfo.cs" "AssemblyInformationalVersion"
+$gitRevisionFormat = "{bmin:2013:4}.{commit:6}{!:+}"
 $revId = Get-GitRevision
 
 # Disable FASTBUILD mode to always include a full version number in the assembly version info.
@@ -24,15 +25,19 @@ $env:FASTBUILD = ""
 
 Write-Host "Application version: $revId"
 
-# -------------------------------  PERFORM ACTIONS  -------------------------------
+# ------------------------------  ACTION DEFINITION  ------------------------------
 
 # ---------- Debug builds ----------
 
-if ($config -eq "all" -or $config.Contains("build-debug"))
+if (IsSelected("build-debug"))
 {
 	Build-Solution "TxTranslation.sln" "Debug" "Mixed Platforms" 6
 
-	if ($config -eq "all" -or $config.Contains("sign-app"))
+	if (IsSelected("sign-lib"))
+	{
+		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "signkey.pfx" "@signkey.password" 1
+	}
+	if (IsSelected("sign-app"))
 	{
 		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "signkey.pfx" "@signkey.password" 1
 	}
@@ -40,11 +45,15 @@ if ($config -eq "all" -or $config.Contains("build-debug"))
 
 # ---------- Release builds ----------
 
-if ($config -eq "all" -or $config.Contains("build-release"))
+if (IsSelected("build-release"))
 {
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
 
-	if ($config -eq "all" -or $config.Contains("sign-app"))
+	if (IsSelected("sign-lib"))
+	{
+		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "signkey.pfx" "@signkey.password" 1
+	}
+	if (IsSelected("sign-app"))
 	{
 		Sign-File "TxEditor\bin\Release\TxEditor.exe" "signkey.pfx" "@signkey.password" 1
 	}
@@ -52,14 +61,21 @@ if ($config -eq "all" -or $config.Contains("build-release"))
 
 # ---------- Release setups ----------
 
-if ($config -eq "all" -or $config.Contains("setup-release"))
+if (IsSelected("setup-release"))
 {
 	Create-Setup "Setup\Tx.iss" Release 1
 
-	if ($config -eq "all" -or $config.Contains("sign-setup"))
+	if (IsSelected("sign-setup"))
 	{
 		Sign-File "Setup\TxSetup-$revId.exe" "signkey.pfx" "@signkey.password" 1
 	}
+}
+
+# ---------- Install release setup ----------
+
+if (IsSelected("install"))
+{
+	Exec-File "Setup\TxSetup-$revId.exe" "/silent" 1
 }
 
 # ---------------------------------------------------------------------------------

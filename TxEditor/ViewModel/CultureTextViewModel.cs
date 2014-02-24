@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using TxLib;
+using Unclassified.TxLib;
 using System.Windows.Media;
 using Unclassified.UI;
 using System.Collections.Specialized;
 using Unclassified;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class CultureTextViewModel : ViewModelBase, IViewCommandSource
 	{

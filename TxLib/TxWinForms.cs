@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace TxLib
+namespace Unclassified.TxLib
 {
 	/// <summary>
 	/// Provides data binding of Windows Forms controls to translated texts.

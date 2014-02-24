@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Unclassified.UI;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class QuantifiedTextViewModel : ViewModelBase, IViewCommandSource
 	{

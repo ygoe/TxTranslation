@@ -8,8 +8,8 @@
     <ProjectGuid>{DC6BA170-806F-4D6E-9165-401DE852E304}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TxLib</RootNamespace>
-    <AssemblyName>TxLib</AssemblyName>
+    <RootNamespace>Unclassified.TxLib</RootNamespace>
+    <AssemblyName>Unclassified.TxLib</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\TxLib.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Unclassified.TxLib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\TxLib.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Unclassified.TxLib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>

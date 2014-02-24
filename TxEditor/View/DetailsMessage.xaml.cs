@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class DetailsMessage : UserControl
 	{

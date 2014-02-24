@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModel;
 using Unclassified.UI;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class SelectFileWindow : Window
 	{

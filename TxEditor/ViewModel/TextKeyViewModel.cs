@@ -6,10 +6,10 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 using Unclassified;
-using TxLib;
+using Unclassified.TxLib;
 using System.Text.RegularExpressions;
 
-namespace TxEditor.ViewModel
+namespace Unclassified.TxEditor.ViewModel
 {
 	class TextKeyViewModel : TreeViewItemViewModel
 	{

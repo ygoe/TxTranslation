@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 
-namespace TxEditor.Converters
+namespace Unclassified.TxEditor.Converters
 {
 	// Source: http://stackoverflow.com/a/5260065/143684
 	public class DoubleGridLengthConverter : IValueConverter

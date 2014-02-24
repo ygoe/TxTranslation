@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace TxEditor.Converters
+namespace Unclassified.TxEditor.Converters
 {
 	class CharacterMapConverter : IValueConverter
 	{

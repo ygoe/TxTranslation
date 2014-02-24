@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using Unclassified;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class AboutWindow : Window
 	{

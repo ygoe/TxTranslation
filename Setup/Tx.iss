@@ -17,7 +17,7 @@
 #include "scripts\products\dotnetfx40full.iss"
 
 [Setup]
-AppCopyright=© Yves Goergen
+AppCopyright=© Yves Goergen, GNU GPL v3
 AppPublisher=Yves Goergen
 AppPublisherURL=http://dev.unclassified.de/source/txlib
 AppName=TxEditor
@@ -102,11 +102,11 @@ Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignorev
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\Unclassified.TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; TxLib assembly
-Source: "..\TxLib\bin\Release\TxLib.dll"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
-Source: "..\TxLib\bin\Release\TxLib.xml"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\Unclassified.TxLib.dll"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+Source: "..\TxLib\bin\Release\Unclassified.TxLib.xml"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
 
 ; TxLib source code
 Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion

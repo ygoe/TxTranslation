@@ -7,10 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using TxLib;
+using Unclassified.TxLib;
 using Unclassified.UI;
 
-namespace TxEditor.View
+namespace Unclassified.TxEditor.View
 {
 	public partial class CultureWindow : Window
 	{
