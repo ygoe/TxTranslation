@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace Unclassified
 {
@@ -77,7 +74,7 @@ namespace Unclassified
 			public HARDWAREINPUT hi;
 		}
 
-		public enum VK: short
+		public enum VK : short
 		{
 			SHIFT = 0x10,
 			CONTROL = 0x11,
@@ -387,16 +384,22 @@ namespace Unclassified
 
 		[DllImport("kernel32")]
 		public static extern int GetCurrentThreadId();
+
 		[DllImport("user32")]
 		public static extern bool AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
+
 		[DllImport("user32.dll")]
 		public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
+
 		[DllImport("user32.dll")]
 		public static extern short VkKeyScan(char ch);
+
 		[DllImport("user32.dll")]
 		public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
 		[DllImport("user32.dll")]
 		public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
 		[DllImport("user32.dll")]
 		public static extern short GetKeyState(VK nVirtKey);
 
@@ -410,6 +413,5 @@ namespace Unclassified
 			int cmd = GET_APPCOMMAND_LPARAM(m.LParam.ToInt32());
 			return (AppCommands) cmd;
 		}
-
 	}
 }

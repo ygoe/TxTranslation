@@ -1,18 +1,18 @@
 ﻿<UserControl
 	x:Class="Unclassified.TxEditor.View.TextKeyView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:ui="clr-namespace:Unclassified.UI"
-	xmlns:v="clr-namespace:Unclassified.TxEditor.View" 
+	xmlns:v="clr-namespace:Unclassified.TxEditor.View"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	mc:Ignorable="d" 
+	mc:Ignorable="d"
 	d:DesignHeight="190" d:DesignWidth="572"
 	Focusable="False">
 	<UserControl.Resources>
 		<ui:BoolToVisibilityConverter x:Key="boolVis"/>
 	</UserControl.Resources>
-	
+
 	<DockPanel>
 		<TextBlock
 			DockPanel.Dock="Top" Margin="13,12,13,12"
@@ -30,7 +30,7 @@
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			
+
 			<Image
 				Grid.Column="0" VerticalAlignment="Top" Margin="3,1,0,1"
 				Source="/Images/comment.png"/>

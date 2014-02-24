@@ -8,7 +8,7 @@ namespace Unclassified.UI
 	/// Provides a comparer converter that compares multiple values and returns true if all are
 	/// equal.
 	/// </summary>
-	class ComparerConverter : IMultiValueConverter
+	internal class ComparerConverter : IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{

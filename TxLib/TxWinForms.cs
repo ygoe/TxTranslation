@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -60,7 +59,7 @@ namespace Unclassified.TxLib
 				AddTextBindings(child);
 			}
 		}
-		
+
 		/// <summary>
 		/// Adds or replaces a text dictionary binding to a control's property.
 		/// </summary>

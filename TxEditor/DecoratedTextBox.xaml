@@ -9,19 +9,19 @@
 	mc:Ignorable="d"
 	Name="root"
 	d:DesignHeight="150" d:DesignWidth="358">
-	
+
 	<UserControl.Resources>
 		<DrawingBrush x:Key="SquiggleBrush" Viewport="0,-0.6,6,4.3" ViewportUnits="Absolute" TileMode="Tile" Stretch="None">
 			<DrawingBrush.Drawing>
 				<GeometryDrawing Geometry="M0,0L1.5,-1.5 4.5,1.5 6,0">
 					<GeometryDrawing.Pen>
-						<Pen Brush="#FFFF0000" Thickness="0.8" StartLineCap="Square" EndLineCap="Square" LineJoin="Round" MiterLimit="10" />
+						<Pen Brush="#FFFF0000" Thickness="0.8" StartLineCap="Square" EndLineCap="Square" LineJoin="Round" MiterLimit="10"/>
 					</GeometryDrawing.Pen>
 				</GeometryDrawing>
 			</DrawingBrush.Drawing>
 		</DrawingBrush>
 	</UserControl.Resources>
-	
+
 	<Grid Name="grid1">
 		<TextBox
 			Name="textBox1"

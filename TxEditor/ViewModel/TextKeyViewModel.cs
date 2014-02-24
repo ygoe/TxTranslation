@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Media;
-using Unclassified;
-using Unclassified.TxLib;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Unclassified.TxLib;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class TextKeyViewModel : TreeViewItemViewModel
+	internal class TextKeyViewModel : TreeViewItemViewModel
 	{
 		/// <summary>
 		/// Determines the root key of the specified text key.
@@ -87,7 +83,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
-		bool isNamespace;
+		private bool isNamespace;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key represents a namespace node.
 		/// </summary>
@@ -105,7 +101,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
-		bool isFullKey;
+		private bool isFullKey;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key represents a full text key or
 		/// only a key segment node.
@@ -124,7 +120,7 @@ namespace Unclassified.TxEditor.ViewModel
 						Comment = null;
 						CultureTextVMs.Clear();
 					}
-					
+
 					UpdateIcon();
 					OnPropertyChanged("IsFullKey");
 				}
@@ -244,7 +240,7 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 			}
 		}
-		
+
 		public bool Validate()
 		{
 			// NOTE: All checks are performed in their decreasing order of significance. The most-
@@ -768,7 +764,7 @@ namespace Unclassified.TxEditor.ViewModel
 				placeholderPattern = @"(?<!\{)\{(#|[^{=#]+)\}";
 			else
 				placeholderPattern = @"(?<!\{)\{([^{=#]+)\}";
-			
+
 			List<string> varNamesA = new List<string>();
 			Match m = Regex.Match(a, placeholderPattern);
 			while (m.Success)

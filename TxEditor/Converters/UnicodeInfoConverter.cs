@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
-using Unclassified;
 
 namespace Unclassified.TxEditor.Converters
 {
-	class UnicodeInfoConverter : IValueConverter
+	internal class UnicodeInfoConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{

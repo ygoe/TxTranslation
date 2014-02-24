@@ -179,7 +179,8 @@ function Get-AssemblyInfoVersion($sourceFile, $attributeName)
 
 function IsSelected($part)
 {
-	if ($global:configParts -eq "all" -or $global:configParts.Contains($part))
+	#if ($global:configParts -eq "all" -or $global:configParts.Contains($part))
+	if ($global:configParts.Contains($part))
 	{
 		return $true
 	}
@@ -227,6 +228,12 @@ function Sign-File($file, $keyFile, $password, $time)
 function Exec-File($file, $params, $time)
 {
 	$action = @{ action = "exec"; file = $file; params = $params; time = $time }
+	$global:actions += $action
+}
+
+function Git-Commit($time)
+{
+	$action = @{ action = "gitcommit"; time = $time }
 	$global:actions += $action
 }
 
@@ -528,10 +535,34 @@ function Do-Exec-File($file, $params, $progressAfter)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Executing $file $params..."
 
-	& "$sourcePath\$file" $params
+	# Wait until the started process has finished
+	& "$sourcePath\$file" $params | Out-Host
 	if (-not $?)
 	{
 		WaitError "Execution failed"
+		exit 1
+	}
+	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+}
+
+function Do-Git-Commit($progressAfter)
+{
+	Write-Host ""
+	Write-Host -ForegroundColor DarkCyan "Git commit..."
+
+	# Find the TortoiseGitProc binary
+	$tgitBin = Check-RegFilename "hklm:\SOFTWARE\TortoiseGit" "ProcPath"
+	if ($tgitBin -eq $null)
+	{
+		WaitError "TortoiseGitProc binary not found"
+		exit 1
+	}
+	
+	# Wait until the started process has finished
+	& $tgitBin /command:commit /path:"$sourcePath" | Out-Host
+	if (-not $?)
+	{
+		WaitError "Git commit failed"
 		exit 1
 	}
 	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
@@ -596,6 +627,10 @@ function End-BuildScript()
 			"exec"
 			{
 				Do-Exec-File $action.file $action.params $progressAfter
+			}
+			"gitcommit"
+			{
+				Do-Git-Commit $progressAfter
 			}
 		}
 		$timeSum += $action.time

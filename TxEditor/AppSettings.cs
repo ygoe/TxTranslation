@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Unclassified;
 
 namespace Unclassified.TxEditor
 {
@@ -22,7 +21,7 @@ namespace Unclassified.TxEditor
 			base.AddHandler("file.ask-save-upgrade", delegate() { OnPropertyChanged("AskSaveUpgrade"); });
 
 			base.AddHandler("input.charmap", delegate() { OnPropertyChanged("CharacterMap"); });
-			
+
 			base.AddHandler("view.comments", delegate() { OnPropertyChanged("ShowComments"); });
 			base.AddHandler("view.monospace-font", delegate() { OnPropertyChanged("MonospaceFont"); });
 			base.AddHandler("view.hidden-chars", delegate() { OnPropertyChanged("ShowHiddenChars"); });

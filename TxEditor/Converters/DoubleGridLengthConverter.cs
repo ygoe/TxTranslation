@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
 
 namespace Unclassified.TxEditor.Converters
 {
@@ -14,6 +12,7 @@ namespace Unclassified.TxEditor.Converters
 		{
 			return new GridLength((double) value);
 		}
+
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			GridLength gridLength = (GridLength) value;

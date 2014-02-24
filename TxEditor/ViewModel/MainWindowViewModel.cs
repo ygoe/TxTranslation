@@ -9,19 +9,17 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Xml;
 using Microsoft.Win32;
 using TaskDialogInterop;
 using Unclassified.TxEditor.View;
 using Unclassified.TxLib;
-using Unclassified;
 using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class MainWindowViewModel : ViewModelBase, IViewCommandSource
+	internal class MainWindowViewModel : ViewModelBase, IViewCommandSource
 	{
 		#region Static data
 
@@ -47,7 +45,7 @@ namespace Unclassified.TxEditor.ViewModel
 		public MainWindowViewModel()
 		{
 			Instance = this;
-			
+
 			TextKeys = new Dictionary<string, TextKeyViewModel>();
 			LoadedCultureNames = new HashSet<string>();
 			DeletedCultureNames = new HashSet<string>();
@@ -1022,7 +1020,7 @@ namespace Unclassified.TxEditor.ViewModel
 						// Find modulo values and new placeholders {#} and {=...}
 						if (ct.Text != null && Regex.IsMatch(ct.Text, @"(?<!\{)\{(?:#\}|=)"))
 							foundIncompatibleFeatures = true;
-						
+
 						foreach (var qt in ct.QuantifiedTextVMs)
 						{
 							if (qt.Modulo != 0)
@@ -1459,7 +1457,7 @@ namespace Unclassified.TxEditor.ViewModel
 			};
 			uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			//System.Diagnostics.Debug.WriteLine(ret + " inputs sent");
-			
+
 			//System.Threading.Thread.Sleep(50);
 			DelayedCall.Start(TextKeyWizardFromHotKey2, 50);
 		}
@@ -1606,7 +1604,7 @@ namespace Unclassified.TxEditor.ViewModel
 						MessageBoxImage.Warning);
 					return;
 				}
-				
+
 				bool needDuplicateForChildren = win.IncludeSubitemsCheckbox.IsChecked == false && selKey.Children.Count > 0;
 
 				// Test whether the entered text key already exists with content or subkeys
@@ -1653,7 +1651,7 @@ namespace Unclassified.TxEditor.ViewModel
 						return;
 					}
 				}
-				
+
 				var oldParent = selKey.Parent;
 				int affectedKeyCount = selKey.IsFullKey ? 1 : 0;
 
@@ -1734,7 +1732,7 @@ namespace Unclassified.TxEditor.ViewModel
 					// Clean up possible unused partial keys at the old position.
 					DeletePartialParentKeys(oldParent as TextKeyViewModel);
 				}
-	
+
 				FileModified = true;
 				StatusText = Tx.T("statusbar.text keys renamed", affectedKeyCount);
 
@@ -2206,7 +2204,7 @@ namespace Unclassified.TxEditor.ViewModel
 			{
 				AddNewCulture(RootTextKey, cultureName, false);
 			}
-			
+
 			// Read the XML document
 			foreach (XmlNode textNode in xe.SelectNodes("text[@key]"))
 			{
@@ -2286,7 +2284,7 @@ namespace Unclassified.TxEditor.ViewModel
 					EnsureCultureInTextKey(tk, cn);
 				}
 				tk.UpdateCultureTextSeparators();
-				
+
 				// Find the current culture
 				var ct = tk.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
 				if (count == -1)
@@ -2635,7 +2633,7 @@ namespace Unclassified.TxEditor.ViewModel
 						var countAttr = xe.OwnerDocument.CreateAttribute("count");
 						countAttr.Value = quantifiedTextVM.Count.ToString();
 						textElement.Attributes.Append(countAttr);
-						
+
 						if (quantifiedTextVM.Modulo != 0 &&
 							(quantifiedTextVM.Modulo < 2 && quantifiedTextVM.Modulo > 1000))
 						{
@@ -3212,7 +3210,7 @@ namespace Unclassified.TxEditor.ViewModel
 			HashSet<string> commonWords;
 			if (lastSelectedCulture.StartsWith("de"))
 			{
-				// GERMAN STOPWORDS 
+				// GERMAN STOPWORDS
 				// Zusammmengetragen von Marco Götze, Steffen Geyer
 				// Last update: 2011-01-15
 				// Source: http://solariz.de/649/deutsche-stopwords.htm
@@ -3371,7 +3369,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 			// Remove all placeholders and key references
 			refText = Regex.Replace(refText, @"(?<!\{)\{[^{]*?\}", "");
-			
+
 			// Extract all words
 			List<string> refWords = new List<string>();
 			m = Regex.Match(refText, @"(\w{2,})");
@@ -3402,7 +3400,7 @@ namespace Unclassified.TxEditor.ViewModel
 					// Both keys' primary translation matches exactly
 					isExactMatch = true;
 				}
-				
+
 				// Remove all placeholders and key references
 				string otherText = Regex.Replace(otherBaseText, @"(?<!\{)\{[^{]*?\}", "");
 

@@ -2,11 +2,9 @@
 // Source: http://www.jmedved.com/2011/12/openfolderdialog/
 
 using System;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace Unclassified.UI
 {
@@ -19,13 +17,13 @@ namespace Unclassified.UI
 	/// This class only depends on Windows Forms, it does not require WPF. To use it from a WPF
 	/// window, use the Wpf32Window wrapper class as an argument for the ShowDialog method.
 	/// </remarks>
-	class OpenFolderDialog
+	internal class OpenFolderDialog
 	{
 		/// <summary>
 		/// Gets or sets the title for the selection dialog.
 		/// </summary>
 		public string Title { get; set; }
-		
+
 		/// <summary>
 		/// Gets or sets the initial folder of the dialog.
 		/// </summary>
@@ -166,7 +164,7 @@ namespace Unclassified.UI
 			{
 				[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 				[PreserveSig()]
-				uint Show([In, Optional] IntPtr hwndOwner); //IModalWindow 
+				uint Show([In, Optional] IntPtr hwndOwner); //IModalWindow
 
 
 				[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]

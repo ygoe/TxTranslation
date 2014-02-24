@@ -500,7 +500,7 @@ namespace Unclassified
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected virtual void OnFire()
 		{
@@ -684,7 +684,7 @@ namespace Unclassified
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected override void OnFire()
 		{
@@ -800,7 +800,7 @@ namespace Unclassified
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected override void OnFire()
 		{
@@ -926,7 +926,7 @@ namespace Unclassified
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		protected override void OnFire()
 		{

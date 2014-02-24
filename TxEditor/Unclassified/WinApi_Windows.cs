@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using Microsoft.Win32;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Unclassified
 {
@@ -86,36 +84,52 @@ namespace Unclassified
 
 		[DllImport("user32")]
 		public static extern bool IsWindow(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern bool IsWindowEnabled(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern bool IsWindowVisible(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern bool IsIconic(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern int GetWindow(IntPtr hWnd, uint flags);
+
 		[DllImport("user32")]
 		public static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
+
 		[DllImport("user32")]
 		public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)] StringBuilder buf, int nMaxCount);
+
 		[DllImport("user32")]
 		public static extern int GetWindowText(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)] StringBuilder buf, int nMaxCount);
+
 		[DllImport("user32.dll")]
 		public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
+
 		[DllImport("user32")]
 		public static extern int SetActiveWindow(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern int SetFocus(IntPtr hWnd);
+
 		[DllImport("user32")]
 		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
 		[DllImport("user32.dll")]
 		public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
 		[DllImport("user32")]
 		public static extern IntPtr GetForegroundWindow();
+
 		[DllImport("user32")]
 		public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
 		[DllImport("user32")]
 		public static extern bool PostMessage(IntPtr hWnd, int msg, uint wParam, uint lParam);
 
@@ -123,37 +137,48 @@ namespace Unclassified
 		// int, *
 		[DllImport("user32")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
 		[DllImport("user32")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, uint lParam);
+
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, StringBuilder lParam);
 
 		// uint, *
 		[DllImport("user32")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, uint wParam, int lParam);
+
 		[DllImport("user32")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, uint wParam, uint lParam);
+
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, uint wParam, StringBuilder lParam);
 
 		// StringBuilder, *
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, StringBuilder wParam, int lParam);
+
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, StringBuilder wParam, uint lParam);
+
 		[DllImport("user32", CharSet = CharSet.Auto)]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int msg, StringBuilder wParam, StringBuilder lParam);
 
 		[DllImport("user32.dll")]
 		public static extern bool LockWindowUpdate(IntPtr hWnd);
+
 		[DllImport("user32.dll")]
 		public static extern bool ClientToScreen(IntPtr hWnd, ref Point lpPoint);
+
 		[DllImport("user32.dll")]
 		public static extern bool ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern ushort RegisterClass([In] ref WNDCLASS lpWndClass);
+
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr CreateWindowEx(
 			uint dwExStyle,
@@ -168,10 +193,13 @@ namespace Unclassified
 			IntPtr hMenu,
 			IntPtr hInstance,
 			IntPtr lpParam);
+
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern bool DestroyWindow(IntPtr hWnd);
+
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern IntPtr GetModuleHandle(string modName);
+
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		public static extern bool SetWindowText(IntPtr hWnd, string lpString);
 
@@ -189,7 +217,7 @@ namespace Unclassified
 			public string lpszMenuName;
 			public string lpszClassName;
 		}
-		
+
 		/// <summary>
 		/// Put a Form into foreground and activate the window. This is more reliable then Form.Focus().
 		/// </summary>

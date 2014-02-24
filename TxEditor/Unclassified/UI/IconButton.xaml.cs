@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Unclassified.UI
 {
@@ -104,7 +96,7 @@ namespace Unclassified.UI
 		private void UpdateToolTip()
 		{
 			bool showToolTip = ContentVisibility == Visibility.Collapsed || !string.IsNullOrEmpty(HotkeyText) || !string.IsNullOrEmpty(ExtendedToolTipText);
-			
+
 			if (showToolTip)
 			{
 				if (!string.IsNullOrEmpty(HotkeyText) || !string.IsNullOrEmpty(ExtendedToolTipText))

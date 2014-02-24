@@ -6,9 +6,9 @@
 		<Setter Property="Background" Value="{x:Null}"/>
 		<Setter Property="BorderBrush" Value="{x:Null}"/>
 	</Style>
-	
-	
-	
+
+
+
 	<Style x:Key="ToolGridStyle" TargetType="Grid">
 		<Setter Property="Background">
 			<Setter.Value>
@@ -21,7 +21,7 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
-	
+
 	<ControlTemplate x:Key="ToolGridLargeSeparator">
 		<Grid Margin="3,0">
 			<Rectangle Width="3">
@@ -53,5 +53,4 @@
 			<GradientStop Color="Transparent" Offset="1"/>
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
-
 </ResourceDictionary>

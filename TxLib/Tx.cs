@@ -292,7 +292,7 @@ namespace Unclassified.TxLib
 		/// </remarks>
 		private static Dictionary<string, DateTime> fileTimes =
 			new Dictionary<string, DateTime>();
-		
+
 		private static object logLock = new object();
 
 		/// <summary>
@@ -1781,7 +1781,7 @@ namespace Unclassified.TxLib
 			{
 				return GetText(SystemKeys.TimeNever, -1) ?? NotFound(SystemKeys.TimeNever);
 			}
-			
+
 			// Calculate time span between specified time and now
 			if (time.Kind != DateTimeKind.Utc)
 			{
@@ -2928,7 +2928,7 @@ namespace Unclassified.TxLib
 				usedPlaceholderNames = new HashSet<string>();
 				newUnusedSet = true;
 			}
-			
+
 			if (string.IsNullOrEmpty(text))
 			{
 				if (newUnusedSet && data != null)
@@ -3416,7 +3416,7 @@ namespace Unclassified.TxLib
 							// No culture, no unused keys. Nothing to do.
 						}
 					}
-					
+
 					logWriter.Close();
 					logWriter = null;
 				}

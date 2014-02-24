@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Unclassified
 {
@@ -10,7 +8,7 @@ namespace Unclassified
 	/// methods from executing the same operation. An <see cref="OpFlag"/> is created for each
 	/// lockable operation and an OpLock is held in a using block around the critical code.
 	/// </summary>
-	class OpLock : IDisposable
+	internal class OpLock : IDisposable
 	{
 		private OpFlag opFlag;
 
@@ -38,7 +36,7 @@ namespace Unclassified
 	/// operation is currently being locked, i.e. executing. It needs to be a reference value for
 	/// the <see cref="OpLock"/> methods to write to its real instance.
 	/// </summary>
-	class OpFlag
+	internal class OpFlag
 	{
 		private bool flag;
 

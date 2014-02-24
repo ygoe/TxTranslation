@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System;
+﻿using System;
+using System.Windows;
 
 namespace Unclassified.UI
 {
@@ -38,7 +38,7 @@ namespace Unclassified.UI
 //            typeof(bool?),
 //            typeof(FocusManager),
 //            new FrameworkPropertyMetadata(IsFocusedChanged));
-		
+
 //        public static bool? GetIsFocused(DependencyObject element)
 //        {
 //            if (element == null)

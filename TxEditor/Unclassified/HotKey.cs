@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Mime;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
@@ -13,7 +9,7 @@ namespace Unclassified
 {
 	// Managed RegisterHotKey wrapper for WPF applications
 	// Source: http://stackoverflow.com/a/9330358/143684 (modified)
-	class HotKey : IDisposable
+	internal class HotKey : IDisposable
 	{
 		private static Dictionary<int, HotKey> hotKeyCallbacks;
 

@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TaskDialogInterop;
 using Unclassified.TxEditor.Converters;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;
-using System.Runtime.InteropServices;
 
 namespace Unclassified.TxEditor.View
 {
@@ -88,7 +83,7 @@ namespace Unclassified.TxEditor.View
 
 			suggestions.Clear();
 			ScanAllTexts(MainWindowViewModel.Instance.RootTextKey);
-	
+
 			if (exactMatchTextKey != null)
 			{
 				TextKeyText.Text = exactMatchTextKey;
@@ -154,7 +149,7 @@ namespace Unclassified.TxEditor.View
 		{
 			SetDefaultCheckbox.Visibility =
 				SourceCodeCombobox.SelectedItem as string == "XAML" ? Visibility.Visible : Visibility.Collapsed;
-			
+
 			// Re-evaluate the format and parameters
 			ResetButton_Click(null, null);
 		}
@@ -187,7 +182,7 @@ namespace Unclassified.TxEditor.View
 		private void OKButton_Click(object sender, RoutedEventArgs e)
 		{
 			string textKey = TextKeyText.Text != null ? TextKeyText.Text.Trim() : "";
-			
+
 			string errorMessage;
 			if (!TextKeyViewModel.ValidateName(textKey, out errorMessage))
 			{

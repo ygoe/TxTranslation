@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class DetailsMessageViewModel : ViewModelBase
+	internal class DetailsMessageViewModel : ViewModelBase
 	{
 		public string Title { get; set; }
 		public string Message { get; set; }

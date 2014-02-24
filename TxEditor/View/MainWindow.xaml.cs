@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Unclassified.TxEditor.ViewModel;
-using Unclassified;
 using Unclassified.UI;
 
 namespace Unclassified.TxEditor.View
@@ -48,7 +41,7 @@ namespace Unclassified.TxEditor.View
 		public MainWindow()
 		{
 			Instance = this;
-			
+
 			InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.Manual;
@@ -365,13 +358,13 @@ namespace Unclassified.TxEditor.View
 				statusTextAnimationDc.Fire();
 			}
 			StatusTextShadow.Text = newText;
-			
+
 			// Animate both text blocks
 			AnimationHelper.AnimateEaseOut(StatusTextTranslateTransform, TranslateTransform.YProperty, 0, -offset, duration);
 			AnimationHelper.AnimateEaseOut(StatusText, TextBlock.OpacityProperty, 1, 0, duration);
 			AnimationHelper.AnimateEaseOut(StatusTextShadowTranslateTransform, TranslateTransform.YProperty, offset, 0, duration);
 			AnimationHelper.AnimateEaseOut(StatusTextShadow, TextBlock.OpacityProperty, 0, 1, duration);
-			
+
 			// Finish up animation
 			statusTextAnimationDc = DelayedCall.Start(StatusTextAnimationFinished, durationMs);
 		}

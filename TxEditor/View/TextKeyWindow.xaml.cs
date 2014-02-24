@@ -2,8 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Windows;
 using Unclassified.TxEditor.ViewModel;
-using Unclassified.UI;
 using Unclassified.TxLib;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.View
 {
@@ -64,7 +64,7 @@ namespace Unclassified.TxEditor.View
 					MessageBoxImage.Warning);
 				return;
 			}
-			
+
 			DialogResult = true;
 			Close();
 		}

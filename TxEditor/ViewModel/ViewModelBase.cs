@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Unclassified.TxEditor.ViewModel
@@ -13,7 +11,7 @@ namespace Unclassified.TxEditor.ViewModel
 	/// <summary>
 	/// Provides common properties and methods supporting view model classes.
 	/// </summary>
-	abstract class ViewModelBase : INotifyPropertyChanged
+	internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
 		#region Common view properties
 

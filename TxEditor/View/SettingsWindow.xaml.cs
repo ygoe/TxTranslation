@@ -17,6 +17,6 @@ namespace Unclassified.TxEditor.View
 		{
 			this.HideIcon();
 			base.OnSourceInitialized(e);
-		}	
+		}
 	}
 }

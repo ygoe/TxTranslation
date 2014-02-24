@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Data;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Unclassified.UI
 {
-	class TextHighlightConverter : IValueConverter, IMultiValueConverter
+	internal class TextHighlightConverter : IValueConverter, IMultiValueConverter
 	{
 		#region IValueConverter Member
 
@@ -87,7 +85,7 @@ namespace Unclassified.UI
 				// Highlighting disabled for this item
 				return values[0];
 			}
-			
+
 			return Convert(values[0], targetType, values[1], culture);
 		}
 

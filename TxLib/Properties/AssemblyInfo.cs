@@ -5,7 +5,6 @@ using System.Windows.Markup;
 [assembly: AssemblyProduct("TxLib")]
 [assembly: AssemblyTitle("TxLib")]
 [assembly: AssemblyDescription("TxTranslation library")]
-
 [assembly: AssemblyCopyright("© Yves Goergen, GNU GPL v3")]
 [assembly: AssemblyCompany("unclassified software development")]
 
@@ -26,5 +25,4 @@ using System.Windows.Markup;
 #endif
 
 [assembly: ComVisible(false)]
-
 [assembly: XmlnsDefinition("http://dev.unclassified.de/source/txlib", "Unclassified.TxLib")]

@@ -5,7 +5,6 @@ using System.Windows;
 [assembly: AssemblyProduct("TxEditor")]
 [assembly: AssemblyTitle("TxEditor")]
 [assembly: AssemblyDescription("TxTranslation Editor")]
-
 [assembly: AssemblyCopyright("© Yves Goergen, GNU GPL v3")]
 [assembly: AssemblyCompany("unclassified software development")]
 

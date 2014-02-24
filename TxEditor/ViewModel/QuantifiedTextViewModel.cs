@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class QuantifiedTextViewModel : ViewModelBase, IViewCommandSource
+	internal class QuantifiedTextViewModel : ViewModelBase, IViewCommandSource
 	{
 		private ViewCommandManager viewCommandManager = new ViewCommandManager();
 		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
@@ -170,11 +168,11 @@ namespace Unclassified.TxEditor.ViewModel
 		private void OnDelete()
 		{
 			int myIndex = CultureTextVM.QuantifiedTextVMs.IndexOf(this);
-			
+
 			CultureTextVM.QuantifiedTextVMs.Remove(this);
 			CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 			CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
-			
+
 			if (CultureTextVM.QuantifiedTextVMs.Count == 0)
 			{
 				CultureTextVM.ViewCommandManager.InvokeLoaded("FocusText");

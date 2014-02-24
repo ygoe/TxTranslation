@@ -9,10 +9,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+
 #if WINFORMS
 using System.Windows.Forms;
 #elif WPF
+
 using System.Windows;
+
 #endif
 
 namespace Unclassified
@@ -20,6 +23,7 @@ namespace Unclassified
 	public class ErrorHandling
 	{
 		#region Exception reporting functions
+
 		/*
 		Usage for Windows Forms:
 
@@ -53,9 +57,9 @@ namespace Unclassified
 		{
 			ErrorHandling.ReportException(e.ExceptionObject as Exception, "Globale Ausnahmebehandlung, UnhandledException");
 		}
-		
+
 		_____________________________________________________________
-		
+
 		Usage for WPF (in App.xaml.cs):
 
 		public App()
@@ -354,9 +358,11 @@ namespace Unclassified
 			if (myex != null)
 				throw myex;
 		}
+
 		#endregion Exception reporting functions
 
 		#region Tracing function
+
 		private static bool traceToFile = false;
 		private static string traceFileName = null;
 		private static object traceLock = new object();
@@ -396,7 +402,7 @@ namespace Unclassified
 				}
 			}
 		}
-		
+
 		public static void TraceLine(params object[] args)
 		{
 			lock (traceLock)
@@ -453,6 +459,7 @@ namespace Unclassified
 				}
 			}
 		}
+
 		#endregion Tracing function
 	}
 }

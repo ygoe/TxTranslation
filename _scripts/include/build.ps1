@@ -45,7 +45,7 @@ if (IsSelected("build-debug"))
 
 # ---------- Release builds ----------
 
-if (IsSelected("build-release"))
+if ((IsSelected("build-release")) -or (IsSelected("commit")))
 {
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
 
@@ -61,7 +61,7 @@ if (IsSelected("build-release"))
 
 # ---------- Release setups ----------
 
-if (IsSelected("setup-release"))
+if ((IsSelected("setup-release")) -or (IsSelected("commit")))
 {
 	Create-Setup "Setup\Tx.iss" Release 1
 
@@ -76,6 +76,13 @@ if (IsSelected("setup-release"))
 if (IsSelected("install"))
 {
 	Exec-File "Setup\TxSetup-$revId.exe" "/silent" 1
+}
+
+# ---------- Commit to repository ----------
+
+if (IsSelected("commit"))
+{
+	Git-Commit 1
 }
 
 # ---------------------------------------------------------------------------------

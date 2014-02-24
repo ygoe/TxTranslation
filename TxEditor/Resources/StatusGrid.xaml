@@ -56,5 +56,4 @@
 			<ui:ColorMath Key="{x:Static SystemColors.ControlDarkColorKey}" Lighten="0.2"/>
 		</SolidColorBrush.Color>
 	</SolidColorBrush>
-
 </ResourceDictionary>

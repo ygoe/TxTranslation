@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<!-- Source: http://www.rudivisser.com/Article/code-examples/windows-8-release-preview-button-textbox-style-wpf -->
-	
+
 	<Style TargetType="{x:Type TextBox}">
 		<Setter Property="Padding" Value="1"/>
 		<Setter Property="AllowDrop" Value="true"/>
@@ -15,36 +15,36 @@
 					<Grid>
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="FocusStates">
-								<VisualState x:Name="Unfocused" />
+								<VisualState x:Name="Unfocused"/>
 								<VisualState x:Name="Focused">
 									<Storyboard>
-										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
-										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
+										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
+										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 							<VisualStateGroup x:Name="CommonStates">
-								<VisualState x:Name="Normal" />
+								<VisualState x:Name="Normal"/>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<ColorAnimation To="#EAEAEA" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0" />
-										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0" />
+										<ColorAnimation To="#EAEAEA" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
+										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
-										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
-										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
+										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
+										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border BorderThickness="1">
 							<Border.Background>
-								<SolidColorBrush Color="#F9F9F9" x:Name="BgBrush" />
+								<SolidColorBrush Color="#F9F9F9" x:Name="BgBrush"/>
 							</Border.Background>
 							<Border.BorderBrush>
-								<SolidColorBrush Color="LightGray" x:Name="BordBrush" />
+								<SolidColorBrush Color="LightGray" x:Name="BordBrush"/>
 							</Border.BorderBrush>
 							<ScrollViewer Margin="3" x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 						</Border>
@@ -72,36 +72,36 @@
 					<Grid>
 						<VisualStateManager.VisualStateGroups>
 							<VisualStateGroup x:Name="FocusStates">
-								<VisualState x:Name="Unfocused" />
+								<VisualState x:Name="Unfocused"/>
 								<VisualState x:Name="Focused">
 									<Storyboard>
-										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
-										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
+										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
+										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 							<VisualStateGroup x:Name="CommonStates">
-								<VisualState x:Name="Normal" />
+								<VisualState x:Name="Normal"/>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<ColorAnimation To="#EAEAEA" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0" />
-										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0" />
+										<ColorAnimation To="#EAEAEA" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
+										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
-										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
-										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09" />
+										<ColorAnimation To="White" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
+										<ColorAnimation To="#87bff0" Storyboard.TargetName="BordBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.09"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border BorderThickness="1">
 							<Border.Background>
-								<SolidColorBrush Color="#F9F9F9" x:Name="BgBrush" />
+								<SolidColorBrush Color="#F9F9F9" x:Name="BgBrush"/>
 							</Border.Background>
 							<Border.BorderBrush>
-								<SolidColorBrush Color="LightGray" x:Name="BordBrush" />
+								<SolidColorBrush Color="LightGray" x:Name="BordBrush"/>
 							</Border.BorderBrush>
 							<ScrollViewer Margin="3" x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 						</Border>
@@ -127,35 +127,35 @@
 									<Storyboard>
 										<ColorAnimation To="#F0F0F0" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.07"/>
 										<ColorAnimation To="#E5E5E5" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.07"/>
-										<ColorAnimation To="#ACACAC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.07" />
+										<ColorAnimation To="#ACACAC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.07"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
 										<ColorAnimation To="#F0F4F9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.07"/>
 										<ColorAnimation To="#E0ECF9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.07"/>
-										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.07" />
+										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.07"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Pressed">
 									<Storyboard>
 										<ColorAnimation To="#DBEDFD" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.05"/>
 										<ColorAnimation To="#C4E0FC" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.05"/>
-										<ColorAnimation To="#569DE5" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.05" />
+										<ColorAnimation To="#569DE5" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.05"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
 										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0"/>
 										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0"/>
-										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0" />
+										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
 						</VisualStateManager.VisualStateGroups>
 						<Border x:Name="Chrome" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
 							<Border.BorderBrush>
-								<SolidColorBrush x:Name="BrBrush" Color="#ACACAC" />
+								<SolidColorBrush x:Name="BrBrush" Color="#ACACAC"/>
 							</Border.BorderBrush>
 							<Border.Background>
 								<LinearGradientBrush x:Name="BgBrush" EndPoint="0,1" StartPoint="0,0">

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
-using System.Xml;
 using Unclassified.TxEditor.View;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;
-using Unclassified;
 
 namespace Unclassified.TxEditor
 {

@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using Unclassified.TxLib;
-using System.Windows.Media;
-using Unclassified.UI;
 using System.Collections.Specialized;
-using Unclassified;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Media;
+using Unclassified.TxLib;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class CultureTextViewModel : ViewModelBase, IViewCommandSource
+	internal class CultureTextViewModel : ViewModelBase, IViewCommandSource
 	{
 		private ViewCommandManager viewCommandManager = new ViewCommandManager();
 		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
@@ -389,7 +386,7 @@ namespace Unclassified.TxEditor.ViewModel
 				//System.Diagnostics.Debug.WriteLine(CultureName + " = " + otherName + " (1)");
 				return 0;   // Exact match
 			}
-				
+
 			if (CultureName.Length >= 2 && otherName.Length >= 2)
 			{
 				// Prefer primary culture (with or without region; if set)
@@ -425,7 +422,7 @@ namespace Unclassified.TxEditor.ViewModel
 						return 1;
 					}
 				}
-				
+
 				if (string.Compare(CultureName.Substring(0, 2), otherName.Substring(0, 2), StringComparison.InvariantCultureIgnoreCase) == 0)
 				{
 					// Same language, prefer shorter names (without region)

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 namespace Unclassified
@@ -14,6 +12,7 @@ namespace Unclassified
 	public class MyEnvironment
 	{
 		#region OS version detection
+
 		[StructLayout(LayoutKind.Sequential)]
 		private struct OSVERSIONINFOEX
 		{
@@ -38,9 +37,10 @@ namespace Unclassified
 
 		private const ushort VER_SUITE_WH_SERVER = 0x8000;
 		private const ushort VER_NT_WORKSTATION = 1;
-		
+
 		[DllImport("kernel32.dll")]
 		private static extern short GetVersionEx(ref OSVERSIONINFOEX osvi);
+
 		[DllImport("user32.dll")]
 		private static extern int GetSystemMetrics(SystemMetric smIndex);
 
@@ -254,9 +254,11 @@ namespace Unclassified
 				return os.Version.Build.ToString();
 			}
 		}
+
 		#endregion OS version detection
 
 		#region OS user detection
+
 		/// <summary>
 		/// Checks whether the logged on Windows user is member of the specified Windows group.
 		/// </summary>
@@ -272,9 +274,11 @@ namespace Unclassified
 			System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
 			return principal.IsInRole(groupName);
 		}
+
 		#endregion OS user detection
 
 		#region Application information
+
 		public static string AssemblyTitle
 		{
 			get
@@ -352,6 +356,7 @@ namespace Unclassified
 				return null;
 			}
 		}
+
 		#endregion Application information
 	}
 

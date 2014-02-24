@@ -39,7 +39,7 @@ namespace Unclassified.TxEditor.View
 				files[i] = System.IO.Path.Combine(vm.BaseDir, FileList.SelectedItems[i] as string);
 			}
 			vm.SelectedFileNames = files;
-			
+
 			DialogResult = true;
 			Close();
 		}

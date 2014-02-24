@@ -1,14 +1,14 @@
 ﻿<Window
 	x:Class="Unclassified.TxEditor.View.TextKeyWizardWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
 	xmlns:Tx="http://dev.unclassified.de/source/txlib"
 	xmlns:ui="clr-namespace:Unclassified.UI"
-	mc:Ignorable="d" 
+	mc:Ignorable="d"
 	d:DesignHeight="403" d:DesignWidth="500"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
@@ -19,18 +19,18 @@
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight"
 	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
-	
+
 	<Window.Resources>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</Window.Resources>
 
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="400" />
+			<ColumnDefinition Width="400"/>
 		</Grid.ColumnDefinitions>
 
 		<Grid Grid.Row="0" Margin="10">
@@ -89,7 +89,7 @@
 				InnerBorderThickness="1" InnerPadding="1" Margin="8,4,0,0"
 				PlaceholderText="{Tx:T 'msg.enter text', Default='Enter text'}"
 				ValidateKey="DecoratedTextBox_ValidateKey"/>
-			
+
 			<CheckBox
 				Name="SetDefaultCheckbox"
 				Grid.Row="4" Grid.Column="1"

@@ -27,16 +27,16 @@
 		<c:DoubleGridLengthConverter x:Key="doubleGridLengthConverter"/>
 	</Window.Resources>
 	<Window.InputBindings>
-		<KeyBinding Key="D" Modifiers="Control" Command="{Binding DuplicateTextKeyCommand}" />
-		<KeyBinding Key="N" Modifiers="Control" Command="{Binding NewTextKeyCommand}" />
-		<KeyBinding Key="O" Modifiers="Control" Command="{Binding LoadFileCommand}" />
-		<KeyBinding Key="O" Modifiers="Control+Shift" Command="{Binding LoadFolderCommand}" />
-		<KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
-		<KeyBinding Key="F12" Command="{Binding GotoDefinitionCommand}" />
-		<KeyBinding Key="Left" Modifiers="Alt" Command="{Binding NavigateBackCommand}" />
-		<KeyBinding Key="Right" Modifiers="Alt" Command="{Binding NavigateForwardCommand}" />
-		<KeyBinding Key="Up" Modifiers="Alt" Command="{Binding SelectPreviousTextKeyCommand}" />
-		<KeyBinding Key="Down" Modifiers="Alt" Command="{Binding SelectNextTextKeyCommand}" />
+		<KeyBinding Key="D" Modifiers="Control" Command="{Binding DuplicateTextKeyCommand}"/>
+		<KeyBinding Key="N" Modifiers="Control" Command="{Binding NewTextKeyCommand}"/>
+		<KeyBinding Key="O" Modifiers="Control" Command="{Binding LoadFileCommand}"/>
+		<KeyBinding Key="O" Modifiers="Control+Shift" Command="{Binding LoadFolderCommand}"/>
+		<KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+		<KeyBinding Key="F12" Command="{Binding GotoDefinitionCommand}"/>
+		<KeyBinding Key="Left" Modifiers="Alt" Command="{Binding NavigateBackCommand}"/>
+		<KeyBinding Key="Right" Modifiers="Alt" Command="{Binding NavigateForwardCommand}"/>
+		<KeyBinding Key="Up" Modifiers="Alt" Command="{Binding SelectPreviousTextKeyCommand}"/>
+		<KeyBinding Key="Down" Modifiers="Alt" Command="{Binding SelectNextTextKeyCommand}"/>
 	</Window.InputBindings>
 
 	<DockPanel>
@@ -143,17 +143,17 @@
 							<ContextMenu>
 								<MenuItem Header="{Tx:T 'toolbar.culture.replace', Default='Replace culture'}" Command="{Binding ReplaceCultureCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Images/globe_change.png" />
+										<Image Source="/Images/globe_change.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
 								<MenuItem Header="{Tx:T 'toolbar.culture.insert system keys', Default='Insert system keys'}" Command="{Binding InsertSystemKeysCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Images/Tx_16.png" />
+										<Image Source="/Images/Tx_16.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
 								<MenuItem Header="{Tx:T 'toolbar.culture.view date and time formats', Default='View date and time formats'}" Command="{Binding ViewDateTimeFormatsCommand}">
 									<MenuItem.Icon>
-										<Image Source="/Images/globe_time.png" />
+										<Image Source="/Images/globe_time.png"/>
 									</MenuItem.Icon>
 								</MenuItem>
 							</ContextMenu>
@@ -449,7 +449,7 @@
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>
-			
+
 			<Border
 				Grid.Row="1" Grid.ColumnSpan="2"
 				BorderThickness="0,0,0,1" BorderBrush="#20000000"/>
@@ -516,7 +516,7 @@
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1*"/>
-				<ColumnDefinition Width="6" />
+				<ColumnDefinition Width="6"/>
 				<ColumnDefinition Width="2*"/>
 			</Grid.ColumnDefinitions>
 
@@ -533,16 +533,16 @@
 				ContextMenuOpening="TextKeysTreeView_ContextMenuOpening"-->
 
 				<Controls:MultiSelectTreeView.InputBindings>
-					<KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyTextKeyCommand}" />
+					<KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyTextKeyCommand}"/>
 				</Controls:MultiSelectTreeView.InputBindings>
 
 				<Controls:MultiSelectTreeView.ItemContainerStyle>
 					<Style TargetType="{x:Type Controls:MultiSelectTreeViewItem}">
-						<Setter Property="DisplayName" Value="{Binding DisplayName, Mode=TwoWay}" />
-						<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-						<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+						<Setter Property="DisplayName" Value="{Binding DisplayName, Mode=TwoWay}"/>
+						<Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+						<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
 						<!--Setter Property="IsVisible" Value="{Binding IsVisible, Mode=TwoWay}" /-->
-						<Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=TwoWay}" />
+						<Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=TwoWay}"/>
 						<Setter Property="Remarks" Value="{Binding Remarks, Mode=TwoWay}"/>
 
 						<Setter Property="RemarksTemplate">
@@ -571,7 +571,7 @@
 				<Controls:MultiSelectTreeView.Resources>
 					<HierarchicalDataTemplate DataType="{x:Type vm:TextKeyViewModel}" ItemsSource="{Binding VisibleChildren}">
 						<StackPanel Orientation="Horizontal">
-							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}" />
+							<Image Name="icon" Width="16" Height="16" Margin="0,0,2,0" Source="{Binding ImageSource}"/>
 							<ContentControl Margin="0,0,2,0" Focusable="False">
 								<ContentControl.Content>
 									<MultiBinding Converter="{StaticResource textHighlightConverter}">
@@ -676,7 +676,7 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
-					
+
 					<TextBlock FontSize="16" Margin="12,10,12,12" Text="{Binding SuggestionsCultureCaption, Mode=OneWay}"/>
 
 					<ScrollViewer Grid.Row="1" Focusable="False">

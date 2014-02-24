@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;
 
 namespace Unclassified.TxEditor.Converters
 {
-	class TreeNodesConverter : IMultiValueConverter
+	internal class TreeNodesConverter : IMultiValueConverter
 	{
 		#region IMultiValueConverter Member
 
@@ -72,6 +70,6 @@ namespace Unclassified.TxEditor.Converters
 			throw new NotImplementedException();
 		}
 
-		#endregion
+		#endregion IMultiValueConverter Member
 	}
 }

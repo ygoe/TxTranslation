@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -13,10 +11,13 @@ namespace Unclassified.UI
 	{
 		[DllImport("user32.dll")]
 		private static extern uint GetWindowLong(IntPtr hwnd, int index);
+
 		[DllImport("user32.dll")]
 		private static extern uint SetWindowLong(IntPtr hwnd, int index, uint newStyle);
+
 		[DllImport("user32.dll")]
 		private static extern bool SetWindowPos(IntPtr hwnd, IntPtr hwndInsertAfter, int x, int y, int width, int height, uint flags);
+
 		[DllImport("user32.dll")]
 		private static extern IntPtr SendMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 

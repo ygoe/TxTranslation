@@ -12,7 +12,7 @@ using System;
 
 namespace Unclassified
 {
-	static class NaturalSort
+	internal static class NaturalSort
 	{
 		/// <summary>
 		/// Compares two strings in natural order.

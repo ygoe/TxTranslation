@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Globalization;
 
 namespace Unclassified.UI
 {
@@ -27,6 +20,7 @@ namespace Unclassified.UI
 			get { return (Color) GetValue(ColorProperty); }
 			set { SetValue(ColorProperty, value); }
 		}
+
 		private static void ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			ProgressSpinner ctl = d as ProgressSpinner;
@@ -43,6 +37,7 @@ namespace Unclassified.UI
 			get { return (Color) GetValue(BackColorProperty); }
 			set { SetValue(BackColorProperty, value); }
 		}
+
 		private static void BackColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			ProgressSpinner ctl = d as ProgressSpinner;

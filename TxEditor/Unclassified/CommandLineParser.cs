@@ -222,6 +222,6 @@ namespace Unclassified
 			return chunks.ToArray();
 		}
 
-		#endregion
+		#endregion Unclassified.EasyConvert
 	}
 }

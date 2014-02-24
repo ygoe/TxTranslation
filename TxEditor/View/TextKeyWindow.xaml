@@ -1,12 +1,12 @@
 ﻿<Window
 	x:Class="Unclassified.TxEditor.View.TextKeyWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="http://dev.unclassified.de/source/txlib"
 	xmlns:ui="clr-namespace:Unclassified.UI"
-	mc:Ignorable="d" 
+	mc:Ignorable="d"
 	d:DesignHeight="200" d:DesignWidth="500"
 	ResizeMode="NoResize"
 	WindowStartupLocation="CenterOwner"
@@ -16,24 +16,24 @@
 	Title="Text key"
 	Loaded="Window_Loaded"
 	SizeToContent="WidthAndHeight">
-	
+
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 
 		<Grid Grid.Row="0" Margin="10">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 
 			<TextBlock
@@ -46,7 +46,7 @@
 				Grid.Row="1" Grid.Column="0"
 				Width="350" Margin="0,6,0,0"
 				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
-			
+
 			<CheckBox
 				Name="IncludeSubitemsCheckbox"
 				Grid.Row="2" Grid.Column="0"

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Media;
-using System.Threading;
 using System.Windows.Data;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class TreeViewItemViewModel : ViewModelBase
+	internal class TreeViewItemViewModel : ViewModelBase
 	{
-		#region Data
+		#region Private data
 
 		private static readonly TreeViewItemViewModel DummyChild = new TreeViewItemViewModel();
 
@@ -26,7 +22,7 @@ namespace Unclassified.TxEditor.ViewModel
 		private bool isEnabled = true;
 		private int sortIndex;
 
-		#endregion Data
+		#endregion Private data
 
 		#region Constructors
 
@@ -56,7 +52,7 @@ namespace Unclassified.TxEditor.ViewModel
 		#region Presentation Members
 
 		/// <summary>
-		/// Returns the logical child items of this object.
+		/// Gets the logical child items of this object.
 		/// </summary>
 		public ObservableCollection<TreeViewItemViewModel> Children
 		{
@@ -72,7 +68,7 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Returns the visible child items of this object.
+		/// Gets the visible child items of this object.
 		/// </summary>
 		public CollectionView VisibleChildren
 		{
@@ -80,7 +76,7 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Returns true if this object's Children have not yet been populated.
+		/// Gets a value indicating whether this object's Children have not yet been populated.
 		/// </summary>
 		public bool HasDummyChild
 		{
@@ -88,8 +84,8 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Gets/sets whether the TreeViewItem 
-		/// associated with this object is expanded.
+		/// Gets or sets a value indicating whether the TreeViewItem associated with this object is
+		/// expanded.
 		/// </summary>
 		public bool IsExpanded
 		{
@@ -160,8 +156,8 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Gets/sets whether the TreeViewItem 
-		/// associated with this object is selected.
+		/// Gets or sets a value indicating whether the TreeViewItem associated with this object is
+		/// selected.
 		/// </summary>
 		public bool IsSelected
 		{
@@ -228,8 +224,8 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		/// <summary>
-		/// Invoked when the child items need to be loaded on demand.
-		/// Subclasses can override this to populate the Children collection.
+		/// Called when the child items need to be loaded on demand. Derived classes should
+		/// override this method to populate the Children collection with lazy loading.
 		/// </summary>
 		/// <param name="allowAsync">Allow loading the child items asynchronously.</param>
 		protected virtual void LoadChildren(bool allowAsync)

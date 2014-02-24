@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace Unclassified
 {
@@ -11,9 +10,10 @@ namespace Unclassified
 	/// Simple observable HashSet class. Currently only the Count property is observable.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	class ObservableHashSet<T> : INotifyPropertyChanged, IEnumerable<T>, IEnumerable
+	internal class ObservableHashSet<T> : INotifyPropertyChanged, IEnumerable<T>, IEnumerable
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
+
 		protected void OnPropertyChanged(string propertyName)
 		{
 			PropertyChangedEventHandler handler = PropertyChanged;

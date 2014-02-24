@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -25,7 +19,7 @@ namespace Unclassified.TxEditor
 		private bool hasFocus;
 		private List<FrameworkElement> decos = new List<FrameworkElement>();
 		private bool isEditing;
-		private DispatcherTimer editTimer; 
+		private DispatcherTimer editTimer;
 		//private Popup popup;
 		// Popup see: http://www.codeproject.com/Articles/22803/Intellisense-like-Method-Selection-Pop-up-Window
 
@@ -65,6 +59,7 @@ namespace Unclassified.TxEditor
 			get { return (string) GetValue(TextProperty); }
 			set { SetValue(TextProperty, value); }
 		}
+
 		private static void TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			DecoratedTextBox dt = d as DecoratedTextBox;
@@ -126,6 +121,7 @@ namespace Unclassified.TxEditor
 			get { return (bool) GetValue(HiddenCharsProperty); }
 			set { SetValue(HiddenCharsProperty, value); }
 		}
+
 		private static void HiddenCharsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			DecoratedTextBox dt = d as DecoratedTextBox;
@@ -145,6 +141,7 @@ namespace Unclassified.TxEditor
 			get { return (string) GetValue(SearchTextProperty); }
 			set { SetValue(SearchTextProperty, value); }
 		}
+
 		private static void SearchTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			DecoratedTextBox dt = d as DecoratedTextBox;
@@ -335,7 +332,7 @@ namespace Unclassified.TxEditor
 				string refKey = m.Groups[1].Value;
 				if (!TextKeyReferences.Contains(refKey))
 					TextKeyReferences.Add(refKey);
-				
+
 				bool isValidKey = true;
 				if (!IsEditing)
 					isValidKey = DoValidateKey(refKey);
@@ -441,7 +438,7 @@ namespace Unclassified.TxEditor
 						{
 							// Spanning multiple lines
 						}
-						
+
 						switch (textBox1.Text[pos])
 						{
 							case '\t':

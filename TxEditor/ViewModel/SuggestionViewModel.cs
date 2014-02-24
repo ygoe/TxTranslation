@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Media;
-using Unclassified.TxLib;
-using Unclassified;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	class SuggestionViewModel : ViewModelBase
+	internal class SuggestionViewModel : ViewModelBase
 	{
 		public MainWindowViewModel MainWindowVM { get; private set; }
 

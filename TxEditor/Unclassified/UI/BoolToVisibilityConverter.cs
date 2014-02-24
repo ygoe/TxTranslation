@@ -35,10 +35,10 @@ namespace Unclassified.UI
 				if (!bool.TryParse(paramStr, out param))
 					return Visibility.Visible;
 			}
-			
+
 			if (!(value is bool))
 				return Visibility.Visible;
-			
+
 			bool val = (bool) value;
 
 			return val == param ? Visibility.Visible : (UseHiddenValue ? Visibility.Hidden : Visibility.Collapsed);

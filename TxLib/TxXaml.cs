@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -67,7 +65,7 @@ namespace Unclassified.TxLib
 		/// Gets or sets the text key to translate.
 		/// </summary>
 		public string Key { get; set; }
-		
+
 		/// <summary>
 		/// Gets or sets the count value to consider when selecting the text value.
 		/// </summary>
@@ -109,7 +107,7 @@ namespace Unclassified.TxLib
 		{
 			if (string.IsNullOrEmpty(Key))
 				throw new ArgumentException("Key is not specified.", "Key");
-			
+
 			// Always create a dummy binding to be notified when the translation dictionary changes.
 			Binding binding = new Binding("Dummy");
 			binding.Source = DictionaryWatcher.Instance;
@@ -899,7 +897,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Dummy class to provide notifications when the dictionary has changed.
 	/// </summary>
-	class DictionaryWatcher : INotifyPropertyChanged
+	internal class DictionaryWatcher : INotifyPropertyChanged
 	{
 		#region Static singleton access
 
@@ -953,7 +951,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Converts the various binding values to a translated text string.
 	/// </summary>
-	class TConverter : IValueConverter, IMultiValueConverter
+	internal class TConverter : IValueConverter, IMultiValueConverter
 	{
 		#region Private fields
 
@@ -1057,7 +1055,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Converts the number binding value to a formatted number.
 	/// </summary>
-	class NConverter : IMultiValueConverter
+	internal class NConverter : IMultiValueConverter
 	{
 		#region Private fields
 
@@ -1149,7 +1147,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Converts the number binding value to a formatted data size.
 	/// </summary>
-	class DSConverter : IMultiValueConverter
+	internal class DSConverter : IMultiValueConverter
 	{
 		#region IMultiValueConverter members
 
@@ -1183,7 +1181,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Converts the time binding value to a formatted date or time.
 	/// </summary>
-	class TimeConverter : IMultiValueConverter
+	internal class TimeConverter : IMultiValueConverter
 	{
 		#region Private fields
 
@@ -1223,7 +1221,7 @@ namespace Unclassified.TxLib
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			string text;
-			
+
 			// Return the text key only in design mode. Nothing better to do for now.
 			if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
 			{
@@ -1305,7 +1303,7 @@ namespace Unclassified.TxLib
 		#endregion IMultiValueConverter members
 	}
 
-	class UpdateTimer : INotifyPropertyChanged
+	internal class UpdateTimer : INotifyPropertyChanged
 	{
 		#region Static singleton access
 
