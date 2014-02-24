@@ -39,21 +39,6 @@ namespace Unclassified.TxEditor
 
 		#endregion Constructors
 
-		#region INotifyPropertyChanged members
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected void OnPropertyChanged(string propertyName)
-		{
-			var handler = PropertyChanged;
-			if (handler != null)
-			{
-				handler(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
-		#endregion INotifyPropertyChanged members
-
 		/// <summary>
 		/// Gets or sets the culture to use for the application user interface. Empty for default.
 		/// </summary>
