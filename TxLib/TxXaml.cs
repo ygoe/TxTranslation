@@ -1104,7 +1104,11 @@ namespace TxLib
 				// values[0] is the Dummy binding, don't use it
 
 				// Read the number value from binding number two.
-				if (values[1] is byte || values[1] is sbyte ||
+				if (values[1] == DependencyProperty.UnsetValue)
+				{
+					return DependencyProperty.UnsetValue;
+				}
+				else if (values[1] is byte || values[1] is sbyte ||
 					values[1] is ushort || values[1] is short ||
 					values[1] is uint || values[1] is int ||
 					values[1] is long)
@@ -1160,6 +1164,10 @@ namespace TxLib
 			// values[0] is the Dummy binding, don't use it
 
 			// Read the number value from binding number two.
+			if (values[1] == DependencyProperty.UnsetValue)
+			{
+				return DependencyProperty.UnsetValue;
+			}
 			long l = System.Convert.ToInt64(values[1]);
 			return Tx.DataSize(l);
 		}
@@ -1244,6 +1252,10 @@ namespace TxLib
 				// values[1] is the timer Dummy binding, don't use it
 
 				// Read the time value from binding number three.
+				if (values[2] == DependencyProperty.UnsetValue)
+				{
+					return DependencyProperty.UnsetValue;
+				}
 				DateTime dt;
 				TimeSpan ts;
 				switch (relKind)
