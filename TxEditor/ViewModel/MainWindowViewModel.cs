@@ -2575,14 +2575,18 @@ namespace Unclassified.TxEditor.ViewModel
 				if (cultureTextVM != null)
 				{
 					if (!string.IsNullOrEmpty(cultureTextVM.Text) ||
-						textKeyVM.IsEmpty() && cultureName == PrimaryCulture)   // Save empty text keys in the primary culture at least
+						textKeyVM.IsEmpty() && cultureName == PrimaryCulture ||   // Save empty text keys in the primary culture at least
+						cultureTextVM.AcceptMissing || cultureTextVM.AcceptPlaceholders || cultureTextVM.AcceptPunctuation)   // Keep accept flags
 					{
 						var textElement = xe.OwnerDocument.CreateElement("text");
 						xe.AppendChild(textElement);
 						var keyAttr = xe.OwnerDocument.CreateAttribute("key");
 						keyAttr.Value = textKeyVM.TextKey;
 						textElement.Attributes.Append(keyAttr);
-						textElement.InnerText = cultureTextVM.Text;
+						if (!string.IsNullOrEmpty(cultureTextVM.Text))
+						{
+							textElement.InnerText = cultureTextVM.Text;
+						}
 
 						if (cultureTextVM.AcceptMissing)
 						{
@@ -2666,7 +2670,10 @@ namespace Unclassified.TxEditor.ViewModel
 							textElement.Attributes.Append(acceptPunctuationAttr);
 						}
 
-						textElement.InnerText = quantifiedTextVM.Text;
+						if (!string.IsNullOrEmpty(quantifiedTextVM.Text))
+						{
+							textElement.InnerText = quantifiedTextVM.Text;
+						}
 					}
 				}
 			}
