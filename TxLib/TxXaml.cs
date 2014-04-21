@@ -1366,6 +1366,7 @@ namespace Unclassified.TxLib
 	/// <summary>
 	/// Values that specify a kind of relative time.
 	/// </summary>
+	[System.Reflection.Obfuscation(Exclude = true)]
 	public enum RelativeTimeKind
 	{
 		/// <summary>
