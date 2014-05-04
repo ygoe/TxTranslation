@@ -54,6 +54,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
+		<text key="msg.load file.multiple primary cultures">Mehrere Dateien waren als Hauptkultur gekennzeichnet: {list}
+Die Hauptkultur ist jetzt auf {name} eingestellt.</text>
 		<text key="msg.load file.other cultures for prefix">Es gibt weitere Kulturdateien für diesen Präfix.</text>
 		<text key="msg.load file.other cultures for prefix.desc">Die folgenden Kulturen können mitgeladen werden: {list}</text>
 		<text key="msg.load file.title">Dateien zum Laden auswählen</text>
@@ -414,6 +416,8 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
+		<text key="msg.load file.multiple primary cultures">Multiple files were marked as primary culture: {list}
+The primary culture is now set to {name}.</text>
 		<text key="msg.load file.other cultures for prefix">There are additional culture files for this prefix.</text>
 		<text key="msg.load file.other cultures for prefix.desc">The following cultures can be loaded as well: {list}</text>
 		<text key="msg.load file.title">Select files to load</text>

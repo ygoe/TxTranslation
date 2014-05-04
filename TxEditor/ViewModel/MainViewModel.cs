@@ -916,6 +916,8 @@ namespace Unclassified.TxEditor.ViewModel
 
 				bool foundFiles = false;
 				fileVersion = 0;
+				string prevPrimaryCulture = null;
+				List<string> primaryCultureFiles = new List<string>();
 				foreach (string fileName in filesToLoad)
 				{
 					if (!foundFiles)
@@ -925,8 +927,21 @@ namespace Unclassified.TxEditor.ViewModel
 						OnNewFile();   // Clear any currently loaded content
 					}
 					LoadFromXmlFile(fileName);
+					if (PrimaryCulture != prevPrimaryCulture)
+					{
+						primaryCultureFiles.Add(PrimaryCulture);
+					}
+					prevPrimaryCulture = PrimaryCulture;
 				}
-				// TODO: Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
+				if (primaryCultureFiles.Count > 1)
+				{
+					// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
+					MessageBox.Show(
+						Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
+						Tx.T("msg.caption.warning"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+				}
 
 				SortCulturesInTextKey(RootTextKey);
 				DeletedCultureNames.Clear();
@@ -2118,6 +2133,8 @@ namespace Unclassified.TxEditor.ViewModel
 			OnNewFile();
 			int count = 0;
 			ClearReadonlyFiles();
+			string prevPrimaryCulture = null;
+			List<string> primaryCultureFiles = new List<string>();
 			foreach (string _fileName in fileNames.Distinct())
 			{
 				string fileName = _fileName;
@@ -2127,6 +2144,21 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 				LoadFromXmlFile(fileName);
 				count++;
+				if (PrimaryCulture != prevPrimaryCulture)
+				{
+					primaryCultureFiles.Add(PrimaryCulture);
+				}
+				prevPrimaryCulture = PrimaryCulture;
+			}
+			if (primaryCultureFiles.Count > 1)
+			{
+				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
+				App.SplashScreen.Close(TimeSpan.Zero);
+				MessageBox.Show(
+					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
+					Tx.T("msg.caption.warning"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
 			}
 			ValidateTextKeysDelayed();
 			StatusText = Tx.T("statusbar.n files loaded", count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
