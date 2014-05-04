@@ -6,7 +6,7 @@ namespace Unclassified.TxEditor.ViewModel
 {
 	internal class SuggestionViewModel : ViewModelBase
 	{
-		public MainWindowViewModel MainWindowVM { get; private set; }
+		public MainViewModel MainWindowVM { get; private set; }
 
 		private string textKey;
 		public string TextKey
@@ -108,7 +108,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
-		public SuggestionViewModel(MainWindowViewModel mainWindowVM)
+		public SuggestionViewModel(MainViewModel mainWindowVM)
 		{
 			MainWindowVM = mainWindowVM;
 		}

@@ -19,11 +19,11 @@ using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	internal class MainWindowViewModel : ViewModelBase, IViewCommandSource
+	internal class MainViewModel : ViewModelBase, IViewCommandSource
 	{
 		#region Static data
 
-		public static MainWindowViewModel Instance { get; private set; }
+		public static MainViewModel Instance { get; private set; }
 
 		#endregion Static data
 
@@ -42,7 +42,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 		#region Constructors
 
-		public MainWindowViewModel()
+		public MainViewModel()
 		{
 			Instance = this;
 

@@ -210,7 +210,7 @@ namespace Unclassified.TxEditor
 
 			// Create main window and view model
 			var view = new MainWindow();
-			var viewModel = new MainWindowViewModel();
+			var viewModel = new MainViewModel();
 
 			if (filesToLoad.Count == 0 && clp.IsOptionSet("s"))
 			{

@@ -124,7 +124,7 @@
     <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
     <Compile Include="ViewModel\SelectFileViewModel.cs" />
     <Compile Include="ViewModel\SuggestionViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
     <Compile Include="ViewModel\TextKeyViewModel.cs" />
     <Compile Include="Converters\TreeNodesConverter.cs" />

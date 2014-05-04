@@ -52,7 +52,7 @@ namespace Unclassified.TxEditor.View
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			if (MainWindowViewModel.Instance.LoadedCultureNames.Count == 0)
+			if (MainViewModel.Instance.LoadedCultureNames.Count == 0)
 			{
 				MessageBox.Show(
 					Tx.T("window.wizard.no culture added"),
@@ -64,13 +64,13 @@ namespace Unclassified.TxEditor.View
 			}
 
 			TranslationText.HiddenChars = App.Settings.ShowHiddenChars;
-			TranslationText.FontSize = MainWindowViewModel.Instance.FontSize;
+			TranslationText.FontSize = MainViewModel.Instance.FontSize;
 			if (App.Settings.MonospaceFont)
 			{
 				MonospaceFontConverter monospaceFontConverter = new MonospaceFontConverter();
 				TranslationText.FontFamily = monospaceFontConverter.Convert(App.Settings.MonospaceFont, null, null, null) as FontFamily;
 			}
-			TextOptions.SetTextFormattingMode(TranslationText, MainWindowViewModel.Instance.TextFormattingMode);
+			TextOptions.SetTextFormattingMode(TranslationText, MainViewModel.Instance.TextFormattingMode);
 
 			initialClipboardText = ReadClipboard();
 			if (initialClipboardText == null)
@@ -82,7 +82,7 @@ namespace Unclassified.TxEditor.View
 			ResetButton_Click(null, null);
 
 			suggestions.Clear();
-			ScanAllTexts(MainWindowViewModel.Instance.RootTextKey);
+			ScanAllTexts(MainViewModel.Instance.RootTextKey);
 
 			if (exactMatchTextKey != null)
 			{
@@ -176,7 +176,7 @@ namespace Unclassified.TxEditor.View
 
 		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
 		{
-			e.IsValid = MainWindowViewModel.Instance.TextKeys.ContainsKey(e.TextKey);
+			e.IsValid = MainViewModel.Instance.TextKeys.ContainsKey(e.TextKey);
 		}
 
 		private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -195,7 +195,7 @@ namespace Unclassified.TxEditor.View
 			}
 			// TODO: Find another source than parsedText, use the actual text key content instead
 			if (TranslationText.Text != parsedText &&
-				MainWindowViewModel.Instance.TextKeys.ContainsKey(textKey))
+				MainViewModel.Instance.TextKeys.ContainsKey(textKey))
 			{
 				TaskDialogResult result = TaskDialog.Show(
 					owner: this,

@@ -63,12 +63,12 @@ namespace Unclassified.TxEditor.View
 			TextKeysTreeView.Focus();
 
 			// Let all other contents load
-			TaskHelper.WhenLoaded(MainWindowViewModel.Instance.InitCommand.Execute);
+			TaskHelper.WhenLoaded(MainViewModel.Instance.InitCommand.Execute);
 		}
 
 		private void OnHotKey(HotKey hotKey)
 		{
-			var vm = DataContext as MainWindowViewModel;
+			var vm = DataContext as MainViewModel;
 			if (vm != null)
 			{
 				vm.TextKeyWizardFromHotKey();
@@ -77,7 +77,7 @@ namespace Unclassified.TxEditor.View
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			MainWindowViewModel vm = DataContext as MainWindowViewModel;
+			MainViewModel vm = DataContext as MainViewModel;
 			if (vm != null && !vm.CheckModifiedSaved())
 			{
 				e.Cancel = true;
@@ -123,7 +123,7 @@ namespace Unclassified.TxEditor.View
 			}
 			if (e.Key == Key.F2 && e.KeyboardDevice.Modifiers == ModifierKeys.None)
 			{
-				(DataContext as MainWindowViewModel).RenameTextKeyCommand.TryExecute();
+				(DataContext as MainViewModel).RenameTextKeyCommand.TryExecute();
 			}
 		}
 
@@ -266,7 +266,7 @@ namespace Unclassified.TxEditor.View
 
 		private void TextKeysTreeView_SelectionChanged(object sender, EventArgs e)
 		{
-			var vm = DataContext as MainWindowViewModel;
+			var vm = DataContext as MainViewModel;
 			if (vm != null)
 			{
 				vm.TextKeySelectionChanged(TextKeysTreeView.SelectedItems);
@@ -277,7 +277,7 @@ namespace Unclassified.TxEditor.View
 		{
 			if (e.Key == Key.Delete && e.KeyboardDevice.Modifiers == 0)
 			{
-				(DataContext as MainWindowViewModel).DeleteTextKeyCommand.TryExecute();
+				(DataContext as MainViewModel).DeleteTextKeyCommand.TryExecute();
 				e.Handled = true;
 			}
 		}

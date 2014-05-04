@@ -24,7 +24,7 @@ namespace Unclassified.TxEditor.ViewModel
 			return textKey;
 		}
 
-		public MainWindowViewModel MainWindowVM { get; private set; }
+		public MainViewModel MainWindowVM { get; private set; }
 
 		private string textKey;
 		public string TextKey
@@ -177,7 +177,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
-		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainWindowViewModel mainWindowVM)
+		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainViewModel mainWindowVM)
 			: base(parent, false)
 		{
 			this.textKey = textKey;
