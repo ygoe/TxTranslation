@@ -410,6 +410,29 @@ namespace Unclassified.TxLib
 			}
 		}
 
+		private static TxMode globalMode;
+
+		[ThreadStatic]
+		private static TxMode threadMode;
+
+		/// <summary>
+		/// Gets or sets the operation mode for the current application domain.
+		/// </summary>
+		public static TxMode GlobalMode
+		{
+			get { return globalMode; }
+			set { globalMode = value; }
+		}
+
+		/// <summary>
+		/// Gets or sets the operation mode for the current thread.
+		/// </summary>
+		public static TxMode ThreadMode
+		{
+			get { return threadMode; }
+			set { threadMode = value; }
+		}
+
 		#endregion Properties
 
 		#region Load methods
@@ -1012,6 +1035,12 @@ namespace Unclassified.TxLib
 			CultureInfo ci = new CultureInfo(culture);
 			if (ci.Name != CultureInfo.CurrentCulture.Name)
 			{
+				if (Environment.Version.Major < 4)
+				{
+					// Before .NET 4.0 the CurrentCulture could only be assigned a non-neutral
+					// culture. Find the default culture in this case and use it instead.
+					ci = new CultureInfo(ci.LCID | 0x0400);
+				}
 				Thread.CurrentThread.CurrentCulture = ci;
 				RaiseDictionaryChanged();
 			}
@@ -3136,13 +3165,25 @@ namespace Unclassified.TxLib
 				}
 			}
 
+			if (globalMode == TxMode.ShowKey || threadMode == TxMode.ShowKey)
+			{
+				return NotFound(key);
+			}
+
 			using (new ReadLock(rwlock))
 			{
 				string firstCulture = null;
 				foreach (string culture in GetCulturesToTry(1))
 				{
 					string text = GetCultureText(culture, key, count);
-					if (text != null) return text;
+					if (text != null)
+					{
+						if (globalMode == TxMode.UnicodeTest || threadMode == TxMode.UnicodeTest)
+						{
+							text = GetUnicodeTestString(text);
+						}
+						return text;
+					}
 					if (firstCulture == null) firstCulture = culture;
 				}
 				if (!useFallback)
@@ -3159,12 +3200,103 @@ namespace Unclassified.TxLib
 				foreach (string culture in GetCulturesToTry(2))
 				{
 					string text = GetCultureText(culture, key, count);
-					if (text != null) return text;
+					if (text != null)
+					{
+						if (globalMode == TxMode.UnicodeTest || threadMode == TxMode.UnicodeTest)
+						{
+							text = GetUnicodeTestString(text);
+						}
+						return text;
+					}
 				}
 				// Nothing found, return null
 				Log("Get text: Text key \"{0}\" is unset for ALL cultures.", key);
 				return null;
 			}
+		}
+
+		private static string GetUnicodeTestString(string text)
+		{
+			bool inPlaceholder = false;
+			char[] chars = text.ToCharArray();
+			for (int i = 0; i < chars.Length; i++)
+			{
+				if (chars[i] == '{')
+				{
+					inPlaceholder = true;
+				}
+				else if (chars[i] == '}')
+				{
+					inPlaceholder = false;
+				}
+				else if (!inPlaceholder)
+				{
+					chars[i] = GetUnicodeTestChar(chars[i], i);
+				}
+			}
+			return new string(chars);
+		}
+
+		private static char GetUnicodeTestChar(char ch, int i)
+		{
+			string alternatives = null;
+			switch (ch)
+			{
+				case 'A': alternatives = "ÀÁÂÃÄÅĀāĂĄǞǠȀȂÅ"; break;
+				case 'B': alternatives = "ḂḄḆ"; break;
+				case 'C': alternatives = "ÇĆĈĊČƇℂ"; break;
+				case 'D': alternatives = "ĐƉƊ"; break;
+				case 'E': alternatives = "ÈÉÊËĒĔĖĘĚƎȄȆ"; break;
+				case 'F': alternatives = "ƑḞ"; break;
+				case 'G': alternatives = "ĜĞĠĢǤǦḠ"; break;
+				case 'H': alternatives = "ĤĦḢḤḦḨḪῌℍ"; break;
+				case 'I': alternatives = "ĨĪĬĮİǏȈȊḬỈỊῙ"; break;
+				case 'J': alternatives = "Ĵ"; break;
+				case 'K': alternatives = "ҠĶḲḴ"; break;
+				case 'L': alternatives = "ĹĻĽĿŁḶḸḺḼℒ"; break;
+				case 'M': alternatives = "ḾṀṂℳ"; break;
+				case 'N': alternatives = "ƝÑŃŅŇИЙṄṆṈṊℕ₦"; break;
+				case 'O': alternatives = "ÒÓÔÕÖØŌŎŐƠǑǪȌȎΘṌṒỌỘ"; break;
+				case 'P': alternatives = "ƤṔṖℙ₧"; break;
+				case 'Q': alternatives = "Ⴓℚ"; break;
+				case 'R': alternatives = "ŔŖŘȐȒЯṘṚṜṞℛℜℝ"; break;
+				case 'S': alternatives = "ŚŜŞŠṠṢṤṨ"; break;
+				case 'T': alternatives = "ŢŤƬṪṬṮṰ"; break;
+				case 'U': alternatives = "ÙÚÛÜŨŪŬŮǓǕỦ"; break;
+				case 'V': alternatives = "ƲṾ℣"; break;
+				case 'W': alternatives = "ŴШѠẀẂẄẆẈ₩"; break;
+				case 'X': alternatives = "ҲẊẌ"; break;
+				case 'Y': alternatives = "ÝŶŸƳУҰႸჄẎ"; break;
+				case 'Z': alternatives = "ŹŻŽƵẐẒẔℤ"; break;
+				case 'a': alternatives = "àáâãäåāăӑạậ"; break;
+				case 'b': alternatives = "ƀƅɓḃḅḇ"; break;
+				case 'c': alternatives = "çćĉċčḉ"; break;
+				case 'd': alternatives = "đḋḍḏḓძ"; break;
+				case 'e': alternatives = "èéêëēĕėęěɘєӗḙḛệ"; break;
+				case 'f': alternatives = "ƒḟ"; break;
+				case 'g': alternatives = "ǥĝğġģɠḡ"; break;
+				case 'h': alternatives = "ĥħɦḣḥḧḩḫႹℎℏ"; break;
+				case 'i': alternatives = "ìíîïĩīĭǐȉȋɨιїḭịἰῒ"; break;
+				case 'j': alternatives = "ĵʝǰ"; break;
+				case 'k': alternatives = "ķĸƙʞкḱḳḵ"; break;
+				case 'l': alternatives = "Ɩĺļľŀłɭḷḻḽℓ"; break;
+				case 'm': alternatives = "ɱḿṁṃ₥ო"; break;
+				case 'n': alternatives = "ñńņňŋɲɳήṅṇṉ"; break;
+				case 'o': alternatives = "òóôõöōŏőǒǫȏόṍọ"; break;
+				case 'p': alternatives = "ƥρṕṗῤῥ"; break;
+				case 'q': alternatives = "ʠգզ"; break;
+				case 'r': alternatives = "ŕŗřгṙṛṝṟ"; break;
+				case 's': alternatives = "śŝşšʂṡṣṩ"; break;
+				case 't': alternatives = "ţťŧтṫṭṯṱẗ"; break;
+				case 'u': alternatives = "ùúûüũūŭůűṳṵṷṻụ∪"; break;
+				case 'v': alternatives = "ṽṿ∨"; break;
+				case 'w': alternatives = "ẁẃẅẇẉὠὡὼώ"; break;
+				case 'x': alternatives = "×ẋẍχ"; break;
+				case 'y': alternatives = "ýÿŷўႸẏỳỵ"; break;
+				case 'z': alternatives = "źżžƶẑẓẕ"; break;
+				default: return ch;
+			}
+			return alternatives[i % alternatives.Length];
 		}
 
 		/// <summary>
@@ -3546,6 +3678,24 @@ namespace Unclassified.TxLib
 
 		#endregion Synchronisation helper classes
 	}
+
+	#region TxMode enumeration
+
+	/// <summary>
+	/// Defines operation modes of the Tx library.
+	/// </summary>
+	public enum TxMode
+	{
+		/// <summary>Normal translation of text keys.</summary>
+		Normal,
+		/// <summary>Returns the text keys instead of their translation.</summary>
+		ShowKey,
+		/// <summary>Adds additional Unicode characters or decorations to test the application's
+		/// encoding capabilities.</summary>
+		UnicodeTest
+	}
+
+	#endregion TxMode enumeration
 
 	#region Date and time format enumeration
 
