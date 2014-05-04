@@ -54,6 +54,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
+		<text key="msg.load file.other cultures for prefix">Es gibt weitere Kulturdateien für diesen Präfix.</text>
+		<text key="msg.load file.other cultures for prefix.desc">Die folgenden Kulturen können mitgeladen werden: {list}</text>
 		<text key="msg.load file.title">Dateien zum Laden auswählen</text>
 		<text key="msg.load folder.multiple dictionaries in folder">Es gibt mehrere Wörterbücher im ausgewählten Ordner.</text>
 		<text key="msg.load folder.multiple dictionaries in folder.desc">Bitte wählen Sie das zu ladende Wörterbuch aus:</text>
@@ -110,6 +112,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="task dialog.button.delete">&amp;Löschen</text>
 		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
 		<text key="task dialog.button.load">&amp;Laden</text>
+		<text key="task dialog.button.load all">&amp;Alle laden</text>
+		<text key="task dialog.button.load one">&amp;Eine laden</text>
 		<text key="task dialog.button.merge">&amp;Zusammenführen</text>
 		<text key="task dialog.button.overwrite">Ü&amp;berschreiben</text>
 		<text key="task dialog.button.save">&amp;Speichern</text>
@@ -410,6 +414,8 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
+		<text key="msg.load file.other cultures for prefix">There are additional culture files for this prefix.</text>
+		<text key="msg.load file.other cultures for prefix.desc">The following cultures can be loaded as well: {list}</text>
 		<text key="msg.load file.title">Select files to load</text>
 		<text key="msg.load folder.multiple dictionaries in folder">There are multiple dictionaries in the selected folder.</text>
 		<text key="msg.load folder.multiple dictionaries in folder.desc">Please choose the dictionary to load:</text>
@@ -466,6 +472,8 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="task dialog.button.delete">&amp;Delete</text>
 		<text key="task dialog.button.dont save">Do&amp;n’t save</text>
 		<text key="task dialog.button.load">&amp;Load</text>
+		<text key="task dialog.button.load all">Load &amp;all</text>
+		<text key="task dialog.button.load one">Load &amp;one</text>
 		<text key="task dialog.button.merge">&amp;Merge</text>
 		<text key="task dialog.button.overwrite">&amp;Overwrite</text>
 		<text key="task dialog.button.save">&amp;Save</text>

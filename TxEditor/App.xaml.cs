@@ -167,8 +167,7 @@ namespace Unclassified.TxEditor
 							// Nothing found, try older XML file names
 							foreach (string fileName in Directory.GetFiles(fileNameArg, "*.xml"))
 							{
-								Match m = Regex.Match(fileName, @"[^.]\.(([a-z]{2})([-][a-z]{2})?)\.xml$", RegexOptions.IgnoreCase);
-								if (m.Success)
+								if (FileNameHelper.GetCulture(fileName) != null)
 								{
 									filesToLoad.Add(fileName);
 								}
@@ -206,7 +205,10 @@ namespace Unclassified.TxEditor
 			//        }
 			//    }
 			//}
-			// TODO: Loading multiple txd files is not supported. Only scan for more cultures of version 1 files.
+			// NOTE: Loading multiple txd files is not supported. (Only scan for more cultures of version 1 files. - Done)
+
+			if (!FileNameHelper.FindOtherCultures(filesToLoad))
+				Application.Current.Shutdown();
 
 			// Create main window and view model
 			var view = new MainWindow();

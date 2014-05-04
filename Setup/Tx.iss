@@ -43,7 +43,7 @@ WizardSmallImageFile=TxFlagSmall.bmp
 UninstallDisplayName=TxTranslation
 UninstallDisplayIcon={app}\TxEditor.exe
 
-OutputDir=.
+OutputDir=bin
 OutputBaseFilename=TxSetup-{#RevId}
 SolidCompression=True
 InternalCompressLevel=max
@@ -136,8 +136,8 @@ Name: "{group}\TxLib assembly"; Filename: "{app}\TxLib assembly\"
 Name: "{group}\TxLib source code"; Filename: "{app}\TxLib source code\"
 
 [Run]
-Filename: {app}\TxEditor.exe; WorkingDir: {app}; Flags: nowait postinstall
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\TxEditor.exe"""; StatusMsg: "{cm:NgenMessage}"; Flags: runhidden
+Filename: {app}\TxEditor.exe; WorkingDir: {app}; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: uninstall {app}\TxEditor.exe; Flags: runhidden

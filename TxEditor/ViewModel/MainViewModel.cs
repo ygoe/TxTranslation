@@ -840,7 +840,7 @@ namespace Unclassified.TxEditor.ViewModel
 					regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
 					if (!string.IsNullOrEmpty(prefix))
 					{
-						regex = "^" + prefix + regex;
+						regex = "^" + prefix.ToRegex() + regex;
 					}
 					foreach (string fileName in Directory.GetFiles(d.Folder))
 					{
@@ -891,19 +891,13 @@ namespace Unclassified.TxEditor.ViewModel
 			if (dlg.ShowDialog(MainWindow.Instance) == true)
 			{
 				// Check for same prefix and reject mixed files
-				string regex = @"^(.+?)(\.(([a-z]{2})([-][a-z]{2})?))?\.(?:txd|xml)$";
 				List<string> prefixes = new List<string>();
-				string prefix = null;
 				foreach (string fileName in dlg.FileNames)
 				{
-					Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
-					if (m.Success)
+					string prefix = FileNameHelper.GetPrefix(fileName);
+					if (!prefixes.Contains(prefix))
 					{
-						prefix = m.Groups[1].Value;
-						if (!prefixes.Contains(prefix))
-						{
-							prefixes.Add(prefix);
-						}
+						prefixes.Add(prefix);
 					}
 				}
 				if (prefixes.Count > 1)
@@ -916,26 +910,28 @@ namespace Unclassified.TxEditor.ViewModel
 					return;
 				}
 
-				// TODO: Scan for similar files and ask if not all of them are selected
+				List<string> filesToLoad = new List<string>(dlg.FileNames);
+
+				if (!FileNameHelper.FindOtherCultures(filesToLoad)) return;
 
 				bool foundFiles = false;
 				fileVersion = 0;
-				foreach (string fileName in dlg.FileNames)
+				foreach (string fileName in filesToLoad)
 				{
 					if (!foundFiles)
 					{
 						foundFiles = true;
 						fileModified = false;   // Prevent another unsaved warning from OnNewFile
-						OnNewFile();
+						OnNewFile();   // Clear any currently loaded content
 					}
 					LoadFromXmlFile(fileName);
 				}
-				// TODO: Display a warning if multiple files claimed to be the primary culture, and which has won
+				// TODO: Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
 
 				SortCulturesInTextKey(RootTextKey);
 				DeletedCultureNames.Clear();
 				ValidateTextKeysDelayed();
-				StatusText = Tx.T("statusbar.n files loaded", dlg.FileNames.Length) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
+				StatusText = Tx.T("statusbar.n files loaded", filesToLoad.Count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
 				FileModified = false;
 				ClearViewHistory();
 				CheckNotifyReadonlyFiles();

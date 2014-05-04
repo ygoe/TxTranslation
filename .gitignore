@@ -1,5 +1,5 @@
 # Project-specific files
-Setup/TxSetup-*.exe
+Setup/bin/
 
 # User-specific files
 *.suo

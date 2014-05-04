@@ -29,6 +29,29 @@ namespace Unclassified
 		}
 
 		/// <summary>
+		/// Converts a string into a regular expression pattern.
+		/// </summary>
+		/// <param name="str">Source string to convert.</param>
+		/// <returns></returns>
+		public static string ToRegex(this string str)
+		{
+			return str
+				.Replace(@"\", @"\\")
+				.Replace(@"$", @"\$")
+				.Replace(@"(", @"\(")
+				.Replace(@")", @"\)")
+				.Replace(@"*", @"\*")
+				.Replace(@".", @"\.")
+				.Replace(@"?", @"\?")
+				.Replace(@"[", @"\[")
+				.Replace(@"]", @"\]")
+				.Replace(@"^", @"\^")
+				.Replace(@"{", @"\{")
+				.Replace(@"|", @"\|")
+				.Replace(@"}", @"\}");
+		}
+
+		/// <summary>
 		/// Returns a new string in which a specified string is replaced with another specified
 		/// string if its occurence is at the beginning of the current string.
 		/// </summary>

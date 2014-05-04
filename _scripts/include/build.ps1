@@ -17,14 +17,6 @@ $sourcePath = $MyInvocation.MyCommand.Definition | split-path -parent | split-pa
 $gitRevisionFormat = "{bmin:2013:4}.{commit:6}{!:+}"
 $revId = Get-GitRevision
 
-# Disable FASTBUILD mode to always include a full version number in the assembly version info.
-#
-$env:FASTBUILD = ""
-
-# ---------------------------------------------------------------------------------
-
-Write-Host "Application version: $revId"
-
 # ------------------------------  ACTION DEFINITION  ------------------------------
 
 # ---------- Debug builds ----------
@@ -67,7 +59,7 @@ if ((IsSelected("setup-release")) -or (IsSelected("commit")))
 
 	if (IsSelected("sign-setup"))
 	{
-		Sign-File "Setup\TxSetup-$revId.exe" "signkey.pfx" "@signkey.password" 1
+		Sign-File "Setup\bin\TxSetup-$revId.exe" "signkey.pfx" "@signkey.password" 1
 	}
 }
 
@@ -75,13 +67,14 @@ if ((IsSelected("setup-release")) -or (IsSelected("commit")))
 
 if (IsSelected("install"))
 {
-	Exec-File "Setup\TxSetup-$revId.exe" "/silent" 1
+	Exec-File "Setup\bin\TxSetup-$revId.exe" "/norestart /verysilent" 1
 }
 
 # ---------- Commit to repository ----------
 
 if (IsSelected("commit"))
 {
+	Delete-File "Setup\bin\TxSetup-$revId.exe" 0
 	Git-Commit 1
 }
 
