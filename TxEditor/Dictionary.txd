@@ -50,6 +50,9 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.delete text key.multiple.content mixed">Sie haben vollständige Textschlüssel ausgewählt, die weitere Unterschlüssel enthalten. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Nur ausgewählte Schlüssel löschen</text>
 		<text key="msg.enter text">Text hier eingeben</text>
+		<text key="msg.import file.add new culture">Neue Kultur {culture} aus importierter Datei hinzufügen?</text>
+		<text key="msg.import file.add new culture.desc">Die Datei „{name}“ enthält die Kultur {culture}, die diesem Wörterbuch noch nicht hinzugefügt wurde.</text>
+		<text key="msg.import file.title">Dateien zum Importieren auswählen</text>
 		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
@@ -88,6 +91,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.culture added">Neue Kultur {name} hinzugefügt.</text>
 		<text key="statusbar.culture deleted">Kultur {name} gelöscht.</text>
 		<text key="statusbar.file saved">Datei gespeichert.</text>
+		<text key="statusbar.n files imported">{#} Dateien importiert, </text>
+		<text key="statusbar.n files imported" count="1">Datei importiert, </text>
 		<text key="statusbar.n files loaded">{#} Dateien geladen, </text>
 		<text key="statusbar.n files loaded" count="1">Datei geladen, </text>
 		<text key="statusbar.n results">{#} Ergebnisse.</text>
@@ -110,6 +115,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="suggestions.caption for">Vorschläge für {name}</text>
 		<text key="suggestions.exact match">Genaue Übereinstimmung</text>
 		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
+		<text key="task dialog.button.add culture">&amp;Kultur hinzufügen</text>
 		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
 		<text key="task dialog.button.delete">&amp;Löschen</text>
 		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
@@ -121,6 +127,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="task dialog.button.save">&amp;Speichern</text>
 		<text key="task dialog.button.save anyway">Trotzdem &amp;speichern</text>
 		<text key="task dialog.button.save in original format">Im ursprünglichen Format &amp;speichern</text>
+		<text key="task dialog.button.skip culture">Kultur über&amp;springen</text>
 		<text key="task dialog.button.switch">&amp;Wechseln</text>
 		<text key="task dialog.button.upgrade">Akt&amp;ualisieren</text>
 		<text key="toolbar.app">Anwendung</text>
@@ -412,6 +419,9 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.delete text key.multiple.content mixed">You have selected full text keys that also contain other subkeys. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Only delete selected keys</text>
 		<text key="msg.enter text">Enter text here</text>
+		<text key="msg.import file.add new culture">Add new culture {culture} from imported file?</text>
+		<text key="msg.import file.add new culture.desc">The file “{name}” contains the culture {culture} which is not yet added to this dictionary.</text>
+		<text key="msg.import file.title">Select files to import</text>
 		<text key="msg.incomplete key selected">Incomplete text key selected</text>
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
@@ -450,6 +460,8 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.culture added">New culture {name} added.</text>
 		<text key="statusbar.culture deleted">Culture {name} deleted.</text>
 		<text key="statusbar.file saved">File saved.</text>
+		<text key="statusbar.n files imported">{#} files imported, </text>
+		<text key="statusbar.n files imported" count="1">File imported, </text>
 		<text key="statusbar.n files loaded">{#} files loaded, </text>
 		<text key="statusbar.n files loaded" count="1">File loaded, </text>
 		<text key="statusbar.n results">{#} results.</text>
@@ -472,6 +484,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="suggestions.caption for">Suggestions for {name}</text>
 		<text key="suggestions.exact match">Exact match</text>
 		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
+		<text key="task dialog.button.add culture">&amp;Add culture</text>
 		<text key="task dialog.button.cancel">&amp;Cancel</text>
 		<text key="task dialog.button.delete">&amp;Delete</text>
 		<text key="task dialog.button.dont save">Do&amp;n’t save</text>
@@ -483,6 +496,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="task dialog.button.save">&amp;Save</text>
 		<text key="task dialog.button.save anyway">&amp;Save anyway</text>
 		<text key="task dialog.button.save in original format">&amp;Save in original format</text>
+		<text key="task dialog.button.skip culture">&amp;Skip culture</text>
 		<text key="task dialog.button.switch">&amp;Switch</text>
 		<text key="task dialog.button.upgrade">&amp;Upgrade</text>
 		<text key="toolbar.app">Application</text>
