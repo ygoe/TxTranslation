@@ -13,7 +13,7 @@ namespace Unclassified
 		static UnicodeInfo()
 		{
 			// First load the XML file into an XmlDocument for further processing
-			Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("TxEditor.UnicodeTable.deflate");
+			Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Unclassified.TxEditor.UnicodeTable.deflate");
 			if (stream == null)
 			{
 				throw new ArgumentException("The embedded resource was not found in this assembly.");

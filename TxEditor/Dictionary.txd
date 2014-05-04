@@ -4,11 +4,37 @@
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="msg.cannot backup file.v1">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert, aber manche Dateien wurden vielleicht schon als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
+
+{msg}</text>
+		<text key="msg.cannot backup file.v2">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert.
+
+{msg}</text>
 		<text key="msg.cannot copy namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum kopiert werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
 		<text key="msg.cannot create namespace key">Sie können den Namensraum-Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als normaler Schlüssel existiert.</text>
 		<text key="msg.cannot create non-namespace key">Sie können den Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als Namensraum existiert.</text>
+		<text key="msg.cannot delete backup file">Die vorherige Sicherungskopie „{name}“ kann nicht gelöscht werden. Es wurden keine neuen Daten gespeichert.
+
+{msg}</text>
+		<text key="msg.cannot delete new backup file.v1">Mindestens eine neue Sicherungskopie konnte nicht wieder gelöscht werden. Alle Daten wurden gespeichert.</text>
+		<text key="msg.cannot delete new backup file.v2">Die neue Sicherungskopie „{name}“ konnte nicht wieder gelöscht werden. Alle Daten wurden gespeichert.
+
+{msg}</text>
 		<text key="msg.cannot move namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum verschoben werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
 		<text key="msg.cannot save unsupported file version">Nicht unterstützte Dateiversion {ver} kann nicht gespeichert werden. Wie wurde diese Datei geladen?</text>
+		<text key="msg.cannot write file.v1">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Manche neuen Daten sind ungespeichert und manche Dateien wurden vielleicht als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
+
+{msg}</text>
+		<text key="msg.cannot write file.v2">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
+
+{firstmsg}
+
+Die automatische Wiederherstellung ist fehlgeschlagen.
+
+{msg}</text>
+		<text key="msg.cannot write file.v2 restored">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde aus der Sicherungskopie wiederhergestellt.
+
+{msg}</text>
 		<text key="msg.cannot write to read-only file">Die Datei, in die gespeichert werden soll, ist als schreibgeschützt markiert.
 
 Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
@@ -334,11 +360,37 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
+		<text key="msg.cannot backup file.v1" comment="Move to backup exception for file format v1 (multiple files)">Cannot rename the file “{name}” for backup. No new data was saved but some files may have been renamed to their backup and you need to restore them.
+
+{msg}</text>
+		<text key="msg.cannot backup file.v2" comment="Move to backup exception for file format v2 (single file)">Cannot rename the file “{name}” for backup. No new data was saved.
+
+{msg}</text>
 		<text key="msg.cannot copy namespace">A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.</text>
 		<text key="msg.cannot create namespace key">You cannot create the namespace text key {key} because the root key already exists as regular key.</text>
 		<text key="msg.cannot create non-namespace key">You cannot create the text key {key} because the root key already exists as namespace.</text>
+		<text key="msg.cannot delete backup file">Cannot delete the previous backup file “{name}”. No new data was saved.
+
+{msg}</text>
+		<text key="msg.cannot delete new backup file.v1" comment="Exception here does not stop, just report that something has happened afterwards">One or more new backup files cannot be deleted again. All data has been saved.</text>
+		<text key="msg.cannot delete new backup file.v2">The new backup file “{name}” cannot be deleted again. All data has been saved.
+
+{msg}</text>
 		<text key="msg.cannot move namespace">A namespace cannot be nested or moved to another tree position. Please enter a normal name for the namespace.</text>
 		<text key="msg.cannot save unsupported file version">Unsupported file version {ver} cannot be saved. How was that loaded?</text>
+		<text key="msg.cannot write file.v1" comment="File write exception for file format v1 (multiple files)">Cannot write the dictionary file “{name}”. Some new data is unsaved and some files may have been renamed to their backup and you need to restore them.
+
+{msg}</text>
+		<text key="msg.cannot write file.v2" comment="File write exception for file format v2 (single file), restore failed">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been renamed to its backup and you need to restore it.
+
+{firstmsg}
+
+Automatic restoring of the backup file failed.
+
+{msg}</text>
+		<text key="msg.cannot write file.v2 restored" comment="File write exception for file format v2 (single file), the backup was restored">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been restored from its backup.
+
+{msg}</text>
 		<text key="msg.cannot write to read-only file">The file you are trying to save to is marked read-only.
 
 Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>

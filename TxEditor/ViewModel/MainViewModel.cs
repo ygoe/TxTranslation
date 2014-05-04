@@ -2464,10 +2464,35 @@ namespace Unclassified.TxEditor.ViewModel
 					string cultureFileName = fileNamePrefix + "." + cultureName + ".xml";
 					if (File.Exists(cultureFileName))
 					{
-						File.Delete(cultureFileName + ".bak");
-						File.Move(cultureFileName, cultureFileName + ".bak");
+						try
+						{
+							File.Delete(cultureFileName + ".bak");
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(
+								Tx.T("msg.cannot delete backup file", "name", cultureFileName + ".bak", "msg", ex.Message),
+								Tx.T("msg.caption.error"),
+								MessageBoxButton.OK,
+								MessageBoxImage.Error);
+							return false;
+						}
+						try
+						{
+							File.Move(cultureFileName, cultureFileName + ".bak");
+						}
+						catch (Exception ex)
+						{
+							MessageBox.Show(
+								Tx.T("msg.cannot backup file.v1", "name", cultureFileName, "msg", ex.Message),
+								Tx.T("msg.caption.error"),
+								MessageBoxButton.OK,
+								MessageBoxImage.Error);
+							return false;
+						}
 					}
 				}
+
 				// Write new files, one for each loaded culture
 				foreach (var cultureName in LoadedCultureNames)
 				{
@@ -2485,18 +2510,48 @@ namespace Unclassified.TxEditor.ViewModel
 					WriteToXml(cultureName, xmlDoc.DocumentElement);
 
 					// Write xmlDoc to file
-					WriteXmlToFile(xmlDoc, fileNamePrefix + "." + cultureName + ".xml");
+					try
+					{
+						WriteXmlToFile(xmlDoc, fileNamePrefix + "." + cultureName + ".xml");
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(
+							Tx.T("msg.cannot write file.v1", "name", fileNamePrefix + "." + cultureName + ".xml", "msg", ex.Message),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+						return false;
+					}
 				}
+
 				// Delete all backup files (could also be an option)
+				int deleteErrorCount = 0;
 				foreach (var cultureName in LoadedCultureNames.Union(DeletedCultureNames).Distinct())
 				{
 					string cultureFileName = fileNamePrefix + "." + cultureName + ".xml";
-					File.Delete(cultureFileName + ".bak");
+					try
+					{
+						File.Delete(cultureFileName + ".bak");
+					}
+					catch
+					{
+						deleteErrorCount++;
+					}
+				}
+				if (deleteErrorCount > 0)
+				{
+					MessageBox.Show(
+						Tx.T("msg.cannot delete new backup file.v1"),
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Error);
 				}
 				DeletedCultureNames.Clear();
 			}
 			else if (fileVersion == 2)
 			{
+				// Check file for read-only attribute
 				FileInfo fi = new FileInfo(fileNamePrefix + ".txd");
 				if (fi.Exists && fi.IsReadOnly)
 				{
@@ -2506,6 +2561,37 @@ namespace Unclassified.TxEditor.ViewModel
 						MessageBoxButton.OK,
 						MessageBoxImage.Error);
 					return false;
+				}
+
+				// Delete previous backup and move current file to backup
+				if (File.Exists(fileNamePrefix + ".txd"))
+				{
+					try
+					{
+						File.Delete(fileNamePrefix + ".txd.bak");
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(
+							Tx.T("msg.cannot delete backup file", "name", fileNamePrefix + ".txd.bak", "msg", ex.Message),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+						return false;
+					}
+					try
+					{
+						File.Move(fileNamePrefix + ".txd", fileNamePrefix + ".txd.bak");
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(
+							Tx.T("msg.cannot backup file.v2", "name", fileNamePrefix + ".txd", "msg", ex.Message),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+						return false;
+					}
 				}
 
 				XmlDocument xmlDoc = new XmlDocument();
@@ -2531,7 +2617,48 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 
 				// Write xmlDoc to file
-				WriteXmlToFile(xmlDoc, fileNamePrefix + ".txd");
+				try
+				{
+					WriteXmlToFile(xmlDoc, fileNamePrefix + ".txd");
+				}
+				catch (Exception ex)
+				{
+					// Try to restore the backup file
+					try
+					{
+						File.Delete(fileNamePrefix + ".txd");
+						File.Move(fileNamePrefix + ".txd.bak", fileNamePrefix + ".txd");
+
+						MessageBox.Show(
+							Tx.T("msg.cannot write file.v2 restored", "name", fileNamePrefix + ".txd", "msg", ex.Message),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+					}
+					catch (Exception ex2)
+					{
+						MessageBox.Show(
+							Tx.T("msg.cannot write file.v2", "name", fileNamePrefix + ".txd", "msg", ex2.Message, "firstmsg", ex.Message),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+					}
+					return false;
+				}
+
+				// Delete backup file (could also be an option)
+				try
+				{
+					File.Delete(fileNamePrefix + ".txd.bak");
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(
+						Tx.T("msg.cannot delete new backup file.v2", "name", fileNamePrefix + ".txd.bak", "msg", ex.Message),
+						Tx.T("msg.caption.error"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Error);
+				}
 			}
 			else
 			{
