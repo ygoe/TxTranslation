@@ -43,6 +43,10 @@
 			SelectionChanged="CulturesList_SelectionChanged"
 			MouseDoubleClick="CulturesList_MouseDoubleClick"/>
 
+		<StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Left">
+			<CheckBox Name="InsertSystemKeysCheckBox" VerticalAlignment="Center" Content="{Tx:T 'window.new culture.checkbox.insert system keys', Default='Insert system keys'}"/>
+		</StackPanel>
+
 		<StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
 			<Button Name="AddButton" Padding="6,1" MinWidth="75" IsDefault="True" Click="AddButton_Click" Content="{Tx:T 'window.new culture.button.add culture', Default='Add culture'}"/>
 			<Button Name="CancelButton" Margin="6,0,0,0" Padding="6,1" MinWidth="75" IsCancel="True" Content="{Tx:T 'window.new culture.button.cancel', Default='Cancel'}"/>

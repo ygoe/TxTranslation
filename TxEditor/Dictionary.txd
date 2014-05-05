@@ -55,6 +55,14 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.import file.title">Dateien zum Importieren auswählen</text>
 		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
+		<text key="msg.insert system keys.base culture">Die Systemschlüssel für die ausgewählte Kultur wurden hinzugefügt. Beachten Sie jedoch, dass diese Schlüssel auf ihre Basiskultur {name} angewiesen sein können. Ansonsten sind die möglicherweise unvollständig. Bitte fügen Sie ggf. auch die Basiskultur und deren Systemschlüssel hinzu.</text>
+		<text key="msg.insert system keys.base culture.title">Abhängigkeit von der Basiskultur</text>
+		<text key="msg.insert system keys.not available">Die ausgewählte Kultur {name} ist nicht verfügbar.
+
+TxEditor enthält nur Systemschlüssel für die Kulturen, die die Benutzer bereitstellen. Wenn Sie Ihre Systemschlüssel für diese Kultur an den Tx-Entwickler senden, können sie in zukünftigen Versionen aufgenommen werden und dadurch auch Ihren Arbeitsablauf erleichtern!
+
+Um eine Übersicht der aktuell unterstützten Kulturen zu erhalten, öffnen Sie bitte die Datei Template.txd im TxEditor-Quelltext.</text>
+		<text key="msg.insert system keys.not available.title">Kultur nicht unterstützt</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
 		<text key="msg.load file.multiple primary cultures">Mehrere Dateien waren als Hauptkultur gekennzeichnet: {list}
@@ -327,6 +335,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="window.load select file.intro">Wählen Sie eine Datei zum Laden aus:</text>
 		<text key="window.new culture.button.add culture">Kultur hinzufügen</text>
 		<text key="window.new culture.button.cancel">Abbrechen</text>
+		<text key="window.new culture.checkbox.insert system keys">Systemschlüssel einfügen</text>
 		<text key="window.new culture.intro">Bitte wählen Sie die hinzuzufügende Kultur aus der Liste aus oder geben Sie ihren Code ein</text>
 		<text key="window.new culture.title">Neue Kultur hinzufügen</text>
 		<text key="window.settings.file">Datei</text>
@@ -424,6 +433,14 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.import file.title">Select files to import</text>
 		<text key="msg.incomplete key selected">Incomplete text key selected</text>
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
+		<text key="msg.insert system keys.base culture">The system keys for the selected culture were added. Note however that these keys may depend on its base culture {name}. Otherwise they may be incomplete. Please consider adding the base culture and adding their system keys as well.</text>
+		<text key="msg.insert system keys.base culture.title">Base culture dependency</text>
+		<text key="msg.insert system keys.not available">The selected culture {name} is not available.
+
+TxEditor only contains system keys for those cultures that are provided by its users. Please consider submitting your system keys for this culture to the Tx developer to make them available in TxEditor in the future. This can also make your workflow easier!
+
+For an overview of currently supported cultures, please open the file Template.txd from the TxEditor source code.</text>
+		<text key="msg.insert system keys.not available.title">Culture not supported</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
 		<text key="msg.load file.multiple primary cultures">Multiple files were marked as primary culture: {list}
@@ -703,6 +720,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="window.load select file.intro">Select a file to load:</text>
 		<text key="window.new culture.button.add culture">Add culture</text>
 		<text key="window.new culture.button.cancel">Cancel</text>
+		<text key="window.new culture.checkbox.insert system keys">Insert system keys</text>
 		<text key="window.new culture.intro">Please select the culture to add from the list, or type its code</text>
 		<text key="window.new culture.title">Add new culture</text>
 		<text key="window.settings.file">File</text>

@@ -279,6 +279,7 @@
     </None>
     <AppDesigner Include="Properties\" />
     <EmbeddedResource Include="UnicodeTable.deflate" />
+    <EmbeddedResource Include="Template.txd" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\globe_delete.png" />

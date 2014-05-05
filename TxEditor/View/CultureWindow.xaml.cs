@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Xml;
 using Unclassified.TxLib;
 using Unclassified.UI;
 
@@ -15,11 +17,20 @@ namespace Unclassified.TxEditor.View
 	public partial class CultureWindow : Window
 	{
 		private bool updating;
+		private XmlDocument templateXmlDoc;
 
 		public CultureWindow()
 		{
 			InitializeComponent();
 
+			Stream templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Unclassified.TxEditor.Template.txd");
+			if (templateStream != null)
+			{
+				templateXmlDoc = new XmlDocument();
+				templateXmlDoc.Load(templateStream);
+			}
+
+			InsertSystemKeysCheckBox.IsEnabled = false;
 			AddButton.IsEnabled = false;
 			LoadCultures();
 		}
@@ -49,6 +60,11 @@ namespace Unclassified.TxEditor.View
 			{
 				CulturesList.SelectedItem = selci;
 				CulturesList.ScrollIntoView(selci);
+				UpdateSystemKeysCheckBox(selci.CultureInfo.Name);
+			}
+			else
+			{
+				UpdateSystemKeysCheckBox(null);
 			}
 		}
 
@@ -59,8 +75,11 @@ namespace Unclassified.TxEditor.View
 			updating = true;
 			if (CulturesList.SelectedItem is CultureItem)
 			{
+				int selStart = CodeText.SelectionStart;   // Keep cursor position when typing
 				CodeText.Text = ((CultureItem) CulturesList.SelectedItem).CultureInfo.IetfLanguageTag;
+				CodeText.SelectionStart = selStart;   // Out of range value is okay
 				AddButton.IsEnabled = true;
+				UpdateSystemKeysCheckBox(CodeText.Text);
 			}
 			else
 			{
@@ -119,6 +138,25 @@ namespace Unclassified.TxEditor.View
 				CulturesList.ScrollIntoView(CulturesList.SelectedItem);
 			}
 			updating = false;
+		}
+
+		private void UpdateSystemKeysCheckBox(string culture)
+		{
+			bool wasEnabled = InsertSystemKeysCheckBox.IsEnabled;
+			InsertSystemKeysCheckBox.IsEnabled =
+				culture != null &&
+				templateXmlDoc != null &&
+				templateXmlDoc.DocumentElement.SelectSingleNode("culture[@name='" + culture + "']") is XmlElement;
+
+			if (InsertSystemKeysCheckBox.IsEnabled && !wasEnabled)
+			{
+				// Pre-check this as soon as it becomes available
+				InsertSystemKeysCheckBox.IsChecked = true;
+			}
+			if (!InsertSystemKeysCheckBox.IsEnabled)
+			{
+				InsertSystemKeysCheckBox.IsChecked = false;
+			}
 		}
 
 		private class CultureItem : IComparable

@@ -1132,6 +1132,10 @@ namespace Unclassified.TxEditor.ViewModel
 			{
 				CultureInfo ci = new CultureInfo(win.CodeText.Text);
 				AddNewCulture(RootTextKey, ci.IetfLanguageTag, true);
+				if (win.InsertSystemKeysCheckBox.IsChecked == true)
+				{
+					InsertSystemKeys(ci.Name);
+				}
 				// Make the very first culture the primary culture by default
 				if (LoadedCultureNames.Count == 1)
 				{
@@ -1173,6 +1177,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 		private void OnInsertSystemKeys()
 		{
+			InsertSystemKeys(SelectedCulture);
 		}
 
 		private void OnViewDateTimeFormats()
@@ -2402,14 +2407,25 @@ namespace Unclassified.TxEditor.ViewModel
 				else
 				{
 					// Quantified text, go deeper
-					var qt = new QuantifiedTextViewModel(ct);
-					qt.Count = count;
-					qt.Modulo = modulo;
+					// Update existing entry or create and add a new one
+					QuantifiedTextViewModel qt = ct.QuantifiedTextVMs
+						.FirstOrDefault(q => q.Count == count && q.Modulo == modulo);
+
+					bool newQt = qt == null;
+					if (qt == null)
+					{
+						qt = new QuantifiedTextViewModel(ct);
+						qt.Count = count;
+						qt.Modulo = modulo;
+					}
 					qt.Text = text;
 					qt.AcceptMissing = acceptMissing;
 					qt.AcceptPlaceholders = acceptPlaceholders;
 					qt.AcceptPunctuation = acceptPunctuation;
-					ct.QuantifiedTextVMs.InsertSorted(qt, (a, b) => QuantifiedTextViewModel.Compare(a, b));
+					if (newQt)
+					{
+						ct.QuantifiedTextVMs.InsertSorted(qt, (a, b) => QuantifiedTextViewModel.Compare(a, b));
+					}
 				}
 			}
 		}
@@ -2806,7 +2822,7 @@ namespace Unclassified.TxEditor.ViewModel
 				if (cultureTextVM != null)
 				{
 					if (!string.IsNullOrEmpty(cultureTextVM.Text) ||
-						textKeyVM.IsEmpty() && cultureName == PrimaryCulture ||   // Save empty text keys in the primary culture at least
+						textKeyVM.IsEmpty() && cultureName == PrimaryCulture && !textKeyVM.TextKey.StartsWith("Tx:") ||   // Save empty text keys in the primary culture at least (not for system keys)
 						cultureTextVM.AcceptMissing || cultureTextVM.AcceptPlaceholders || cultureTextVM.AcceptPunctuation)   // Keep accept flags
 					{
 						var textElement = xe.OwnerDocument.CreateElement("text");
@@ -3023,6 +3039,43 @@ namespace Unclassified.TxEditor.ViewModel
 		{
 			return Tx.U(App.Settings.NativeCultureNames ? ci.NativeName : ci.DisplayName) +
 				(includeCode ? " [" + ci.IetfLanguageTag + "]" : "");
+		}
+
+		private void InsertSystemKeys(string culture)
+		{
+			if (!string.IsNullOrEmpty(culture))
+			{
+				Stream templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Unclassified.TxEditor.Template.txd");
+				if (templateStream == null)
+				{
+					throw new Exception("The template dictionary is not an embedded resource in this assembly. This is a build error.");
+				}
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.Load(templateStream);
+
+				var xe = xmlDoc.DocumentElement.SelectSingleNode("culture[@name='" + culture + "']") as XmlElement;
+				if (xe != null)
+				{
+					LoadFromXml(culture, xe);
+
+					if (culture.Length == 5)
+					{
+						MessageBox.Show(
+							Tx.T("msg.insert system keys.base culture", "name", culture.Substring(0, 2)),
+							Tx.T("msg.insert system keys.base culture.title"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Information);
+					}
+				}
+				else
+				{
+					MessageBox.Show(
+						Tx.T("msg.insert system keys.not available", "name", culture),
+						Tx.T("msg.insert system keys.not available.title"),
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+				}
+			}
 		}
 
 		#endregion Culture management
