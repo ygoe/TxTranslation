@@ -313,9 +313,21 @@ function Svn-Commit($time)
 	$global:actions += $action
 }
 
+function Git-Export($archive, $time)
+{
+	$action = @{ action = "gitexport"; archive = $archive; time = $time }
+	$global:actions += $action
+}
+
 function Svn-Export($archive, $time)
 {
 	$action = @{ action = "svnexport"; archive = $archive; time = $time }
+	$global:actions += $action
+}
+
+function Git-Log($logFile, $time)
+{
+	$action = @{ action = "gitlog"; logFile = $logFile; time = $time }
 	$global:actions += $action
 }
 
@@ -616,6 +628,9 @@ function Do-Create-Archive($archive, $listFile, $progressAfter)
 		# Prepare all files in a temporary directory
 		ForEach ($line in Get-Content (MakeRootedPath($listFile)) -ErrorAction Stop)
 		{
+			if (-not $line.Trim()) { continue }
+			if ($line.StartsWith("#")) { continue }
+			
 			# Parse input line
 			$parts = $line.Split(">")
 			$src = $parts[0].Trim()
@@ -687,7 +702,7 @@ function Do-Sign-File($file, $keyFile, $password, $progressAfter)
 		$password = gc (MakeRootedPath($password.SubString(1)))
 	}
 
-	& $signtoolBin sign /f (MakeRootedPath($keyFile)) /p "$password" /t http://timestamp.verisign.com/scripts/timstamp.dll (MakeRootedPath($file))
+	& $signtoolBin sign /q /f (MakeRootedPath($keyFile)) /p "$password" /t http://timestamp.verisign.com/scripts/timstamp.dll (MakeRootedPath($file))
 	if (-not $?)
 	{
 		WaitError "Digitally signing failed"
@@ -793,10 +808,94 @@ function Do-Svn-Commit($progressAfter)
 	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
 }
 
+function Do-Git-Export($archive, $progressAfter)
+{
+	Write-Host ""
+	Write-Host -ForegroundColor DarkCyan "Git export to $archive..."
+
+	if ($revId.Contains("+"))
+	{
+		Write-Host -ForegroundColor Yellow "Warning: The local working copy is modified! Uncommitted changes are NOT exported."
+	}
+
+	# Find the Git binary
+	$gitBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
+	$gitBin = Check-Filename "$gitBin\bin\git.exe"
+	if ($gitBin -eq $null)
+	{
+		$gitBin = Check-RegFilename "hklm:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
+		$gitBin = Check-Filename "$gitBin\bin\git.exe"
+		if ($gitBin -eq $null)
+		{
+			WaitError "Git binary not found"
+			exit 1
+		}
+	}
+
+	# Find the 7-Zip binary
+	$sevenZipBin = Check-RegFilename "hklm:\SOFTWARE\7-Zip" "Path"
+	$sevenZipBin = Check-Filename "$sevenZipBin\7z.exe"
+	if ($sevenZipBin -eq $null)
+	{
+		WaitError "7-Zip binary not found"
+		exit 1
+	}
+
+	# Delete previous export if it exists
+	if (Test-Path "$sourcePath\.tmp.export")
+	{
+		Remove-Item "$sourcePath\.tmp.export" -Recurse -ErrorAction Stop
+	}
+
+	# Create temp directory
+	New-Item -ItemType Directory "$sourcePath\.tmp.export" -ErrorAction Stop | Out-Null
+
+	Push-Location "$sourcePath"
+	& $gitBin checkout-index -a --prefix ".tmp.export\"
+	if (-not $?)
+	{
+		WaitError "Git export failed"
+		exit 1
+	}
+	Pop-Location
+
+	# Delete previous archive if it exists
+	if (Test-Path (MakeRootedPath($archive)))
+	{
+		Remove-Item (MakeRootedPath($archive)) -ErrorAction Stop
+	}
+
+	Push-Location "$sourcePath\.tmp.export"
+	& $sevenZipBin a (MakeRootedPath($archive)) -mx=9 * | where {
+		$_ -notmatch "^7-Zip " -and `
+		$_ -notmatch "^Scanning$" -and `
+		$_ -notmatch "^Creating archive " -and `
+		$_ -notmatch "^\s*$" -and `
+		$_ -notmatch "^Compressing "
+	}
+	if (-not $?)
+	{
+		Pop-Location
+		WaitError "Creating Git export archive failed"
+		exit 1
+	}
+	Pop-Location
+
+	# Clean up
+	Remove-Item "$sourcePath\.tmp.export" -Recurse
+
+	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+}
+
 function Do-Svn-Export($archive, $progressAfter)
 {
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Subversion export to $archive..."
+
+	if ($revId.Contains("+"))
+	{
+		Write-Host -ForegroundColor Yellow "Warning: The local working copy is modified! Uncommitted changes are exported."
+	}
 
 	# Find the SVN binary
 	$svnBin = Check-RegFilename "hklm:\SOFTWARE\TortoiseSVN" "Directory"
@@ -819,7 +918,7 @@ function Do-Svn-Export($archive, $progressAfter)
 	# Delete previous export if it exists
 	if (Test-Path "$sourcePath\.tmp.export")
 	{
-		Remove-Item "$sourcePath\.tmp.export" -Recurse
+		Remove-Item "$sourcePath\.tmp.export" -Recurse -ErrorAction Stop
 	}
 
 	& $svnBin export -q "$sourcePath" "$sourcePath\.tmp.export"
@@ -832,7 +931,7 @@ function Do-Svn-Export($archive, $progressAfter)
 	# Delete previous archive if it exists
 	if (Test-Path (MakeRootedPath($archive)))
 	{
-		Remove-Item (MakeRootedPath($archive))
+		Remove-Item (MakeRootedPath($archive)) -ErrorAction Stop
 	}
 
 	Push-Location "$sourcePath\.tmp.export"
@@ -853,6 +952,136 @@ function Do-Svn-Export($archive, $progressAfter)
 
 	# Clean up
 	Remove-Item "$sourcePath\.tmp.export" -Recurse
+
+	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+}
+
+function Do-Git-Log($logFile, $progressAfter)
+{
+	Write-Host ""
+	Write-Host -ForegroundColor DarkCyan "Git log dump..."
+	
+	if ($revId.Contains("+"))
+	{
+		Write-Host -ForegroundColor Yellow "Warning: The local working copy is modified!"
+	}
+
+	# Find the Git binary
+	$gitBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
+	$gitBin = Check-Filename "$gitBin\bin\git.exe"
+	if ($gitBin -eq $null)
+	{
+		$gitBin = Check-RegFilename "hklm:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
+		$gitBin = Check-Filename "$gitBin\bin\git.exe"
+		if ($gitBin -eq $null)
+		{
+			WaitError "Git binary not found"
+			exit 1
+		}
+	}
+
+	# Read the output log file and determine the last added revision
+	$data = ""
+	$lastRev = ""
+	if (Test-Path (MakeRootedPath($logFile)))
+	{
+		$data = [System.IO.File]::ReadAllText((MakeRootedPath($logFile)))
+		if ($data -Match " - .+ \((.+)\)")
+		{
+			$lastRev = ([regex]::Match($data, " - .+ \((.+)\)")).Groups[1].Value
+		}
+	}
+	
+	Write-Host Adding log messages since commit $lastRev
+	
+	# Get last commit date
+	$consoleEncoding = [System.Console]::OutputEncoding
+	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+	Push-Location "$sourcePath"
+	$commitDate = (& $gitBin log -1 --pretty=format:"%ai" 2>&1)
+	if (-not $?)
+	{
+		Pop-Location
+		WaitError "Git log failed for current commit date"
+		exit 1
+	}
+	Pop-Location
+	[System.Console]::OutputEncoding = $consoleEncoding
+	if (-not [string]$commitDate)
+	{
+		Write-Host "No commit yet"
+		& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+		return
+	}
+	# DEBUG: Write-Host -ForegroundColor Yellow $commitDate
+	$commitDate = $commitDate.Substring(0, 10)
+
+	# Get last commit hash
+	$consoleEncoding = [System.Console]::OutputEncoding
+	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+	Push-Location "$sourcePath"
+	$commitHash = (& $gitBin log -1 --pretty=format:"%h" 2>&1)
+	if (-not $?)
+	{
+		Pop-Location
+		[System.Console]::OutputEncoding = $consoleEncoding
+		WaitError "Git log failed for current commit hash"
+		exit 1
+	}
+	Pop-Location
+	[System.Console]::OutputEncoding = $consoleEncoding
+	if (-not [string]$commitHash)
+	{
+		Write-Host "No commit yet"
+		& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+		return
+	}
+
+	# Get log messages for the new revisions
+	$consoleEncoding = [System.Console]::OutputEncoding
+	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+	Push-Location "$sourcePath"
+	if ($lastRev)
+	{
+		$logText = (& $gitBin log --pretty=format:"%B" --reverse "${lastRev}..HEAD" 2>&1)
+	}
+	else
+	{
+		$logText = (& $gitBin log --pretty=format:"%B" --reverse 2>&1)
+	}
+	if (-not $?)
+	{
+		Pop-Location
+		[System.Console]::OutputEncoding = $consoleEncoding
+		WaitError "Git log failed for commit messages"
+		exit 1
+	}
+	Pop-Location
+	[System.Console]::OutputEncoding = $consoleEncoding
+	if (-not [string]$logText)
+	{
+		Write-Host "No new messages"
+		& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
+		return
+	}
+	# DEBUG: Write-Host -ForegroundColor Yellow $logText
+
+	# Extract non-empty lines from all returned messages
+	$msgs = $logText | Foreach { $_.Trim() } | Where { $_ }
+	# DEBUG: Write-Host -ForegroundColor Yellow ([String]::Join("`n", $msgs))
+
+	# Format current date and revision and new messages
+	$caption = $commitDate + " - " + $revId + " (" + $commitHash + ")"
+	$newMsgs = $caption + "`r`n" + `
+		("—" * $caption.Length) + "`r`n" + `
+		[string]::Join("`r`n", $msgs).Replace("`r`r", "`r") + "`r`n`r`n"
+
+	# Write back the complete file
+	$data = ($newMsgs + $data).Trim() + "`r`n"
+	[System.IO.File]::WriteAllText((MakeRootedPath($logFile)), $data)
+
+	# Open file in editor for manual edits of the raw changes
+	Invoke-Expression (MakeRootedPath($logFile))
 
 	& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
 }
@@ -882,9 +1111,9 @@ function Do-Svn-Log($logFile, $progressAfter)
 	if (Test-Path (MakeRootedPath($logFile)))
 	{
 		$data = [System.IO.File]::ReadAllText((MakeRootedPath($logFile)))
-		if ($data -match " - r([0-9]+)")
+		if ($data -Match " - r([0-9]+)")
 		{
-			$startRev = [int]([regex]::Match($data, " - r([0-9]+)")).groups[1].value + 1
+			$startRev = [int]([regex]::Match($data, " - r([0-9]+)")).Groups[1].Value + 1
 		}
 	}
 
@@ -898,6 +1127,7 @@ function Do-Svn-Log($logFile, $progressAfter)
 	if (-not $?)
 	{
 		Pop-Location
+		[System.Console]::OutputEncoding = $consoleEncoding
 		WaitError "Subversion log failed"
 		exit 1
 	}
@@ -909,16 +1139,19 @@ function Do-Svn-Log($logFile, $progressAfter)
 		& ($toolsPath + "FlashConsoleWindow") -progress $progressAfter
 		return
 	}
+	# DEBUG: Write-Host -ForegroundColor Yellow $xmlText
 	$xml = [xml]$xmlText
 
 	# Extract non-empty lines from all returned messages
 	$msgs = $xml.log.logentry.msg -split "`n" | Foreach { $_.Trim() } | Where { $_ }
 
 	# Format current date and revision and new messages
-	$caption = ($xml.log.logentry.date[-1]).Substring(0, 10) + " - r" + $xml.log.logentry.revision[-1]
+	$date = $xml.SelectSingleNode("(/log/logentry)[last()]/date").InnerText
+	$currentRev = $xml.SelectSingleNode("(/log/logentry)[last()]/@revision").Value
+	$caption = $date.Substring(0, 10) + " - r" + $currentRev
 	$newMsgs = $caption + "`r`n" + `
 		("—" * $caption.Length) + "`r`n" + `
-		[string]::join("`r`n", $msgs).Replace("`r`r", "`r") + "`r`n`r`n"
+		[string]::Join("`r`n", $msgs).Replace("`r`r", "`r") + "`r`n`r`n"
 
 	# Write back the complete file
 	$data = ($newMsgs + $data).Trim() + "`r`n"
@@ -1014,9 +1247,17 @@ function End-BuildScript()
 			{
 				Do-Svn-Commit $progressAfter
 			}
+			"gitexport"
+			{
+				Do-Git-Export $action.archive $progressAfter
+			}
 			"svnexport"
 			{
 				Do-Svn-Export $action.archive $progressAfter
+			}
+			"gitlog"
+			{
+				Do-Git-Log $action.logFile $progressAfter
 			}
 			"svnlog"
 			{
