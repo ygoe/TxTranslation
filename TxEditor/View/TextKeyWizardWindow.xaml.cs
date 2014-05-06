@@ -27,6 +27,7 @@ namespace Unclassified.TxEditor.View
 		private string exactMatchTextKey;   // TODO: remove
 		private string initialClipboardText;
 		private string parsedText;
+		private bool isPartialString;
 		private List<PlaceholderData> placeholders = new List<PlaceholderData>();
 		private int keySuggestPhase;   // TODO: remove?
 		private List<SuggestionViewModel> suggestions = new List<SuggestionViewModel>();
@@ -40,13 +41,16 @@ namespace Unclassified.TxEditor.View
 			InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.Manual;
-
-			SourceCodeCombobox.Items.Add("C#");
-			SourceCodeCombobox.Items.Add("XAML");
-			SourceCodeCombobox.SelectedItem = App.Settings.WizardSourceCode;
+			SourceCSharpButton.IsChecked = true;
 		}
 
 		#endregion Constructors
+
+		#region Properties
+
+		public IDataObject ClipboardBackup { get; set; }
+
+		#endregion Properties
 
 		#region Window event handlers
 
@@ -77,6 +81,13 @@ namespace Unclassified.TxEditor.View
 			{
 				Close();
 				return;
+			}
+
+			// Restore clipboard
+			if (ClipboardBackup != null)
+			{
+				Clipboard.SetDataObject(ClipboardBackup, true);
+				ClipboardBackup = null;
 			}
 
 			ResetButton_Click(null, null);
@@ -145,10 +156,19 @@ namespace Unclassified.TxEditor.View
 
 		#region Control event handlers
 
-		private void SourceCodeCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void SourceCSharpButton_Checked(object sender, RoutedEventArgs e)
 		{
-			SetDefaultCheckbox.Visibility =
-				SourceCodeCombobox.SelectedItem as string == "XAML" ? Visibility.Visible : Visibility.Collapsed;
+			SourceXamlButton.IsChecked = false;
+			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
+
+			// Re-evaluate the format and parameters
+			ResetButton_Click(null, null);
+		}
+
+		private void SourceXamlButton_Checked(object sender, RoutedEventArgs e)
+		{
+			SourceCSharpButton.IsChecked = false;
+			SetDefaultCheckbox.Visibility = Visibility.Visible;
 
 			// Re-evaluate the format and parameters
 			ResetButton_Click(null, null);
@@ -210,13 +230,20 @@ namespace Unclassified.TxEditor.View
 				}
 			}
 
-			if (SourceCodeCombobox.SelectedIndex == 0)   // C#
+			// Backup current clipboard content
+			ClipboardBackup = ClipboardHelper.GetDataObject();
+
+			if (SourceCSharpButton.IsChecked == true)
 			{
 				App.Settings.WizardSourceCode = "C#";
 
 				string keyString = textKey.Replace("\\", "\\\\").Replace("\"", "\\\"");
 
 				StringBuilder codeSb = new StringBuilder();
+				if (isPartialString)
+				{
+					codeSb.Append("\" + ");
+				}
 				codeSb.Append("Tx.T(\"" + keyString + "\"");
 				foreach (var pd in placeholders)
 				{
@@ -233,9 +260,13 @@ namespace Unclassified.TxEditor.View
 					}
 				}
 				codeSb.Append(")");
+				if (isPartialString)
+				{
+					codeSb.Append(" + \"");
+				}
 				Clipboard.SetText(codeSb.ToString());
 			}
-			if (SourceCodeCombobox.SelectedIndex == 1)   // XAML
+			if (SourceXamlButton.IsChecked == true)
 			{
 				App.Settings.WizardSourceCode = "XAML";
 
@@ -261,11 +292,19 @@ namespace Unclassified.TxEditor.View
 			// Detect parameters in the code
 			placeholders.Clear();
 			parsedText = "";
+			isPartialString = false;
 			if (initialClipboardText != null)
 			{
-				if (SourceCodeCombobox.SelectedIndex == 0)   // C#
+				if (SourceCSharpButton.IsChecked == true)
 				{
-					bool inStringLiteral = false;
+					isPartialString = true;
+					if ((initialClipboardText.StartsWith("\"") || initialClipboardText.StartsWith("@\"")) &&
+						initialClipboardText.EndsWith("\""))
+					{
+						isPartialString = false;
+					}
+
+					bool inStringLiteral = isPartialString;
 					bool isVerbatimString = false;
 					bool inCharLiteral = false;
 					int parensLevel = 0;
@@ -413,7 +452,7 @@ namespace Unclassified.TxEditor.View
 								bracesLevel--;
 						}
 					}
-					if (lastStringEnd < initialClipboardText.Length)
+					if (!isPartialString && lastStringEnd < initialClipboardText.Length)
 					{
 						// Some non-string content is still left (parameter at the end)
 						string code = initialClipboardText.Substring(lastStringEnd);
@@ -421,8 +460,13 @@ namespace Unclassified.TxEditor.View
 						placeholders.Add(pd);
 						parsedText += "{" + pd.Name + "}";
 					}
+					if (isPartialString && inStringLiteral && stringContent.Length > 0)
+					{
+						// Save the last string part
+						parsedText += stringContent.ToString();
+					}
 				}
-				if (SourceCodeCombobox.SelectedIndex == 1)   // XAML
+				if (SourceXamlButton.IsChecked == true)
 				{
 					parsedText = initialClipboardText;
 					// TODO: Any further processing required?
@@ -443,6 +487,8 @@ namespace Unclassified.TxEditor.View
 				{
 					var localPd = pd;
 
+					ParametersGrid.RowDefinitions.Add(new RowDefinition());
+					
 					TextBox nameText = new TextBox();
 					nameText.Text = pd.Name;
 					nameText.SelectAll();

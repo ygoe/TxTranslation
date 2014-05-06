@@ -51,11 +51,12 @@
 				Grid.Row="0" Grid.Column="0"
 				VerticalAlignment="Center"
 				Text="{Tx:T 'window.wizard.source code', Default='Source code:'}"/>
-			<ComboBox
-				Name="SourceCodeCombobox"
+			<StackPanel
 				Grid.Row="0" Grid.Column="1"
-				Margin="8,0,0,0" HorizontalAlignment="Left" Width="60"
-				SelectionChanged="SourceCodeCombobox_SelectionChanged"/>
+				Margin="8,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="C#" Checked="SourceCSharpButton_Checked"/>
+				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="XAML" Checked="SourceXamlButton_Checked"/>
+			</StackPanel>
 
 			<TextBlock
 				Name="OtherKeysLabel"

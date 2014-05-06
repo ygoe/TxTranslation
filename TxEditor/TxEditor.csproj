@@ -80,6 +80,7 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileNameHelper.cs" />
+    <Compile Include="Unclassified\ClipboardHelper.cs" />
     <Compile Include="Unclassified\CommandLineParser.cs" />
     <Compile Include="Unclassified\DelayedCall.cs" />
     <Compile Include="Unclassified\ErrorHandling.cs" />

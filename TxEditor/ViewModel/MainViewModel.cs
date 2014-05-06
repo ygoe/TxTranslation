@@ -1474,6 +1474,7 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		private IntPtr fgWin;
+		private IDataObject clipboardBackup;
 
 		public void TextKeyWizardFromHotKey()
 		{
@@ -1484,6 +1485,9 @@ namespace Unclassified.TxEditor.ViewModel
 			StringBuilder sb = new StringBuilder(1000);
 			WinApi.GetWindowText(fgWin, sb, 1000);
 			if (!sb.ToString().EndsWith(" - Microsoft Visual Studio")) return;
+
+			// Backup current clipboard content
+			clipboardBackup = ClipboardHelper.GetDataObject();
 
 			// Send Ctrl+C keys to the active window to copy the selected text
 			// (First send events to release the still-pressed hot key buttons Ctrl and Shift)
@@ -1499,7 +1503,6 @@ namespace Unclassified.TxEditor.ViewModel
 			uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			//System.Diagnostics.Debug.WriteLine(ret + " inputs sent");
 
-			//System.Threading.Thread.Sleep(50);
 			DelayedCall.Start(TextKeyWizardFromHotKey2, 50);
 		}
 
@@ -1509,6 +1512,7 @@ namespace Unclassified.TxEditor.ViewModel
 			TextKeyWizardWindow win = new TextKeyWizardWindow();
 			//win.Owner = MainWindow.Instance;
 			win.ShowInTaskbar = true;
+			win.ClipboardBackup = clipboardBackup;
 
 			MainWindow.Instance.Hide();
 
@@ -1535,6 +1539,18 @@ namespace Unclassified.TxEditor.ViewModel
 				};
 				uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			}
+
+			clipboardBackup = win.ClipboardBackup;
+			if (clipboardBackup != null)
+			{
+				DelayedCall.Start(TextKeyWizardFromHotKey3, 200);
+			}
+		}
+
+		private void TextKeyWizardFromHotKey3()
+		{
+			// Restore clipboard
+			Clipboard.SetDataObject(clipboardBackup, true);
 		}
 
 		private bool HandleWizardInput(string keyName, string text)
