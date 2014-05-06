@@ -1259,7 +1259,10 @@ namespace Unclassified.TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		public static string Text(string key)
 		{
-			return GetText(key, -1) ?? NotFound(key);
+			using (new ReadLock(rwlock))
+			{
+				return ResolveData(GetText(key, -1), key, -1, (Dictionary<string, string>) null) ?? NotFound(key);
+			}
 		}
 
 		/// <summary>
