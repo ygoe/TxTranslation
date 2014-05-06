@@ -9,6 +9,8 @@ namespace Unclassified.UI
 {
 	public partial class IconToggleButton : ToggleButton, ICollapsableToolbarItem
 	{
+		#region Dependency properties
+
 		public static DependencyProperty IconSourceProperty = DependencyProperty.Register(
 			"IconSource",
 			typeof(ImageSource),
@@ -37,6 +39,11 @@ namespace Unclassified.UI
 			typeof(string),
 			typeof(IconToggleButton),
 			new PropertyMetadata(HotkeyTextChanged));   // Does the same anyway
+
+		public static DependencyProperty ShowMenuProperty = DependencyProperty.Register(
+			"ShowMenu",
+			typeof(bool),
+			typeof(IconToggleButton));
 
 		public ImageSource IconSource
 		{
@@ -68,12 +75,30 @@ namespace Unclassified.UI
 			set { SetValue(ExtendedToolTipTextProperty, value); }
 		}
 
-		public int CollapsePriority { get; set; }
+		public bool ShowMenu
+		{
+			get { return (bool) GetValue(ShowMenuProperty); }
+			set { SetValue(ShowMenuProperty, value); }
+		}
+
+		#endregion Dependency properties
+
+		#region Constructor
 
 		public IconToggleButton()
 		{
 			InitializeComponent();
 		}
+
+		#endregion Constructor
+
+		#region Public properties
+
+		public int CollapsePriority { get; set; }
+
+		#endregion Public properties
+
+		#region ToolTip handling
 
 		protected override void OnContentChanged(object oldContent, object newContent)
 		{
@@ -173,5 +198,55 @@ namespace Unclassified.UI
 			ToolTipService.SetShowDuration(this, 20000);
 			base.OnToolTipOpening(e);
 		}
+
+		#endregion ToolTip handling
+
+		#region ShowMenu handling
+
+		private bool justPressed;
+		private bool cancelOpen;
+
+		protected override void OnPreviewMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		{
+			if (ShowMenu && ContextMenu != null)
+			{
+				justPressed = true;
+				DelayedCall.Start(() => { justPressed = false; }, 50);
+			}
+			base.OnPreviewMouseLeftButtonDown(e);
+		}
+
+		protected override void OnChecked(RoutedEventArgs e)
+		{
+			if (ShowMenu && ContextMenu != null)
+			{
+				base.OnChecked(e);
+				if (cancelOpen)
+				{
+					DelayedCall.Start(() => { cancelOpen = false; }, 50);
+					IsChecked = false;
+					return;
+				}
+
+				ContextMenu.Closed += ContextMenu_Closed;
+
+				ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+				ContextMenu.PlacementTarget = this;
+				ContextMenu.IsOpen = true;
+			}
+		}
+
+		private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+		{
+			ContextMenu.Closed -= ContextMenu_Closed;
+
+			IsChecked = false;
+			if (justPressed)
+			{
+				cancelOpen = true;
+			}
+		}
+
+		#endregion ShowMenu handling
 	}
 }

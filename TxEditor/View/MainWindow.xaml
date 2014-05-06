@@ -134,12 +134,13 @@
 						ToolTipService.ShowOnDisabled="True"
 						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70"/>
 					<!-- I18N -->
-					<ui:IconButton
+					<ui:IconToggleButton
 						x:Name="CultureToolsButton"
 						Content="Tools▾" IconSource="/Images/globe_config.png"
 						ToolTipService.ShowOnDisabled="True"
-						Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Focusable="False" CollapsePriority="70" Click="CultureToolsButton_Click">
-						<ui:IconButton.ContextMenu>
+						Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" Focusable="False" CollapsePriority="70"
+						ContextMenuService.IsEnabled="False" ShowMenu="True">
+						<ui:IconToggleButton.ContextMenu>
 							<ContextMenu>
 								<MenuItem Header="{Tx:T 'toolbar.culture.replace', Default='Replace culture'}" Command="{Binding ReplaceCultureCommand}">
 									<MenuItem.Icon>
@@ -157,8 +158,8 @@
 									</MenuItem.Icon>
 								</MenuItem>
 							</ContextMenu>
-						</ui:IconButton.ContextMenu>
-					</ui:IconButton>
+						</ui:IconToggleButton.ContextMenu>
+					</ui:IconToggleButton>
 				</StackPanel>
 				<StackPanel Grid.Row="2" Grid.Column="4" Margin="0,1,0,0" Orientation="Horizontal">
 					<ui:IconButton

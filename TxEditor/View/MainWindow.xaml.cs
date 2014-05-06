@@ -229,13 +229,6 @@ namespace Unclassified.TxEditor.View
 
 		#region Toolbar event handlers
 
-		private void CultureToolsButton_Click(object sender, RoutedEventArgs e)
-		{
-			CultureToolsButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-			CultureToolsButton.ContextMenu.PlacementTarget = CultureToolsButton;
-			CultureToolsButton.ContextMenu.IsOpen = true;
-		}
-
 		private void CharMapButton_ToolTipOpening(object sender, ToolTipEventArgs e)
 		{
 			FrameworkElement obj = sender as FrameworkElement;
