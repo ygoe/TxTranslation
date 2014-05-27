@@ -26,4 +26,8 @@ The TxLib solution also comes with a graphical translation file editor that prov
 
 Licence
 
-This software is released under the terms of the GNU GPL licence, version 3. You can find the detailed terms and conditions in the download or on the GNU website <http://www.gnu.org/licenses/gpl-3.0.html>.
+The TxLib library, which is used in applications, is released under the terms of the GNU Lesser GPL (LGPL) licence, version 3.
+
+The other projects (TxEditor, demos and converters) are released under the terms of the GNU GPL licence, version 3.
+
+You can find the detailed terms and conditions in the download or on the GNU website <http://www.gnu.org/licenses/lgpl-3.0.html> and <http://www.gnu.org/licenses/gpl-3.0.html>.

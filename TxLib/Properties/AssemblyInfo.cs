@@ -1,11 +1,25 @@
-﻿using System.Reflection;
+﻿// TxLib – Tx Translation & Localisation for .NET and WPF
+// © Yves Goergen, Made in Germany
+// Website: http://dev.unclassified.de/source/txlib
+//
+// This program is free software: you can redistribute it and/or modify it under the terms of
+// the GNU General Public License as published by the Free Software Foundation, version 3.
+//
+// This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+// without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with this library.
+// If not, see <http://www.gnu.org/licenses/>.
+
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
 
 [assembly: AssemblyProduct("TxLib")]
 [assembly: AssemblyTitle("TxLib")]
 [assembly: AssemblyDescription("TxTranslation library")]
-[assembly: AssemblyCopyright("© Yves Goergen, GNU GPL v3")]
+[assembly: AssemblyCopyright("© Yves Goergen, GNU LGPL v3")]
 [assembly: AssemblyCompany("unclassified software development")]
 
 // Assembly version, also used for Win32 file version resource.
