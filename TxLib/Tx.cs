@@ -3274,7 +3274,7 @@ namespace Unclassified.TxLib
 				case 'M': alternatives = "ḾṀṂℳ"; break;
 				case 'N': alternatives = "ƝÑŃŅŇИЙṄṆṈṊℕ₦"; break;
 				case 'O': alternatives = "ÒÓÔÕÖØŌŎŐƠǑǪȌȎΘṌṒỌỘ"; break;
-				case 'P': alternatives = "ƤṔṖℙ₧"; break;
+				case 'P': alternatives = "ƤṔṖℙ"; break;
 				case 'Q': alternatives = "Ⴓℚ"; break;
 				case 'R': alternatives = "ŔŖŘȐȒЯṘṚṜṞℛℜℝ"; break;
 				case 'S': alternatives = "ŚŜŞŠṠṢṤṨ"; break;
@@ -3304,12 +3304,12 @@ namespace Unclassified.TxLib
 				case 'q': alternatives = "ʠգզ"; break;
 				case 'r': alternatives = "ŕŗřгṙṛṝṟ"; break;
 				case 's': alternatives = "śŝşšʂṡṣṩ"; break;
-				case 't': alternatives = "ţťŧтṫṭṯṱẗ"; break;
+				case 't': alternatives = "ţťŧṫṭṯṱẗ"; break;
 				case 'u': alternatives = "ùúûüũūŭůűṳṵṷṻụ∪"; break;
 				case 'v': alternatives = "ṽṿ∨"; break;
 				case 'w': alternatives = "ẁẃẅẇẉὠὡὼώ"; break;
 				case 'x': alternatives = "×ẋẍχ"; break;
-				case 'y': alternatives = "ýÿŷўႸẏỳỵ"; break;
+				case 'y': alternatives = "ýÿŷўẏỳỵ"; break;
 				case 'z': alternatives = "źżžƶẑẓẕ"; break;
 				default: return ch;
 			}
