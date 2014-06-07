@@ -186,6 +186,11 @@ namespace Unclassified.TxEditor.ViewModel
 				{
 					isVisible = value;
 					OnPropertyChanged("IsVisible");
+					if (!value)
+					{
+						// Invisible items can no longer be selected
+						IsSelected = false;
+					}
 					if (parent != null)
 						parent.visibleChildren.Refresh();
 				}
