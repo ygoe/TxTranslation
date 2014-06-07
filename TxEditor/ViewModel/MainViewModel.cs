@@ -33,7 +33,7 @@ namespace Unclassified.TxEditor.ViewModel
 		private string loadedFilePath;
 		private string loadedFilePrefix;
 		private int readonlyFilesCount;
-		private IList selectedTextKeys;
+		private List<TextKeyViewModel> selectedTextKeys;
 		private List<TextKeyViewModel> viewHistory = new List<TextKeyViewModel>();
 		private int viewHistoryIndex;
 		private OpFlag navigatingHistory = new OpFlag();
@@ -1293,7 +1293,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 		public void TextKeySelectionChanged(IList selectedItems)
 		{
-			selectedTextKeys = selectedItems;
+			selectedTextKeys = selectedItems.OfType<TextKeyViewModel>().ToList();
 			DeleteTextKeyCommand.RaiseCanExecuteChanged();
 			RenameTextKeyCommand.RaiseCanExecuteChanged();
 			DuplicateTextKeyCommand.RaiseCanExecuteChanged();
@@ -1322,6 +1322,7 @@ namespace Unclassified.TxEditor.ViewModel
 			foreach (TextKeyViewModel tk in selectedTextKeys)
 			{
 				// TODO: Check whether any selected key is a child of another selected key -> don't count them additionally - collect all selected keys in a HashSet, then count
+				// or use TreeViewItemViewModel.IsAParentOf method
 				count += CountTextKeys(tk);
 				if (!tk.IsFullKey)
 					onlyFullKeysSelected = false;
@@ -1364,15 +1365,19 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 			if (result.CustomButtonResult == 0)
 			{
-				object[] selectedTextKeysArray = new object[selectedTextKeys.Count];
-				selectedTextKeys.CopyTo(selectedTextKeysArray, 0);
-				foreach (TextKeyViewModel tk in selectedTextKeysArray)
+				// Determine the remaining text key to select after deleting
+				TextKeyViewModel lastSelectedTk = selectedTextKeys[selectedTextKeys.Count - 1];
+				var remainingItem = lastSelectedTk.FindRemainingItem(t => !selectedTextKeys.Contains(t) && !selectedTextKeys.Any(s => s.IsAParentOf(t)));
+
+				foreach (TextKeyViewModel tk in selectedTextKeys.ToArray())
 				{
 					DeleteTextKey(tk, !selectedOnlyOption);
 					// Also remove unused partial keys
 					DeletePartialParentKeys(tk.Parent as TextKeyViewModel);
 					FileModified = true;
 				}
+				// Select and focus other key in the tree
+				ViewCommandManager.InvokeLoaded("SelectTextKey", remainingItem);
 				ValidateTextKeysDelayed();
 
 				StatusText = Tx.T("statusbar.n text keys deleted", count);
@@ -2153,7 +2158,6 @@ namespace Unclassified.TxEditor.ViewModel
 		private void OnCopyTextKey()
 		{
 			string str = selectedTextKeys
-				.OfType<TextKeyViewModel>()
 				.Select(tk => tk.TextKey)
 				.Aggregate((a, b) => a + Environment.NewLine + b);
 			Clipboard.SetText(str);
@@ -3155,7 +3159,7 @@ namespace Unclassified.TxEditor.ViewModel
 		{
 			viewHistory.Clear();
 			if (selectedTextKeys != null && selectedTextKeys.Count > 0)
-				viewHistory.Add(selectedTextKeys[0] as TextKeyViewModel);
+				viewHistory.Add(selectedTextKeys[0]);
 			else
 				viewHistory.Add(null);
 			viewHistoryIndex = 0;
@@ -3189,7 +3193,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 
 			if (selectedTextKeys != null && selectedTextKeys.Count > 0)
-				viewHistory.Add(selectedTextKeys[0] as TextKeyViewModel);
+				viewHistory.Add(selectedTextKeys[0]);
 			else
 				viewHistory.Add(null);
 			viewHistoryIndex++;
@@ -3409,7 +3413,7 @@ namespace Unclassified.TxEditor.ViewModel
 			SuggestionsCulture = CultureInfoName(new CultureInfo(lastSelectedCulture), false);
 			//if (lastSelectedCulture == primaryCulture) return;
 
-			TextKeyViewModel tk = selectedTextKeys != null && selectedTextKeys.Count > 0 ? selectedTextKeys[0] as TextKeyViewModel : null;
+			TextKeyViewModel tk = selectedTextKeys != null && selectedTextKeys.Count > 0 ? selectedTextKeys[0] : null;
 			if (tk == null || tk.CultureTextVMs.Count < 1)
 			{
 				AddDummySuggestion();

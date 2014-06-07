@@ -256,5 +256,88 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		#endregion Presentation Members
+
+		#region Navigation helper
+
+		public TreeViewItemViewModel FindPreviousSibling()
+		{
+			int myIndex = Parent.Children.IndexOf(this);
+			if (myIndex > 0)
+			{
+				return Parent.Children[myIndex - 1];
+			}
+			return null;
+		}
+
+		public TreeViewItemViewModel FindNextSibling()
+		{
+			int myIndex = Parent.Children.IndexOf(this);
+			int count = Parent.Children.Count;
+			if (myIndex < count - 1)
+			{
+				return Parent.Children[myIndex + 1];
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Finds the remaining item after some items have been deleted.
+		/// </summary>
+		/// <param name="predicate">Function that determines whether an item is acceptable.</param>
+		/// <returns>The first accepted item, or null.</returns>
+		public TreeViewItemViewModel FindRemainingItem(Predicate<TreeViewItemViewModel> predicate)
+		{
+			// Start on the current tree level
+			TreeViewItemViewModel level = this;
+
+			do
+			{
+				// Try the following siblings
+				TreeViewItemViewModel position = level;
+				do
+				{
+					position = position.FindNextSibling();
+					if (position != null && predicate(position)) return position;
+				}
+				while (position != null);
+
+				// Try the preceding siblings
+				position = this;
+				do
+				{
+					position = position.FindPreviousSibling();
+					if (position != null && predicate(position)) return position;
+				}
+				while (position != null);
+
+				// Continue on the parent level (stop on the root item)
+				level = level.Parent;
+			}
+			while (level != null && level.Parent != null);
+
+			// Nothing remains
+			return null;
+		}
+
+		/// <summary>
+		/// Returns a value indicating whether the current instance is a parent or grand-parent of
+		/// the specified child item.
+		/// </summary>
+		/// <param name="child"></param>
+		/// <returns></returns>
+		public bool IsAParentOf(TreeViewItemViewModel child)
+		{
+			TreeViewItemViewModel parent = child;
+			do
+			{
+				parent = parent.Parent;
+				if (parent != null && parent == this) return true;
+			}
+			while (parent != null);
+			// All parents compared, it's not our (grand-)child
+			return false;
+		}
+
+		#endregion Navigation helper
 	}
 }

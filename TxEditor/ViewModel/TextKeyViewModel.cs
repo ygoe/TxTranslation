@@ -177,6 +177,8 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
+		#region Constructor
+
 		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainViewModel mainWindowVM)
 			: base(parent, false)
 		{
@@ -189,6 +191,8 @@ namespace Unclassified.TxEditor.ViewModel
 
 			UpdateIcon();
 		}
+
+		#endregion Constructor
 
 		public override string ToString()
 		{
@@ -240,6 +244,8 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 			}
 		}
+
+		#region Validation
 
 		public bool Validate()
 		{
@@ -442,6 +448,10 @@ namespace Unclassified.TxEditor.ViewModel
 			return !HasProblem;
 		}
 
+		#endregion Validation
+
+		#region UI support
+
 		public void UpdateCultureTextSeparators()
 		{
 			string prevLang = null;
@@ -496,6 +506,10 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 			}
 		}
+
+		#endregion UI support
+
+		#region Set key
 
 		/// <summary>
 		/// Sets a new text key value but does not update any children.
@@ -572,6 +586,10 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 			return affectedKeys;
 		}
+
+		#endregion Set key
+
+		#region Clone and merge
 
 		/// <summary>
 		/// Creates a new TextKeyViewModel instance with all contents of this instance.
@@ -653,6 +671,10 @@ namespace Unclassified.TxEditor.ViewModel
 				myChild.MergeChildrenRecursive(sourceChild);
 			}
 		}
+
+		#endregion Clone and merge
+
+		#region Static methods
 
 		/// <summary>
 		/// Compares two TextKeyViewModel instances to determine the sort order in the text keys
@@ -826,5 +848,7 @@ namespace Unclassified.TxEditor.ViewModel
 			message = null;
 			return true;
 		}
+
+		#endregion Static methods
 	}
 }
