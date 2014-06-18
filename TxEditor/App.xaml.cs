@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using Unclassified.FieldLog;
 using Unclassified.TxEditor.View;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor
 {
@@ -28,12 +30,6 @@ namespace Unclassified.TxEditor
 
 		#endregion Static properties
 
-		#region Setup detection mutex
-
-		private Mutex appMutex = new Mutex(false, "Unclassified.TxEditor");
-
-		#endregion Setup detection mutex
-
 		#region Application entry point
 
 		/// <summary>
@@ -42,6 +38,14 @@ namespace Unclassified.TxEditor
 		[STAThread]
 		public static void Main()
 		{
+			// Set up FieldLog
+			FL.AcceptLogFileBasePath();
+			FL.RegisterPresentationTracing();
+			TaskHelper.UnhandledTaskException = ex => FL.Critical(ex, "TaskHelper.UnhandledTaskException", true);
+
+			// Keep the setup away
+			GlobalMutex.Create("Unclassified.TxEditor");
+
 			// Set the image file's build action to "Resource" and "Never copy" for this to work.
 			splashScreen = new SplashScreen("Images/TxFlag_256.png");
 			splashScreen.Show(false, true);
@@ -57,11 +61,6 @@ namespace Unclassified.TxEditor
 
 		public App()
 		{
-#if !DEBUG
-			DispatcherUnhandledException += App_DispatcherUnhandledException;
-			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-#endif
-
 			// Initialise the settings system
 			Settings = new AppSettings(
 			Path.Combine(
@@ -110,21 +109,6 @@ namespace Unclassified.TxEditor
 		}
 
 		#endregion Constructors
-
-		#region Error handling
-
-		private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-		{
-			ErrorHandling.ReportException(e.Exception, "Application.DispatcherUnhandledException");
-			e.Handled = true;
-		}
-
-		private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-		{
-			ErrorHandling.ReportException(e.ExceptionObject as Exception, "AppDomain.UnhandledException");
-		}
-
-		#endregion Error handling
 
 		#region Startup
 
@@ -246,7 +230,6 @@ namespace Unclassified.TxEditor
 		{
 			if (Settings != null)
 			{
-				Settings.SaveNow();
 				Settings.Dispose();
 				Settings = null;
 			}

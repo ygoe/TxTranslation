@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	public class UnicodeInfo
 	{

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	public class CommandLineParser
 	{

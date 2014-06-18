@@ -63,6 +63,9 @@
     <Reference Include="TaskDialog">
       <HintPath>.\TaskDialog.dll</HintPath>
     </Reference>
+    <Reference Include="Unclassified.FieldLog">
+      <HintPath>lib\Unclassified.FieldLog.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -80,19 +83,18 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileNameHelper.cs" />
-    <Compile Include="Unclassified\ClipboardHelper.cs" />
-    <Compile Include="Unclassified\CommandLineParser.cs" />
-    <Compile Include="Unclassified\DelayedCall.cs" />
-    <Compile Include="Unclassified\ErrorHandling.cs" />
-    <Compile Include="Unclassified\ListExtensions.cs" />
-    <Compile Include="Unclassified\MyEnvironment.cs" />
-    <Compile Include="Unclassified\NaturalSort.cs" />
-    <Compile Include="Unclassified\ObservableHashSet.cs" />
-    <Compile Include="Unclassified\OpLock.cs" />
-    <Compile Include="Unclassified\PropertyExtensions.cs" />
-    <Compile Include="Unclassified\Settings.cs" />
-    <Compile Include="Unclassified\StringExtensions.cs" />
-    <Compile Include="Unclassified\TaskHelper.cs" />
+    <Compile Include="Unclassified\Util\ClipboardHelper.cs" />
+    <Compile Include="Unclassified\Util\CommandLineParser.cs" />
+    <Compile Include="Unclassified\Util\DelayedCall.cs" />
+    <Compile Include="Unclassified\Util\GlobalMutex.cs" />
+    <Compile Include="Unclassified\Util\ListExtensions.cs" />
+    <Compile Include="Unclassified\Util\NaturalSort.cs" />
+    <Compile Include="Unclassified\Util\ObservableHashSet.cs" />
+    <Compile Include="Unclassified\Util\OpLock.cs" />
+    <Compile Include="Unclassified\Util\PropertyExtensions.cs" />
+    <Compile Include="Unclassified\Util\Settings.cs" />
+    <Compile Include="Unclassified\Util\StringExtensions.cs" />
+    <Compile Include="Unclassified\Util\TaskHelper.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />
     <Compile Include="Unclassified\UI\BoolToVisibilityConverter.cs" />
     <Compile Include="Unclassified\UI\ColorMath.cs" />
@@ -114,14 +116,13 @@
     </Compile>
     <Compile Include="Unclassified\UI\TextHighlightConverter.cs" />
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
-    <Compile Include="Unclassified\HotKey.cs" />
+    <Compile Include="Unclassified\Util\HotKey.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\UI\WpfTextBoxExtensions.cs" />
     <Compile Include="Unclassified\UI\WpfWindowExtensions.cs" />
-    <Compile Include="Unclassified\ULog.cs" />
-    <Compile Include="Unclassified\UnicodeInfo.cs" />
-    <Compile Include="Unclassified\WinApi_Input.cs" />
-    <Compile Include="Unclassified\WinApi_Windows.cs" />
+    <Compile Include="Unclassified\Util\UnicodeInfo.cs" />
+    <Compile Include="Unclassified\Util\WinApi_Input.cs" />
+    <Compile Include="Unclassified\Util\WinApi_Windows.cs" />
     <Compile Include="ViewModel\CultureTextViewModel.cs" />
     <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
     <Compile Include="ViewModel\SelectFileViewModel.cs" />

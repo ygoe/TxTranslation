@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	/// <summary>
 	/// Simple observable HashSet class. Currently only the Count property is observable.

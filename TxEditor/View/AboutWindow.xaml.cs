@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Unclassified.FieldLog;
 
 namespace Unclassified.TxEditor.View
 {
@@ -15,8 +16,8 @@ namespace Unclassified.TxEditor.View
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			VersionLabel.Text = "Version " + MyEnvironment.AssemblyInformationalVersion;
-			CopyrightLabel.Text = MyEnvironment.AssemblyCopyright;
+			VersionLabel.Text = "Version " + FL.AppVersion;
+			CopyrightLabel.Text = FL.AppCopyright;
 		}
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)

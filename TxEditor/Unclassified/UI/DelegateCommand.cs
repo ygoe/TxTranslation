@@ -7,12 +7,15 @@ using System.Windows.Threading;
 namespace Unclassified.UI
 {
 	/// <summary>
-	/// Provides an <see cref="ICommand"/> implementation which relays the <see cref="Execute"/> and <see cref="CanExecute"/>
+	/// Provides an <see cref="ICommand"/> implementation which relays the Execute and CanExecute
 	/// method to the specified delegates.
 	/// </summary>
 	public class DelegateCommand : ICommand
 	{
+		#region Static disabled command
+
 		private static DelegateCommand disabledCommand;
+
 		/// <summary>
 		/// Gets a DelegateCommand instance that can never execute.
 		/// </summary>
@@ -22,16 +25,24 @@ namespace Unclassified.UI
 			{
 				if (disabledCommand == null)
 				{
-					disabledCommand = new DelegateCommand(() => { }, () => false);
+					disabledCommand = new DelegateCommand(() => { }) { IsEnabled = false };
 				}
 				return disabledCommand;
 			}
 		}
 
+		#endregion Static disabled command
+
+		#region Private data
+
 		private readonly Action<object> execute;
 		private readonly Func<object, bool> canExecute;
 		private List<WeakReference> weakHandlers;
+		private bool isEnabled = true;
 
+		#endregion Private data
+
+		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DelegateCommand"/> class.
@@ -78,6 +89,9 @@ namespace Unclassified.UI
 			this.canExecute = canExecute;
 		}
 
+		#endregion Constructors
+
+		#region CanExecuteChanged event
 
 		/// <summary>
 		/// Occurs when changes occur that affect whether or not the command should execute.
@@ -109,56 +123,6 @@ namespace Unclassified.UI
 					}
 				}
 			}
-		}
-
-
-		/// <summary>
-		/// Defines the method that determines whether the command can execute in its current state.
-		/// </summary>
-		/// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-		/// <returns>
-		/// true if this command can be executed; otherwise, false.
-		/// </returns>
-		[DebuggerStepThrough]
-		public bool CanExecute(object parameter)
-		{
-			return canExecute != null ? canExecute(parameter) : true;
-		}
-
-		/// <summary>
-		/// Defines the method to be called when the command is invoked.
-		/// </summary>
-		/// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-		/// <exception cref="InvalidOperationException">The <see cref="CanExecute"/> method returns <c>false.</c></exception>
-		[DebuggerStepThrough]
-		public void Execute(object parameter)
-		{
-			if (!CanExecute(parameter))
-			{
-				throw new InvalidOperationException("The command cannot be executed because the canExecute action returned false.");
-			}
-
-			execute(parameter);
-		}
-
-		public void Execute()
-		{
-			Execute(null);
-		}
-
-		public bool TryExecute(object parameter)
-		{
-			if (CanExecute(parameter))
-			{
-				Execute(parameter);
-				return true;
-			}
-			return false;
-		}
-
-		public bool TryExecute()
-		{
-			return TryExecute(null);
 		}
 
 		/// <summary>
@@ -242,5 +206,101 @@ namespace Unclassified.UI
 
 			if (weakHandlers.Count == 0) { weakHandlers = null; }
 		}
+
+		#endregion CanExecuteChanged event
+
+		#region ICommand methods
+
+		/// <summary>
+		/// Defines the method that determines whether the command can execute in its current state.
+		/// </summary>
+		/// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+		/// <returns>true if this command can be executed; otherwise, false.</returns>
+		[DebuggerStepThrough]
+		public bool CanExecute(object parameter)
+		{
+			return canExecute != null ? canExecute(parameter) : isEnabled;
+		}
+
+		/// <summary>
+		/// Convenience method that invokes CanExecute without parameters.
+		/// </summary>
+		/// <returns>true if this command can be executed; otherwise, false.</returns>
+		public bool CanExecute()
+		{
+			return CanExecute(null);
+		}
+
+		/// <summary>
+		/// Defines the method to be called when the command is invoked.
+		/// </summary>
+		/// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+		/// <exception cref="InvalidOperationException">The <see cref="CanExecute(object)"/> method returns false.</exception>
+		[DebuggerStepThrough]
+		public void Execute(object parameter)
+		{
+			if (!CanExecute(parameter))
+			{
+				throw new InvalidOperationException("The command cannot be executed because CanExecute returned false.");
+			}
+
+			execute(parameter);
+		}
+
+		/// <summary>
+		/// Convenience method that invokes the command without parameters.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">The <see cref="CanExecute(object)"/> method returns false.</exception>
+		public void Execute()
+		{
+			Execute(null);
+		}
+
+		/// <summary>
+		/// Invokes the command if the <see cref="CanExecute(object)"/> method returns true.
+		/// </summary>
+		/// <param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to null.</param>
+		/// <returns>true if this command was executed; otherwise, false.</returns>
+		public bool TryExecute(object parameter)
+		{
+			if (CanExecute(parameter))
+			{
+				Execute(parameter);
+				return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Convenience method that invokes the command without parameters if the
+		/// <see cref="CanExecute(object)"/> method returns true.
+		/// </summary>
+		public bool TryExecute()
+		{
+			return TryExecute(null);
+		}
+
+		#endregion ICommand methods
+
+		#region Enabled state
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the current DelegateCommand is enabled. This
+		/// property is only effective if no canExecute function was passed in the constructor.
+		/// </summary>
+		public bool IsEnabled
+		{
+			get { return isEnabled; }
+			set
+			{
+				if (value != isEnabled)
+				{
+					isEnabled = value;
+					RaiseCanExecuteChanged();
+				}
+			}
+		}
+
+		#endregion Enabled state
 	}
 }

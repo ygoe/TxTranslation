@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media.Animation;
 
@@ -62,6 +64,20 @@ namespace Unclassified.UI
 		{
 			var anim = new DoubleAnimation(fromValue, toValue, new Duration(duration));
 			anim.DecelerationRatio = 1;
+			obj.BeginAnimation(property, anim);
+		}
+
+		public static void StopDoubleAnimation(this UIElement obj, DependencyProperty property)
+		{
+			var anim = new DoubleAnimation(0, 0, new Duration());
+			anim.BeginTime = null;
+			obj.BeginAnimation(property, anim);
+		}
+
+		public static void StopDoubleAnimation(this Animatable obj, DependencyProperty property)
+		{
+			var anim = new DoubleAnimation(0, 0, new Duration());
+			anim.BeginTime = null;
 			obj.BeginAnimation(property, anim);
 		}
 

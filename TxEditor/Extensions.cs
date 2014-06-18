@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Unclassified.TxEditor.ViewModel;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor
 {

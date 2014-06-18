@@ -11,6 +11,7 @@ using TaskDialogInterop;
 using Unclassified.TxEditor.Converters;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.View
 {
@@ -129,7 +130,7 @@ namespace Unclassified.TxEditor.View
 				Top = SystemParameters.WorkArea.Bottom - 40 - ActualHeight;
 			}
 
-			Unclassified.WinApi.SetForegroundWindow(new Unclassified.UI.Wpf32Window(this).Handle);
+			Unclassified.Util.WinApi.SetForegroundWindow(new Unclassified.UI.Wpf32Window(this).Handle);
 
 			TextKeyText.Focus();
 		}

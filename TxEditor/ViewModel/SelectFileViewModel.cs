@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModel
 {

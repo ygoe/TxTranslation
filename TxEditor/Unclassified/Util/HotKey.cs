@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	// Managed RegisterHotKey wrapper for WPF applications
 	// Source: http://stackoverflow.com/a/9330358/143684 (modified)

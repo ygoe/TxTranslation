@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Media;
 using Unclassified.TxLib;
 using Unclassified.UI;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModel
 {

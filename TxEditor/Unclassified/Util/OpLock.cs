@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	/// <summary>
 	/// Operation lock. This is a lightweight, non-threadsafe locking mechanism to mutually lock

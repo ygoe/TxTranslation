@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Unclassified.TxLib;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModel
 {

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.UI;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.View
 {

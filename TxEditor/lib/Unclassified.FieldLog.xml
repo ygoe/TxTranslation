@@ -1,0 +1,3659 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Unclassified.FieldLog</name>
+    </assembly>
+    <members>
+        <member name="T:Unclassified.FieldLog.CheckTimeThread">
+            <summary>
+            Implements a thread that monitors the system time and rebases FieldLog's clock on a change.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.CheckTimeThread.CheckInterval">
+            <summary>
+            Defines the time checking interval in milliseonds.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CheckTimeThread.Start">
+            <summary>
+            Starts the time checking thread.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CheckTimeThread.Stop(System.Int32)">
+            <summary>
+            Stops the time checking thread.
+            </summary>
+            <param name="millisecondsTimeout">Timeout to wait for the thread to stop. Should be longer than <see cref="F:Unclassified.FieldLog.CheckTimeThread.CheckInterval"/>.</param>
+            <returns>true if the thread has stopped; otherwise, false.</returns>
+        </member>
+        <member name="T:Unclassified.FieldLog.CustomTimerInfo">
+            <summary>
+            Provides methods for custom time measuring and deferred logging of the results.
+            </summary>
+            <remarks>
+            Tests have shown that measurements are good for time spans from 1 microsecond (10 ticks) on.
+            </remarks>
+        </member>
+        <member name="F:Unclassified.FieldLog.CustomTimerInfo.customTimerDelay">
+            <summary>
+            Defines the delay for saving custom timers, in milliseconds.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerInfo.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the CustomTimerInfo class. Does not start measuring.
+            </summary>
+            <param name="key">The custom timer key.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerInfo.Dispose">
+            <summary>
+            Releases all resources used by the CustomTimerInfo.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerInfo.OnCustomTimer(System.Object)">
+            <summary>
+            Handles a custom time measurement timer for saving the time data.
+            </summary>
+            <param name="state">Unused.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerInfo.Start(System.Boolean)">
+            <summary>
+            Starts, or resumes, measuring elapsed time for an interval and increases the call
+            counter. Does nothing if the measurement is currently started.
+            </summary>
+            <param name="incrementCounter">Increment the counter value.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerInfo.Stop(System.Boolean)">
+            <summary>
+            Stops measuring elapsed time for an interval and schedules saving the measured time to
+            a log item. Does nothing if the measurement is currently stopped.
+            </summary>
+            <param name="writeNow">true to write the timer value immediately, false for the normal delay.</param>
+        </member>
+        <member name="T:Unclassified.FieldLog.CustomTimerScope">
+            <summary>
+            Provides an IDisposable implementation to help in custom time measuring.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the CustomTimerScope class and calls the Start method of
+            the CustomTimerInfo instance.
+            </summary>
+            <param name="key">The custom timer key for a dictionary lookup.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.#ctor(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Initialises a new instance of the CustomTimerScope class and calls the Start method of
+            the CustomTimerInfo instance.
+            </summary>
+            <param name="key">The custom timer key for a dictionary lookup.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.#ctor(Unclassified.FieldLog.CustomTimerInfo)">
+            <summary>
+            Initialises a new instance of the CustomTimerScope class and calls the Start method of
+            the CustomTimerInfo instance.
+            </summary>
+            <param name="cti">A CustomTimerInfo instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.#ctor(Unclassified.FieldLog.CustomTimerInfo,System.Boolean,System.Boolean)">
+            <summary>
+            Initialises a new instance of the CustomTimerScope class and calls the Start method of
+            the CustomTimerInfo instance.
+            </summary>
+            <param name="cti">A CustomTimerInfo instance.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.Dispose">
+            <summary>
+            Calls the Stop method of the CustomTimerInfo instance.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.CustomTimerScope.Finalize">
+            <summary>
+            Finalises the CustomTimerScope instance. This generates an Error log item.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogPriority">
+            <summary>
+            Defines priority values for log items. Higher priority values indicate a more severe event.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Trace">
+            <summary>Detailed information for debugging purposes only. (Default if unset)</summary>
+            <example>User chose to load a file. / 5 files found to chose from. / (Most other data items.)</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Checkpoint">
+            <summary>Information for debugging purposes only.</summary>
+            <example>Scanning optional directories completed. / First part of the file was processed.</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Info">
+            <summary>Normal operation informational message.</summary>
+            <example>The file was loaded normally.</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Notice">
+            <summary>Noticeable informational message.</summary>
+            <example>The file is in an old format but should have been long upgraded.</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Warning">
+            <summary>Warning condition.</summary>
+            <example>Unknown entries in the file were ignored, but they might have an important meaning.</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Error">
+            <summary>Error condition that can normally be handled.</summary>
+            <example>File cannot be saved to disk, the user was informed and has alternative options.</example>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogPriority.Critical">
+            <summary>Critical error condition that prevents the application or an essential part of it from working (properly). (Exception default if unset)</summary>
+            <example>Out of memory or missing assembly file, the algorithm cannot complete.</example>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogScopeType">
+            <summary>
+            Defines scope item types.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.Enter">
+            <summary>A function or other scope was entered.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.Leave">
+            <summary>A function or other scope was left.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.ThreadStart">
+            <summary>A thread has started. This occurs only once in a thread's lifetime.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.ThreadEnd">
+            <summary>A thread has ended. This occurs only once in a thread's lifetime.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.LogStart">
+            <summary>The logging has started. This occurs only once in an application's lifetime.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.LogShutdown">
+            <summary>The logging was shut down. This occurs only once in an application's lifetime.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.WebRequestStart">
+            <summary>A web request has started.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogScopeType.WebRequestEnd">
+            <summary>A web request has ended.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogItemType">
+            <summary>
+            Defines item types in the log file. Can only use 4 bits, i. e. 16 values.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.None">
+            <summary>Invalid value.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.StringData">
+            <summary>The file record contains a shared string value.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.Text">
+            <summary>The file record contains a FieldLogTextItem.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.Data">
+            <summary>The file record contains a FieldLogDataItem.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.Exception">
+            <summary>The file record contains a FieldLogExceptionItem.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.Scope">
+            <summary>The file record contains a FieldLogScopeItem.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogItemType.RepeatedScope">
+            <summary>The file record contains a repeated FieldLogScopeItem.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogException">
+            <summary>
+            Wraps an Exception instance for use in FieldLog logging.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogException.#ctor(System.Exception)">
+            <summary>
+            Initialises a new instance of the FieldLogException class.
+            </summary>
+            <param name="ex">The Exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogException.#ctor(System.Exception,System.Diagnostics.StackTrace)">
+            <summary>
+            Initialises a new instance of the FieldLogException class.
+            </summary>
+            <param name="ex">The Exception instance.</param>
+            <param name="customStackTrace">A StackTrace that shall be logged instead of the StackTrace from the Exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogException.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the exception fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogException.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the exception fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Size">
+            <summary>Gets the approximated data size of this log item. Used for buffer size estimation.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Type">
+            <summary>Gets the exception type name.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.TypeModule">
+            <summary>Gets the module that defines the exception type.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Token">
+            <summary>Gets the metadata token of the exception type.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Message">
+            <summary>Gets the exception message.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Code">
+            <summary>Gets the exception code.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Data">
+            <summary>Gets additional data provided by the exception.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.StackFrames">
+            <summary>Gets the stack frames of the exception.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.InnerExceptions">
+            <summary>Gets the inner exceptions of the exception.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogException.Exception">
+            <summary>Gets the original Exception instance.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogStackFrame">
+            <summary>
+            Wraps a StackFrame instance for the FieldLogException class.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogStackFrame.#ctor(System.Diagnostics.StackFrame)">
+            <summary>
+            Initialises a new instance of the FieldLogStackFrame class.
+            </summary>
+            <param name="stackFrame">The StackFrame instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogStackFrame.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the stack frame fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogStackFrame.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the stack frame fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.Size">
+            <summary>Gets the approximated data size of this log item. Used for buffer size estimation.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.Module">
+            <summary>Gets the module name.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.Token">
+            <summary>Gets the metadata token of the method.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.ILOffset">
+            <summary>Gets the IL code offset of the executed instruction in the method body.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.TypeName">
+            <summary>Gets the defining type name.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.MethodName">
+            <summary>Gets the executed method name.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.MethodSignature">
+            <summary>Gets the executed method parameters signature.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.FileName">
+            <summary>Gets the source code file name.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.Line">
+            <summary>Gets the source code line number.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogStackFrame.Column">
+            <summary>Gets the source code column number.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogEventEnvironment">
+            <summary>
+            Contains information about the current system and process environment for log items.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogEventEnvironment.Empty">
+            <summary>Contains the empty environment object.</summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogEventEnvironment.IsNullOrEmpty(Unclassified.FieldLog.FieldLogEventEnvironment)">
+            <summary>
+            Indicates whether the specified environment variable is null or an Empty environment.
+            </summary>
+            <param name="value">The variable to test.</param>
+            <returns>true if the value parameter is null or an empty environment; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogEventEnvironment.Current">
+            <summary>
+            Returns a new instance of the FieldLogEventEnvironment class that contains information
+            about the current environment and state of the system.
+            </summary>
+            <returns>The FieldLogEventEnvironment instance.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogEventEnvironment.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the FieldLogEventEnvironment data to a log file writer.
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogEventEnvironment.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the FieldLogEventEnvironment data from a log file reader.
+            </summary>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.Size">
+            <summary>
+            Gets the approximate data size of this data structure. Used for buffer size estimation.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSType">
+            <summary>
+            Gets the operating system type (client, server, core server). (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSVersion">
+            <summary>
+            Gets the Windows version. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSEdition">
+            <summary>
+            Gets the Windows edition. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSServicePack">
+            <summary>
+            Gets the installed service pack name. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSIs64Bit">
+            <summary>
+            Gets a value indicating whether a 64 bit system is running. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSBuild">
+            <summary>
+            Gets the Windows version build number. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSServicePackBuild">
+            <summary>
+            Gets the service pack build number. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSProductName">
+            <summary>
+            Gets the complete operating system product name from the registry, including Windows
+            version and edition name. This can be used if correctness is required and the value
+            does not need to be evaluated. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSIsAppServer">
+            <summary>
+            Gets a value indicating whether the system is set up as application terminal server.
+            (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSLanguage">
+            <summary>
+            Gets the ISO 639-1/ISO 3166 language/country code of the system language. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSLastBootTime">
+            <summary>
+            Gets the time when the system was last booted, in UTC. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.OSIsFailSafeBoot">
+            <summary>
+            Gets a value indicating whether the system is started in fail-safe mode. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.AppCompatLayer">
+            <summary>
+            Gets the application compatibility layers that are in effect for the current process.
+            (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ClrType">
+            <summary>
+            Gets the CLR type running the current process. This is either "Microsoft .NET" or
+            "Mono". (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.MouseButtons">
+            <summary>
+            Gets the number of buttons on a mouse, or zero if no mouse is installed. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.MaxTouchPoints">
+            <summary>
+            Gets the number of supported touch points. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ScreenDpi">
+            <summary>
+            Gets the logical resolution of the screen. 100 % is 96 dpi. (From OSInfo)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.CultureName">
+            <summary>
+            Gets the current thread culture code.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.CurrentDirectory">
+            <summary>
+            Gets the current working directory.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.EnvironmentVariables">
+            <summary>
+            Gets the current environment variables.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.CpuCount">
+            <summary>
+            Gets the number of installed (logical) processors.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.HostName">
+            <summary>
+            Gets the host name of the computer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.UserName">
+            <summary>
+            Gets the user name of the currently logged in user.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.IsInteractive">
+            <summary>
+            Gets a value indicating whether the process is running interactively. See
+            Environment.UserInteractive.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ExecutablePath">
+            <summary>
+            Gets the file name of the process executable.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.CommandLine">
+            <summary>
+            Gets the command line passed to the current process.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.AppVersion">
+            <summary>
+            Gets the version of the current application.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.AppAsmConfiguration">
+            <summary>
+            Gets the assembly configuration of the current application.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.IsProcess64Bit">
+            <summary>
+            Gets a value indicating whether the running process is 64 bit.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ClrVersion">
+            <summary>
+            Gets the CLR version.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.LocalTimeZoneOffset">
+            <summary>
+            Gets the UTC offset of the local time zone.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ProcessMemory">
+            <summary>
+            Gets the private memory currently used by this process in bytes.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PeakProcessMemory">
+            <summary>
+            Gets the peak working set memory used by this process in bytes.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.TotalMemory">
+            <summary>
+            Gets the amount of total visible memory on the computer in bytes.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.AvailableMemory">
+            <summary>
+            Gets the amount of available memory on the computer in bytes.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ProcessId">
+            <summary>
+            Gets the process ID of the current process.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.IsAdministrator">
+            <summary>
+            Gets a value indicating whether the current process is running with administrator
+            privileges.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenWidth">
+            <summary>
+            Gets the width of the primary screen in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenHeight">
+            <summary>
+            Gets the height of the primary screen in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenBitsPerPixel">
+            <summary>
+            Gets the bits per pixel of the primary screen, a.k.a. colour depth.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenWorkingAreaLeft">
+            <summary>
+            Gets the left of the primary screen workspace in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenWorkingAreaTop">
+            <summary>
+            Gets the top of the primary screen workspace in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenWorkingAreaWidth">
+            <summary>
+            Gets the width of the primary screen workspace in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.PrimaryScreenWorkingAreaHeight">
+            <summary>
+            Gets the height of the primary screen workspace in pixels.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogEventEnvironment.ScreenCount">
+            <summary>
+            Gets the number of screens attached to this computer.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogFileGroupReader">
+            <summary>
+            Implements a virtual log file reader that reads all log files concurrently and returns the
+            log items from all files in the order of their time value.
+            </summary>
+            <remarks>
+            This class is full of .NET 4.0 code so it's not included in the NET20 project altogether.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.#ctor(System.String,System.Boolean,System.Threading.EventWaitHandle)">
+            <summary>
+            Initialises a new instance of the FieldLogFileGroupReader class. This sets up log
+            readers for each priority and links additional readers for existing files to them.
+            A FileSystemWatcher is set up to add new files as they are created.
+            </summary>
+            <param name="basePath">The path and file prefix of the log files to read.</param>
+            <param name="singleFile">true to load a single file only. <paramref name="basePath"/>
+            must be a full file name then.</param>
+            <param name="readWaitHandle">The wait handle that will be signalled after all files
+            have been read to the end and if the last reader is now going to wait for further data
+            to be appended to the file.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.ReadWaitHandleTask(System.Threading.EventWaitHandle)">
+            <summary>
+            Waits for all priority readers to wait, then sets the readWaitHandle event. Loops until
+            the closeEvent is set.
+            </summary>
+            <param name="readWaitHandle">The EventWaitHandle instance to set.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.WaitForNewFilePrio">
+            <summary>
+            Implements the task that waits for a log file for a new priority to be created.
+            </summary>
+            <returns>The return value is not used.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.WaitForClose">
+            <summary>
+            Implements the task that waits for the close event.
+            </summary>
+            <returns>The return value is not used.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.fsw_Created(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            Called when the FileSystemWatcher found a newly created file of the currently used
+            log file set.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.FindLogFiles(System.String,Unclassified.FieldLog.FieldLogPriority)">
+            <summary>
+            Finds all currently existing log files and adds a new reader for each of them.
+            </summary>
+            <param name="basePath"></param>
+            <param name="prio"></param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.AddNewReader(Unclassified.FieldLog.FieldLogPriority,System.String,System.Boolean)">
+            <summary>
+            Creates a new log file reader and adds it to the priority's log file enumerator.
+            </summary>
+            <param name="prio"></param>
+            <param name="fileName"></param>
+            <param name="fromFsw">Indicates whether the reader was created from a FileSystemWatcher event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.ReadLogItem">
+            <summary>
+            Reads the next log item from the log file group. If all files have been read until the
+            end, this method blocks until a new log item was written to any file, or until the
+            close event was set.
+            </summary>
+            <returns>The next log item, or null if there are no more log items and the waiting was cancelled.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.ReadLogItemAsync">
+            <summary>
+            Starts a new Task that calls the ReadLogItem method.
+            </summary>
+            <returns>The new Task instance.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileGroupReader.Close">
+            <summary>
+            Sets the close signal to stop waiting for and reading log items.
+            </summary>
+        </member>
+        <member name="E:Unclassified.FieldLog.FieldLogFileGroupReader.Error">
+            <summary>
+            Occurs when there was a problem reading a log file.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogFileEnumerator">
+            <summary>
+            Supports the iteration over log items in a sequence of FieldLogFileReader instances linked
+            by their NextReader property.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.#ctor(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Initialises a new instance of the FieldLogFileEnumerator class.
+            </summary>
+            <param name="reader">The first file reader instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.Dispose">
+            <summary>
+            Disposes of all FieldLogFileReader in this enumerator, beginning with the first.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.MoveNext">
+            <summary>
+            Advances the enumerator to the next log item of the currently read log file. If there
+            are no more items in this file and there is a NextReader set, the first log item of the
+            next file reader is selected. If there are no more items in this file and WaitMode is
+            set, the method will block until another log item is appended to the current file or
+            the wait operation is cancelled by a close event.
+            </summary>
+            <returns>true if the enumerator was successfully advanced to the next log item;
+            false if the enumerator has passed the end of the collection.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.Reset">
+            <summary>
+            Sets the enumerator to its initial position, which is before the first log item of the
+            first log file. WARNING: This function is not used yet and may not work as expected.
+            It is implemented as part of the IEnumerator interface and probably does not work
+            correctly regarding the WaitMode flag because it is re-reading from used readers.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.Close">
+            <summary>
+            Sets the close signal for the currently used log file reader.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.ContainsFile(System.String)">
+            <summary>
+            Determines whether the enumerator contains the specified log file.
+            </summary>
+            <param name="fileName">The full name of the log file to locate in the enumerator.</param>
+            <returns>true if the enumerator contains the specified log file reader; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.Append(Unclassified.FieldLog.FieldLogFileReader,System.Boolean)">
+            <summary>
+            Appends a new FieldLogFileReader at the end of this enumerator.
+            </summary>
+            <param name="newReader">The new reader to append.</param>
+            <param name="fromFsw">Indicates whether the reader was created from a FileSystemWatcher event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileEnumerator.OnError(System.Exception)">
+            <summary>
+            Raises the Error event.
+            </summary>
+            <param name="ex">An Exception that represents the error that occurred.</param>
+        </member>
+        <member name="E:Unclassified.FieldLog.FieldLogFileEnumerator.Error">
+            <summary>
+            Occurs when there was a problem reading a log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileEnumerator.Current">
+            <summary>
+            Gets the log item at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileEnumerator.System#Collections#IEnumerator#Current">
+            <summary>
+            Gets the log item at the current position of the enumerator.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileEnumerator.FirstReader">
+            <summary>
+            Gets the first log file reader of this enumerator.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileEnumerator.LastReader">
+            <summary>
+            Gets the last log file reader of this enumerator.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogFileReader">
+            <summary>
+            Reads log items from a log file.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initialises a new instance of the FieldLogFileReader class.
+            </summary>
+            <param name="fileName">The name of the log file to read.</param>
+            <param name="waitMode">true to wait for more items at the end of the file, false to indicate the end of the file and return.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.TryReadBytes(System.Int32)">
+            <summary>
+            Tries to read bytes from the file.
+            </summary>
+            <param name="count">Number of bytes to read.</param>
+            <returns>Bytes read from the file, if all bytes were available; null otherwise.</returns>
+            <remarks>
+            If not all requested bytes were available to read, the bytes that were already
+            available are stored in a buffer and the method returns null. The next time this
+            method is called, the bytes that are still missing are read. This must be repeated
+            until the method does not return null.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadBytes(System.Int32)">
+            <summary>
+            Reads the specified number of bytes from the file. Waits until all requested bytes were
+            available to read.
+            </summary>
+            <param name="count">Number of bytes to read.</param>
+            <returns>Bytes read from the file.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadByte">
+            <summary>
+            Reads a single byte from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadInt16">
+            <summary>
+            Reads a short value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadInt32">
+            <summary>
+            Reads an int value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadInt64">
+            <summary>
+            Reads a long value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadUInt16">
+            <summary>
+            Reads a ushort value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadUInt32">
+            <summary>
+            Reads a uint value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadUInt64">
+            <summary>
+            Reads a ulong value from the file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadString">
+            <summary>
+            Reads a string from the file, using the text cache.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadLogItem">
+            <summary>
+            Reads the next complete log item from the file.
+            </summary>
+            <returns>The next log item in the file.</returns>
+            <remarks>
+            This method will block until a complete log item is available in the file.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.ReadLogItemAsync">
+            <summary>
+            Reads the next complete log item from the file.
+            </summary>
+            <returns>The Task that reads a log item.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.Reset">
+            <summary>
+            Resets the current position to the beginning of the file.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.Close">
+            <summary>
+            Sets the close signal. This may only work if WaitMode is set.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileReader.Dispose">
+            <summary>
+            Closes the open log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.FileName">
+            <summary>
+            Gets the name of the log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.FormatVersion">
+            <summary>
+            Gets the format version of the log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.WaitMode">
+            <summary>
+            Gets or sets a value indicating whether a read operation should wait until all
+            requested data is available in the file. If true, read operations will block; otherwise
+            read operations may return null. This property is thread-safe.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.ItemCount">
+            <summary>
+            Gets the number of items that have been read by this FieldLogFileReader instance since
+            it has been created or reset.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.NextReader">
+            <summary>
+            Gets or sets a follow-up reader to use when this file has been read till the end.
+            Setting a value for NextReader unsets WaitMode for this reader. This property is
+            thread-safe.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.IsClosing">
+            <summary>
+            Gets a value indicating whether the reader is closing.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileReader.ReadWaitHandle">
+            <summary>
+            Gets or sets the wait handle that will be signalled after the file has been read to
+            the end and if the reader is now going to wait for further data to be appended to the
+            file.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogTraceListener">
+            <summary>
+            Implements a TraceListener that can be added to several TraceSources and writes their
+            events to the FieldLog log file.
+            </summary>
+            <remarks>
+            This class is largely specific to WPF and not included in the NET20 project.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTraceListener.Start">
+            <summary>
+            Starts event logging of all events with Warning level and up from all WPF sources and
+            from System.Diagnostics.Trace.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTraceListener.Start(System.Diagnostics.SourceLevels)">
+            <summary>
+            Starts event logging of all events from all WPF sources and System.Diagnostics.Trace.
+            </summary>
+            <param name="level">The minimum source level to log.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTraceListener.Stop">
+            <summary>
+            Stops event logging started with <see cref="M:Unclassified.FieldLog.FieldLogTraceListener.Start"/>.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FL">
+            <summary>
+            Implements the FieldLog system and provides logging methods for applications.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileFormatVersion">
+            <summary>
+            Defines the format version of log files.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.maxBufferSize">
+            <summary>
+            Defines the maximum buffer size to keep.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.AppErrorTerminateTimeout">
+            <summary>
+            Defines the seconds to wait for user feedback in the application error message. If the
+            user does not respond within this time, a warning is logged and the application is
+            terminated.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.logConfigExtension">
+            <summary>
+            Defines the log configuration file name extension.
+            </summary>
+            <remarks>
+            Don't set this to ".config" when using it with ASP.NET applications, or it will find
+            the Web.config file and try to read it.
+            </remarks>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.StackTraceOnlyExceptionContext">
+            <summary>
+            Defines the exception context used for the LogStackTrace methods.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.StackTraceEnvOnlyExceptionContext">
+            <summary>
+            Defines the exception context used for the LogStackTrace methods, including environment
+            data.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.GetFileType(System.IntPtr)">
+            <summary>
+            Retrieves the file type of the specified file.
+            </summary>
+            <param name="hFile">A handle to the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.GetStdHandle(Unclassified.FieldLog.FL.StdHandle)">
+            <summary>
+            Retrieves a handle to the specified standard device (standard input, standard output,
+            or standard error).
+            </summary>
+            <param name="nStdHandle">The standard device.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.GetConsoleWindow">
+            <summary>
+            Retrieves the window handle used by the console associated with the calling process.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.IsWindowVisible(System.IntPtr)">
+            <summary>
+            Determines the visibility state of the specified window.
+            </summary>
+            <param name="hWnd">A handle to the window to be tested.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.fieldLogVersion">
+            <summary>
+            The version of the FieldLog assembly, if available.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.startTime">
+            <summary>
+            The UTC date and time at the start of the Stopwatch.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.stopwatch">
+            <summary>
+            The Stopwatch to measure high-precision relative time.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.eventCounter">
+            <summary>
+            The log items counter. Increased with every log event. Used for correct ordering of
+            log items with the exact same time value. May wrap around.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.buffers">
+            <summary>
+            Contains all buffers that are ready to send. Synchronised by buffers.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.currentBufferLock">
+            <summary>
+            Lock object for accessing the currentBuffer field.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.currentBuffer">
+            <summary>
+            The current buffer that new items are added to. Synchronised by currentBufferLock.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.currentBufferSize">
+            <summary>
+            The size of the current buffer. Synchronised by currentBufferLock.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.newBufferEvent">
+            <summary>
+            Event to signal a new buffer ready for sending.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.sendTimeout">
+            <summary>
+            Timeout for sending buffers before reaching their maximum size.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.sendThread">
+            <summary>
+            Background thread for sending the buffers.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.sendThreadCancellationPending">
+            <summary>
+            Indicates whether the send thread shall be shut down. Synchronised by sendThread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.isShutdown">
+            <summary>
+            Indicates whether the log queue has been shut down. Intentionally not synchronised.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.shutdownLock">
+            <summary>
+            Lock object for shutting down FieldLog.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.logFileBasePath">
+            <summary>
+            Log file base path.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.logFileBasePathSet">
+            <summary>
+            Indicates whether the path for writing log files has already been set.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customLogFilePrefix">
+            <summary>
+            Application-defined custom log file prefix. Used for all log directories tested in the
+            default strategy, but not when customLogFileBasePath is set.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customLogFileBasePath">
+            <summary>
+            Application-defined custom log file base path. If set, this is tried first.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customLogFileBasePathSet">
+            <summary>
+            Indicates whether an application-defined path for writing log files has already been
+            set. If false, no log files are written and all buffers are retained, except when
+            FieldLog is shutting down. In the latter case, the default automatic path selection is
+            used and files are written if a working path was found. This is so that start-up errors
+            that occur before the application could set a custom path can be logged at least
+            somewhere.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customLogPathLock">
+            <summary>
+            Lock object for setting a custom log path.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.maxFileSize">
+            <summary>
+            Maximum size of any single log file. Only set when the send thread is stopped.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.maxTotalSize">
+            <summary>
+            Maximum size of all log files together. Only set when the send thread is stopped.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.priorityKeepTimes">
+            <summary>
+            Minimum time to keep log items of each priority. Only set when the send thread is
+            stopped.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.priorityLastPurgeTimes">
+            <summary>
+            Time when the log files of each priority were last purged. Only used in the send thread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.totalSizeLastPurgeTime">
+            <summary>
+            Time when the total size of all log files was last checked. Only used in the send thread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.configChanged">
+            <summary>
+            Indicates whether the configuration file has changed and should be reloaded.
+            Synchronised by sendThread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.configFileWatcher">
+            <summary>
+            Detects changes to the configuration file.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.configFileName">
+            <summary>
+            The path of the configuration file. This file does not necessarily exist, but it would
+            be the file to read. This is set after calling the <see cref="M:Unclassified.FieldLog.FL.ReadLogConfiguration"/>
+            method.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.buffersToSend">
+            <summary>
+            Keeps all buffers that still need to be sent. Used by the send thread only.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.priorityLogWriters">
+            <summary>
+            Keeps all open log file writers for each priority. Used by the send thread only.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customTimers">
+            <summary>
+            Keeps all custom time measurement entries.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.customTimersLock">
+            <summary>
+            Locks access to custom time measurement data.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.threadTransientItems">
+            <summary>
+            Contains all log items that are transiently buffered in the current thread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.configFileNameOverride">
+            <summary>
+            Override configuration file name. Used for ASP.NET.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.logDefaultDirOverride">
+            <summary>
+            Override default log file directory. Used for ASP.NET.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.didDuplicateLogStartCheck">
+            <summary>
+            Indicates whether the duplicate LogStart check on writing items to the log file has
+            been run. Used for ASP.NET.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.firstChanceExceptionLevel">
+            <summary>
+            The level of first-chance exception handling. If this goes up, there is an exception
+            in the exception handler. If this goes uncontrolled, it leads to a
+            StackOverflowException that crashes the application.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.LogScopeItem">
+            <summary>
+            Written from the static constructor, read in the send thread.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.ThreadScopes">
+            <summary>
+            Written and read in the send thread only.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.WebRequestScopes">
+            <summary>
+            Written and read in the send thread only.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.CurrentScopes">
+            <summary>
+            Written and read in the send thread only.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.EntryAssembly">
+            <summary>
+            A reference to the EntryAssembly. This is determined by other means for ASP.NET
+            applications.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.EntryAssemblyLocation">
+            <summary>
+            The entry assembly's Location value. This is determined by other means for ASP.NET
+            applications.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.#cctor">
+            <summary>
+            Initialises the static FieldLog environment, time measurement, worker threads and
+            application error handlers. This is called automatically when the process is started.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.AppDomain_ProcessExit(System.Object,System.EventArgs)">
+            <summary>
+            Called when the current process exits.
+            </summary>
+            <remarks>
+            <para>
+            The processing time in this event is limited. All handlers of this event together must
+            not take more than ca. 3 seconds. The processing will then be terminated.
+            </para>
+            <para>
+            This method is called on a pool thread.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.AppDomain_DomainUnload(System.Object,System.EventArgs)">
+            <summary>
+            Called when the current AppDomains is unloaded.
+            </summary>
+            <remarks>
+            <para>
+            This event is never raised in the default application domain.
+            </para>
+            <para>
+            This method is called on a pool thread.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Use">
+            <summary>
+            Does nothing. By referencing the FL type with this method call, it is ensured that the
+            FL type initialiser (static constructor) is called. This method can be used if no other
+            FL member can reasonably be accessed directly at application startup, just to ensure
+            that the unhandled exception handling is active right from the start.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.RegisterAppErrorHandler">
+            <summary>
+            Registers application error handlers for all application types.
+            </summary>
+            <remarks>
+            This method is called from the FL static constructor, and only if no debugger is
+            currently attached. A debugger should catch exceptions instead of us.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.RegisterPresentationTracing">
+            <summary>
+            Registers presentation trace handlers for a WPF application.
+            </summary>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ExceptionUserMessageRecursive(Unclassified.FieldLog.FieldLogException)">
+            <summary>
+            Formats the message text of an exception and all inner exceptions for display in a user
+            dialog.
+            </summary>
+            <param name="ex">The exception to format.</param>
+            <returns>The formatted text for <paramref name="ex"/>.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Trace(System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Checkpoint(System.String)">
+            <summary>
+            Writes a text log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Info(System.String)">
+            <summary>
+            Writes a text log item with Info priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Notice(System.String)">
+            <summary>
+            Writes a text log item with Notice priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Warning(System.String)">
+            <summary>
+            Writes a text log item with Warning priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Error(System.String)">
+            <summary>
+            Writes a text log item with Error priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Critical(System.String)">
+            <summary>
+            Writes a text log item with Critical priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Trace(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Checkpoint(System.String,System.String)">
+            <summary>
+            Writes a text log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Info(System.String,System.String)">
+            <summary>
+            Writes a text log item with Info priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Notice(System.String,System.String)">
+            <summary>
+            Writes a text log item with Notice priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Warning(System.String,System.String)">
+            <summary>
+            Writes a text log item with Warning priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Error(System.String,System.String)">
+            <summary>
+            Writes a text log item with Error priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Critical(System.String,System.String)">
+            <summary>
+            Writes a text log item with Critical priority to the log file.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceTransient(System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CheckpointTransient(System.String)">
+            <summary>
+            Writes a text log item with Checkpoint priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.InfoTransient(System.String)">
+            <summary>
+            Writes a text log item with Info priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.NoticeTransient(System.String)">
+            <summary>
+            Writes a text log item with Notice priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.WarningTransient(System.String)">
+            <summary>
+            Writes a text log item with Warning priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ErrorTransient(System.String)">
+            <summary>
+            Writes a text log item with Error priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CriticalTransient(System.String)">
+            <summary>
+            Writes a text log item with Critical priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CheckpointTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Checkpoint priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.InfoTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Info priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.NoticeTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Notice priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.WarningTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Warning priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ErrorTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Error priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CriticalTransient(System.String,System.String)">
+            <summary>
+            Writes a text log item with Critical priority to the transient buffer.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Trace priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CheckpointData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.InfoData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Info priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.NoticeData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Notice priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.WarningData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Warning priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ErrorData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Error priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CriticalData(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Critical priority to the log file.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Trace priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CheckpointDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Checkpoint priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.InfoDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Info priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.NoticeDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Notice priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.WarningDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Warning priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ErrorDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Error priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CriticalDataTransient(System.String,System.Object)">
+            <summary>
+            Writes a data log item with Critical priority to the transient buffer.
+            </summary>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Trace(System.Exception)">
+            <summary>
+            Writes an exception log item with Trace priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Checkpoint(System.Exception)">
+            <summary>
+            Writes an exception log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Info(System.Exception)">
+            <summary>
+            Writes an exception log item with Info priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Notice(System.Exception)">
+            <summary>
+            Writes an exception log item with Notice priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Warning(System.Exception)">
+            <summary>
+            Writes an exception log item with Warning priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Error(System.Exception)">
+            <summary>
+            Writes an exception log item with Error priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Critical(System.Exception)">
+            <summary>
+            Writes an exception log item with Critical priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Trace(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Trace priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Checkpoint(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Info(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Info priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Notice(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Notice priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Warning(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Warning priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Error(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Error priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Critical(System.Exception,System.String)">
+            <summary>
+            Writes an exception log item with Critical priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Trace(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Trace priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Checkpoint(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Checkpoint priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Info(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Info priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Notice(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Notice priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Warning(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Warning priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Error(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Error priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Critical(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item with Critical priority to the log file.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Text(Unclassified.FieldLog.FieldLogPriority,System.String)">
+            <summary>
+            Writes a text log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Text(Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
+            <summary>
+            Writes a text log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TextTransient(Unclassified.FieldLog.FieldLogPriority,System.String)">
+            <summary>
+            Writes a text log item to the transient buffer.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TextTransient(Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
+            <summary>
+            Writes a text log item to the transient buffer.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Data(Unclassified.FieldLog.FieldLogPriority,System.String,System.Object)">
+            <summary>
+            Writes a data log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.DataTransient(Unclassified.FieldLog.FieldLogPriority,System.String,System.Object)">
+            <summary>
+            Writes a data log item to the transient buffer.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="name">The name of the data item.</param>
+            <param name="value">The value of the data item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Exception(Unclassified.FieldLog.FieldLogPriority,System.Exception)">
+            <summary>
+            Writes an exception log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Exception(Unclassified.FieldLog.FieldLogPriority,System.Exception,System.String)">
+            <summary>
+            Writes an exception log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Exception(Unclassified.FieldLog.FieldLogPriority,System.Exception,System.String,System.Boolean)">
+            <summary>
+            Writes an exception log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="showUserDialog">true to show a user dialog about the application error.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Exception(Unclassified.FieldLog.FieldLogPriority,System.Exception,System.String,System.Diagnostics.StackTrace)">
+            <summary>
+            Writes an exception log item to the log file.
+            </summary>
+            <param name="priority">The priority of the log item.</param>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown.</param>
+            <param name="customStackTrace">A StackTrace that shall be logged instead of the StackTrace from the Exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Enter(System.String)">
+            <summary>
+            Writes a scope entering log item to the log file.
+            </summary>
+            <param name="name">The scope name. Should be application-unique and hierarchical for easier analysis.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Leave(System.String)">
+            <summary>
+            Writes a scope leaving log item to the log file.
+            </summary>
+            <param name="name">The scope name. Should be the same as the corresponding Enter scope name.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogScope(Unclassified.FieldLog.FieldLogScopeType,System.String)">
+            <summary>
+            Writes a scope log item to the log file.
+            </summary>
+            <param name="type">The scope type.</param>
+            <param name="name">The scope name. Should be application-unique and hierarchical for easier analysis.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogScope(Unclassified.FieldLog.FieldLogScopeType,System.String,Unclassified.FieldLog.FieldLogWebRequestData)">
+            <summary>
+            Writes a scope log item to the log file.
+            </summary>
+            <param name="type">The scope type.</param>
+            <param name="name">The scope name. Should be application-unique and hierarchical for easier analysis.</param>
+            <param name="webRequestData">The web request data. This parameter is required for the WebRequestStart scope type.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogStackTrace">
+            <summary>
+            Writes a stack trace through an exception log item of Trace priority to the log file.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogStackTrace(System.String)">
+            <summary>
+            Writes a stack trace through an exception log item of Trace priority to the log file.
+            </summary>
+            <param name="text">The exception message text to log.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogStackTrace(Unclassified.FieldLog.FieldLogPriority,System.String)">
+            <summary>
+            Writes a stack trace through an exception log item to the log file.
+            </summary>
+            <param name="prio">The priority of the log item.</param>
+            <param name="text">The exception message text to log.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogStackTrace(Unclassified.FieldLog.FieldLogPriority,System.String,System.Boolean)">
+            <summary>
+            Writes a stack trace through an exception log item to the log file.
+            </summary>
+            <param name="prio">The priority of the log item.</param>
+            <param name="text">The exception message text to log.</param>
+            <param name="includeEnvironment">true to include the current environment data.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Log(Unclassified.FieldLog.FieldLogItem)">
+            <summary>
+            Writes a log item to the log file.
+            </summary>
+            <param name="item">The log item to write.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogTransient(Unclassified.FieldLog.FieldLogItem)">
+            <summary>
+            Writes a log item to the transient buffer for the current thread. All buffered log
+            items are only written to the log file if a non-transient (normal) log item is written
+            through another log method. The transient buffer can be cleared before it was written.
+            </summary>
+            <param name="item">The log item to add to the transient buffer.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogBuffer(Unclassified.FieldLog.FieldLogItem)">
+            <summary>
+            Writes a log item to the transient buffer for the current thread. All buffered log
+            items are only written to the log file if a non-transient (normal) log item is written
+            through another log method. The transient buffer can be cleared before it was written.
+            </summary>
+            <param name="item">The log item to add to the transient buffer.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ClearTransient">
+            <summary>
+            Clears the transient log items buffer for the current thread.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ClearLogBuffer">
+            <summary>
+            Clears the transient log items buffer for the current thread.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.LogTimeout(Unclassified.FieldLog.FieldLogItem,System.Int32)">
+            <summary>
+            Writes a log item to the log file if the specified timeout expires.
+            </summary>
+            <param name="item">The log item to write.</param>
+            <param name="milliseconds">The timeout in milliseconds.</param>
+            <remarks>
+            To cancel the timeout logging, call the Dispose method of the returned Timer instance.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Scope(System.String,System.Object)">
+            <summary>
+            Returns a new FieldLogScope item that implements IDisposable and can be used to log
+            scopes with the <c>using</c> statement.
+            </summary>
+            <param name="name">The scope name.</param>
+            <param name="values">Optional argument values for the scope.</param>
+            <returns>A new <see cref="T:Unclassified.FieldLog.FieldLogScope"/> instance.</returns>
+            <remarks>
+            The <paramref name="values"/> parameter is any object whose public instance properties
+            and fields will be dumped to a multi-line string in the log. The property and field
+            names are determined through reflection.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Scope(System.Object)">
+            <summary>
+            Returns a new FieldLogScope item that implements IDisposable and can be used to log
+            scopes with the <c>using</c> statement. The calling method name is used as scope name.
+            </summary>
+            <param name="values">Optional argument values for the scope.</param>
+            <returns>A new <see cref="T:Unclassified.FieldLog.FieldLogScope"/> instance.</returns>
+            <remarks>
+            The <paramref name="values"/> parameter is any object whose public instance properties
+            and fields will be dumped to a multi-line string in the log. The property and field
+            names are determined through reflection.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ThreadScope(System.String)">
+            <summary>
+            Returns a new FieldLogThreadScope item that implements IDisposable and can be used to
+            log thread scopes with the <c>using</c> statement.
+            </summary>
+            <param name="name">The thread scope name.</param>
+            <returns>A new <see cref="T:Unclassified.FieldLog.FieldLogThreadScope"/> instance.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeAction(System.Action,System.String)">
+            <summary>
+            Wraps an Action delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeAction``1(System.Action{``0},``0,System.String)">
+            <summary>
+            Wraps an Action delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="action"/>.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeAction``2(System.Action{``0,``1},``0,``1,System.String)">
+            <summary>
+            Wraps an Action delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="action"/>.</param>
+            <param name="arg2">The second argument passed to <paramref name="action"/>.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeFunc``1(System.Func{``0},System.String)">
+            <summary>
+            Wraps a Func delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeFunc``2(System.Func{``0,``1},``0,System.String)">
+            <summary>
+            Wraps a Func delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="func"/>.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ScopeFunc``3(System.Func{``0,``1,``2},``0,``1,System.String)">
+            <summary>
+            Wraps a Func delegate in a FieldLogScope to mark its entering and returning.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="func"/>.</param>
+            <param name="arg2">The second argument passed to <paramref name="func"/>.</param>
+            <param name="name">The scope name. Defaults to the delegate's method name if not specified.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.StartTimer(System.String,System.Boolean)">
+            <summary>
+            Starts a custom timer. If the key does not exist, a new timer is created.
+            </summary>
+            <param name="key">The custom timer key.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <returns>An instance which can be used to call the Start and Stop methods without a further key lookup.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.StopTimer(System.String,System.Boolean)">
+            <summary>
+            Stops a custom timer.
+            </summary>
+            <param name="key">The custom timer key.</param>
+            <param name="writeNow">true to write the timer value immediately, false for the normal delay.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ClearTimer(System.String)">
+            <summary>
+            Stops a custom timer and removes it from the dictionary.
+            </summary>
+            <param name="key">The custom timer key.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Timer(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a new CustomTimerScope item that implements IDisposable and can be used for
+            time measuring with the <c>using</c> statement.
+            </summary>
+            <param name="key">The custom timer key.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <returns>A new <see cref="T:Unclassified.FieldLog.CustomTimerScope"/> instance.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerAction(System.Action,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps an Action delegate in a CustomTimerScope to measure the time that the action
+            takes to execute.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerAction``1(System.Action{``0},``0,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps an Action delegate in a CustomTimerScope to measure the time that the action
+            takes to execute.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="action"/>.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerAction``2(System.Action{``0,``1},``0,``1,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps an Action delegate in a CustomTimerScope to measure the time that the action
+            takes to execute.
+            </summary>
+            <param name="action">The action to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="action"/>.</param>
+            <param name="arg2">The second argument passed to <paramref name="action"/>.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerFunc``1(System.Func{``0},System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps a Func delegate in a CustomTimerScope to measure the time that the action takes
+            to execute.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerFunc``2(System.Func{``0,``1},``0,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps a Func delegate in a CustomTimerScope to measure the time that the action takes
+            to execute.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="func"/>.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerFunc``3(System.Func{``0,``1,``2},``0,``1,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Wraps a Func delegate in a CustomTimerScope to measure the time that the action takes
+            to execute.
+            </summary>
+            <param name="func">The function to execute.</param>
+            <param name="arg1">The first argument passed to <paramref name="func"/>.</param>
+            <param name="arg2">The second argument passed to <paramref name="func"/>.</param>
+            <param name="key">The custom timer key. Defaults to the delegate's method name if not specified.</param>
+            <param name="incrementCounter">Increment the counter value.</param>
+            <param name="writeImmediately">true to write the timer value immediately when stopping, false for the normal delay.</param>
+            <returns>The return value of <paramref name="func"/>.</returns>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TextOnDispatcherPriority(System.Windows.Threading.DispatcherPriority,Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
+            <summary>
+            Writes a text log item to the log file after the WPF dispatcher has processed other
+            queued events of the specified dispatcher priority.
+            </summary>
+            <param name="dispPriority">The WPF dispatcher priority to schedule the log message with.</param>
+            <param name="logPriority">The priority of the log item.</param>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnDispatcherPriority(System.Windows.Threading.DispatcherPriority,System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of the specified dispatcher priority.
+            </summary>
+            <param name="priority">The WPF dispatcher priority to schedule the log message with.</param>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnBackground(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of Background priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnInput(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of Input priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnLoaded(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of Loaded priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnRender(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of Render priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TraceOnDataBind(System.String,System.String)">
+            <summary>
+            Writes a text log item with Trace priority to the log file after the WPF dispatcher has
+            processed other queued events of DataBind priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.StopTimerOnDispatcherPriority(System.Windows.Threading.DispatcherPriority,System.String)">
+            <summary>
+            Stops a custom timer after the WPF dispatcher has processed other queued events of the
+            specified dispatcher priority.
+            </summary>
+            <param name="priority">The WPF dispatcher priority to schedule the timer with.</param>
+            <param name="key">The custom timer key.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TimerUntilDispatcherPriority(System.Windows.Threading.DispatcherPriority,System.String)">
+            <summary>
+            Starts a custom timer and stops it after the WPF dispatcher has processed other queued
+            events of the specified dispatcher priority.
+            </summary>
+            <param name="priority">The WPF dispatcher priority to schedule the timer with.</param>
+            <param name="key">The custom timer key.</param>
+            <remarks>
+            This method is not available in the NET20 build.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CheckAddBuffer(System.Int32)">
+            <summary>
+            Checks the current buffer size and adds it to the sending queue and creates a new one.
+            </summary>
+            <param name="addSize">Size of the next item to add. If 0, the current buffer is always added for sending.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Flush">
+            <summary>
+            Sends all remaining buffers regardless of their size or the regular timeout. Buffers
+            already dequeued by the send thread cannot be flushed.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.Shutdown">
+            <summary>
+            Shuts down the log queue. All remaining items will be sent but no new items will be
+            accepted.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.OnSendTimeout(System.Object)">
+            <summary>
+            Send timeout handler that adds the current buffer for sending even before it has
+            reached its maximum size.
+            </summary>
+            <param name="state">Unused.</param>
+            <remarks>
+            This method is called on a pool thread.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.SendThread">
+            <summary>
+            Background thread function that waits for new buffers to send them.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.SendBuffers">
+            <summary>
+            Dequeues all enqueued buffers and sends them.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.SetCustomLogFilePrefix(System.String)">
+            <summary>
+            Sets an application-defined prefix for the log files. The default is the file name of
+            the entry assembly without its extension.
+            </summary>
+            <param name="prefix">The new log file name prefix.</param>
+            <remarks>
+            This method must be called before AcceptLogFileBasePath. SetCustomLogFileBasePath
+            effectively overwrites the file prefix so both methods cannot be used together.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.SetCustomLogFileBasePath(System.String)">
+            <summary>
+            Sets an application-defined base path for writing log files to.
+            </summary>
+            <param name="path">Log file base path. This is an absolute path to a directory and a file name prefix.</param>
+            <remarks>
+            FieldLog tries to find a working path to write log files to automatically. The
+            application can specify a custom path that will be tried before all automatic defaults.
+            If this path is null or doesn't work, the other default paths are tested and the first
+            working path will be used. No attempt to find a working path is made until this method
+            or <see cref="M:Unclassified.FieldLog.FL.AcceptLogFileBasePath"/> is called.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.AcceptLogFileBasePath">
+            <summary>
+            Accepts FieldLogs default log path strategy or a path specified in the flconfig file.
+            </summary>
+            <remarks>
+            Calling this method just tells FieldLog that the default paths are okay and logs shall
+            be written there if not specified otherwise in the flconfig file. No attempt to find a
+            working path is made until this method or <see cref="M:Unclassified.FieldLog.FL.SetCustomLogFileBasePath(System.String)"/> is
+            called.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.TestLogPaths">
+            <summary>
+            Detects and stores a working path for writing log files to.
+            </summary>
+            <returns>true if a path has been set, false to defer writing to a later time.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.WriteLogReadmeFile">
+            <summary>
+            Writes a readme text file to the log directory that explains the user what to do with
+            these files. If the file already exists, it will not be recreated.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.PurgeAllFiles">
+            <summary>
+            Purges log files of all priorities where necessary.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.PurgePriority(Unclassified.FieldLog.FieldLogPriority)">
+            <summary>
+            Purges log files of the specified priority if necessary.
+            </summary>
+            <param name="prio"></param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ReadLogConfiguration">
+            <summary>
+            Reads the log configuration from the file next to the executable file.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ResetLogConfiguration">
+            <summary>
+            Sets default values for the log configuration.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ParseConfigNumber(System.String,System.Int64)">
+            <summary>
+            Parses a number description from the configuration file.
+            </summary>
+            <param name="value">A number value with an optional byte size suffix "k", "m" or "g" (case-insensitive).</param>
+            <param name="defaultValue">The value to return if the value cannot be parsed or used.</param>
+            <returns>The parsed value, or <paramref name="defaultValue"/> on error.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ParseConfigTimeSpan(System.String,System.TimeSpan)">
+            <summary>
+            Parses a timespan description from the configuration file.
+            </summary>
+            <param name="value">A number value with an optional time unit suffix "s", "m", "h" or "d" (case-insensitive).</param>
+            <param name="defaultValue">The value to return if the value cannot be parsed or used.</param>
+            <returns>The parsed value, or <paramref name="defaultValue"/> on error.</returns>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.SessionId">
+            <summary>
+            Gets an ID that uniquely identifies the current execution of the application.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.ShowAppErrorDialog">
+            <summary>
+            Gets or sets a method that shows an application error dialog to the user.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.UtcNow">
+            <summary>
+            Gets the high-precision UTC time.
+            </summary>
+            <remarks>
+            This call takes ~50 ns on 2013 hardware, DateTime.UtcNow takes ~20 ns.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.CheckTimeThreshold">
+            <summary>
+            Gets or sets the threshold value in milliseconds above which discontinuities of the
+            system time will be recalibrated. This event is logged at Notice priority. (Default: 100)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.LogTimeThreshold">
+            <summary>
+            Experimental. Gets or sets the value in milliseconds above which discontinuities of the
+            system time will be logged. No calibration takes place for this event.
+            (Default: -1, do not log)
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.LogFileBasePath">
+            <summary>
+            Gets the currently used log file base path. This is an absolute path to a directory and
+            a file name prefix. To write other application-specific log files to that directory,
+            just append a file name suffix and extension (not .fl) to this value. If this value is
+            null, no path has been specified yet (log file writing is deferred) or no working path
+            could be found (no files will be written at all).
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.LogFirstChanceExceptions">
+            <summary>
+            Gets or sets a value indicating whether FirstChanceException events shall be logged.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.IsInteractiveConsoleApp">
+            <summary>
+            Gets a value indicating whether the current application has an interactive console and
+            is able to interact with the user through it.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.WriteItemsBacklog">
+            <summary>
+            Gets the backlog of items to be written to the log files.
+            </summary>
+            <remarks>
+            Not synchronised because it shouldn't be necessary for a single Int32 value and a single
+            wrong reading is not critical.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.WaitForItemsBacklog">
+            <summary>
+            Gets or sets a value indicating whether a Log call should be delayed if there is a high
+            backlog of items to be written to the log files. This avoids item loss when flushing at
+            process shutdown but may lead to considerable delays in rare cases of high logging rate.
+            Default is true for safety.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.IsShutdown">
+            <summary>
+            Gets a value indicating whether the log queue has been shut down.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTitle">
+            <summary>Gets or sets the application error user dialog title.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinuableGui">
+            <summary>Gets or sets the application error user dialog intro for GUI applications if the application can be continued.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinuableConsole">
+            <summary>Gets or sets the application error user dialog intro for console applications if the application can be continued.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTerminating">
+            <summary>Gets or sets the application error user dialog intro if the application will be terminated.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContext">
+            <summary>Gets or sets the application error user dialog context caption, including a colon at the end.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogNote">
+            <summary>Gets or sets the application error user dialog note at the end of the message.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogLogPath">
+            <summary>Gets or sets the application error user dialog text describing the log path.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogNoLog">
+            <summary>Gets or sets the application error user dialog text if no log is written to disk.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogConsoleAction">
+            <summary>Gets or sets the application error user dialog text to ask for an action (quit or continue).</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTimerNote">
+            <summary>Gets or sets the application error user dialog text informing about the safety timer.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppUptime">
+            <summary>
+            Gets the uptime of the application.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppVersion">
+            <summary>
+            Gets the version string of the current application from the
+            AssemblyInformationalVersionAttribute, AssemblyVersionAttribute or
+            AssemblyFileVersionAttribute value, or null if none is set.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppAsmConfiguration">
+            <summary>
+            Gets the assembly configuration of the current application from the
+            AssemblyConfigurationAttribute value, or null if none is set.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppName">
+            <summary>
+            Gets the name of the current application from the AssemblyProductAttribute or
+            AssemblyTitleAttribute value, or null if none is set.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppDescription">
+            <summary>
+            Gets the description of the current application from the AssemblyDescriptionAttribute
+            value, or null if none is set.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppCopyright">
+            <summary>
+            Gets the copyright note of the current application from the AssemblyCopyrightAttribute
+            value, or null if none is set.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FL.FileType">
+            <summary>
+            Defines values returned by the GetFileType function.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileType.FileTypeChar">
+            <summary>The specified file is a character file, typically an LPT device or a console.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileType.FileTypeDisk">
+            <summary>The specified file is a disk file.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileType.FileTypePipe">
+            <summary>The specified file is a socket, a named pipe, or an anonymous pipe.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileType.FileTypeRemote">
+            <summary>Unused.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.FileType.FileTypeUnknown">
+            <summary>Either the type of the specified file is unknown, or the function failed.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FL.StdHandle">
+            <summary>
+            Defines standard device handles for the GetStdHandle function.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.StdHandle.Input">
+            <summary>The standard input device. Initially, this is the console input buffer, CONIN$.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.StdHandle.Output">
+            <summary>The standard output device. Initially, this is the active console screen buffer, CONOUT$.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FL.StdHandle.Error">
+            <summary>The standard error device. Initially, this is the active console screen buffer, CONOUT$.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FL.ShowAppErrorDialogDelegate">
+            <summary>
+            Encapsulates a method that shows an application error dialog to the user.
+            </summary>
+            <param name="exItem">Information about the exception to report.</param>
+            <param name="allowContinue">true if the application can be continued, false if the application will be terminated.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileWriter.Flush">
+            <summary>
+            Flushes the file stream.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogFileWriter.GetCompressedFileSize(System.String)">
+            <summary>
+            Gets the file size on disk. Considers NTFS compression if available and used.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileWriter.FileName">
+            <summary>
+            Gets the full name of the file that this writer writes to.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileWriter.Length">
+            <summary>
+            Gets the file contents size.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogFileWriter.CreatedTime">
+            <summary>
+            Gets the time when the file was created, in UTC. Parses the file name's encoded timestamp.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogWebRequestData">
+            <summary>
+            Contains information about the current web request for log items.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.FieldLogWebRequestData.Empty">
+            <summary>Contains the empty data object.</summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.IsNullOrEmpty(Unclassified.FieldLog.FieldLogWebRequestData)">
+            <summary>
+            Indicates whether the specified data variable is null or the Empty object.
+            </summary>
+            <param name="value">The variable to test.</param>
+            <returns>true if the value parameter is null or the empty object; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.#ctor">
+            <summary>
+            Initialises a new instance of the FieldLogWebRequestData class.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.#ctor(Unclassified.FieldLog.FieldLogWebRequestData)">
+            <summary>
+            Copy constructor.
+            </summary>
+            <param name="source">The FieldLogWebRequestData instance to copy from.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.UpdateFrom(Unclassified.FieldLog.FieldLogWebRequestData)">
+            <summary>
+            Updates the current instance with data from another instance.
+            </summary>
+            <param name="source">The FieldLogWebRequestData instance to copy from.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the FieldLogWebRequestData data to a log file writer.
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogWebRequestData.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the FieldLogWebRequestData data from a log file reader.
+            </summary>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.Size">
+            <summary>
+            Gets the approximate data size of this data structure. Used for buffer size estimation.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.RequestUrl">
+            <summary>
+            Gets or sets the URL of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.Method">
+            <summary>
+            Gets or sets the HTTP request method (GET, POST).
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.ClientAddress">
+            <summary>
+            Gets or sets the network (IP) address of the client.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.ClientHostName">
+            <summary>
+            Gets or sets the network host name of the client.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.Referrer">
+            <summary>
+            Gets or sets the Referrer HTTP header of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.UserAgent">
+            <summary>
+            Gets or sets the User-Agent HTTP header of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.AcceptLanguages">
+            <summary>
+            Gets or sets the Accept-Languages HTTP header of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.Accept">
+            <summary>
+            Gets or sets the Accept HTTP header of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.WebSessionId">
+            <summary>
+            Gets or sets the web session ID of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.AppUserId">
+            <summary>
+            Gets or sets the application-defined user ID of the request.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogWebRequestData.AppUserName">
+            <summary>
+            Gets or sets the application-defined user name of the request.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogItem">
+            <summary>
+            Abstract base class that defines a log item.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.#ctor">
+            <summary>
+            Initialises a new instance of the FieldLogItem class with Trace priority.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.#ctor(Unclassified.FieldLog.FieldLogPriority)">
+            <summary>
+            Initialises a new instance of the FieldLogItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.#ctor(Unclassified.FieldLog.FieldLogItem)">
+            <summary>
+            Copy constructor.
+            </summary>
+            <param name="source">The FieldLogItem instance to copy from.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.ToString">
+            <summary>
+            Converts the data of the current FieldLogItem object to its equivalent string
+            representation.
+            </summary>
+            <returns>A string representation of the value of the current FieldLogItem object.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the common log item fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogItem.ReadBaseData(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the common log item fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.Size">
+            <summary>Gets the approximated data size of this log item. Used for buffer size estimation.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.EventCounter">
+            <summary>Gets the log item counter. Used for correct ordering of log items with the exact same time value. May wrap around.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.Time">
+            <summary>Gets the exact time when the log item was generated.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.Priority">
+            <summary>Gets the priority of the log item.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.SessionId">
+            <summary>Gets the current unique process execution ID of the log item.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.ThreadId">
+            <summary>Gets the current thread ID of the log item.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.WebRequestId">
+            <summary>Gets the current web request ID of the log item.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.LogItemSourceFileName">
+            <summary>
+            Gets the name of the file from which this log item was read, if any.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogItem.FileFormatVersion">
+            <summary>
+            Gets the file format version from which the item was read.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogTextItem">
+            <summary>
+            Defines a log item that contains a simple text message.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogTextItem class with Trace priority.
+            </summary>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogTextItem class with Trace priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">Additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogTextItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="text">The text message.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogTextItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="text">The text message.</param>
+            <param name="details">Additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.ToString">
+            <summary>
+            Converts the data of the current FieldLogTextItem object to its equivalent string
+            representation.
+            </summary>
+            <returns>A string representation of the value of the current FieldLogTextItem object.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the log item fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogTextItem.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the log item fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogTextItem.Text">
+            <summary>Gets the text message.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogTextItem.Details">
+            <summary>Gets additional details of the log event.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogDataItem">
+            <summary>
+            Defines a log item that contains a variable name and value.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.#ctor(System.String,System.Object)">
+            <summary>
+            Initialises a new instance of the FieldLogDataItem class with Trace priority.
+            </summary>
+            <param name="name">The name of the data item. Can be an arbitrary string that is useful for the logging purpose.</param>
+            <param name="value">The value of the data item. Will be converted to a string. Line breaks are allowed for structuring.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.String,System.Object)">
+            <summary>
+            Initialises a new instance of the FieldLogDataItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="name">The name of the data item. Can be an arbitrary string that is useful for the logging purpose.</param>
+            <param name="value">The value of the data item. Will be converted to a string. Line breaks are allowed for structuring.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.ToString">
+            <summary>
+            Converts the data of the current FieldLogDataItem object to its equivalent string
+            representation.
+            </summary>
+            <returns>A string representation of the value of the current FieldLogDataItem object.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the log item fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the log item fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogDataItem.FormatValues(System.Object,System.Int32,System.Collections.Stack)">
+            <summary>
+            Formats all public instance properties and fields from the specified object to a
+            multi-line string.
+            </summary>
+            <param name="data">The object containing public properties and/or fields.</param>
+            <param name="level">Indenting level.</param>
+            <param name="seenObjects">Stack of objects already seen along this path. Used to break reference loops.</param>
+            <returns>The formatted values of the object.</returns>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogDataItem.Name">
+            <summary>Gets the name of the data item.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogDataItem.Value">
+            <summary>Gets the value of the data item.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogExceptionItem">
+            <summary>
+            Defines a log item that contains exception and environment information.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.#ctor(System.Exception)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class with Trace priority.
+            </summary>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.#ctor(System.Exception,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class with Trace priority.
+            </summary>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown. Can be an
+            arbitrary string that is useful for the logging purpose.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.Exception)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="ex">The exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.Exception,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown. Can be an
+            arbitrary string that is useful for the logging purpose.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.#ctor(Unclassified.FieldLog.FieldLogPriority,System.Exception,System.String,System.Diagnostics.StackTrace)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="ex">The exception instance.</param>
+            <param name="context">The context in which the exception has been thrown. Can be an
+            arbitrary string that is useful for the logging purpose.</param>
+            <param name="customStackTrace">A StackTrace that shall be logged instead of the StackTrace from the Exception instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.ToString">
+            <summary>
+            Converts the data of the current FieldLogExceptionItem object to its equivalent string
+            representation.
+            </summary>
+            <returns>A string representation of the value of the current FieldLogExceptionItem object.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the log item fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogExceptionItem.Read(Unclassified.FieldLog.FieldLogFileReader)">
+            <summary>
+            Reads the log item fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogExceptionItem.Exception">
+            <summary>Gets the exception instance.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogExceptionItem.Context">
+            <summary>Gets the context in which the exception has been thrown.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogExceptionItem.EnvironmentData">
+            <summary>Gets the environment at the time of creating the log item.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogScopeItem">
+            <summary>
+            Defines a log item that contains code scope information.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.#ctor(Unclassified.FieldLog.FieldLogScopeType,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class with Trace priority.
+            </summary>
+            <param name="type">The scope type.</param>
+            <param name="name">The scope name.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.#ctor(Unclassified.FieldLog.FieldLogPriority,Unclassified.FieldLog.FieldLogScopeType,System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="type">The scope type.</param>
+            <param name="name">The scope name.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.#ctor(Unclassified.FieldLog.FieldLogPriority,Unclassified.FieldLog.FieldLogScopeType,System.String,Unclassified.FieldLog.FieldLogWebRequestData)">
+            <summary>
+            Initialises a new instance of the FieldLogExceptionItem class.
+            </summary>
+            <param name="priority">The priority of the new log item.</param>
+            <param name="type">The scope type.</param>
+            <param name="name">The scope name.</param>
+            <param name="webRequestData">The web request data. This parameter is required for the WebRequestStart scope type.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.#ctor(Unclassified.FieldLog.FieldLogScopeItem)">
+            <summary>
+            Copy constructor.
+            </summary>
+            <param name="source">The FieldLogScopeItem instance to copy from.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.ToString">
+            <summary>
+            Converts the data of the current FieldLogScopeItem object to its equivalent string
+            representation.
+            </summary>
+            <returns>A string representation of the value of the current FieldLogScopeItem object.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.Write(Unclassified.FieldLog.FieldLogFileWriter)">
+            <summary>
+            Writes the log item fields to the log file writer.
+            </summary>
+            <param name="writer">The log file writer to write to.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScopeItem.Read(Unclassified.FieldLog.FieldLogFileReader,System.Boolean)">
+            <summary>
+            Reads the log item fields from the specified log file reader.
+            </summary>
+            <param name="reader">The log file reader to read from.</param>
+            <param name="isRepeated">true if the log item is repeated from a previous file, false if it is written for the first time.</param>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.Type">
+            <summary>Gets the scope type.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.Level">
+            <summary>Gets the new scope nesting level after the log item. The last scope item in a thread should be 0.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.Name">
+            <summary>Gets the scope name. Should be application-unique and hierarchical for easier analysis.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.IsBackgroundThread">
+            <summary>Gets a value indicating whether this is a background thread. (Only valid when entering a thread scope.)</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.IsPoolThread">
+            <summary>Gets a value indicating whether this is a pool thread. (Only valid when entering a thread scope.)</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.EnvironmentData">
+            <summary>Gets the process static environment data. (Only valid when entering a process scope.)</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.WebRequestData">
+            <summary>Gets or sets the web request data. (Only valid when starting a web request scope.)</summary>
+            <remarks>
+            Write access is used in FL.UpdateWebRequestStart and in FieldLogViewer when updating
+            from a repeated scope item. The <see cref="P:Unclassified.FieldLog.FieldLogItem.Size"/> value is not updated
+            when this data is changed.
+            </remarks>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.WasWritten">
+            <summary>
+            Gets or sets a value whether this item has already been written to a log file. Items
+            that have not yet been written will not be repeated upon creating the next new log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.IsRepeated">
+            <summary>
+            Gets or sets a value whether this item is repeated in a new log file.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FieldLogScopeItem.Thread">
+            <summary>
+            Gets the thread object for a ThreadStart-type log item.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogScope">
+            <summary>
+            Provides an IDisposable implementation to help in general scope logging.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScope.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogScope class and logs the scope beginning.
+            </summary>
+            <param name="name">The scope name.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScope.Dispose">
+            <summary>
+            Logs the end of the current scope.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogScope.Finalize">
+            <summary>
+            Finalises the FieldLogScope instance. This generates an Error log item.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.FieldLogThreadScope">
+            <summary>
+            Provides an IDisposable implementation to help in thread scope logging.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogThreadScope.#ctor(System.String)">
+            <summary>
+            Initialises a new instance of the FieldLogThreadScope class and logs the thread scope
+            beginning.
+            </summary>
+            <param name="name">The thread scope name.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogThreadScope.Dispose">
+            <summary>
+            Logs the end of the current scope.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogThreadScope.Finalize">
+            <summary>
+            Finalises the FieldLogThreadScope instance. This generates an Error log item.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.OSInfo">
+            <summary>
+            Provides information about the version, edition and other aspects of running operating system.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_CLEANBOOT">
+            <summary>
+            The value that specifies how the system is started:
+            0 Normal boot
+            1 Fail-safe boot
+            2 Fail-safe with network boot
+            A fail-safe boot (also called SafeBoot, Safe Mode, or Clean Boot) bypasses the user startup files.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_CMONITORS">
+            <summary>
+            The number of display monitors on a desktop.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_CMOUSEBUTTONS">
+            <summary>
+            The number of buttons on a mouse, or zero if no mouse is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_MEDIACENTER">
+            <summary>
+            Nonzero if the current operating system is the Windows XP, Media Center Edition, 0 if not.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_SERVERR2">
+            <summary>
+            The build number if the system is Windows Server 2003 R2; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_STARTER">
+            <summary>
+            Nonzero if the current operating system is Windows 7 Starter Edition, Windows Vista
+            Starter, or Windows XP Starter Edition; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_TABLETPC">
+            <summary>
+            Nonzero if the current operating system is the Windows XP Tablet PC edition or if the
+            current operating system is Windows Vista or Windows 7 and the Tablet PC Input service
+            is started; otherwise, 0.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_DIGITIZER">
+            <summary>
+            Nonzero if the current operating system is Windows 7 or Windows Server 2008 R2 and the
+            Tablet PC Input service is started; otherwise, 0. The return value is a bitmask that
+            specifies the type of digitizer input supported by the device. (Only supported in
+            Windows 7 an newer.)
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.SM_MAXIMUMTOUCHES">
+            <summary>
+            Nonzero if there are digitizers in the system; otherwise, 0. SM_MAXIMUMTOUCHES returns
+            the aggregate maximum of the maximum number of contacts supported by every digitizer in
+            the system. If the system has only single-touch digitizers, the return value is 1. If
+            the system has multi-touch digitizers, the return value is the number of simultaneous
+            contacts the hardware can provide. (Only supported in Windows 7 an newer.)
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_BACKOFFICE">
+            <summary>
+            Microsoft BackOffice components are installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_BLADE">
+            <summary>
+            Windows Server 2003, Web Edition is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_COMPUTE_SERVER">
+            <summary>
+            Windows Server 2003, Compute Cluster Edition is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_DATACENTER">
+            <summary>
+            Windows Server 2008 Datacenter, Windows Server 2003, Datacenter Edition, or Windows 2000
+            Datacenter Server is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_ENTERPRISE">
+            <summary>
+            Windows Server 2008 Enterprise, Windows Server 2003, Enterprise Edition, or Windows 2000
+            Advanced Server is installed. Refer to the Remarks section for more information about
+            this bit flag.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_EMBEDDEDNT">
+            <summary>
+            Windows XP Embedded is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_PERSONAL">
+            <summary>
+            Windows Vista Home Premium, Windows Vista Home Basic, or Windows XP Home Edition is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_SINGLEUSERTS">
+            <summary>
+            Remote Desktop is supported, but only one interactive session is supported. This value
+            is set unless the system is running in application server mode.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_SMALLBUSINESS">
+            <summary>
+            Microsoft Small Business Server was once installed on the system, but may have been
+            upgraded to another version of Windows.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_SMALLBUSINESS_RESTRICTED">
+            <summary>
+            Microsoft Small Business Server is installed with the restrictive client license in force.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_STORAGE_SERVER">
+            <summary>
+            Windows Storage Server 2003 R2 or Windows Storage Server 2003 is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_TERMINAL">
+            <summary>
+            Terminal Services is installed. This value is always set.
+            If VER_SUITE_TERMINAL is set but VER_SUITE_SINGLEUSERTS is not set, the system is running
+            in application server mode.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.VER_SUITE_WH_SERVER">
+            <summary>
+            Windows Home Server is installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_INTEGRATED_TOUCH">
+            <summary>
+            An integrated (built-in) touch digitizer is used for input.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_EXTERNAL_TOUCH">
+            <summary>
+            An external (connected) touch digitizer is used for input.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_INTEGRATED_PEN">
+            <summary>
+            An integrated (built-in) pen digitizer is used for input.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_EXTERNAL_PEN">
+            <summary>
+            An external (connected) pen digitizer is used for input.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_MULTI_INPUT">
+            <summary>
+            An input digitizer with support for multiple inputs is used for input.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.NID_READY">
+            <summary>
+            The input digitizer is ready for input. If this value is unset, it may mean that the
+            tablet service is stopped, the digitizer is not supported, or digitizer drivers have
+            not been installed.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.LOGPIXELSX">
+            <summary>
+            Logical pixels inch in X.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSInfo.LOGPIXELSY">
+            <summary>
+            Logical pixels inch in Y.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.#cctor">
+            <summary>
+            Initialises the static environment information and stores it in the static properties
+            for later access.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserInWindowsGroup(System.String)">
+            <summary>
+            Determines whether the logged on Windows user is member of the specified Windows group.
+            </summary>
+            <param name="groupName">Group name (format: "Domain\Group")</param>
+            <returns>true, if the user is member of the group, false otherwise.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserInWindowsGroup(System.Security.Principal.WellKnownSidType)">
+            <summary>
+            Determines whether the logged on Windows user is member of the specified Windows group.
+            </summary>
+            <param name="wellKnownSidType">A value of the set of commonly used security identifiers (SIDs).</param>
+            <returns>true, if the user is member of the group, false otherwise.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserLocalAdministrator">
+            <summary>
+            Determines whether the logged on Windows user is a local administrator.
+            </summary>
+            <returns>true if the user is a local administrator; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserDomainAdministrator">
+            <summary>
+            Determines whether the logged on Windows user is a domain administrator.
+            </summary>
+            <returns>true if the user is a domain administrator; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserLocalSystem">
+            <summary>
+            Determines whether the logged on Windows user is the local system account.
+            </summary>
+            <returns>true if the user is the local system account; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserLocalService">
+            <summary>
+            Determines whether the logged on Windows user is the local service account.
+            </summary>
+            <returns>true if the user is the local service account; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.IsCurrentUserNetworkService">
+            <summary>
+            Determines whether the logged on Windows user is the network service account.
+            </summary>
+            <returns>true if the user is the network service account; otherwise, false.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetProcessPrivateMemory">
+            <summary>
+            Gets the private memory currently used by this process.
+            </summary>
+            <returns>The private memory currently used by this process, in bytes.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetProcessPeakMemory">
+            <summary>
+            Gets the peak working set memory used by this process.
+            </summary>
+            <returns>The peak working set memory used by this process, in bytes.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetTotalMemorySize">
+            <summary>
+            Gets the amount of total visible memory on the computer. This is the installed physical
+            memory, excluding the memory reserved for hardware or that cannot be addressed.
+            </summary>
+            <returns>The amount of total visible memory on the computer, in bytes.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetAvailableMemorySize">
+            <summary>
+            Gets the amount of available memory on the computer. This is the unused physical
+            memory, plus the memory currently used for cache.
+            </summary>
+            <returns>The amount of available memory on the computer, in bytes.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetWmiIdentifier(System.String,System.String)">
+            <summary>
+            Reads a value from the WMI interface.
+            </summary>
+            <param name="wmiClass">The WMI management class name, e. g. "Win32_LogicalDisk" or "Win32_Process".</param>
+            <param name="wmiProperty">The name of the property of interest.</param>
+            <returns>The value of the requested property.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.OSInfo.GetWmiIdentifier(System.String,System.String,System.String)">
+            <summary>
+            Reads a value from the WMI interface.
+            </summary>
+            <param name="wmiClass">The WMI management class name, e. g. "Win32_LogicalDisk" or "Win32_Process".</param>
+            <param name="wmiProperty">The name of the property of interest.</param>
+            <param name="wmiCondition">If not null, the name of the property whose value must be true (boolean) to select the object instance.</param>
+            <returns>The value of the requested property.</returns>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Type">
+            <summary>
+            Gets the operating system type (client, server, core server).
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Version">
+            <summary>
+            Gets the Windows version.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Edition">
+            <summary>
+            Gets the Windows edition.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.ServicePack">
+            <summary>
+            Gets the installed service pack name.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Is64Bit">
+            <summary>
+            Gets a value indicating whether a 64 bit system is running.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Build">
+            <summary>
+            Gets the Windows version build number.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.ServicePackBuild">
+            <summary>
+            Gets the service pack build number.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.ProductName">
+            <summary>
+            Gets the complete operating system product name from the registry, including Windows
+            version and edition name. This can be used if correctness is required and the value
+            does not need to be evaluated.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsAppServer">
+            <summary>
+            Gets a value indicating whether the system is set up as application terminal server.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.Language">
+            <summary>
+            Gets the ISO 639-1/ISO 3166 language/country code of the system language.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.LastBootTime">
+            <summary>
+            Gets the time when the system was last booted, in UTC.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsFailSafeBoot">
+            <summary>
+            Gets a value indicating whether the system is started in fail-safe mode.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.AppCompatLayer">
+            <summary>
+            Gets the application compatibility layers that are in effect for the current process.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.ClrType">
+            <summary>
+            Gets the CLR type running the current process. This is either "Microsoft .NET" or
+            "Mono".
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.MouseButtons">
+            <summary>
+            Gets the number of buttons on a mouse, or zero if no mouse is installed.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.MaxTouchPoints">
+            <summary>
+            Gets the number of supported touch points.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.ScreenDpi">
+            <summary>
+            Gets the logical resolution of the screen. 100 % is 96 dpi.
+            </summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.OSType">
+            <summary>
+            Defines operating system type values.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSType.Client">
+            <summary>A client system.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSType.Server">
+            <summary>A server system.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSType.ServerCore">
+            <summary>A server core system.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.OSVersion">
+            <summary>
+            Defines operating system version values.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Unknown">
+            <summary>Unknown version.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.NonWindows">
+            <summary>Not Windows.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows98">
+            <summary>Windows 98</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows98SE">
+            <summary>Windows 98 SE</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsME">
+            <summary>Windows ME</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsNT4">
+            <summary>Windows NT 4</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows2000">
+            <summary>Windows 2000</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsXP">
+            <summary>Windows XP</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsVista">
+            <summary>Windows Vista</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows7">
+            <summary>Windows 7</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows8">
+            <summary>Windows 8</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows81">
+            <summary>Windows 8.1</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.Windows2000Server">
+            <summary>Windows 2000 Server</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsHomeServer">
+            <summary>Windows Home Server</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2003">
+            <summary>Windows Server 2003</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2003R2">
+            <summary>Windows Server 2003 R2</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2008">
+            <summary>Windows Server 2008</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2008R2">
+            <summary>Windows Server 2008 R2</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2012">
+            <summary>Windows Server 2012</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsServer2012R2">
+            <summary>Windows Server 2012 R2</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSVersion.WindowsFuture">
+            <summary>A future version of Windows not yet known by this implementation.</summary>
+        </member>
+        <member name="T:Unclassified.FieldLog.OSEdition">
+            <summary>
+            Defines operating system edition values.
+            </summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.None">
+            <summary>No special edition.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows2000Professional">
+            <summary>Windows 2000 Professional.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows2000Server">
+            <summary>Windows 2000 Server.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows2000AdvancedServer">
+            <summary>Windows 2000 Advanced Server.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows2000DatacenterServer">
+            <summary>Windows 2000 Datacenter Server.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPStarter">
+            <summary>Windows XP Starter.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPHome">
+            <summary>Windows XP Home.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPProfessional">
+            <summary>Windows XP Professional.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPMediaCenter">
+            <summary>Windows XP Media Center.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPTabletPC">
+            <summary>Windows XP Tablet PC.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsXPProfessionalX64">
+            <summary>Windows XP Professional x64.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaStarter">
+            <summary>Windows Vista Starter.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaHomeBasic">
+            <summary>Windows Vista Home Basic.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaHomePremium">
+            <summary>Windows Vista Home Premium.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaBusiness">
+            <summary>Windows Vista Business.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaEnterprise">
+            <summary>Windows Vista Enterprise.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsVistaUltimate">
+            <summary>Windows Vista Ultimate.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7Starter">
+            <summary>Windows 7 Starter.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7HomeBasic">
+            <summary>Windows 7 Home Basic.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7HomePremium">
+            <summary>Windows 7 Home Premium.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7Professional">
+            <summary>Windows 7 Professional.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7Enterprise">
+            <summary>Windows 7 Enterprise.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows7Ultimate">
+            <summary>Windows 7 Ultimate.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows8Core">
+            <summary>Windows 8 ("Core").</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows8Pro">
+            <summary>Windows 8 Pro.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.Windows8Enterprise">
+            <summary>Windows 8 Enterprise.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Web">
+            <summary>Windows Server 2003/2003 R2 Web.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Standard">
+            <summary>Windows Server 2003/2003 R2 Standard.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Enterprise">
+            <summary>Windows Server 2003/2003 R2 Enterprise.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Datacenter">
+            <summary>Windows Server 2003/2003 R2 Datacenter.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Cluster">
+            <summary>Windows Server 2003/2003 R2 Cluster.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Storage">
+            <summary>Windows Server 2003/2003 R2 Storage.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003SmallBusiness">
+            <summary>Windows Server 2003/2003 R2 Small Business.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2003Home">
+            <summary>Windows Server 2003/2003 R2 Home.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Foundation">
+            <summary>Windows Server 2008/2008 R2 Foundation.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Standard">
+            <summary>Windows Server 2008/2008 R2 Standard.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Enterprise">
+            <summary>Windows Server 2008/2008 R2 Enterprise.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Datacenter">
+            <summary>Windows Server 2008/2008 R2 Datacenter.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Hpc">
+            <summary>Windows Server 2008/2008 R2 HPC.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Web">
+            <summary>Windows Server 2008/2008 R2 Web.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008Storage">
+            <summary>Windows Server 2008/2008 R2 Storage.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008SmallBusiness">
+            <summary>Windows Server 2008/2008 R2 Small Business.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2008EssentialBusiness">
+            <summary>Windows Server 2008/2008 R2 Essential Business.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2012Foundation">
+            <summary>Windows Server 2012/2012 R2 Foundation.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2012Essentials">
+            <summary>Windows Server 2012/2012 R2 Essentials.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2012Standard">
+            <summary>Windows Server 2012/2012 R2 Standard.</summary>
+        </member>
+        <member name="F:Unclassified.FieldLog.OSEdition.WindowsServer2012Datacenter">
+            <summary>Windows Server 2012/2012 R2 Datacenter.</summary>
+        </member>
+    </members>
+</doc>

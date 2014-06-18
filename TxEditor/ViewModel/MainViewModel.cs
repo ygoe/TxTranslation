@@ -16,6 +16,7 @@ using TaskDialogInterop;
 using Unclassified.TxEditor.View;
 using Unclassified.TxLib;
 using Unclassified.UI;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModel
 {
@@ -840,7 +841,7 @@ namespace Unclassified.TxEditor.ViewModel
 					regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
 					if (!string.IsNullOrEmpty(prefix))
 					{
-						regex = "^" + prefix.ToRegex() + regex;
+						regex = "^" + Regex.Escape(prefix) + regex;
 					}
 					foreach (string fileName in Directory.GetFiles(d.Folder))
 					{

@@ -72,7 +72,7 @@ namespace Unclassified.UI
 
 		#endregion View registration
 
-		#region Command invokation
+		#region Command invocation
 
 		/// <summary>
 		/// Invokes a command on all registered views.
@@ -95,7 +95,19 @@ namespace Unclassified.UI
 							var attr = attrs[0] as ViewCommandAttribute;
 							if (attr.CommandName == null || attr.CommandName == commandName)
 							{
-								method.Invoke(view, args);
+								int methodParamCount = method.GetParameters().Length;
+								object[] newArgs = args;
+								// Fill optional parameters with Type.Missing
+								if (args.Length < methodParamCount)
+								{
+									newArgs = new object[methodParamCount];
+									Array.Copy(args, newArgs, args.Length);
+									for (int i = args.Length; i < methodParamCount; i++)
+									{
+										newArgs[i] = Type.Missing;
+									}
+								}
+								method.Invoke(view, newArgs);
 							}
 						}
 					}
@@ -111,7 +123,19 @@ namespace Unclassified.UI
 								var attr = attrs[0] as ViewCommandAttribute;
 								if (attr.CommandName == commandName)
 								{
-									method2.Invoke(view, args);
+									int methodParamCount = method.GetParameters().Length;
+									object[] newArgs = args;
+									// Fill optional parameters with Type.Missing
+									if (args.Length < methodParamCount)
+									{
+										newArgs = new object[methodParamCount];
+										Array.Copy(args, newArgs, args.Length);
+										for (int i = args.Length; i < methodParamCount; i++)
+										{
+											newArgs[i] = Type.Missing;
+										}
+									}
+									method2.Invoke(view, newArgs);
 									continue;
 								}
 							}
@@ -144,7 +168,7 @@ namespace Unclassified.UI
 			BeginInvoke(commandName, DispatcherPriority.Loaded, args);
 		}
 
-		#endregion Command invokation
+		#endregion Command invocation
 	}
 
 	/// <summary>

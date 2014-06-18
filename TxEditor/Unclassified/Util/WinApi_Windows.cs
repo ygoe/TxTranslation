@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	public partial class WinApi
 	{

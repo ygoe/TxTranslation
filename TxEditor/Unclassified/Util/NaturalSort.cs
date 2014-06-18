@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	internal static class NaturalSort
 	{

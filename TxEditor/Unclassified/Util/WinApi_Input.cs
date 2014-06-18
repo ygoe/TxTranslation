@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	public partial class WinApi
 	{

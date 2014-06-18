@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Unclassified
+namespace Unclassified.Util
 {
 	/// <summary>
 	/// Implements a timer that invokes a method after a user-defined timeout.
@@ -278,6 +278,18 @@ namespace Unclassified
 			if (milliseconds > 0) dc.Start();
 			else if (milliseconds == 0) dc.FireNow();
 			return dc;
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the synchronous DelayedCall methods can be used in the
+		/// current thread. If this property is false, the *Async methods must be used instead.
+		/// </summary>
+		public static bool SupportsSynchronization
+		{
+			get
+			{
+				return SynchronizationContext.Current != null;
+			}
 		}
 
 		/// <summary>
