@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
 using Unclassified.Util;
+using Unclassified.FieldLog;
 
 namespace Unclassified.TxEditor.ViewModel
 {
@@ -93,6 +94,11 @@ namespace Unclassified.TxEditor.ViewModel
 		private void scanBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			OnPropertyChanged("SpinnerVisibility");
+			if (e.Error != null)
+			{
+				FL.Error(e.Error);
+				// TODO: Show the error in a user message box
+			}
 		}
 
 		#endregion BackgroundWorker

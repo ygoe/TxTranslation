@@ -8,7 +8,7 @@ namespace Unclassified.Util
 	/// <summary>
 	/// Provides extension methods for sequences, lists and collections.
 	/// </summary>
-	public static class ListExtensions
+	internal static class ListExtensions
 	{
 		#region List iteration
 

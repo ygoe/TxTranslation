@@ -84,8 +84,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FileNameHelper.cs" />
     <Compile Include="Unclassified\Util\ClipboardHelper.cs" />
-    <Compile Include="Unclassified\Util\CommandLineParser.cs" />
+    <Compile Include="Unclassified\Util\CommandLineHelper.cs" />
     <Compile Include="Unclassified\Util\DelayedCall.cs" />
+    <Compile Include="Unclassified\Util\EnumerableWalker.cs" />
     <Compile Include="Unclassified\Util\GlobalMutex.cs" />
     <Compile Include="Unclassified\Util\ListExtensions.cs" />
     <Compile Include="Unclassified\Util\NaturalSort.cs" />

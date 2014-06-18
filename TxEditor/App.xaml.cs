@@ -116,14 +116,22 @@ namespace Unclassified.TxEditor
 
 			// Initialise and show the main window
 
-			CommandLineParser clp = new CommandLineParser();
+			CommandLineHelper cmdLine = new CommandLineHelper();
+			var scanOption = cmdLine.RegisterOption("scan", 1).Alias("s");
 
-			clp.AddKnownOption("s", "scan", true);
+			try
+			{
+				cmdLine.Parse();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Command line error", MessageBoxButton.OK, MessageBoxImage.Error);
+				Application.Current.Shutdown();
+			}
 
 			List<string> filesToLoad = new List<string>();
-			for (int argIndex = 0; argIndex < clp.GetArgumentCount(); argIndex++)
+			foreach (string fileNameArg in cmdLine.FreeArguments)
 			{
-				string fileNameArg = clp.GetArgument(argIndex);
 				if (!string.IsNullOrWhiteSpace(fileNameArg))
 				{
 					// File name
@@ -196,9 +204,9 @@ namespace Unclassified.TxEditor
 			var view = new MainWindow();
 			var viewModel = new MainViewModel();
 
-			if (filesToLoad.Count == 0 && clp.IsOptionSet("s"))
+			if (filesToLoad.Count == 0 && scanOption.IsSet)
 			{
-				viewModel.ScanDirectory = clp.GetOptionValue("s");
+				viewModel.ScanDirectory = scanOption.Value;
 			}
 
 			view.DataContext = viewModel;
