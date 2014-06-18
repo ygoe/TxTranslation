@@ -17,6 +17,7 @@ using Unclassified.TxEditor.View;
 using Unclassified.TxLib;
 using Unclassified.UI;
 using Unclassified.Util;
+using Unclassified.FieldLog;
 
 namespace Unclassified.TxEditor.ViewModel
 {
@@ -1328,7 +1329,12 @@ namespace Unclassified.TxEditor.ViewModel
 				if (!tk.IsFullKey)
 					onlyFullKeysSelected = false;
 			}
-			if (count == 0) return;   // Means there were nodes with no full keys, should not happen
+			if (count == 0)
+			{
+				// Means there were nodes with no full keys, should not happen
+				FL.Warning("MainViewModel.OnDeleteTextKey: count == 0 (should not happen)");
+				return;
+			}
 
 			TaskDialogResult result;
 			bool selectedOnlyOption = false;
@@ -3747,6 +3753,7 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 				else
 				{
+					FL.Warning("MainViewModel.UpdateSuggestions: otherWords.Count == 0 (should not happen)");
 					score = 0;   // Should not happen
 				}
 
