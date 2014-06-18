@@ -3333,7 +3333,7 @@ namespace Unclassified.TxEditor.ViewModel
 					child.CultureTextVMs.Any(ct => ct.Text != null && ct.Text.ToLower().Contains(searchText.ToLower()));
 				if (problemFilterActive)
 				{
-					isVisible &= child.HasOwnProblem;
+					isVisible &= child.HasOwnProblem || child.HasProblem;
 				}
 
 				child.IsVisible = isVisible;

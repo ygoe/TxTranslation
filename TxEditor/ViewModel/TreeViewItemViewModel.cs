@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
 namespace Unclassified.TxEditor.ViewModel
 {
-	internal class TreeViewItemViewModel : ViewModelBase
+	internal class TreeViewItemViewModel : ViewModelBase, IEditableObject
 	{
 		#region Private data
 
@@ -177,6 +178,11 @@ namespace Unclassified.TxEditor.ViewModel
 		{
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the item is visible in the tree view. Visibility
+		/// by this property is evaluated in the filter of the VisibleChildren CollectionView, to
+		/// which the UI control is bound. It does not set the TreeViewItem's IsVisible property.
+		/// </summary>
 		public bool IsVisible
 		{
 			get { return isVisible; }
@@ -192,7 +198,9 @@ namespace Unclassified.TxEditor.ViewModel
 						IsSelected = false;
 					}
 					if (parent != null)
-						parent.visibleChildren.Refresh();
+					{
+						parent.RefreshVisibleChildrenItem(this);
+					}
 				}
 			}
 		}
@@ -344,5 +352,49 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		#endregion Navigation helper
+
+		#region IEditableObject members
+
+		/// <summary>
+		/// Refreshes a single item in the CollectionView of all (filtered) visible children.
+		/// </summary>
+		/// <param name="item">The changed item.</param>
+		/// <remarks>
+		/// This makes use of the IEditableObject implementation of the item. When an item is
+		/// edited through this mechanism, and the update is committed, the CollectionView will
+		/// re-evaluate the item and apply the filtering accordingly. This method must be called
+		/// for each item that may have been updated. Changes that are signalled through
+		/// INotifyPropertyChanged are not considered by a CollectionView. Updating each single
+		/// log item avoids the Reset type change notification and the focused item issue.
+		/// </remarks>
+		private void RefreshVisibleChildrenItem(TreeViewItemViewModel item)
+		{
+			var ev = visibleChildren as IEditableCollectionView;
+			if (ev != null)
+			{
+				ev.EditItem(item);
+				ev.CommitEdit();
+			}
+		}
+
+		public void BeginEdit()
+		{
+			// Does nothing. IEditableObject is just used for signalling the CollectionView to
+			// update the item.
+		}
+
+		public void CancelEdit()
+		{
+			// Does nothing. IEditableObject is just used for signalling the CollectionView to
+			// update the item.
+		}
+
+		public void EndEdit()
+		{
+			// Does nothing. IEditableObject is just used for signalling the CollectionView to
+			// update the item.
+		}
+
+		#endregion IEditableObject members
 	}
 }
