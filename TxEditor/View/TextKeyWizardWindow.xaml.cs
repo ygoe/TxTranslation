@@ -334,7 +334,6 @@ namespace Unclassified.TxEditor.View
 							// End char literal
 							inCharLiteral = false;
 						}
-
 						else if (!inStringLiteral && !inCharLiteral && ch == '@' && nextChar == '"')
 						{
 							// Start verbatim string literal
@@ -424,7 +423,6 @@ namespace Unclassified.TxEditor.View
 							// Append character to text
 							stringContent.Append(ch);
 						}
-
 						else if (!inStringLiteral && !inCharLiteral && ch == '(')
 						{
 							parensLevel++;
@@ -489,7 +487,7 @@ namespace Unclassified.TxEditor.View
 					var localPd = pd;
 
 					ParametersGrid.RowDefinitions.Add(new RowDefinition());
-					
+
 					TextBox nameText = new TextBox();
 					nameText.Text = pd.Name;
 					nameText.SelectAll();

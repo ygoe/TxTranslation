@@ -101,7 +101,9 @@ Name: VSTool; Description: "{cm:Task_VSTool}"
 Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\Release\Unclassified.FieldLog.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
+; This is the signed version of the DLL:
 Source: "..\TxLib\bin\Release\Unclassified.TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; TxLib assembly
@@ -113,6 +115,13 @@ Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flag
 Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
 Source: "..\TxLib\TxXaml.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+
+; License files
+Source: "..\LICENSE-GPL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\LICENSE-LGPL"; DestDir: "{app}"; Flags: ignoreversion
+
+[Dirs]
+Name: "{app}\log"; Permissions: users-modify
 
 [Registry]
 ; Register .txd file name extension
@@ -146,6 +155,10 @@ Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: uninsta
 Type: files; Name: "{userappdata}\Unclassified\TxTranslation\TxEditor.conf"
 Type: dirifempty; Name: "{userappdata}\Unclassified\TxTranslation"
 Type: dirifempty; Name: "{userappdata}\Unclassified"
+
+; Delete log files
+Type: files; Name: "{app}\log\TxEditor-*.fl"
+Type: files; Name: "{app}\log\!README.txt"
 
 [Code]
 function IsUpgrade: Boolean;
