@@ -251,6 +251,20 @@
 									<DataTrigger Binding="{Binding HaveComment}" Value="True">
 										<Setter Property="ui:IconToggleButton.IconSource" Value="/Images/comment_yellow.png"/>
 									</DataTrigger>
+									<MultiDataTrigger>
+										<MultiDataTrigger.Conditions>
+											<Condition Binding="{Binding HaveComment}" Value="True"/>
+											<Condition Binding="{Binding Settings.ShowComments}" Value="False"/>
+											<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="False"/>
+										</MultiDataTrigger.Conditions>
+										<MultiDataTrigger.Setters>
+											<Setter Property="ui:IconToggleButton.Effect">
+												<Setter.Value>
+													<DropShadowEffect BlurRadius="8" Color="#F0EF1C" Opacity="0.8" ShadowDepth="0"/>
+												</Setter.Value>
+											</Setter>
+										</MultiDataTrigger.Setters>
+									</MultiDataTrigger>
 								</Style.Triggers>
 							</Style>
 						</ui:IconToggleButton.Style>
@@ -288,6 +302,20 @@
 									<DataTrigger Binding="{Binding HaveSuggestions}" Value="True">
 										<Setter Property="ui:IconToggleButton.IconSource" Value="/Images/lightbulb_green.png"/>
 									</DataTrigger>
+									<MultiDataTrigger>
+										<MultiDataTrigger.Conditions>
+											<Condition Binding="{Binding HaveSuggestions}" Value="True"/>
+											<Condition Binding="{Binding Settings.ShowSuggestions}" Value="False"/>
+											<Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="False"/>
+										</MultiDataTrigger.Conditions>
+										<MultiDataTrigger.Setters>
+											<Setter Property="ui:IconToggleButton.Effect">
+												<Setter.Value>
+													<DropShadowEffect BlurRadius="6" Color="#41A717" Opacity="0.6" ShadowDepth="0"/>
+												</Setter.Value>
+											</Setter>
+										</MultiDataTrigger.Setters>
+									</MultiDataTrigger>
 								</Style.Triggers>
 							</Style>
 						</ui:IconToggleButton.Style>
