@@ -35,6 +35,7 @@ DefaultGroupName=TxTranslation
 DisableDirPage=auto
 DisableProgramGroupPage=auto
 
+; Large image max. 164x314 pixels, small image max. 55x58 pixels
 WizardImageFile=TxFlag.bmp
 WizardImageBackColor=$ffffff
 WizardImageStretch=no
