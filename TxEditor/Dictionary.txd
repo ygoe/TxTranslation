@@ -65,6 +65,10 @@ Um eine Übersicht der aktuell unterstützten Kulturen zu erhalten, öffnen Sie 
 		<text key="msg.insert system keys.not available.title">Kultur nicht unterstützt</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
+		<text key="msg.load file.invalid file">Die Datei kann nicht geladen werden.</text>
+		<text key="msg.load file.invalid file.desc">Die ausgewählte Datei „{name}“ ist kein Tx-Wörterbuch oder die Datei ist beschädigt.
+
+{msg}</text>
 		<text key="msg.load file.multiple primary cultures">Mehrere Dateien waren als Hauptkultur gekennzeichnet: {list}
 Die Hauptkultur ist jetzt auf {name} eingestellt.</text>
 		<text key="msg.load file.other cultures for prefix">Es gibt weitere Kulturdateien für diesen Präfix.</text>
@@ -136,6 +140,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="task dialog.button.save anyway">Trotzdem &amp;speichern</text>
 		<text key="task dialog.button.save in original format">Im ursprünglichen Format &amp;speichern</text>
 		<text key="task dialog.button.skip culture">Kultur über&amp;springen</text>
+		<text key="task dialog.button.skip file">Datei über&amp;springen</text>
 		<text key="task dialog.button.switch">&amp;Wechseln</text>
 		<text key="task dialog.button.upgrade">Akt&amp;ualisieren</text>
 		<text key="toolbar.app">Anwendung</text>
@@ -443,6 +448,10 @@ For an overview of currently supported cultures, please open the file Template.t
 		<text key="msg.insert system keys.not available.title">Culture not supported</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
+		<text key="msg.load file.invalid file">Cannot load the file.</text>
+		<text key="msg.load file.invalid file.desc">The selected file “{name}” is not a Tx dictionary or the file is corrupted.
+
+{msg}</text>
 		<text key="msg.load file.multiple primary cultures">Multiple files were marked as primary culture: {list}
 The primary culture is now set to {name}.</text>
 		<text key="msg.load file.other cultures for prefix">There are additional culture files for this prefix.</text>
@@ -514,6 +523,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="task dialog.button.save anyway">&amp;Save anyway</text>
 		<text key="task dialog.button.save in original format">&amp;Save in original format</text>
 		<text key="task dialog.button.skip culture">&amp;Skip culture</text>
+		<text key="task dialog.button.skip file">&amp;Skip file</text>
 		<text key="task dialog.button.switch">&amp;Switch</text>
 		<text key="task dialog.button.upgrade">&amp;Upgrade</text>
 		<text key="toolbar.app">Application</text>

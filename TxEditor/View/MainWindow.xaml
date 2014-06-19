@@ -12,6 +12,7 @@
 	Title="{Binding DisplayName}"
 	Height="296" Width="1304" UseLayoutRounding="True"
 	Icon="/Images/TxFlag.ico"
+	AllowDrop="True" Drop="Window_Drop"
 	LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged"
 	Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing"
 	PreviewKeyDown="Window_PreviewKeyDown"

@@ -128,6 +128,27 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
+		private void Window_Drop(object sender, DragEventArgs e)
+		{
+			MainViewModel vm = DataContext as MainViewModel;
+			if (vm != null)
+			{
+				var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+				if (fileNames != null && fileNames.Length > 0)
+				{
+					if (fileNames.Length == 1 && System.IO.Directory.Exists(fileNames[0]))
+					{
+						vm.DoLoadFolder(fileNames[0]);
+					}
+					else
+					{
+						vm.DoLoadFiles(fileNames);
+					}
+					Activate();
+				}
+			}
+		}
+
 		#endregion Window event handlers
 
 		#region Tool grid layouting

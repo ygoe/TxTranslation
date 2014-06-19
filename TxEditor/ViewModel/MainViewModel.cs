@@ -13,11 +13,11 @@ using System.Windows.Media.Effects;
 using System.Xml;
 using Microsoft.Win32;
 using TaskDialogInterop;
+using Unclassified.FieldLog;
 using Unclassified.TxEditor.View;
 using Unclassified.TxLib;
 using Unclassified.UI;
 using Unclassified.Util;
-using Unclassified.FieldLog;
 
 namespace Unclassified.TxEditor.ViewModel
 {
@@ -791,15 +791,66 @@ namespace Unclassified.TxEditor.ViewModel
 			if (!CheckModifiedSaved()) return;
 
 			ClearReadonlyFiles();
-			var d = new OpenFolderDialog();
-			d.Title = Tx.T("msg.load folder.title");
-			if (d.ShowDialog(new Wpf32Window(MainWindow.Instance)) == true)
+			var folderDlg = new OpenFolderDialog();
+			folderDlg.Title = Tx.T("msg.load folder.title");
+			if (folderDlg.ShowDialog(new Wpf32Window(MainWindow.Instance)) == true)
 			{
-				bool foundFiles = false;
-				string regex = @"^(.+?)(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
-				List<string> prefixes = new List<string>();
-				string prefix = null;
-				foreach (string fileName in Directory.GetFiles(d.Folder))
+				DoLoadFolder(folderDlg.Folder);
+			}
+		}
+
+		public void DoLoadFolder(string folder)
+		{
+			bool foundFiles = false;
+			string regex = @"^(.+?)(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
+			List<string> prefixes = new List<string>();
+			string prefix = null;
+			foreach (string fileName in Directory.GetFiles(folder))
+			{
+				Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
+				if (m.Success)
+				{
+					if (!foundFiles)
+					{
+						foundFiles = true;
+					}
+					prefix = m.Groups[1].Value;
+					if (!prefixes.Contains(prefix))
+					{
+						prefixes.Add(prefix);
+					}
+				}
+			}
+			if (prefixes.Count > 1)
+			{
+				prefixes.Sort();
+				var result = TaskDialog.Show(
+					owner: MainWindow.Instance,
+					title: "TxEditor",
+					mainInstruction: Tx.T("msg.load folder.multiple dictionaries in folder"),
+					content: Tx.T("msg.load folder.multiple dictionaries in folder.desc"),
+					radioButtons: prefixes.ToArray(),
+					customButtons: new string[] { Tx.T("task dialog.button.load"), Tx.T("task dialog.button.cancel") },
+					allowDialogCancellation: true);
+				if (result.CustomButtonResult != 0 ||
+					result.RadioButtonResult == null)
+				{
+					// Cancel or unset
+					return;
+				}
+				prefix = prefixes[result.RadioButtonResult.Value];
+			}
+			int fileCount = 0;
+			if (prefix != null)
+			{
+				foundFiles = false;
+				fileVersion = 0;
+				regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
+				if (!string.IsNullOrEmpty(prefix))
+				{
+					regex = "^" + Regex.Escape(prefix) + regex;
+				}
+				foreach (string fileName in Directory.GetFiles(folder))
 				{
 					Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
 					if (m.Success)
@@ -807,73 +858,30 @@ namespace Unclassified.TxEditor.ViewModel
 						if (!foundFiles)
 						{
 							foundFiles = true;
+							fileModified = false;   // Prevent another unsaved warning from OnNewFile
+							OnNewFile();
 						}
-						prefix = m.Groups[1].Value;
-						if (!prefixes.Contains(prefix))
+						if (!LoadFromXmlFile(fileName))
 						{
-							prefixes.Add(prefix);
+							break;
 						}
+						fileCount++;
 					}
 				}
-				if (prefixes.Count > 1)
-				{
-					prefixes.Sort();
-					var result = TaskDialog.Show(
-						owner: MainWindow.Instance,
-						title: "TxEditor",
-						mainInstruction: Tx.T("msg.load folder.multiple dictionaries in folder"),
-						content: Tx.T("msg.load folder.multiple dictionaries in folder.desc"),
-						radioButtons: prefixes.ToArray(),
-						customButtons: new string[] { Tx.T("task dialog.button.load"), Tx.T("task dialog.button.cancel") },
-						allowDialogCancellation: true);
-					if (result.CustomButtonResult != 0 ||
-						result.RadioButtonResult == null)
-					{
-						// Cancel or unset
-						return;
-					}
-					prefix = prefixes[result.RadioButtonResult.Value];
-				}
-				int fileCount = 0;
-				if (prefix != null)
-				{
-					foundFiles = false;
-					fileVersion = 0;
-					regex = @"(\.(([a-z]{2})([-][a-z]{2})?))?\.(txd|xml)$";
-					if (!string.IsNullOrEmpty(prefix))
-					{
-						regex = "^" + Regex.Escape(prefix) + regex;
-					}
-					foreach (string fileName in Directory.GetFiles(d.Folder))
-					{
-						Match m = Regex.Match(Path.GetFileName(fileName), regex, RegexOptions.IgnoreCase);
-						if (m.Success)
-						{
-							if (!foundFiles)
-							{
-								foundFiles = true;
-								fileModified = false;   // Prevent another unsaved warning from OnNewFile
-								OnNewFile();
-							}
-							LoadFromXmlFile(fileName);
-							fileCount++;
-						}
-					}
-				}
-				if (foundFiles)
-				{
-					SortCulturesInTextKey(RootTextKey);
-					DeletedCultureNames.Clear();
-					ValidateTextKeysDelayed();
-					StatusText = Tx.T("statusbar.n files loaded", fileCount) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
-					FileModified = false;
-					ClearViewHistory();
-					CheckNotifyReadonlyFiles();
-				}
-				else
-				{
-					MessageBox.Show(Tx.T("msg.load folder.no files found"), "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
-				}
+			}
+			if (foundFiles)
+			{
+				SortCulturesInTextKey(RootTextKey);
+				DeletedCultureNames.Clear();
+				ValidateTextKeysDelayed();
+				StatusText = Tx.T("statusbar.n files loaded", fileCount) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
+				FileModified = false;
+				ClearViewHistory();
+				CheckNotifyReadonlyFiles();
+			}
+			else
+			{
+				MessageBox.Show(Tx.T("msg.load folder.no files found"), "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
 			}
 		}
 
@@ -882,77 +890,85 @@ namespace Unclassified.TxEditor.ViewModel
 			if (!CheckModifiedSaved()) return;
 
 			ClearReadonlyFiles();
-			var dlg = new OpenFileDialog();
-			dlg.CheckFileExists = true;
-			dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" +
+			var fileDlg = new OpenFileDialog();
+			fileDlg.CheckFileExists = true;
+			fileDlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" +
 				Tx.T("file filter.xml files") + " (*.xml)|*.xml|" +
 				Tx.T("file filter.all files") + " (*.*)|*.*";
-			dlg.Multiselect = true;
-			dlg.ShowReadOnly = false;
-			dlg.Title = Tx.T("msg.load file.title");
-			if (dlg.ShowDialog(MainWindow.Instance) == true)
+			fileDlg.Multiselect = true;
+			fileDlg.ShowReadOnly = false;
+			fileDlg.Title = Tx.T("msg.load file.title");
+			if (fileDlg.ShowDialog(MainWindow.Instance) == true)
 			{
-				// Check for same prefix and reject mixed files
-				List<string> prefixes = new List<string>();
-				foreach (string fileName in dlg.FileNames)
-				{
-					string prefix = FileNameHelper.GetPrefix(fileName);
-					if (!prefixes.Contains(prefix))
-					{
-						prefixes.Add(prefix);
-					}
-				}
-				if (prefixes.Count > 1)
-				{
-					MessageBox.Show(
-						Tx.T("msg.load file.cannot load different prefixes"),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-					return;
-				}
-
-				List<string> filesToLoad = new List<string>(dlg.FileNames);
-
-				if (!FileNameHelper.FindOtherCultures(filesToLoad)) return;
-
-				bool foundFiles = false;
-				fileVersion = 0;
-				string prevPrimaryCulture = null;
-				List<string> primaryCultureFiles = new List<string>();
-				foreach (string fileName in filesToLoad)
-				{
-					if (!foundFiles)
-					{
-						foundFiles = true;
-						fileModified = false;   // Prevent another unsaved warning from OnNewFile
-						OnNewFile();   // Clear any currently loaded content
-					}
-					LoadFromXmlFile(fileName);
-					if (PrimaryCulture != prevPrimaryCulture)
-					{
-						primaryCultureFiles.Add(PrimaryCulture);
-					}
-					prevPrimaryCulture = PrimaryCulture;
-				}
-				if (primaryCultureFiles.Count > 1)
-				{
-					// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
-					MessageBox.Show(
-						Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
-						Tx.T("msg.caption.warning"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
-				}
-
-				SortCulturesInTextKey(RootTextKey);
-				DeletedCultureNames.Clear();
-				ValidateTextKeysDelayed();
-				StatusText = Tx.T("statusbar.n files loaded", filesToLoad.Count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
-				FileModified = false;
-				ClearViewHistory();
-				CheckNotifyReadonlyFiles();
+				DoLoadFiles(fileDlg.FileNames);
 			}
+		}
+
+		public void DoLoadFiles(string[] fileNames)
+		{
+			// Check for same prefix and reject mixed files
+			List<string> prefixes = new List<string>();
+			foreach (string fileName in fileNames)
+			{
+				string prefix = FileNameHelper.GetPrefix(fileName);
+				if (!prefixes.Contains(prefix))
+				{
+					prefixes.Add(prefix);
+				}
+			}
+			if (prefixes.Count > 1)
+			{
+				MessageBox.Show(
+					Tx.T("msg.load file.cannot load different prefixes"),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return;
+			}
+
+			List<string> filesToLoad = new List<string>(fileNames);
+
+			if (!FileNameHelper.FindOtherCultures(filesToLoad)) return;
+
+			bool foundFiles = false;
+			fileVersion = 0;
+			string prevPrimaryCulture = null;
+			List<string> primaryCultureFiles = new List<string>();
+			foreach (string fileName in filesToLoad)
+			{
+				if (!foundFiles)
+				{
+					foundFiles = true;
+					fileModified = false;   // Prevent another unsaved warning from OnNewFile
+					OnNewFile();   // Clear any currently loaded content
+				}
+				if (!LoadFromXmlFile(fileName))
+				{
+					break;
+				}
+				if (PrimaryCulture != prevPrimaryCulture)
+				{
+					primaryCultureFiles.Add(PrimaryCulture);
+				}
+				prevPrimaryCulture = PrimaryCulture;
+			}
+			if (primaryCultureFiles.Count > 1)
+			{
+				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
+				MessageBox.Show(
+					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
+					Tx.T("msg.caption.warning"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+			}
+
+			SortCulturesInTextKey(RootTextKey);
+			DeletedCultureNames.Clear();
+			ValidateTextKeysDelayed();
+			StatusText = Tx.T("statusbar.n files loaded", filesToLoad.Count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
+			FileModified = false;
+			ClearViewHistory();
+			CheckNotifyReadonlyFiles();
 		}
 
 		private void OnSave()
@@ -2199,7 +2215,10 @@ namespace Unclassified.TxEditor.ViewModel
 				{
 					fileName = Path.GetFullPath(fileName);
 				}
-				LoadFromXmlFile(fileName);
+				if (!LoadFromXmlFile(fileName))
+				{
+					break;
+				}
 				count++;
 				if (PrimaryCulture != prevPrimaryCulture)
 				{
@@ -2233,7 +2252,39 @@ namespace Unclassified.TxEditor.ViewModel
 
 			// First load the XML file into an XmlDocument for further processing
 			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.Load(fileName);
+			try
+			{
+				xmlDoc.Load(fileName);
+				if (xmlDoc.DocumentElement.Name != "translation")
+				{
+					throw new Exception("Unexpected XML root element.");
+				}
+				// After the file is valid XML and the root element has the expected name, no more
+				// major errors should occur. If this really is no Tx dictionary, no cultures and
+				// text keys should be found.
+			}
+			catch (Exception ex)
+			{
+				FL.Error("Error loading file", fileName);
+				FL.Error(ex, "Loading XML dictionary file");
+				var result = TaskDialog.Show(
+					owner: MainWindow.Instance,
+					allowDialogCancellation: true,
+					title: "TxEditor",
+					mainIcon: VistaTaskDialogIcon.Error,
+					mainInstruction: Tx.T("msg.load file.invalid file"),
+					content: Tx.T("msg.load file.invalid file.desc", "name", fileName, "msg", ex.Message),
+					customButtons: new string[] { Tx.T("task dialog.button.skip file"), Tx.T("task dialog.button.cancel") });
+
+				if (result.CustomButtonResult == 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
 
 			// Try to recognise the culture name from the file name
 			Match m = Regex.Match(Path.GetFileName(fileName), @"^(.+?)\.(([a-z]{2})([-][a-z]{2})?)\.(?:txd|xml)$", RegexOptions.IgnoreCase);
