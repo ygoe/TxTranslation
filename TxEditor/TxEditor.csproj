@@ -348,16 +348,7 @@
     <Resource Include="Images\textkey_segment.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\noise.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\key_error.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\warning_list_yellow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\warning_list.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\error_list.png" />
