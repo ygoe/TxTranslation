@@ -136,6 +136,7 @@ namespace Unclassified.UI
 
 					TextBlock contentText = new TextBlock();
 					contentText.Text = Content as string;
+					contentText.Margin = new Thickness(0, 1, 0, 0);
 					if (!string.IsNullOrEmpty(HotkeyText))
 					{
 						contentText.Text += " (" + HotkeyText + ")";
@@ -151,7 +152,7 @@ namespace Unclassified.UI
 					{
 						TextBlock extText = new TextBlock();
 						extText.Text = ExtendedToolTipText;
-						extText.Margin = new Thickness(6, 6, 0, 0);
+						extText.Margin = new Thickness(0, 6, 0, 0);
 						extText.TextWrapping = TextWrapping.Wrap;
 						tipGrid.Children.Add(extText);
 						Grid.SetRow(extText, 1);
