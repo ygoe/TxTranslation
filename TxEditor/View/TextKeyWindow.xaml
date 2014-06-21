@@ -45,7 +45,7 @@
 				Name="TextKeyText"
 				Grid.Row="1" Grid.Column="0"
 				Width="350" Margin="0,6,0,0"
-				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+				ui:TextBoxExtensions.DisableInsertKey="True"/>
 
 			<CheckBox
 				Name="IncludeSubitemsCheckbox"

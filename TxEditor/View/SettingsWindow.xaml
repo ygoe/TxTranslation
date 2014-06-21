@@ -55,7 +55,7 @@
 					Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="8,4,0,0"
 					Width="300" AcceptsReturn="True" TextWrapping="Wrap"
 					Text="{Binding CharacterMap, UpdateSourceTrigger=PropertyChanged}"
-					ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+					ui:TextBoxExtensions.DisableInsertKey="True"/>
 
 				<CheckBox
 					Grid.Row="2" Grid.ColumnSpan="3"
@@ -89,7 +89,7 @@
 					Grid.Row="4" Grid.Column="1" Margin="8,4,0,0"
 					HorizontalAlignment="Left" Width="60"
 					Text="{Binding AppCulture, UpdateSourceTrigger=PropertyChanged}"
-					ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+					ui:TextBoxExtensions.DisableInsertKey="True"/>
 				<TextBlock
 					Grid.Row="4" Grid.Column="2"
 					Margin="8,6,0,0"

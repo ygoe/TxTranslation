@@ -6,9 +6,9 @@ using System.Windows.Input;
 namespace Unclassified.UI
 {
 	/// <summary>
-	/// Provides extensions for WPF TextBox controls.
+	/// Provides extension methods for WPF TextBox controls.
 	/// </summary>
-	public static class WpfTextBoxExtensions
+	public static class TextBoxExtensions
 	{
 		#region TextBox no-overwrite attached property
 
@@ -40,7 +40,7 @@ namespace Unclassified.UI
 		/// Identifies the DisableInsertKey XAML attached property.
 		/// </summary>
 		public static readonly DependencyProperty DisableInsertKeyProperty =
-			DependencyProperty.RegisterAttached("DisableInsertKey", typeof(bool), typeof(WpfTextBoxExtensions), new PropertyMetadata(false, OnDisableInsertChanged));
+			DependencyProperty.RegisterAttached("DisableInsertKey", typeof(bool), typeof(TextBoxExtensions), new PropertyMetadata(false, OnDisableInsertChanged));
 
 		private static void OnDisableInsertChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{

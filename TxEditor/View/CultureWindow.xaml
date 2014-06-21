@@ -34,7 +34,7 @@
 			Grid.Column="1"
 			Margin="8,0,0,0" Width="50" HorizontalAlignment="Left"
 			TextChanged="CodeText_TextChanged"
-			ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+			ui:TextBoxExtensions.DisableInsertKey="True"/>
 
 		<ListBox
 			Name="CulturesList"

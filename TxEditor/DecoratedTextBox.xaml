@@ -32,7 +32,7 @@
 			AcceptsReturn="True" TextWrapping="Wrap"
 			TextChanged="textBox1_TextChanged" SelectionChanged="textBox1_SelectionChanged" PreviewKeyDown="textBox1_KeyDown"
 			GotFocus="textBox1_GotFocus" LostFocus="textBox1_LostFocus"
-			ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+			ui:TextBoxExtensions.DisableInsertKey="True"/>
 		<Border
 			Name="TextBoxExtraBorderCompensation">
 			<Border.Style>

@@ -57,7 +57,7 @@ namespace Unclassified.TxEditor.View
 
 		#region Window event handlers
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs args)
 		{
 			hotKeys.Add(new HotKey(Key.T, HotKeyModifier.Ctrl | HotKeyModifier.Shift, OnHotKey));
 
@@ -76,22 +76,22 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs args)
 		{
 			MainViewModel vm = DataContext as MainViewModel;
 			if (vm != null && !vm.CheckModifiedSaved())
 			{
-				e.Cancel = true;
+				args.Cancel = true;
 				return;
 			}
 		}
 
-		private void Window_Closed(object sender, EventArgs e)
+		private void Window_Closed(object sender, EventArgs args)
 		{
 			App.Settings.SaveNow();
 		}
 
-		private void Window_LocationChanged(object sender, EventArgs e)
+		private void Window_LocationChanged(object sender, EventArgs args)
 		{
 			if (App.Settings != null)
 			{
@@ -103,18 +103,18 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+		private void Window_SizeChanged(object sender, SizeChangedEventArgs args)
 		{
 			Window_LocationChanged(this, EventArgs.Empty);
 		}
 
-		private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+		private void Window_PreviewKeyDown(object sender, KeyEventArgs args)
 		{
-			if (e.Key == Key.F && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+			if (args.Key == Key.F && args.KeyboardDevice.Modifiers == ModifierKeys.Control)
 			{
 				SearchText.Focus();
 			}
-			if (e.Key == Key.Escape && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+			if (args.Key == Key.Escape && args.KeyboardDevice.Modifiers == ModifierKeys.None)
 			{
 				if (SearchText.IsKeyboardFocused)
 				{
@@ -122,18 +122,18 @@ namespace Unclassified.TxEditor.View
 				}
 				TextKeysTreeView.Focus();
 			}
-			if (e.Key == Key.F2 && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+			if (args.Key == Key.F2 && args.KeyboardDevice.Modifiers == ModifierKeys.None)
 			{
 				(DataContext as MainViewModel).RenameTextKeyCommand.TryExecute();
 			}
 		}
 
-		private void Window_Drop(object sender, DragEventArgs e)
+		private void Window_Drop(object sender, DragEventArgs args)
 		{
 			MainViewModel vm = DataContext as MainViewModel;
 			if (vm != null)
 			{
-				var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+				var fileNames = args.Data.GetData(DataFormats.FileDrop) as string[];
 				if (fileNames != null && fileNames.Length > 0)
 				{
 					if (fileNames.Length == 1 && System.IO.Directory.Exists(fileNames[0]))
@@ -156,7 +156,7 @@ namespace Unclassified.TxEditor.View
 		private bool collapsingItems;
 		private double lastToolGridWidth;
 
-		private void InnerToolGrid_LayoutUpdated(object sender, EventArgs e)
+		private void InnerToolGrid_LayoutUpdated(object sender, EventArgs args)
 		{
 			// NOTE: The collapsing method is only called when the layout was updated after a
 			// change in the window width. Other layout events include resizing of tool buttons
@@ -251,7 +251,7 @@ namespace Unclassified.TxEditor.View
 
 		#region Toolbar event handlers
 
-		private void CharMapButton_ToolTipOpening(object sender, ToolTipEventArgs e)
+		private void CharMapButton_ToolTipOpening(object sender, ToolTipEventArgs args)
 		{
 			FrameworkElement obj = sender as FrameworkElement;
 			if (obj != null)
@@ -261,7 +261,7 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
-		private void CharmapButton_Click(object sender, RoutedEventArgs e)
+		private void CharmapButton_Click(object sender, RoutedEventArgs args)
 		{
 			Button button = sender as Button;
 			string text = button.Content as string;
@@ -279,7 +279,7 @@ namespace Unclassified.TxEditor.View
 
 		#region Tree event handlers
 
-		private void TextKeysTreeView_SelectionChanged(object sender, EventArgs e)
+		private void TextKeysTreeView_SelectionChanged(object sender, EventArgs args)
 		{
 			var vm = DataContext as MainViewModel;
 			if (vm != null)
@@ -288,12 +288,38 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
-		private void TextKeysTreeView_KeyDown(object sender, KeyEventArgs e)
+		private void TextKeysTreeView_ContextMenuOpening(object sender, ContextMenuEventArgs args)
 		{
-			if (e.Key == Key.Delete && e.KeyboardDevice.Modifiers == 0)
+			Dispatcher.BeginInvoke(new Action(() =>
+			{
+				// Wait until DataBind until the Commands are available
+				foreach (var menuItem in TextKeysTreeView.ContextMenu.Items.OfType<MenuItem>())
+				{
+					menuItem.Visibility = menuItem.Command != null && menuItem.Command.CanExecute(null) ? Visibility.Visible : Visibility.Collapsed;
+				}
+
+				TextKeysTreeView.ContextMenu.ReduceSeparators();
+
+				// If no menu item is visible, don't show the menu
+				if (!TextKeysTreeView.ContextMenu.Items.OfType<MenuItem>().Any(mi => mi.Visibility == Visibility.Visible))
+				{
+					TextKeysTreeView.ContextMenu.IsOpen = false;
+				}
+			}), System.Windows.Threading.DispatcherPriority.DataBind);
+
+			//// If no menu item is visible, don't show the menu
+			//if (!TextKeysTreeView.ContextMenu.Items.OfType<MenuItem>().Any(mi => mi.Visibility == Visibility.Visible))
+			//{
+			//    args.Handled = true;
+			//}
+		}
+
+		private void TextKeysTreeView_KeyDown(object sender, KeyEventArgs args)
+		{
+			if (args.Key == Key.Delete && args.KeyboardDevice.Modifiers == 0)
 			{
 				(DataContext as MainViewModel).DeleteTextKeyCommand.TryExecute();
-				e.Handled = true;
+				args.Handled = true;
 			}
 		}
 

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <translation xml:space="preserve">
 	<culture name="de">
+		<text key="contextmenu.text key.convert to namespace">In Namensraum umwandeln</text>
+		<text key="contextmenu.text key.convert to text key">In Textschlüssel umwandeln</text>
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
@@ -40,6 +42,9 @@ Die automatische Wiederherstellung ist fehlgeschlagen.
 Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
 		<text key="msg.caption.error">Fehler</text>
 		<text key="msg.caption.warning">Warnung</text>
+		<text key="msg.convert to namespace.is full key">Der Textschlüssel {key} ist ein vollständiger Schlüssel und kann nicht in einen Namensraum umgewandelt werden.</text>
+		<text key="msg.convert to namespace.not a root child">Der Textschlüssel {key} ist nicht auf der obersten Ebene und kann nicht in einen Namensraum umgewandelt werden.</text>
+		<text key="msg.convert to text key.contains point">Der Namensraum {key} enthält einen Punkt (.) und kann nicht in einen Textschlüssel umgewandelt werden.</text>
 		<text key="msg.delete culture">Möchten Sie die Kultur {name} wirklich löschen?</text>
 		<text key="msg.delete culture.title">Kultur löschen</text>
 		<text key="msg.delete text key">Textschlüssel {key} löschen.</text>
@@ -113,9 +118,11 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.n text keys defined" count="1">1 Textschlüssel definiert.</text>
 		<text key="statusbar.n text keys deleted">{#} Textschlüssel gelöscht.</text>
 		<text key="statusbar.n text keys deleted" count="1">Textschlüssel gelöscht.</text>
+		<text key="statusbar.namespace converted to text key">Namensraum in Textschlüssel umgewandelt.</text>
 		<text key="statusbar.new dictionary created">Neues Wörterbuch erstellt.</text>
 		<text key="statusbar.primary culture set">Hauptkultur auf {name} gesetzt.</text>
 		<text key="statusbar.text key already exists">Der Textschlüssel existiert bereits und wurde jetzt ausgewählt.</text>
+		<text key="statusbar.text key converted to namespace">Textschlüssel in Namensraum umgewandelt.</text>
 		<text key="statusbar.text key copied">Textschlüssel in die Zwischenablage kopiert.</text>
 		<text key="statusbar.text key created">Neuer Textschlüssel erstellt.</text>
 		<text key="statusbar.text keys duplicated">{#} Textschlüssel dupliziert.</text>
@@ -129,6 +136,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
 		<text key="task dialog.button.add culture">&amp;Kultur hinzufügen</text>
 		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
+		<text key="task dialog.button.convert to namespace">In Namensraum umwandeln</text>
+		<text key="task dialog.button.convert to text key">In Textschlüssel umwandeln</text>
 		<text key="task dialog.button.delete">&amp;Löschen</text>
 		<text key="task dialog.button.dont save">&amp;Nicht speichern</text>
 		<text key="task dialog.button.load">&amp;Laden</text>
@@ -384,6 +393,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="Tx:quote nested end">›</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="contextmenu.text key.convert to namespace">Convert to namespace</text>
+		<text key="contextmenu.text key.convert to text key">Convert to text key</text>
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
@@ -423,6 +434,9 @@ Automatic restoring of the backup file failed.
 Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>
 		<text key="msg.caption.error">Error</text>
 		<text key="msg.caption.warning">Warning</text>
+		<text key="msg.convert to namespace.is full key">The text key {key} is a full key and cannot be converted to a namespace.</text>
+		<text key="msg.convert to namespace.not a root child">The text key {key} is not on the top level and cannot be converted to a namespace.</text>
+		<text key="msg.convert to text key.contains point">The namespace {key} contains a point (.) and cannot be converted to a text key.</text>
 		<text key="msg.delete culture">Are you sure to delete the culture {name}?</text>
 		<text key="msg.delete culture.title">Delete culture</text>
 		<text key="msg.delete text key">Deleting text key {key}.</text>
@@ -496,9 +510,11 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.n text keys defined" count="1">1 text key defined.</text>
 		<text key="statusbar.n text keys deleted">{#} text keys deleted.</text>
 		<text key="statusbar.n text keys deleted" count="1">Text key deleted.</text>
+		<text key="statusbar.namespace converted to text key">Namespace converted to text key.</text>
 		<text key="statusbar.new dictionary created">New dictionary created.</text>
 		<text key="statusbar.primary culture set">Primary culture set to {name}.</text>
 		<text key="statusbar.text key already exists">The text key already exists and is now selected.</text>
+		<text key="statusbar.text key converted to namespace">Text key converted to namespace.</text>
 		<text key="statusbar.text key copied">Text key copied to the clipboard.</text>
 		<text key="statusbar.text key created">New text key created.</text>
 		<text key="statusbar.text keys duplicated">{#} text keys duplicated.</text>
@@ -512,6 +528,8 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
 		<text key="task dialog.button.add culture">&amp;Add culture</text>
 		<text key="task dialog.button.cancel">&amp;Cancel</text>
+		<text key="task dialog.button.convert to namespace">Convert to namespace</text>
+		<text key="task dialog.button.convert to text key">Convert to text key</text>
 		<text key="task dialog.button.delete">&amp;Delete</text>
 		<text key="task dialog.button.dont save">Do&amp;n’t save</text>
 		<text key="task dialog.button.load">&amp;Load</text>

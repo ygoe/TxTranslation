@@ -516,7 +516,7 @@ namespace Unclassified.TxEditor.ViewModel
 		/// Sets a new text key value but does not update any children.
 		/// </summary>
 		/// <param name="newKey">New text key.</param>
-		/// <param name="textKeys">Text keys dictionary to update, if not null</param>
+		/// <param name="textKeys">Text keys dictionary to update, if not null.</param>
 		public void SetKey(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
 			int i = newKey.LastIndexOfAny(new char[] { ':', '.' });
@@ -538,6 +538,7 @@ namespace Unclassified.TxEditor.ViewModel
 		/// Sets a new text key value and updates the prefix for all children.
 		/// </summary>
 		/// <param name="newKey">New text key.</param>
+		/// <param name="textKeys">Text keys dictionary to update.</param>
 		/// <returns>Number of affected keys.</returns>
 		public int SetKeyRecursive(string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
@@ -568,6 +569,7 @@ namespace Unclassified.TxEditor.ViewModel
 		/// </summary>
 		/// <param name="oldKey">Old text key prefix to delete.</param>
 		/// <param name="newKey">New text key prefix to insert.</param>
+		/// <param name="textKeys">Text keys dictionary to update.</param>
 		/// <returns>Number of affected keys.</returns>
 		private int ReplaceKeyRecursive(string oldKey, string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{

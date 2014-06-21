@@ -42,11 +42,13 @@ namespace Unclassified.TxEditor.ViewModel
 
 		#endregion Private data
 
-		#region Constructors
+		#region Constructor
 
 		public MainViewModel()
 		{
 			Instance = this;
+
+			InitializeCommands();
 
 			TextKeys = new Dictionary<string, TextKeyViewModel>();
 			LoadedCultureNames = new HashSet<string>();
@@ -69,7 +71,7 @@ namespace Unclassified.TxEditor.ViewModel
 			UpdateSuggestionsLayout();
 		}
 
-		#endregion Constructors
+		#endregion Constructor
 
 		#region Public properties
 
@@ -387,358 +389,98 @@ namespace Unclassified.TxEditor.ViewModel
 
 		#endregion Data properties
 
-		#region Toolbar commands
+		#region Commands
 
-		#region File section
+		#region Definition and initialisation
 
-		private DelegateCommand newFileCommand;
-		public DelegateCommand NewFileCommand
+		// Toolbar commands
+		// File section
+		public DelegateCommand NewFileCommand { get; private set; }
+		public DelegateCommand LoadFolderCommand { get; private set; }
+		public DelegateCommand LoadFileCommand { get; private set; }
+		public DelegateCommand SaveCommand { get; private set; }
+		public DelegateCommand ImportFileCommand { get; private set; }
+		public DelegateCommand ExportKeysCommand { get; private set; }
+		// Culture section
+		public DelegateCommand NewCultureCommand { get; private set; }
+		public DelegateCommand DeleteCultureCommand { get; private set; }
+		public DelegateCommand ReplaceCultureCommand { get; private set; }
+		public DelegateCommand InsertSystemKeysCommand { get; private set; }
+		public DelegateCommand ViewDateTimeFormatsCommand { get; private set; }
+		public DelegateCommand SetPrimaryCultureCommand { get; private set; }
+		// Text key section
+		public DelegateCommand NewTextKeyCommand { get; private set; }
+		public DelegateCommand DeleteTextKeyCommand { get; private set; }
+		public DelegateCommand TextKeyWizardCommand { get; private set; }
+		public DelegateCommand RenameTextKeyCommand { get; private set; }
+		public DelegateCommand DuplicateTextKeyCommand { get; private set; }
+		// View section
+		public DelegateCommand NavigateBackCommand { get; private set; }
+		public DelegateCommand NavigateForwardCommand { get; private set; }
+		public DelegateCommand GotoDefinitionCommand { get; private set; }
+		// Filter section
+		public DelegateCommand ClearSearchCommand { get; private set; }
+		// Application section
+		public DelegateCommand SettingsCommand { get; private set; }
+		public DelegateCommand AboutCommand { get; private set; }
+		public DelegateCommand HelpCommand { get; private set; }
+		public DelegateCommand LibFolderCommand { get; private set; }
+
+		// Context menu
+		public DelegateCommand ConvertToNamespaceCommand { get; private set; }
+		public DelegateCommand ConvertToTextKeyCommand { get; private set; }
+
+		// Other commands
+		public DelegateCommand CopyTextKeyCommand { get; private set; }
+		public DelegateCommand SelectPreviousTextKeyCommand { get; private set; }
+		public DelegateCommand SelectNextTextKeyCommand { get; private set; }
+
+		private void InitializeCommands()
 		{
-			get
-			{
-				if (newFileCommand == null)
-				{
-					newFileCommand = new DelegateCommand(OnNewFile);
-				}
-				return newFileCommand;
-			}
+			// Toolbar
+			// File section
+			NewFileCommand = new DelegateCommand(OnNewFile);
+			LoadFolderCommand = new DelegateCommand(OnLoadFolder);
+			LoadFileCommand = new DelegateCommand(OnLoadFile);
+			SaveCommand = new DelegateCommand(OnSave, () => FileModified);
+			ImportFileCommand = new DelegateCommand(OnImportFile);
+			ExportKeysCommand = new DelegateCommand(OnExportKeys, CanExportKeys);
+			// Culture section
+			NewCultureCommand = new DelegateCommand(OnNewCulture);
+			DeleteCultureCommand = new DelegateCommand(OnDeleteCulture, CanDeleteCulture);
+			ReplaceCultureCommand = new DelegateCommand(OnReplaceCulture);
+			InsertSystemKeysCommand = new DelegateCommand(OnInsertSystemKeys);
+			ViewDateTimeFormatsCommand = new DelegateCommand(OnViewDateTimeFormats);
+			SetPrimaryCultureCommand = new DelegateCommand(OnSetPrimaryCulture, CanSetPrimaryCulture);
+			// Text key section
+			NewTextKeyCommand = new DelegateCommand(OnNewTextKey);
+			DeleteTextKeyCommand = new DelegateCommand(OnDeleteTextKey, CanDeleteTextKey);
+			TextKeyWizardCommand = new DelegateCommand(OnTextKeyWizard);
+			RenameTextKeyCommand = new DelegateCommand(OnRenameTextKey, CanRenameTextKey);
+			DuplicateTextKeyCommand = new DelegateCommand(OnDuplicateTextKey, CanDuplicateTextKey);
+			// View section
+			NavigateBackCommand = new DelegateCommand(OnNavigateBack, CanNavigateBack);
+			NavigateForwardCommand = new DelegateCommand(OnNavigateForward, CanNavigateForward);
+			GotoDefinitionCommand = new DelegateCommand(OnGotoDefinition, CanGotoDefinition);
+			// Filter section
+			ClearSearchCommand = new DelegateCommand(() => { SearchText = ""; });
+			// Application section
+			SettingsCommand = new DelegateCommand(OnSettings);
+			AboutCommand = new DelegateCommand(OnAbout);
+			HelpCommand = new DelegateCommand(OnHelp);
+			LibFolderCommand = new DelegateCommand(OnLibFolder);
+
+			// Context menu
+			ConvertToNamespaceCommand = new DelegateCommand(OnConvertToNamespace, CanConvertToNamespace);
+			ConvertToTextKeyCommand = new DelegateCommand(OnConvertToTextKey, CanConvertToTextKey);
+
+			// Other commands
+			CopyTextKeyCommand = new DelegateCommand(OnCopyTextKey);
+			SelectPreviousTextKeyCommand = new DelegateCommand(OnSelectPreviousTextKey);
+			SelectNextTextKeyCommand = new DelegateCommand(OnSelectNextTextKey);
 		}
 
-		private DelegateCommand loadFolderCommand;
-		public DelegateCommand LoadFolderCommand
-		{
-			get
-			{
-				if (loadFolderCommand == null)
-				{
-					loadFolderCommand = new DelegateCommand(OnLoadFolder);
-				}
-				return loadFolderCommand;
-			}
-		}
-
-		private DelegateCommand loadFileCommand;
-		public DelegateCommand LoadFileCommand
-		{
-			get
-			{
-				if (loadFileCommand == null)
-				{
-					loadFileCommand = new DelegateCommand(OnLoadFile);
-				}
-				return loadFileCommand;
-			}
-		}
-
-		private DelegateCommand saveCommand;
-		public DelegateCommand SaveCommand
-		{
-			get
-			{
-				if (saveCommand == null)
-				{
-					saveCommand = new DelegateCommand(OnSave, () => FileModified);
-				}
-				return saveCommand;
-			}
-		}
-
-		private DelegateCommand importFileCommand;
-		public DelegateCommand ImportFileCommand
-		{
-			get
-			{
-				if (importFileCommand == null)
-				{
-					importFileCommand = new DelegateCommand(OnImportFile);
-				}
-				return importFileCommand;
-			}
-		}
-
-		private DelegateCommand exportKeysCommand;
-		public DelegateCommand ExportKeysCommand
-		{
-			get
-			{
-				if (exportKeysCommand == null)
-				{
-					exportKeysCommand = new DelegateCommand(OnExportKeys, CanExportKeys);
-				}
-				return exportKeysCommand;
-			}
-		}
-
-		#endregion File section
-
-		#region Culture section
-
-		private DelegateCommand newCultureCommand;
-		public DelegateCommand NewCultureCommand
-		{
-			get
-			{
-				if (newCultureCommand == null)
-				{
-					newCultureCommand = new DelegateCommand(OnNewCulture);
-				}
-				return newCultureCommand;
-			}
-		}
-
-		private DelegateCommand deleteCultureCommand;
-		public DelegateCommand DeleteCultureCommand
-		{
-			get
-			{
-				if (deleteCultureCommand == null)
-				{
-					deleteCultureCommand = new DelegateCommand(OnDeleteCulture, CanDeleteCulture);
-				}
-				return deleteCultureCommand;
-			}
-		}
-
-		private DelegateCommand replaceCultureCommand;
-		public DelegateCommand ReplaceCultureCommand
-		{
-			get
-			{
-				if (replaceCultureCommand == null)
-				{
-					replaceCultureCommand = new DelegateCommand(OnReplaceCulture);
-				}
-				return replaceCultureCommand;
-			}
-		}
-
-		private DelegateCommand insertSystemKeysCommand;
-		public DelegateCommand InsertSystemKeysCommand
-		{
-			get
-			{
-				if (insertSystemKeysCommand == null)
-				{
-					insertSystemKeysCommand = new DelegateCommand(OnInsertSystemKeys);
-				}
-				return insertSystemKeysCommand;
-			}
-		}
-
-		private DelegateCommand viewDateTimeFormatsCommand;
-		public DelegateCommand ViewDateTimeFormatsCommand
-		{
-			get
-			{
-				if (viewDateTimeFormatsCommand == null)
-				{
-					viewDateTimeFormatsCommand = new DelegateCommand(OnViewDateTimeFormats);
-				}
-				return viewDateTimeFormatsCommand;
-			}
-		}
-
-		private DelegateCommand setPrimaryCultureCommand;
-		public DelegateCommand SetPrimaryCultureCommand
-		{
-			get
-			{
-				if (setPrimaryCultureCommand == null)
-				{
-					setPrimaryCultureCommand = new DelegateCommand(OnSetPrimaryCulture, CanSetPrimaryCulture);
-				}
-				return setPrimaryCultureCommand;
-			}
-		}
-
-		#endregion Culture section
-
-		#region Text key section
-
-		private DelegateCommand newTextKeyCommand;
-		public DelegateCommand NewTextKeyCommand
-		{
-			get
-			{
-				if (newTextKeyCommand == null)
-				{
-					newTextKeyCommand = new DelegateCommand(OnNewTextKey);
-				}
-				return newTextKeyCommand;
-			}
-		}
-
-		private DelegateCommand deleteTextKeyCommand;
-		public DelegateCommand DeleteTextKeyCommand
-		{
-			get
-			{
-				if (deleteTextKeyCommand == null)
-				{
-					deleteTextKeyCommand = new DelegateCommand(OnDeleteTextKey, CanDeleteTextKey);
-				}
-				return deleteTextKeyCommand;
-			}
-		}
-
-		private DelegateCommand textKeyWizardCommand;
-		public DelegateCommand TextKeyWizardCommand
-		{
-			get
-			{
-				if (textKeyWizardCommand == null)
-				{
-					textKeyWizardCommand = new DelegateCommand(OnTextKeyWizard);
-				}
-				return textKeyWizardCommand;
-			}
-		}
-
-		private DelegateCommand renameTextKeyCommand;
-		public DelegateCommand RenameTextKeyCommand
-		{
-			get
-			{
-				if (renameTextKeyCommand == null)
-				{
-					renameTextKeyCommand = new DelegateCommand(OnRenameTextKey, CanRenameTextKey);
-				}
-				return renameTextKeyCommand;
-			}
-		}
-
-		private DelegateCommand duplicateTextKeyCommand;
-		public DelegateCommand DuplicateTextKeyCommand
-		{
-			get
-			{
-				if (duplicateTextKeyCommand == null)
-				{
-					duplicateTextKeyCommand = new DelegateCommand(OnDuplicateTextKey, CanDuplicateTextKey);
-				}
-				return duplicateTextKeyCommand;
-			}
-		}
-
-		#endregion Text key section
-
-		#region View section
-
-		private DelegateCommand navigateBackCommand;
-		public DelegateCommand NavigateBackCommand
-		{
-			get
-			{
-				if (navigateBackCommand == null)
-				{
-					navigateBackCommand = new DelegateCommand(OnNavigateBack, CanNavigateBack);
-				}
-				return navigateBackCommand;
-			}
-		}
-
-		private DelegateCommand navigateForwardCommand;
-		public DelegateCommand NavigateForwardCommand
-		{
-			get
-			{
-				if (navigateForwardCommand == null)
-				{
-					navigateForwardCommand = new DelegateCommand(OnNavigateForward, CanNavigateForward);
-				}
-				return navigateForwardCommand;
-			}
-		}
-
-		private DelegateCommand gotoDefinitionCommand;
-		public DelegateCommand GotoDefinitionCommand
-		{
-			get
-			{
-				if (gotoDefinitionCommand == null)
-				{
-					gotoDefinitionCommand = new DelegateCommand(OnGotoDefinition, CanGotoDefinition);
-				}
-				return gotoDefinitionCommand;
-			}
-		}
-
-		#endregion View section
-
-		#region Filter section
-
-		private DelegateCommand clearSearchCommand;
-		public DelegateCommand ClearSearchCommand
-		{
-			get
-			{
-				if (clearSearchCommand == null)
-				{
-					clearSearchCommand = new DelegateCommand(() => { SearchText = ""; });
-				}
-				return clearSearchCommand;
-			}
-		}
-
-		#endregion Filter section
-
-		#region Application section
-
-		private DelegateCommand settingsCommand;
-		public DelegateCommand SettingsCommand
-		{
-			get
-			{
-				if (settingsCommand == null)
-				{
-					settingsCommand = new DelegateCommand(OnSettings);
-				}
-				return settingsCommand;
-			}
-		}
-
-		private DelegateCommand aboutCommand;
-		public DelegateCommand AboutCommand
-		{
-			get
-			{
-				if (aboutCommand == null)
-				{
-					aboutCommand = new DelegateCommand(OnAbout);
-				}
-				return aboutCommand;
-			}
-		}
-
-		private DelegateCommand helpCommand;
-		public DelegateCommand HelpCommand
-		{
-			get
-			{
-				if (helpCommand == null)
-				{
-					helpCommand = new DelegateCommand(OnHelp);
-				}
-				return helpCommand;
-			}
-		}
-
-		private DelegateCommand libFolderCommand;
-		public DelegateCommand LibFolderCommand
-		{
-			get
-			{
-				if (libFolderCommand == null)
-				{
-					libFolderCommand = new DelegateCommand(OnLibFolder);
-				}
-				return libFolderCommand;
-			}
-		}
-
-		#endregion Application section
-
-		#endregion Toolbar commands
+		#endregion Definition and initialisation
 
 		#region Toolbar command handlers
 
@@ -1309,6 +1051,7 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
+		// TODO: This is not a command handler, move it elsewhere
 		public void TextKeySelectionChanged(IList selectedItems)
 		{
 			selectedTextKeys = selectedItems.OfType<TextKeyViewModel>().ToList();
@@ -1775,7 +1518,7 @@ namespace Unclassified.TxEditor.ViewModel
 							// still useful though!) and insert the selected key at the correct
 							// position in that tree level.
 							destKey.Parent.Children.Remove(destKey);
-							destKey.Parent.Children.InsertSorted(selKey, (a, b) => TextKeyViewModel.Compare(a, b));
+							destKey.Parent.Children.InsertSorted(selKey, TextKeyViewModel.Compare);
 						}
 						else
 						{
@@ -2133,48 +1876,86 @@ namespace Unclassified.TxEditor.ViewModel
 
 		#endregion Toolbar command handlers
 
-		#region Other commands
+		#region Context menu command handlers
 
-		private DelegateCommand copyTextKeyCommand;
-		public DelegateCommand CopyTextKeyCommand
+		private bool CanConvertToNamespace()
 		{
-			get
-			{
-				if (copyTextKeyCommand == null)
-				{
-					copyTextKeyCommand = new DelegateCommand(OnCopyTextKey);
-				}
-				return copyTextKeyCommand;
-			}
+			return selectedTextKeys != null && selectedTextKeys.Count == 1 && !selectedTextKeys[0].IsNamespace;
 		}
 
-		private DelegateCommand selectPreviousTextKeyCommand;
-		public DelegateCommand SelectPreviousTextKeyCommand
+		private void OnConvertToNamespace()
 		{
-			get
+			var selKey = selectedTextKeys[0];
+
+			if (selKey.IsFullKey)
 			{
-				if (selectPreviousTextKeyCommand == null)
-				{
-					selectPreviousTextKeyCommand = new DelegateCommand(OnSelectPreviousTextKey);
-				}
-				return selectPreviousTextKeyCommand;
+				MessageBox.Show(
+					Tx.T("msg.convert to namespace.is full key", "key", Tx.Q(selKey.TextKey)),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return;
 			}
+			if (selKey.Parent != RootTextKey)
+			{
+				MessageBox.Show(
+					Tx.T("msg.convert to namespace.not a root child", "key", Tx.Q(selKey.TextKey)),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return;
+			}
+
+			selKey.IsNamespace = true;
+			foreach (var child in selKey.Children.OfType<TextKeyViewModel>())
+			{
+				child.SetKeyRecursive(selKey.TextKey + ":" + child.DisplayName, TextKeys);
+			}
+			selKey.Parent.Children.Remove(selKey);
+			selKey.Parent.Children.InsertSorted(selKey, TextKeyViewModel.Compare);
+
+			FileModified = true;
+			StatusText = Tx.T("statusbar.text key converted to namespace");
+
+			ViewCommandManager.InvokeLoaded("SelectTextKey", selKey);
+			ValidateTextKeysDelayed();
 		}
 
-		private DelegateCommand selectNextTextKeyCommand;
-		public DelegateCommand SelectNextTextKeyCommand
+		private bool CanConvertToTextKey()
 		{
-			get
-			{
-				if (selectNextTextKeyCommand == null)
-				{
-					selectNextTextKeyCommand = new DelegateCommand(OnSelectNextTextKey);
-				}
-				return selectNextTextKeyCommand;
-			}
+			return selectedTextKeys != null && selectedTextKeys.Count == 1 && selectedTextKeys[0].IsNamespace;
 		}
 
-		#endregion Other commands
+		private void OnConvertToTextKey()
+		{
+			var selKey = selectedTextKeys[0];
+
+			if (selKey.DisplayName.IndexOf('.') != -1)
+			{
+				MessageBox.Show(
+					Tx.T("msg.convert to text key.contains point", "key", Tx.Q(selKey.TextKey)),
+					Tx.T("msg.caption.error"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+				return;
+			}
+
+			selKey.IsNamespace = false;
+			foreach (var child in selKey.Children.OfType<TextKeyViewModel>())
+			{
+				child.SetKeyRecursive(selKey.TextKey + "." + child.DisplayName, TextKeys);
+			}
+			selKey.Parent.Children.Remove(selKey);
+			selKey.Parent.Children.InsertSorted(selKey, TextKeyViewModel.Compare);
+
+			FileModified = true;
+			StatusText = Tx.T("statusbar.namespace converted to text key");
+
+			ViewCommandManager.InvokeLoaded("SelectTextKey", selKey);
+			ValidateTextKeysDelayed();
+		}
+
+		#endregion Context menu command handlers
 
 		#region Other command handlers
 
@@ -2198,6 +1979,8 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		#endregion Other command handlers
+
+		#endregion Commands
 
 		#region XML loading methods
 
@@ -2545,7 +2328,7 @@ namespace Unclassified.TxEditor.ViewModel
 					subtk = new TextKeyViewModel(nsParts[0], false, tk, tk.MainWindowVM);
 					subtk.DisplayName = nsParts[0];
 					subtk.IsNamespace = true;
-					tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
+					tk.Children.InsertSorted(subtk, TextKeyViewModel.Compare);
 				}
 				tk = subtk;
 				// Continue with namespace-free text key
@@ -2579,7 +2362,7 @@ namespace Unclassified.TxEditor.ViewModel
 						if (!create) return null;
 						subtk = new TextKeyViewModel(partialKey, i == keySegments.Length - 1, tk, tk.MainWindowVM);
 						subtk.DisplayName = keySegment;
-						tk.Children.InsertSorted(subtk, (a, b) => TextKeyViewModel.Compare(a, b));
+						tk.Children.InsertSorted(subtk, TextKeyViewModel.Compare);
 					}
 					tk = subtk;
 					partialKey += ".";

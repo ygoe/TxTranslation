@@ -44,7 +44,7 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Count, Converter={StaticResource EmptyIntConv}, ConverterParameter=-1}"
-				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+				ui:TextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<TextBlock
@@ -58,7 +58,7 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"
-				ui:WpfTextBoxExtensions.DisableInsertKey="True"/>
+				ui:TextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
 		<my:DecoratedTextBox

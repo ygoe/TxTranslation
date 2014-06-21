@@ -335,7 +335,7 @@
 							Name="SearchText"
 							Width="150" Margin="0" Padding="2,2,14,2"
 							Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-							ui:WpfTextBoxExtensions.DisableInsertKey="True">
+							ui:TextBoxExtensions.DisableInsertKey="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource {x:Static ToolBar.TextBoxStyleKey}}">
 									<Setter Property="BorderBrush" Value="#1C000000"/>
@@ -558,6 +558,7 @@
 				BorderThickness="0"
 				UseLayoutRounding="False"
 				SelectionChanged="TextKeysTreeView_SelectionChanged"
+				ContextMenuOpening="TextKeysTreeView_ContextMenuOpening"
 				KeyDown="TextKeysTreeView_KeyDown">
 				<!--PreviewSelectionChanged="TextKeysTreeView_PreviewSelectionChanged"
 				ContextMenuOpening="TextKeysTreeView_ContextMenuOpening"-->
@@ -565,6 +566,18 @@
 				<Controls:MultiSelectTreeView.InputBindings>
 					<KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyTextKeyCommand}"/>
 				</Controls:MultiSelectTreeView.InputBindings>
+
+				<Controls:MultiSelectTreeView.ContextMenu>
+					<ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+						<MenuItem Header="{Tx:T 'toolbar.text key.new'}" Command="{Binding NewTextKeyCommand}" Icon="{ui:MenuIcon /Images/key_create.png}"/>
+						<MenuItem Header="{Tx:T 'toolbar.text key.delete'}" Command="{Binding DeleteTextKeyCommand}" Icon="{ui:MenuIcon /Images/key_delete.png}"/>
+						<MenuItem Header="{Tx:T 'toolbar.text key.rename'}" Command="{Binding RenameTextKeyCommand}" Icon="{ui:MenuIcon /Images/rename.png}"/>
+						<MenuItem Header="{Tx:T 'toolbar.text key.duplicate'}" Command="{Binding DuplicateTextKeyCommand}" Icon="{ui:MenuIcon /Images/key_duplicate.png}"/>
+						<Separator/>
+						<MenuItem Header="{Tx:T 'contextmenu.text key.convert to namespace'}" Command="{Binding ConvertToNamespaceCommand}" Icon="{ui:MenuIcon /Images/textkey_namespace.png}"/>
+						<MenuItem Header="{Tx:T 'contextmenu.text key.convert to text key'}" Command="{Binding ConvertToTextKeyCommand}" Icon="{ui:MenuIcon /Images/key.png}"/>
+					</ContextMenu>
+				</Controls:MultiSelectTreeView.ContextMenu>
 
 				<Controls:MultiSelectTreeView.ItemContainerStyle>
 					<Style TargetType="{x:Type Controls:MultiSelectTreeViewItem}">

@@ -85,6 +85,9 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileNameHelper.cs" />
+    <Compile Include="Unclassified\UI\MenuExtensions.cs" />
+    <Compile Include="Unclassified\UI\MenuIconExtension.cs" />
+    <Compile Include="Unclassified\UI\MenuIconImage.cs" />
     <Compile Include="Unclassified\Util\ClipboardHelper.cs" />
     <Compile Include="Unclassified\Util\CommandLineHelper.cs" />
     <Compile Include="Unclassified\Util\DelayedCall.cs" />
@@ -121,7 +124,7 @@
     <Compile Include="Unclassified\UI\ViewCommand.cs" />
     <Compile Include="Unclassified\Util\HotKey.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
-    <Compile Include="Unclassified\UI\WpfTextBoxExtensions.cs" />
+    <Compile Include="Unclassified\UI\TextBoxExtensions.cs" />
     <Compile Include="Unclassified\UI\WpfWindowExtensions.cs" />
     <Compile Include="Unclassified\Util\UnicodeInfo.cs" />
     <Compile Include="Unclassified\Util\WinApi_Input.cs" />
@@ -412,6 +415,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\lib_folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_create.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
