@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
+	xmlns:ctl="clr-namespace:Unclassified.TxEditor.Controls"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
 	xmlns:Tx="http://dev.unclassified.de/source/txlib"
 	xmlns:ui="clr-namespace:Unclassified.UI"
@@ -14,6 +15,7 @@
 	Focusable="False"
 	IsKeyboardFocusWithinChanged="UserControl_IsKeyboardFocusWithinChanged">
 	<UserControl.Resources>
+		<ui:BoolToVisibilityConverter x:Key="boolVisConverter"/>
 		<ui:ComparerConverter x:Key="CmpConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
@@ -95,7 +97,7 @@
 			</StackPanel>
 		</Grid>
 
-		<my:DecoratedTextBox
+		<ctl:DecoratedTextBox
 			x:Name="MyTextBox"
 			InnerBorderThickness="0" InnerPadding="0" Margin="-1,4,0,0"
 			Text="{Binding Text, Mode=TwoWay}"
@@ -109,6 +111,27 @@
 			TextOptions.TextFormattingMode="{Binding TextKeyVM.MainWindowVM.TextFormattingMode}"
 			ValidateKey="DecoratedTextBox_ValidateKey"/>
 
+		<WrapPanel Orientation="Horizontal">
+			<ctl:AcceptProblemButton
+				Margin="1,3,6,0"
+				Content="Missing"
+				Visibility="{Binding IsMissing, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptMissing}"
+				Command="{Binding ToggleAcceptMissingCommand}"/>
+			<ctl:AcceptProblemButton
+				Margin="1,3,6,0"
+				Content="Placeholders"
+				Visibility="{Binding IsPlaceholdersProblem, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptPlaceholders}"
+				Command="{Binding ToggleAcceptPlaceholdersCommand}"/>
+			<ctl:AcceptProblemButton
+				Margin="1,3,6,0"
+				Content="Punctuation"
+				Visibility="{Binding IsPunctuationProblem, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptPunctuation}"
+				Command="{Binding ToggleAcceptPunctuationCommand}"/>
+		</WrapPanel>
+		
 		<ItemsControl ItemsSource="{Binding QuantifiedTextVMs}" Margin="0,2,0,0" Focusable="False">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>

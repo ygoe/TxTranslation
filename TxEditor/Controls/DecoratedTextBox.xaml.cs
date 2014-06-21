@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Unclassified.TxEditor
+namespace Unclassified.TxEditor.Controls
 {
 	public partial class DecoratedTextBox : UserControl
 	{

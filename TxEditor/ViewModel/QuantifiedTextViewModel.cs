@@ -7,8 +7,18 @@ namespace Unclassified.TxEditor.ViewModel
 {
 	internal class QuantifiedTextViewModel : ViewModelBase, IViewCommandSource
 	{
-		private ViewCommandManager viewCommandManager = new ViewCommandManager();
-		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+		#region Constructor
+
+		public QuantifiedTextViewModel(CultureTextViewModel cultureTextVM)
+		{
+			CultureTextVM = cultureTextVM;
+
+			InitializeCommands();
+		}
+
+		#endregion Constructor
+
+		#region Public properties
 
 		public CultureTextViewModel CultureTextVM { get; private set; }
 
@@ -18,10 +28,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return count; }
 			set
 			{
-				if (value != count)
+				if (CheckUpdate(value, ref count, "Count"))
 				{
-					count = value;
-					OnPropertyChanged("Count");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -34,10 +42,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return modulo; }
 			set
 			{
-				if (value != modulo)
+				if (CheckUpdate(value, ref modulo, "Modulo"))
 				{
-					modulo = value;
-					OnPropertyChanged("Modulo");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -50,14 +56,33 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return text; }
 			set
 			{
-				if (value != text)
+				if (CheckUpdate(value, ref text, "Text"))
 				{
-					text = value;
-					OnPropertyChanged("Text");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
 			}
+		}
+
+		private bool isMissing;
+		public bool IsMissing
+		{
+			get { return isMissing; }
+			set { CheckUpdate(value, ref isMissing, "IsMissing"); }
+		}
+
+		private bool isPlaceholdersProblem;
+		public bool IsPlaceholdersProblem
+		{
+			get { return isPlaceholdersProblem; }
+			set { CheckUpdate(value, ref isPlaceholdersProblem, "IsPlaceholdersProblem"); }
+		}
+
+		private bool isPunctuationProblem;
+		public bool IsPunctuationProblem
+		{
+			get { return isPunctuationProblem; }
+			set { CheckUpdate(value, ref isPunctuationProblem, "IsPunctuationProblem"); }
 		}
 
 		private bool acceptMissing;
@@ -66,10 +91,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptMissing; }
 			set
 			{
-				if (value != acceptMissing)
+				if (CheckUpdate(value, ref acceptMissing, "AcceptMissing"))
 				{
-					acceptMissing = value;
-					OnPropertyChanged("AcceptMissing");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -82,10 +105,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptPlaceholders; }
 			set
 			{
-				if (value != acceptPlaceholders)
+				if (CheckUpdate(value, ref acceptPlaceholders, "AcceptPlaceholders"))
 				{
-					acceptPlaceholders = value;
-					OnPropertyChanged("AcceptPlaceholders");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -98,10 +119,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptPunctuation; }
 			set
 			{
-				if (value != acceptPunctuation)
+				if (CheckUpdate(value, ref acceptPunctuation, "AcceptPunctuation"))
 				{
-					acceptPunctuation = value;
-					OnPropertyChanged("AcceptPunctuation");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -123,45 +142,33 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return textKeyReferences; }
 			set
 			{
-				if (value != textKeyReferences)
+				if (CheckUpdate(value, ref textKeyReferences, "TextKeyReferences"))
 				{
-					textKeyReferences = value;
-					OnPropertyChanged("TextKeyReferences");
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 				}
 			}
 		}
 
-		public QuantifiedTextViewModel(CultureTextViewModel cultureTextVM)
-		{
-			CultureTextVM = cultureTextVM;
-		}
-
-		/// <summary>
-		/// Returns a value indicating whether any data was entered for this text item.
-		/// </summary>
-		/// <returns></returns>
-		public bool IsEmpty()
-		{
-			return string.IsNullOrEmpty(Text);
-		}
+		#endregion Public properties
 
 		#region Commands
 
-		private DelegateCommand deleteCommand;
-		public DelegateCommand DeleteCommand
+		#region Definition and initialisation
+
+		public DelegateCommand DeleteCommand { get; private set; }
+		public DelegateCommand ToggleAcceptMissingCommand { get; private set; }
+		public DelegateCommand ToggleAcceptPlaceholdersCommand { get; private set; }
+		public DelegateCommand ToggleAcceptPunctuationCommand { get; private set; }
+
+		private void InitializeCommands()
 		{
-			get
-			{
-				if (deleteCommand == null)
-				{
-					deleteCommand = new DelegateCommand(OnDelete);
-				}
-				return deleteCommand;
-			}
+			DeleteCommand = new DelegateCommand(OnDelete);
+			ToggleAcceptMissingCommand = new DelegateCommand(() => { AcceptMissing = !AcceptMissing; });
+			ToggleAcceptPlaceholdersCommand = new DelegateCommand(() => { AcceptPlaceholders = !AcceptPlaceholders; });
+			ToggleAcceptPunctuationCommand = new DelegateCommand(() => { AcceptPunctuation = !AcceptPunctuation; });
 		}
 
-		#endregion Commands
+		#endregion Definition and initialisation
 
 		#region Command handlers
 
@@ -188,6 +195,19 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		#endregion Command handlers
+
+		#endregion Commands
+
+		#region Public methods
+
+		/// <summary>
+		/// Returns a value indicating whether any data was entered for this text item.
+		/// </summary>
+		/// <returns></returns>
+		public bool IsEmpty()
+		{
+			return string.IsNullOrEmpty(Text);
+		}
 
 		/// <summary>
 		/// Creates a new QuantifiedTextViewModel instance with all contents of this instance.
@@ -216,5 +236,14 @@ namespace Unclassified.TxEditor.ViewModel
 			cmp = qa.Modulo - qb.Modulo;
 			return cmp;
 		}
+
+		#endregion Public methods
+
+		#region IViewCommandSource members
+
+		private ViewCommandManager viewCommandManager = new ViewCommandManager();
+		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+
+		#endregion IViewCommandSource members
 	}
 }

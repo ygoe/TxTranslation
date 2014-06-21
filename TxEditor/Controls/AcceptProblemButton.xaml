@@ -1,0 +1,39 @@
+﻿<Button
+	x:Class="Unclassified.TxEditor.Controls.AcceptProblemButton"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:ui="clr-namespace:Unclassified.UI"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	mc:Ignorable="d" 
+	d:DesignHeight="50" d:DesignWidth="200"
+	x:Name="_this">
+	<Button.Resources>
+		<ui:BoolToVisibilityConverter x:Key="boolVisConverter"/>
+	</Button.Resources>
+	<Button.Template>
+		<ControlTemplate TargetType="Button">
+			<Border x:Name="Border" Background="#bbbbbb" TextElement.Foreground="White" CornerRadius="1">
+				<StackPanel Orientation="Horizontal" Margin="4,1,4,2">
+					<Image
+						Source="/Images/problem_12.png"
+						Width="12" Height="12" Margin="0,0,0,-2"
+						Visibility="{Binding IsAccepted, ElementName=_this, Converter={StaticResource boolVisConverter}, ConverterParameter=False}"/>
+					<Image
+						Source="/Images/problem_accepted_12.png"
+						Width="12" Height="12" Margin="0,0,0,-2"
+						Visibility="{Binding IsAccepted, ElementName=_this, Converter={StaticResource boolVisConverter}}"/>
+					<ContentPresenter Margin="4,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</StackPanel>
+			</Border>
+			<ControlTemplate.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter TargetName="Border" Property="Background" Value="#aaaaaa"/>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Setter TargetName="Border" Property="Background" Value="#888888"/>
+				</Trigger>
+			</ControlTemplate.Triggers>
+		</ControlTemplate>
+	</Button.Template>
+</Button>

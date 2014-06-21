@@ -78,6 +78,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="Controls\AcceptProblemButton.xaml.cs">
+      <DependentUpon>AcceptProblemButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\CharacterMapConverter.cs" />
     <Compile Include="Converters\DoubleGridLengthConverter.cs" />
     <Compile Include="Converters\MonospaceFontConverter.cs" />
@@ -169,7 +172,11 @@
     <Compile Include="View\TextKeyWizardWindow.xaml.cs">
       <DependentUpon>TextKeyWizardWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="DecoratedTextBox.xaml">
+    <Page Include="Controls\AcceptProblemButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DecoratedTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,7 +224,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DecoratedTextBox.xaml.cs">
+    <Compile Include="Controls\DecoratedTextBox.xaml.cs">
       <DependentUpon>DecoratedTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
@@ -418,6 +425,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\key_create.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_accepted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\key_q_accepted.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\problem_12.png" />
+    <Resource Include="Images\problem_accepted_12.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

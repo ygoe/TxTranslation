@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TaskDialogInterop;
+using Unclassified.TxEditor.Controls;
 using Unclassified.TxEditor.Converters;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.TxLib;

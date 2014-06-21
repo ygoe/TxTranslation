@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
+	xmlns:ctl="clr-namespace:Unclassified.TxEditor.Controls"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
 	xmlns:Tx="http://dev.unclassified.de/source/txlib"
 	xmlns:ui="clr-namespace:Unclassified.UI"
@@ -12,6 +13,7 @@
 	d:DesignHeight="66" d:DesignWidth="412"
 	Focusable="False">
 	<UserControl.Resources>
+		<ui:BoolToVisibilityConverter x:Key="boolVisConverter"/>
 		<ui:EmptyIntegerConverter x:Key="EmptyIntConv"/>
 		<c:MonospaceFontConverter x:Key="monospaceFontConverter"/>
 	</UserControl.Resources>
@@ -21,6 +23,7 @@
 
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
@@ -61,7 +64,7 @@
 				ui:TextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
-		<my:DecoratedTextBox
+		<ctl:DecoratedTextBox
 			x:Name="MyTextBox"
 			Grid.Row="0" Grid.Column="4"
 			InnerBorderThickness="0" InnerPadding="0" Margin="6,2,0,0" VerticalAlignment="Top"
@@ -93,5 +96,26 @@
 				Command="{Binding DeleteCommand}"
 				Style="{StaticResource LightButtonStyle}" IsTabStop="False"/>
 		</StackPanel>
+
+		<WrapPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
+			<ctl:AcceptProblemButton
+				Margin="8,3,-2,0"
+				Content="Missing"
+				Visibility="{Binding IsMissing, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptMissing}"
+				Command="{Binding ToggleAcceptMissingCommand}"/>
+			<ctl:AcceptProblemButton
+				Margin="8,3,-2,0"
+				Content="Placeholders"
+				Visibility="{Binding IsPlaceholdersProblem, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptPlaceholders}"
+				Command="{Binding ToggleAcceptPlaceholdersCommand}"/>
+			<ctl:AcceptProblemButton
+				Margin="8,3,-2,0"
+				Content="Punctuation"
+				Visibility="{Binding IsPunctuationProblem, Converter={StaticResource boolVisConverter}}"
+				IsAccepted="{Binding AcceptPunctuation}"
+				Command="{Binding ToggleAcceptPunctuationCommand}"/>
+		</WrapPanel>
 	</Grid>
 </UserControl>

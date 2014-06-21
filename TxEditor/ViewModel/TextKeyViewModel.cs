@@ -10,20 +10,24 @@ namespace Unclassified.TxEditor.ViewModel
 {
 	internal class TextKeyViewModel : TreeViewItemViewModel
 	{
-		/// <summary>
-		/// Determines the root key of the specified text key.
-		/// </summary>
-		/// <param name="textKey"></param>
-		/// <returns></returns>
-		public static string GetRootKey(string textKey)
+		#region Constructor
+
+		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainViewModel mainWindowVM)
+			: base(parent, false)
 		{
-			int index = textKey.IndexOfAny(new char[] { '.', ':' });
-			if (index >= 0)
-			{
-				return textKey.Substring(0, index);
-			}
-			return textKey;
+			this.textKey = textKey;
+			this.isFullKey = isFullKey;
+
+			MainWindowVM = mainWindowVM;
+
+			cultureTextVMs = new ObservableCollection<CultureTextViewModel>();
+
+			UpdateIcon();
 		}
+
+		#endregion Constructor
+
+		#region Public properties
 
 		public MainViewModel MainWindowVM { get; private set; }
 
@@ -75,13 +79,22 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return hasProblem; }
 			set
 			{
-				if (value != hasProblem)
+				if (CheckUpdate(value, ref hasProblem, "HasProblem"))
 				{
-					hasProblem = value;
 					UpdateIcon();
-					OnPropertyChanged("HasProblem");
 				}
 			}
+		}
+
+		private bool isAccepted;
+		/// <summary>
+		/// Gets or sets a value indicating whether an existing problem with this text key is
+		/// marked as accepted.
+		/// </summary>
+		public bool IsAccepted
+		{
+			get { return isAccepted; }
+			set { CheckUpdate(value, ref isAccepted, "IsAccepted"); }
 		}
 
 		private bool isNamespace;
@@ -93,11 +106,9 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return isNamespace; }
 			set
 			{
-				if (value != isNamespace)
+				if (CheckUpdate(value, ref isNamespace, "IsNamespace"))
 				{
-					isNamespace = value;
 					UpdateIcon();
-					OnPropertyChanged("IsNamespace");
 				}
 			}
 		}
@@ -138,28 +149,14 @@ namespace Unclassified.TxEditor.ViewModel
 		public string ImageSource
 		{
 			get { return imageSource; }
-			set
-			{
-				if (value != imageSource)
-				{
-					imageSource = value;
-					OnPropertyChanged("ImageSource");
-				}
-			}
+			set { CheckUpdate(value, ref imageSource, "ImageSource"); }
 		}
 
 		private string remarks;
 		public string Remarks
 		{
 			get { return remarks; }
-			set
-			{
-				if (value != remarks)
-				{
-					remarks = value;
-					OnPropertyChanged("Remarks");
-				}
-			}
+			set { CheckUpdate(value, ref remarks, "Remarks"); }
 		}
 
 		private string comment;
@@ -168,36 +165,21 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return comment; }
 			set
 			{
-				if (value != comment)
+				if (CheckUpdate(value, ref comment, "Comment"))
 				{
-					comment = value;
-					OnPropertyChanged("Comment");
 					MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(comment);
 					MainWindowVM.FileModified = true;
 				}
 			}
 		}
 
-		#region Constructor
+		#endregion Public properties
 
-		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainViewModel mainWindowVM)
-			: base(parent, false)
-		{
-			this.textKey = textKey;
-			this.isFullKey = isFullKey;
-
-			MainWindowVM = mainWindowVM;
-
-			cultureTextVMs = new ObservableCollection<CultureTextViewModel>();
-
-			UpdateIcon();
-		}
-
-		#endregion Constructor
+		#region Overridden methods
 
 		public override string ToString()
 		{
-			return "{TextKeyViewModel " + textKey + "}";
+			return "TextKeyViewModel " + textKey;
 		}
 
 		protected override void OnIsSelectedChanged()
@@ -211,6 +193,10 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 			}
 		}
+
+		#endregion Overridden methods
+
+		#region Public methods
 
 		/// <summary>
 		/// Returns a value indicating whether any data was entered for this text key.
@@ -245,6 +231,8 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 			}
 		}
+
+		#endregion Public methods
 
 		#region Validation
 
@@ -311,9 +299,9 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 			// Check for duplicate count/modulo values in any CultureText
 			if (CultureTextVMs.Any(ct =>
-				ct.QuantifiedTextVMs.GroupBy(qt =>
-					qt.Count << 16 | qt.Modulo).Any(grp =>
-						grp.Count() > 1)))
+				ct.QuantifiedTextVMs
+					.GroupBy(qt => qt.Count << 16 | qt.Modulo)
+					.Any(grp => grp.Count() > 1)))
 			{
 				HasOwnProblem = true;
 				HasProblem = true;
@@ -362,6 +350,8 @@ namespace Unclassified.TxEditor.ViewModel
 
 			// ----- Check translations consistency -----
 
+			IsAccepted = false;
+
 			if (CultureTextVMs.Count > 1)
 			{
 				string primaryText = CultureTextVMs[0].Text;
@@ -372,34 +362,104 @@ namespace Unclassified.TxEditor.ViewModel
 					if (i > 0)
 					{
 						string transText = CultureTextVMs[i].Text;
-						// Ignore any empty text. If that's a problem, it'll be found as missing above.
-						if (!string.IsNullOrEmpty(transText))
+						// Ignore any empty text. If that's a problem, it'll be found as missing below.
+						if (!String.IsNullOrEmpty(transText))
 						{
 							string message;
-							if (!CheckTextConsistency(primaryText, transText, out message, true,
-									CultureTextVMs[i].AcceptPlaceholders, CultureTextVMs[i].AcceptPunctuation))
+							if (!CheckPlaceholdersConsistency(primaryText, transText, true, out message))
 							{
-								HasOwnProblem = true;
-								HasProblem = true;
-								AddRemarks(message);
+								CultureTextVMs[i].IsPlaceholdersProblem = true;
+								if (CultureTextVMs[i].AcceptPlaceholders)
+								{
+									IsAccepted = true;
+								}
+								else
+								{
+									HasOwnProblem = true;
+									HasProblem = true;
+									AddRemarks(message);
+								}
 							}
+							else
+							{
+								CultureTextVMs[i].IsPlaceholdersProblem = false;
+							}
+							if (!CheckPunctuationConsistency(primaryText, transText, out message))
+							{
+								CultureTextVMs[i].IsPunctuationProblem = true;
+								if (CultureTextVMs[i].AcceptPunctuation)
+								{
+									IsAccepted = true;
+								}
+								else
+								{
+									HasOwnProblem = true;
+									HasProblem = true;
+									AddRemarks(message);
+								}
+							}
+							else
+							{
+								CultureTextVMs[i].IsPunctuationProblem = false;
+							}
+						}
+						else
+						{
+							// If there's no text, and it hasn't been checked, there is no problem
+							CultureTextVMs[i].IsPlaceholdersProblem = false;
+							CultureTextVMs[i].IsPunctuationProblem = false;
 						}
 					}
 
 					foreach (var qt in CultureTextVMs[i].QuantifiedTextVMs)
 					{
 						string transText = qt.Text;
-						// Ignore any empty text. If that's a problem, it'll be found as missing above.
-						if (!string.IsNullOrEmpty(transText))
+						// Ignore any empty text for quantified texts.
+						if (!String.IsNullOrEmpty(transText))
 						{
 							string message;
-							if (!CheckTextConsistency(primaryText, transText, out message, false,
-									qt.AcceptPlaceholders, qt.AcceptPunctuation))   // Ignore count placeholder here
+							if (!CheckPlaceholdersConsistency(primaryText, transText, false, out message))   // Ignore count placeholder here
 							{
-								HasOwnProblem = true;
-								HasProblem = true;
-								AddRemarks(message);
+								qt.IsPlaceholdersProblem = true;
+								if (qt.AcceptPlaceholders)
+								{
+									IsAccepted = true;
+								}
+								else
+								{
+									HasOwnProblem = true;
+									HasProblem = true;
+									AddRemarks(message);
+								}
 							}
+							else
+							{
+								qt.IsPlaceholdersProblem = false;
+							}
+							if (!CheckPunctuationConsistency(primaryText, transText, out message))
+							{
+								qt.IsPunctuationProblem = true;
+								if (qt.AcceptPunctuation)
+								{
+									IsAccepted = true;
+								}
+								else
+								{
+									HasOwnProblem = true;
+									HasProblem = true;
+									AddRemarks(message);
+								}
+							}
+							else
+							{
+								qt.IsPunctuationProblem = false;
+							}
+						}
+						else
+						{
+							// If there's no text, and it hasn't been checked, there is no problem
+							qt.IsPlaceholdersProblem = false;
+							qt.IsPunctuationProblem = false;
 						}
 					}
 				}
@@ -412,13 +472,19 @@ namespace Unclassified.TxEditor.ViewModel
 				if (ctVM.CultureName.Length == 2)
 				{
 					// Check that every non-region culture has a text set
-					if (string.IsNullOrEmpty(ctVM.Text) && !ctVM.AcceptMissing)
+					if (String.IsNullOrEmpty(ctVM.Text))
 					{
 						ctVM.IsMissing = true;
-
-						HasOwnProblem = true;
-						HasProblem = true;
-						AddRemarks(Tx.T("validation.content.missing translation"));
+						if (ctVM.AcceptMissing)
+						{
+							IsAccepted = true;
+						}
+						else
+						{
+							HasOwnProblem = true;
+							HasProblem = true;
+							AddRemarks(Tx.T("validation.content.missing translation"));
+						}
 					}
 					else
 					{
@@ -429,21 +495,28 @@ namespace Unclassified.TxEditor.ViewModel
 				{
 					// Check that every region-culture with no text has a non-region culture with a
 					// text set (as fallback)
-					if (string.IsNullOrEmpty(ctVM.Text) &&
-						!ctVM.AcceptMissing &&
+					if (String.IsNullOrEmpty(ctVM.Text) &&
 						!CultureTextVMs.Any(vm2 => vm2.CultureName == ctVM.CultureName.Substring(0, 2)))
 					{
 						ctVM.IsMissing = true;
-
-						HasOwnProblem = true;
-						HasProblem = true;
-						AddRemarks(Tx.T("validation.content.missing translation"));
+						if (ctVM.AcceptMissing)
+						{
+							IsAccepted = true;
+						}
+						else
+						{
+							HasOwnProblem = true;
+							HasProblem = true;
+							AddRemarks(Tx.T("validation.content.missing translation"));
+						}
 					}
 					else
 					{
 						ctVM.IsMissing = false;
 					}
 				}
+
+				// TODO: Also check quantified texts for missing texts
 			}
 
 			return !HasProblem;
@@ -469,6 +542,7 @@ namespace Unclassified.TxEditor.ViewModel
 			if (IsNamespace)
 			{
 				ImageSource = "/Images/textkey_namespace.png";
+				// TODO: Can there be problems inside namespaces? Then we need a textkey_namespace_error icon
 			}
 			else if (IsFullKey)
 			{
@@ -477,6 +551,10 @@ namespace Unclassified.TxEditor.ViewModel
 					if (HasProblem)
 					{
 						ImageSource = "/Images/key_q_error.png";
+					}
+					else if (IsAccepted)
+					{
+						ImageSource = "/Images/key_q_accepted.png";
 					}
 					else
 					{
@@ -488,6 +566,10 @@ namespace Unclassified.TxEditor.ViewModel
 					if (HasProblem)
 					{
 						ImageSource = "/Images/key_error.png";
+					}
+					else if (IsAccepted)
+					{
+						ImageSource = "/Images/key_accepted.png";
 					}
 					else
 					{
@@ -680,6 +762,21 @@ namespace Unclassified.TxEditor.ViewModel
 		#region Static methods
 
 		/// <summary>
+		/// Determines the root key of the specified text key.
+		/// </summary>
+		/// <param name="textKey"></param>
+		/// <returns></returns>
+		public static string GetRootKey(string textKey)
+		{
+			int index = textKey.IndexOfAny(new char[] { '.', ':' });
+			if (index >= 0)
+			{
+				return textKey.Substring(0, index);
+			}
+			return textKey;
+		}
+
+		/// <summary>
 		/// Compares two TextKeyViewModel instances to determine the sort order in the text keys
 		/// tree.
 		/// </summary>
@@ -774,15 +871,10 @@ namespace Unclassified.TxEditor.ViewModel
 			return true;
 		}
 
-		public static bool CheckTextConsistency(string a, string b, out string message, bool includeCount = true, bool acceptPlaceholders = false, bool acceptPunctuation = false)
+		public static bool CheckPlaceholdersConsistency(string a, string b, bool includeCount, out string message)
 		{
-			string pattern;
-			Match m1, m2;
-
 			if (a == null) a = "";
 			if (b == null) b = "";
-
-			// ----- Compare placeholders -----
 
 			string placeholderPattern;
 			if (includeCount)
@@ -808,44 +900,48 @@ namespace Unclassified.TxEditor.ViewModel
 				m = m.NextMatch();
 			}
 
-			if (!acceptPlaceholders)
+			foreach (string n in varNamesA)
 			{
-				foreach (string n in varNamesA)
+				if (!varNamesB.Remove(n))
 				{
-					if (!varNamesB.Remove(n))
-					{
-						message = Tx.T("validation.content.missing placeholder", "name", n);
-						return false;
-					}
-				}
-				if (varNamesB.Count > 0)
-				{
-					message = Tx.T("validation.content.additional placeholder", "name", varNamesB[0]);
+					message = Tx.T("validation.content.missing placeholder", "name", n);
 					return false;
 				}
 			}
-
-			// ----- Compare spacing/punctuation -----
-
-			if (!acceptPunctuation)
+			if (varNamesB.Count > 0)
 			{
-				pattern = "^([ \t\r\n]*)";
-				m1 = Regex.Match(a, pattern);
-				m2 = Regex.Match(b, pattern);
-				if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
-				{
-					message = Tx.T("validation.content.inconsistent punctuation");
-					return false;
-				}
+				message = Tx.T("validation.content.additional placeholder", "name", varNamesB[0]);
+				return false;
+			}
 
-				pattern = "([ \t\r\n!%,.:;?]*)$";
-				m1 = Regex.Match(a, pattern);
-				m2 = Regex.Match(b, pattern);
-				if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
-				{
-					message = Tx.T("validation.content.inconsistent punctuation");
-					return false;
-				}
+			message = null;
+			return true;
+		}
+
+		public static bool CheckPunctuationConsistency(string a, string b, out string message)
+		{
+			if (a == null) a = "";
+			if (b == null) b = "";
+
+			string pattern;
+			Match m1, m2;
+
+			pattern = "^([ \t\r\n]*)";
+			m1 = Regex.Match(a, pattern);
+			m2 = Regex.Match(b, pattern);
+			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+			{
+				message = Tx.T("validation.content.inconsistent punctuation");
+				return false;
+			}
+
+			pattern = "([ \t\r\n!%,.:;?]*)$";
+			m1 = Regex.Match(a, pattern);
+			m2 = Regex.Match(b, pattern);
+			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
+			{
+				message = Tx.T("validation.content.inconsistent punctuation");
+				return false;
 			}
 
 			message = null;

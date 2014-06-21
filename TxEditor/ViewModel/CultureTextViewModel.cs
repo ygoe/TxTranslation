@@ -12,8 +12,30 @@ namespace Unclassified.TxEditor.ViewModel
 {
 	internal class CultureTextViewModel : ViewModelBase, IViewCommandSource
 	{
-		private ViewCommandManager viewCommandManager = new ViewCommandManager();
-		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+		#region Constructor
+
+		public CultureTextViewModel(string cultureName, TextKeyViewModel textKeyVM)
+		{
+			this.cultureName = cultureName;
+
+			InitializeCommands();
+
+			TextKeyVM = textKeyVM;
+			LastOfLanguage = true;   // Change value once to set the brush value
+
+			BackgroundBrush = cultureName == TextKeyVM.MainWindowVM.PrimaryCulture ?
+				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0)) :
+				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0));
+
+			if (App.Settings.NativeCultureNames)
+				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
+			else
+				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).DisplayName);
+		}
+
+		#endregion Constructor
+
+		#region Public properties
 
 		public TextKeyViewModel TextKeyVM { get; private set; }
 
@@ -35,10 +57,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return text; }
 			set
 			{
-				if (value != text)
+				if (CheckUpdate(value, ref text, "Text"))
 				{
-					text = value;
-					OnPropertyChanged("Text");
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -49,14 +69,21 @@ namespace Unclassified.TxEditor.ViewModel
 		public bool IsMissing
 		{
 			get { return isMissing; }
-			set
-			{
-				if (value != isMissing)
-				{
-					isMissing = value;
-					OnPropertyChanged("IsMissing");
-				}
-			}
+			set { CheckUpdate(value, ref isMissing, "IsMissing"); }
+		}
+
+		private bool isPlaceholdersProblem;
+		public bool IsPlaceholdersProblem
+		{
+			get { return isPlaceholdersProblem; }
+			set { CheckUpdate(value, ref isPlaceholdersProblem, "IsPlaceholdersProblem"); }
+		}
+
+		private bool isPunctuationProblem;
+		public bool IsPunctuationProblem
+		{
+			get { return isPunctuationProblem; }
+			set { CheckUpdate(value, ref isPunctuationProblem, "IsPunctuationProblem"); }
 		}
 
 		private bool acceptMissing;
@@ -65,10 +92,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptMissing; }
 			set
 			{
-				if (value != acceptMissing)
+				if (CheckUpdate(value, ref acceptMissing, "AcceptMissing"))
 				{
-					acceptMissing = value;
-					OnPropertyChanged("AcceptMissing");
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -81,10 +106,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptPlaceholders; }
 			set
 			{
-				if (value != acceptPlaceholders)
+				if (CheckUpdate(value, ref acceptPlaceholders, "AcceptPlaceholders"))
 				{
-					acceptPlaceholders = value;
-					OnPropertyChanged("AcceptPlaceholders");
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -97,10 +120,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return acceptPunctuation; }
 			set
 			{
-				if (value != acceptPunctuation)
+				if (CheckUpdate(value, ref acceptPunctuation, "AcceptPunctuation"))
 				{
-					acceptPunctuation = value;
-					OnPropertyChanged("AcceptPunctuation");
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
 				}
@@ -122,10 +143,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return textKeyReferences; }
 			set
 			{
-				if (value != textKeyReferences)
+				if (CheckUpdate(value, ref textKeyReferences, "TextKeyReferences"))
 				{
-					textKeyReferences = value;
-					OnPropertyChanged("TextKeyReferences");
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 				}
 			}
@@ -137,11 +156,9 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return lastOfLanguage; }
 			set
 			{
-				if (value != lastOfLanguage)
+				if (CheckUpdate(value, ref lastOfLanguage, "LastOfLanguage"))
 				{
-					lastOfLanguage = value;
-					OnPropertyChanged("LastOfLanguage");
-					if (lastOfLanguage)
+					if (value)
 					{
 						SeparatorBrush = new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0));
 					}
@@ -157,28 +174,14 @@ namespace Unclassified.TxEditor.ViewModel
 		public Brush SeparatorBrush
 		{
 			get { return separatorBrush; }
-			set
-			{
-				if (value != separatorBrush)
-				{
-					separatorBrush = value;
-					OnPropertyChanged("SeparatorBrush");
-				}
-			}
+			set { CheckUpdate(value, ref separatorBrush, "SeparatorBrush"); }
 		}
 
 		private Brush backgroundBrush;
 		public Brush BackgroundBrush
 		{
 			get { return backgroundBrush; }
-			set
-			{
-				if (value != backgroundBrush)
-				{
-					backgroundBrush = value;
-					OnPropertyChanged("BackgroundBrush");
-				}
-			}
+			set { CheckUpdate(value, ref backgroundBrush, "BackgroundBrush"); }
 		}
 
 		private ObservableCollection<QuantifiedTextViewModel> quantifiedTextVMs;
@@ -195,97 +198,41 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 		}
 
+		#endregion Public properties
+
+		#region Event handlers
+
 		private void quantifiedTextVMs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			TextKeyVM.UpdateIcon();
 		}
 
-		public CultureTextViewModel(string cultureName, TextKeyViewModel textKeyVM)
-		{
-			this.cultureName = cultureName;
-
-			TextKeyVM = textKeyVM;
-			LastOfLanguage = true;   // Change value once to set the brush value
-
-			BackgroundBrush = cultureName == TextKeyVM.MainWindowVM.PrimaryCulture ?
-				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0)) :
-				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0));
-
-			if (App.Settings.NativeCultureNames)
-				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
-			else
-				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).DisplayName);
-		}
-
-		/// <summary>
-		/// Returns a value indicating whether any data was entered for this text key culture.
-		/// </summary>
-		/// <returns></returns>
-		public bool IsEmpty()
-		{
-			if (!string.IsNullOrEmpty(Text)) return false;
-			foreach (var qt in QuantifiedTextVMs)
-			{
-				if (!qt.IsEmpty()) return false;
-			}
-			return true;
-		}
+		#endregion Event handlers
 
 		#region Commands
 
-		private DelegateCommand addCount0Command;
-		public DelegateCommand AddCount0Command
+		#region Definition and initialisation
+
+		public DelegateCommand AddCount0Command { get; private set; }
+		public DelegateCommand AddCount1Command { get; private set; }
+		public DelegateCommand AddCommand { get; private set; }
+		public DelegateCommand RefreshCommand { get; private set; }
+		public DelegateCommand ToggleAcceptMissingCommand { get; private set; }
+		public DelegateCommand ToggleAcceptPlaceholdersCommand { get; private set; }
+		public DelegateCommand ToggleAcceptPunctuationCommand { get; private set; }
+
+		private void InitializeCommands()
 		{
-			get
-			{
-				if (addCount0Command == null)
-				{
-					addCount0Command = new DelegateCommand(OnAddCount0);
-				}
-				return addCount0Command;
-			}
+			AddCount0Command = new DelegateCommand(OnAddCount0);
+			AddCount1Command = new DelegateCommand(OnAddCount1);
+			AddCommand = new DelegateCommand(OnAdd);
+			RefreshCommand = new DelegateCommand(OnRefresh);
+			ToggleAcceptMissingCommand = new DelegateCommand(() => { AcceptMissing = !AcceptMissing; });
+			ToggleAcceptPlaceholdersCommand = new DelegateCommand(() => { AcceptPlaceholders = !AcceptPlaceholders; });
+			ToggleAcceptPunctuationCommand = new DelegateCommand(() => { AcceptPunctuation = !AcceptPunctuation; });
 		}
 
-		private DelegateCommand addCount1Command;
-		public DelegateCommand AddCount1Command
-		{
-			get
-			{
-				if (addCount1Command == null)
-				{
-					addCount1Command = new DelegateCommand(OnAddCount1);
-				}
-				return addCount1Command;
-			}
-		}
-
-		private DelegateCommand addCommand;
-		public DelegateCommand AddCommand
-		{
-			get
-			{
-				if (addCommand == null)
-				{
-					addCommand = new DelegateCommand(OnAdd);
-				}
-				return addCommand;
-			}
-		}
-
-		private DelegateCommand refreshCommand;
-		public DelegateCommand RefreshCommand
-		{
-			get
-			{
-				if (refreshCommand == null)
-				{
-					refreshCommand = new DelegateCommand(OnRefresh);
-				}
-				return refreshCommand;
-			}
-		}
-
-		#endregion Commands
+		#endregion Definition and initialisation
 
 		#region Command handlers
 
@@ -336,6 +283,24 @@ namespace Unclassified.TxEditor.ViewModel
 		}
 
 		#endregion Command handlers
+
+		#endregion Commands
+
+		#region Public methods
+
+		/// <summary>
+		/// Returns a value indicating whether any data was entered for this text key culture.
+		/// </summary>
+		/// <returns></returns>
+		public bool IsEmpty()
+		{
+			if (!string.IsNullOrEmpty(Text)) return false;
+			foreach (var qt in QuantifiedTextVMs)
+			{
+				if (!qt.IsEmpty()) return false;
+			}
+			return true;
+		}
 
 		/// <summary>
 		/// Creates a new CultureTextViewModel instance with all contents of this instance.
@@ -443,5 +408,14 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 			return string.Compare(CultureName, otherName, StringComparison.InvariantCultureIgnoreCase);
 		}
+
+		#endregion Public methods
+
+		#region IViewCommandSource members
+
+		private ViewCommandManager viewCommandManager = new ViewCommandManager();
+		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+
+		#endregion IViewCommandSource members
 	}
 }

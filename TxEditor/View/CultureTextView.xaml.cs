@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Unclassified.TxEditor.Controls;
 using Unclassified.TxEditor.ViewModel;
 using Unclassified.UI;
 

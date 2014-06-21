@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
+	xmlns:ctl="clr-namespace:Unclassified.TxEditor.Controls"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
 	xmlns:Tx="http://dev.unclassified.de/source/txlib"
 	xmlns:ui="clr-namespace:Unclassified.UI"
@@ -83,7 +84,7 @@
 				Grid.Row="3" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
 				Text="{Tx:T 'window.wizard.translated text', Default='Translated text:'}"/>
-			<my:DecoratedTextBox
+			<ctl:DecoratedTextBox
 				x:Name="TranslationText"
 				Grid.Row="3" Grid.Column="1"
 				MaxHeight="500"
