@@ -1135,15 +1135,21 @@ namespace Unclassified.TxEditor.ViewModel
 				TextKeyViewModel lastSelectedTk = selectedTextKeys[selectedTextKeys.Count - 1];
 				var remainingItem = lastSelectedTk.FindRemainingItem(t => !selectedTextKeys.Contains(t) && !selectedTextKeys.Any(s => s.IsAParentOf(t)));
 
+				bool isAnySelectedRemaining = false;
 				foreach (TextKeyViewModel tk in selectedTextKeys.ToArray())
 				{
 					DeleteTextKey(tk, !selectedOnlyOption);
 					// Also remove unused partial keys
 					DeletePartialParentKeys(tk.Parent as TextKeyViewModel);
+					if (tk.Parent.Children.Contains(tk))
+						isAnySelectedRemaining = true;
 					FileModified = true;
 				}
-				// Select and focus other key in the tree
-				ViewCommandManager.InvokeLoaded("SelectTextKey", remainingItem);
+				if (!isAnySelectedRemaining)
+				{
+					// Select and focus other key in the tree
+					ViewCommandManager.InvokeLoaded("SelectTextKey", remainingItem);
+				}
 				ValidateTextKeysDelayed();
 
 				StatusText = Tx.T("statusbar.n text keys deleted", count);
@@ -1421,6 +1427,9 @@ namespace Unclassified.TxEditor.ViewModel
 			{
 				// The dialog was confirmed
 				string newKey = win.TextKey;
+
+				// Was the name changed at all?
+				if (newKey == selKey.TextKey) return;
 
 				// Don't allow namespace nodes to be moved elsewhere
 				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
