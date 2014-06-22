@@ -3524,8 +3524,8 @@ namespace Unclassified.TxEditor.ViewModel
 				}
 				else
 				{
-					FL.Warning("MainViewModel.UpdateSuggestions: otherWords.Count == 0 (should not happen)");
-					score = 0;   // Should not happen
+					// There are no significant words in the other text
+					score = 0;
 				}
 
 				if (isExactMatch)

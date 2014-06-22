@@ -133,7 +133,9 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="suggestions.caption">Vorschläge</text>
 		<text key="suggestions.caption for">Vorschläge für {name}</text>
 		<text key="suggestions.exact match">Genaue Übereinstimmung</text>
-		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.</text>
+		<text key="suggestions.none">Leider keine Vorschläge. Vielleicht wenn mehr Texte eingegeben wurden oder ein anderer Textschlüssel ausgewählt wurde.
+
+Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten wie der ausgewählte Textschlüssel. Das erleichtert die Verwendung konsistenter Formulierungen im Wörterbuch. Die Funktionsweise wird in der Dokumentation näher beschrieben.</text>
 		<text key="task dialog.button.add culture">&amp;Kultur hinzufügen</text>
 		<text key="task dialog.button.cancel">&amp;Abbrechen</text>
 		<text key="task dialog.button.convert to namespace">In Namensraum umwandeln</text>
@@ -528,7 +530,9 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="suggestions.caption">Suggestions</text>
 		<text key="suggestions.caption for">Suggestions for {name}</text>
 		<text key="suggestions.exact match">Exact match</text>
-		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.</text>
+		<text key="suggestions.none">Sorry, no suggestions this time. Maybe it helps to add more texts or select another text key.
+
+Suggestions are other texts that contain similar words as the selected text key. This makes it easier to use consistent wording throughout the dictionary. To learn more about how it works, please read the documentation.</text>
 		<text key="task dialog.button.add culture">&amp;Add culture</text>
 		<text key="task dialog.button.cancel">&amp;Cancel</text>
 		<text key="task dialog.button.convert to namespace">Convert to namespace</text>
