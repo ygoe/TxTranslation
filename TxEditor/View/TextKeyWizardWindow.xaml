@@ -7,7 +7,7 @@
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
 	xmlns:ctl="clr-namespace:Unclassified.TxEditor.Controls"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
-	xmlns:Tx="http://dev.unclassified.de/source/txlib"
+	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
 	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d"
 	d:DesignHeight="403" d:DesignWidth="500"

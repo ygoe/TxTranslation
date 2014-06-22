@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:Tx="http://dev.unclassified.de/source/txlib"
+	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
 	mc:Ignorable="d"
 	d:DesignHeight="240" d:DesignWidth="420"
 	ResizeMode="NoResize"
@@ -54,7 +54,7 @@
 				<StackPanel Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
 					<TextBlock Name="VersionLabel">VersionLabel</TextBlock>
 					<TextBlock Name="CopyrightLabel">CopyrightLabel</TextBlock>
-					<TextBlock><Hyperlink Click="Hyperlink_Click">dev.unclassified.de/source/txlib</Hyperlink></TextBlock>
+					<TextBlock><Hyperlink Click="Hyperlink_Click">dev.unclassified.de/source/txtranslation</Hyperlink></TextBlock>
 				</StackPanel>
 
 				<Button

@@ -4,7 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:Tx="http://dev.unclassified.de/source/txlib"
+	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
 	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d"
 	d:DesignHeight="240" d:DesignWidth="700"

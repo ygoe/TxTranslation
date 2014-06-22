@@ -1,6 +1,6 @@
 ﻿// TxLib – Tx Translation & Localisation for .NET and WPF
 // © Yves Goergen, Made in Germany
-// Website: http://dev.unclassified.de/source/txlib
+// Website: http://dev.unclassified.de/source/txtranslation
 //
 // This library is free software: you can redistribute it and/or modify it under the terms of
 // the GNU Lesser General Public License as published by the Free Software Foundation, version 3.
@@ -32,11 +32,13 @@ using System.Windows.Markup;
 // Informational version string, used for the About dialog, error reports and the setup script.
 // Can be any freely formatted string containing punctuation, letters and revision codes.
 // Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
-#if DEBUG
-[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}-d")]
-#else
 [assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
 #endif
 
 [assembly: ComVisible(false)]
-[assembly: XmlnsDefinition("http://dev.unclassified.de/source/txlib", "Unclassified.TxLib")]
+[assembly: XmlnsDefinition("http://dev.unclassified.de/source/txtranslation", "Unclassified.TxLib")]

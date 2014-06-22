@@ -18,10 +18,12 @@ using System.Windows;
 // Informational version string, used for the About dialog, error reports and the setup script.
 // Can be any freely formatted string containing punctuation, letters and revision codes.
 // Should be set to the same value as AssemblyVersion if only the basic numbering scheme is applied.
-#if DEBUG
-[assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}-d")]
-#else
 [assembly: AssemblyInformationalVersion("{bmin:2013:4}.{commit:6}{!:+}")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
+[assembly: AssemblyConfiguration("Release")]
 #endif
 
 [assembly: ComVisible(false)]

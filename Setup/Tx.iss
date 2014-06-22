@@ -19,7 +19,7 @@
 [Setup]
 AppCopyright=© Yves Goergen, GNU GPL v3
 AppPublisher=Yves Goergen
-AppPublisherURL=http://dev.unclassified.de/source/txlib
+AppPublisherURL=http://dev.unclassified.de/source/txtranslation
 AppName=TxEditor
 AppVersion={#ShortRevId}
 AppMutex=Unclassified.TxEditor

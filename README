@@ -2,7 +2,7 @@ About TxTranslation
 
 Tx Translation & Localisation for .NET and WPF
 
-Website: http://dev.unclassified.de/source/txlib
+Website: http://dev.unclassified.de/source/txtranslation
 
 Tx is a simple yet powerful translation and localisation library for .NET applications. It manages a dictionary containing all the text snippets and phrases you need, for multiple translations. If a translation is not available in your preferred language, it can be looked up from other languages. Texts can also contain named place-holders that are filled with your data at runtime so that you don’t need to concatenate all the parts yourself in the right order. Localisation tasks like typography, number or time formatting according to the local standards are also covered.
 
@@ -22,7 +22,7 @@ The .NET framework uses the concept of cultures to specify a combination of lang
 
 TxEditor
 
-The TxLib solution also comes with a graphical translation file editor that provides all the functionality for translating personnel that don’t necessarily have any programming experience. The TxEditor application can load a dictionary file, list all the text keys that it defines and allows viewing and editing the translation texts. It performs consistency checks to point the user to potential errors and highlight missing translations. TxEditor also makes use of TxLib itself so it is fully localisable and can be used to translate itself into other languages.
+The TxTranslation solution also comes with a graphical translation file editor that provides all the functionality for translating personnel that don’t necessarily have any programming experience. The TxEditor application can load a dictionary file, list all the text keys that it defines and allows viewing and editing the translation texts. It performs consistency checks to point the user to potential errors and highlight missing translations. TxEditor also makes use of TxLib itself so it is fully localisable and can be used to translate itself into other languages.
 
 Licence
 
