@@ -16,11 +16,13 @@ if (IsSelected("build-debug"))
 
 	if (IsSelected("sign-lib"))
 	{
-		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "signkey.pfx" "@signkey.password" 1
+		. "$sourcePath\.local\sign_config.ps1"
+		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword" 1
 	}
 	if (IsSelected("sign-app"))
 	{
-		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "signkey.pfx" "@signkey.password" 1
+		. "$sourcePath\.local\sign_config.ps1"
+		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "$signKeyFile" "$signPassword" 1
 	}
 }
 
@@ -32,11 +34,13 @@ if ((IsSelected("build-release")) -or (IsSelected("commit")))
 
 	if (IsSelected("sign-lib"))
 	{
-		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "signkey.pfx" "@signkey.password" 1
+		. "$sourcePath\.local\sign_config.ps1"
+		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword" 1
 	}
 	if (IsSelected("sign-app"))
 	{
-		Sign-File "TxEditor\bin\Release\TxEditor.exe" "signkey.pfx" "@signkey.password" 1
+		. "$sourcePath\.local\sign_config.ps1"
+		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword" 1
 	}
 }
 
@@ -47,7 +51,8 @@ if ((IsSelected("setup-release")) -or (IsSelected("commit")))
 
 	if (IsSelected("sign-setup"))
 	{
-		Sign-File "Setup\bin\TxSetup-$revId.exe" "signkey.pfx" "@signkey.password" 1
+		. "$sourcePath\.local\sign_config.ps1"
+		Sign-File "Setup\bin\TxSetup-$revId.exe" "$signKeyFile" "$signPassword" 1
 	}
 }
 
@@ -61,6 +66,7 @@ if (IsSelected("install"))
 if (IsSelected("commit"))
 {
 	Delete-File "Setup\bin\TxSetup-$revId.exe" 0
+	Delete-File ".local\TxTranslation-$revId.pdb.xml.gz" 0
 	Git-Commit 1
 }
 

@@ -6,10 +6,6 @@
 # $keyFile = the name of the file that contains the private key for signing.
 # $password = The password for the private key file.
 #
-# If the $password starts with an at character ('@'), the rest of the string is used as the name
-# of the file that contains the password instead. The key file and the password file should be
-# excluded from the source code repository.
-#
 # The key file and password should be passed from variables that are defined in a file that is
 # excluded from the source code repository. This file can be sourced into the definition script
 # to make the variables available. Example:
@@ -54,12 +50,6 @@ function Do-Sign-File($action)
 		}
 	}
 	
-	# Check if the password is to be found in a separate file
-	if ($password.StartsWith("@"))
-	{
-		$password = gc (MakeRootedPath($password.SubString(1)))
-	}
-
 	$timestampServers = @(
 		"http://timestamp.verisign.com/scripts/timstamp.dll",
 		"http://timestamp.comodoca.com/authenticode",

@@ -74,7 +74,6 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.p12
-*.password
 *.publishsettings
 *.bak
 .internal
