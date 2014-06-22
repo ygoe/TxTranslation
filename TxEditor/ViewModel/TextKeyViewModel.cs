@@ -94,7 +94,13 @@ namespace Unclassified.TxEditor.ViewModel
 		public bool IsAccepted
 		{
 			get { return isAccepted; }
-			set { CheckUpdate(value, ref isAccepted, "IsAccepted"); }
+			set
+			{
+				if (CheckUpdate(value, ref isAccepted, "IsAccepted"))
+				{
+					UpdateIcon();
+				}
+			}
 		}
 
 		private bool isNamespace;
