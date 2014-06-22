@@ -436,6 +436,9 @@
     <Resource Include="Images\problem_12.png" />
     <Resource Include="Images\problem_accepted_12.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\textkey_namespace_error.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if not defined FASTBUILD "$(SolutionDir)\_tools\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>

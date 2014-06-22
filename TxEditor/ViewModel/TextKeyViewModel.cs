@@ -264,7 +264,6 @@ namespace Unclassified.TxEditor.ViewModel
 			}
 
 			// The Tx namespace generally has no problems
-			// TODO: This shall only apply to missing translations, not to content/format errors
 			if (TextKey.StartsWith("Tx:"))
 			{
 				HasOwnProblem = false;
@@ -358,7 +357,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 				for (int i = 0; i < CultureTextVMs.Count; i++)
 				{
-					// Skip main text of primary culture
+					// Skip main text of primary culture, it's what we compare everything else with
 					if (i > 0)
 					{
 						string transText = CultureTextVMs[i].Text;
@@ -516,7 +515,28 @@ namespace Unclassified.TxEditor.ViewModel
 					}
 				}
 
-				// TODO: Also check quantified texts for missing texts
+				// Also check quantified texts for missing texts
+				foreach (var qt in ctVM.QuantifiedTextVMs)
+				{
+					if (String.IsNullOrEmpty(qt.Text))
+					{
+						qt.IsMissing = true;
+						if (qt.AcceptMissing)
+						{
+							IsAccepted = true;
+						}
+						else
+						{
+							HasOwnProblem = true;
+							HasProblem = true;
+							AddRemarks(Tx.T("validation.content.missing translation"));
+						}
+					}
+					else
+					{
+						qt.IsMissing = false;
+					}
+				}
 			}
 
 			return !HasProblem;
@@ -541,8 +561,14 @@ namespace Unclassified.TxEditor.ViewModel
 		{
 			if (IsNamespace)
 			{
-				ImageSource = "/Images/textkey_namespace.png";
-				// TODO: Can there be problems inside namespaces? Then we need a textkey_namespace_error icon
+				if (HasProblem)
+				{
+					ImageSource = "/Images/textkey_namespace_error.png";
+				}
+				else
+				{
+					ImageSource = "/Images/textkey_namespace.png";
+				}
 			}
 			else if (IsFullKey)
 			{
