@@ -10,7 +10,7 @@
 	xmlns:ui="clr-namespace:Unclassified.UI"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d"
-	d:DesignHeight="66" d:DesignWidth="412"
+	d:DesignHeight="66" d:DesignWidth="650"
 	Focusable="False">
 	<UserControl.Resources>
 		<ui:BoolToVisibilityConverter x:Key="boolVisConverter"/>
@@ -100,19 +100,19 @@
 		<WrapPanel Grid.Row="1" Grid.Column="4" Orientation="Horizontal">
 			<ctl:AcceptProblemButton
 				Margin="8,3,-2,0"
-				Content="Missing"
+				Content="{Tx:T 'validation.accept button.missing', Default='Missing translation'}"
 				Visibility="{Binding IsMissing, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptMissing}"
 				Command="{Binding ToggleAcceptMissingCommand}"/>
 			<ctl:AcceptProblemButton
 				Margin="8,3,-2,0"
-				Content="Placeholders"
+				Content="{Tx:T 'validation.accept button.placeholders', Default='Placeholders'}"
 				Visibility="{Binding IsPlaceholdersProblem, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptPlaceholders}"
 				Command="{Binding ToggleAcceptPlaceholdersCommand}"/>
 			<ctl:AcceptProblemButton
 				Margin="8,3,-2,0"
-				Content="Punctuation"
+				Content="{Tx:T 'validation.accept button.punctuation', Default='Inconsistent punctuation'}"
 				Visibility="{Binding IsPunctuationProblem, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptPunctuation}"
 				Command="{Binding ToggleAcceptPunctuationCommand}"/>

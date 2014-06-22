@@ -327,6 +327,9 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="Tx:time.span neg.seconds" count="1">{#} Sekunde</text>
 		<text key="Tx:time.span neg.years">{#} Jahre</text>
 		<text key="Tx:time.span neg.years" count="1">{#} Jahr</text>
+		<text key="validation.accept button.missing">Fehlende Übersetzung</text>
+		<text key="validation.accept button.placeholders">Platzhalter</text>
+		<text key="validation.accept button.punctuation">Inkonsistente Zeichensetzung</text>
 		<text key="validation.content.additional placeholder">Zusätzlicher Platzhalter: {name}</text>
 		<text key="validation.content.duplicate count modulo">Doppelte Anzahl/Modulo</text>
 		<text key="validation.content.inconsistent punctuation">Inkonsistente Zeichensetzung</text>
@@ -726,6 +729,9 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="Tx:time.span neg.seconds" count="1">{#} second</text>
 		<text key="Tx:time.span neg.years">{#} years</text>
 		<text key="Tx:time.span neg.years" count="1">{#} year</text>
+		<text key="validation.accept button.missing">Missing translation</text>
+		<text key="validation.accept button.placeholders">Placeholders</text>
+		<text key="validation.accept button.punctuation">Inconsistent punctuation</text>
 		<text key="validation.content.additional placeholder">Additional placeholder: {name}</text>
 		<text key="validation.content.duplicate count modulo">Duplicate count/modulo</text>
 		<text key="validation.content.inconsistent punctuation">Inconsistent punctuation</text>

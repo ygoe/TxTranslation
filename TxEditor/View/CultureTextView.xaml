@@ -11,7 +11,7 @@
 	xmlns:v="clr-namespace:Unclassified.TxEditor.View"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d"
-	d:DesignHeight="214" d:DesignWidth="443"
+	d:DesignHeight="200" d:DesignWidth="500"
 	Focusable="False"
 	IsKeyboardFocusWithinChanged="UserControl_IsKeyboardFocusWithinChanged">
 	<UserControl.Resources>
@@ -114,19 +114,19 @@
 		<WrapPanel Orientation="Horizontal">
 			<ctl:AcceptProblemButton
 				Margin="1,3,6,0"
-				Content="Missing"
+				Content="{Tx:T 'validation.accept button.missing', Default='Missing translation'}"
 				Visibility="{Binding IsMissing, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptMissing}"
 				Command="{Binding ToggleAcceptMissingCommand}"/>
 			<ctl:AcceptProblemButton
 				Margin="1,3,6,0"
-				Content="Placeholders"
+				Content="{Tx:T 'validation.accept button.placeholders', Default='Placeholders'}"
 				Visibility="{Binding IsPlaceholdersProblem, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptPlaceholders}"
 				Command="{Binding ToggleAcceptPlaceholdersCommand}"/>
 			<ctl:AcceptProblemButton
 				Margin="1,3,6,0"
-				Content="Punctuation"
+				Content="{Tx:T 'validation.accept button.punctuation', Default='Inconsistent punctuation'}"
 				Visibility="{Binding IsPunctuationProblem, Converter={StaticResource boolVisConverter}}"
 				IsAccepted="{Binding AcceptPunctuation}"
 				Command="{Binding ToggleAcceptPunctuationCommand}"/>
