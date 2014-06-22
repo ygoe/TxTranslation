@@ -173,7 +173,12 @@ namespace Unclassified.TxEditor.ViewModel
 			{
 				if (CheckUpdate(value, ref comment, "Comment"))
 				{
-					MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(comment);
+					// Only set the toolbar indicator if this key is selected, to prevent switching
+					// it on while loading a dictionary and building the model instances.
+					if (IsSelected)
+					{
+						MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(comment);
+					}
 					MainWindowVM.FileModified = true;
 				}
 			}
