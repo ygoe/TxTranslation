@@ -101,11 +101,9 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return fileModified; }
 			set
 			{
-				if (value != fileModified)
+				if (CheckUpdate(value, ref fileModified, "FileModified"))
 				{
-					fileModified = value;
 					UpdateTitle();
-					OnPropertyChanged("FileModified");
 					SaveCommand.RaiseCanExecuteChanged();
 				}
 			}
@@ -115,14 +113,7 @@ namespace Unclassified.TxEditor.ViewModel
 		public string PrimaryCulture
 		{
 			get { return primaryCulture; }
-			set
-			{
-				if (value != primaryCulture)
-				{
-					primaryCulture = value;
-					OnPropertyChanged("PrimaryCulture");
-				}
-			}
+			set { CheckUpdate(value, ref primaryCulture, "PrimaryCulture"); }
 		}
 
 		private bool problemFilterActive;
@@ -131,10 +122,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return problemFilterActive; }
 			set
 			{
-				if (value != problemFilterActive)
+				if (CheckUpdate(value, ref problemFilterActive, "ProblemFilterActive"))
 				{
-					problemFilterActive = value;
-					OnPropertyChanged("ProblemFilterActive");
 					UpdateSearch();
 				}
 			}
@@ -144,18 +133,7 @@ namespace Unclassified.TxEditor.ViewModel
 		public string CursorChar
 		{
 			get { return cursorChar; }
-			set
-			{
-				if (value != cursorChar)
-				{
-					cursorChar = value;
-					OnPropertyChanged("CursorChar");
-					OnPropertyChanged("CursorCharCodePoint");
-					OnPropertyChanged("CursorCharName");
-					OnPropertyChanged("CursorCharCategory");
-					OnPropertyChanged("CursorCharVisibility");
-				}
-			}
+			set { CheckUpdate(value, ref cursorChar, "CursorChar", "CursorCharCodePoint", "CursorCharName", "CursorCharCategory", "CursorCharVisibility"); }
 		}
 
 		public string CursorCharCodePoint
@@ -185,13 +163,9 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return fontScale; }
 			set
 			{
-				if (value != fontScale)
+				if (CheckUpdate(value, ref fontScale, "FontScale", "FontSize", "TextFormattingMode"))
 				{
-					fontScale = value;
 					App.Settings.FontScale = fontScale;
-					OnPropertyChanged("FontScale");
-					OnPropertyChanged("FontSize");
-					OnPropertyChanged("TextFormattingMode");
 				}
 			}
 		}
@@ -214,11 +188,9 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return statusText; }
 			set
 			{
-				if (value != statusText)
+				if (CheckUpdate(value, ref statusText, "StatusText"))
 				{
-					statusText = value;
 					ViewCommandManager.Invoke("AnimateStatusText", statusText);
-					OnPropertyChanged("StatusText");
 				}
 			}
 		}
@@ -229,10 +201,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return selectedCulture; }
 			set
 			{
-				if (value != selectedCulture)
+				if (CheckUpdate(value, ref selectedCulture, "SelectedCulture"))
 				{
-					selectedCulture = value;
-					OnPropertyChanged("SelectedCulture");
 					DeleteCultureCommand.RaiseCanExecuteChanged();
 					SetPrimaryCultureCommand.RaiseCanExecuteChanged();
 					if (selectedCulture != null)
@@ -249,10 +219,8 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return lastSelectedCulture; }
 			set
 			{
-				if (value != lastSelectedCulture)
+				if (CheckUpdate(value, ref lastSelectedCulture, "LastSelectedCulture"))
 				{
-					lastSelectedCulture = value;
-					OnPropertyChanged("LastSelectedCulture");
 					UpdateSuggestionsLater();
 				}
 			}
@@ -262,14 +230,7 @@ namespace Unclassified.TxEditor.ViewModel
 		public bool HaveComment
 		{
 			get { return haveComment; }
-			set
-			{
-				if (value != haveComment)
-				{
-					haveComment = value;
-					OnPropertyChanged("HaveComment");
-				}
-			}
+			set { CheckUpdate(value, ref haveComment, "HaveComment"); }
 		}
 
 		private double suggestionsPanelWidth;
@@ -278,14 +239,12 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return suggestionsPanelWidth; }
 			set
 			{
-				if (value != suggestionsPanelWidth)
+				if (CheckUpdate(value, ref suggestionsPanelWidth, "SuggestionsPanelWidth"))
 				{
-					suggestionsPanelWidth = value;
 					if (App.Settings.ShowSuggestions && App.Settings.SuggestionsHorizontalLayout)
 					{
 						App.Settings.SuggestionsWidth = suggestionsPanelWidth;
 					}
-					OnPropertyChanged("SuggestionsPanelWidth");
 				}
 			}
 		}
@@ -296,14 +255,12 @@ namespace Unclassified.TxEditor.ViewModel
 			get { return suggestionsPanelHeight; }
 			set
 			{
-				if (value != suggestionsPanelHeight)
+				if (CheckUpdate(value, ref suggestionsPanelHeight, "SuggestionsPanelHeight"))
 				{
-					suggestionsPanelHeight = value;
 					if (App.Settings.ShowSuggestions && !App.Settings.SuggestionsHorizontalLayout)
 					{
 						App.Settings.SuggestionsHeight = suggestionsPanelHeight;
 					}
-					OnPropertyChanged("SuggestionsPanelHeight");
 				}
 			}
 		}
@@ -312,28 +269,14 @@ namespace Unclassified.TxEditor.ViewModel
 		public double SuggestionsSplitterWidth
 		{
 			get { return suggestionsSplitterWidth; }
-			set
-			{
-				if (value != suggestionsSplitterWidth)
-				{
-					suggestionsSplitterWidth = value;
-					OnPropertyChanged("SuggestionsSplitterWidth");
-				}
-			}
+			set { CheckUpdate(value, ref suggestionsSplitterWidth, "SuggestionsSplitterWidth"); }
 		}
 
 		private double suggestionsSplitterHeight;
 		public double SuggestionsSplitterHeight
 		{
 			get { return suggestionsSplitterHeight; }
-			set
-			{
-				if (value != suggestionsSplitterHeight)
-				{
-					suggestionsSplitterHeight = value;
-					OnPropertyChanged("SuggestionsSplitterHeight");
-				}
-			}
+			set { CheckUpdate(value, ref suggestionsSplitterHeight, "SuggestionsSplitterHeight"); }
 		}
 
 		private ObservableCollection<SuggestionViewModel> suggestions = new ObservableCollection<SuggestionViewModel>();
@@ -346,29 +289,14 @@ namespace Unclassified.TxEditor.ViewModel
 		public bool HaveSuggestions
 		{
 			get { return haveSuggestions; }
-			set
-			{
-				if (value != haveSuggestions)
-				{
-					haveSuggestions = value;
-					OnPropertyChanged("HaveSuggestions");
-				}
-			}
+			set { CheckUpdate(value, ref haveSuggestions, "HaveSuggestions"); }
 		}
 
 		private string suggestionsCulture;
 		public string SuggestionsCulture
 		{
 			get { return suggestionsCulture; }
-			set
-			{
-				if (value != suggestionsCulture)
-				{
-					suggestionsCulture = value;
-					OnPropertyChanged("SuggestionsCulture");
-					OnPropertyChanged("SuggestionsCultureCaption");
-				}
-			}
+			set { CheckUpdate(value, ref suggestionsCulture, "SuggestionsCulture", "SuggestionsCultureCaption"); }
 		}
 
 		public string SuggestionsCultureCaption

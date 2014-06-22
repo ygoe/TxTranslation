@@ -23,15 +23,8 @@ namespace Unclassified.TxEditor.ViewModel
 		/// </summary>
 		public virtual string DisplayName
 		{
-			get { return this.displayName; }
-			set
-			{
-				if (value != this.displayName)
-				{
-					this.displayName = value;
-					OnPropertyChanged("DisplayName");
-				}
-			}
+			get { return displayName; }
+			set { CheckUpdate(value, ref displayName, "DisplayName"); }
 		}
 
 		#endregion Common view properties

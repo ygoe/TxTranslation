@@ -12,71 +12,35 @@ namespace Unclassified.TxEditor.ViewModel
 		public string TextKey
 		{
 			get { return textKey; }
-			set
-			{
-				if (value != textKey)
-				{
-					textKey = value;
-					OnPropertyChanged("TextKey");
-				}
-			}
+			set { CheckUpdate(value, ref textKey, "TextKey"); }
 		}
 
 		private string baseText;
 		public string BaseText
 		{
 			get { return baseText; }
-			set
-			{
-				if (value != baseText)
-				{
-					baseText = value;
-					OnPropertyChanged("BaseText");
-				}
-			}
+			set { CheckUpdate(value, ref baseText, "BaseText"); }
 		}
 
 		private string translatedText;
 		public string TranslatedText
 		{
 			get { return translatedText; }
-			set
-			{
-				if (value != translatedText)
-				{
-					translatedText = value;
-					OnPropertyChanged("TranslatedText");
-				}
-			}
+			set { CheckUpdate(value, ref translatedText, "TranslatedText"); }
 		}
 
 		private string score;
 		public string Score
 		{
 			get { return score; }
-			set
-			{
-				if (value != score)
-				{
-					score = value;
-					OnPropertyChanged("Score");
-				}
-			}
+			set { CheckUpdate(value, ref score, "Score"); }
 		}
 
 		private bool isExactMatch;
 		public bool IsExactMatch
 		{
 			get { return isExactMatch; }
-			set
-			{
-				if (value != isExactMatch)
-				{
-					isExactMatch = value;
-					OnPropertyChanged("IsExactMatch");
-					OnPropertyChanged("BaseWeight");
-				}
-			}
+			set { CheckUpdate(value, ref isExactMatch, "IsExactMatch", "BaseWeight"); }
 		}
 
 		public FontWeight BaseWeight
@@ -98,14 +62,7 @@ namespace Unclassified.TxEditor.ViewModel
 		public bool IsDummy
 		{
 			get { return isDummy; }
-			set
-			{
-				if (value != isDummy)
-				{
-					isDummy = value;
-					OnPropertyChanged("IsDummy");
-				}
-			}
+			set { CheckUpdate(value, ref isDummy, "IsDummy"); }
 		}
 
 		public SuggestionViewModel(MainViewModel mainWindowVM)
@@ -115,7 +72,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 		public override string ToString()
 		{
-			return "{SuggestionViewModel}";
+			return "SuggestionViewModel";
 		}
 	}
 }

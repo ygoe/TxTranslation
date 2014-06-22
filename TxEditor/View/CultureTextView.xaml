@@ -131,7 +131,7 @@
 				IsAccepted="{Binding AcceptPunctuation}"
 				Command="{Binding ToggleAcceptPunctuationCommand}"/>
 		</WrapPanel>
-		
+
 		<ItemsControl ItemsSource="{Binding QuantifiedTextVMs}" Margin="0,2,0,0" Focusable="False">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
