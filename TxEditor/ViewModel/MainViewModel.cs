@@ -1187,9 +1187,12 @@ namespace Unclassified.TxEditor.ViewModel
 			fgWin = WinApi.GetForegroundWindow();
 
 			// Require it to be Visual Studio, otherwise do nothing more
-			StringBuilder sb = new StringBuilder(1000);
-			WinApi.GetWindowText(fgWin, sb, 1000);
-			if (!sb.ToString().EndsWith(" - Microsoft Visual Studio")) return;
+			if (App.Settings.WizardHotkeyInVisualStudioOnly)
+			{
+				StringBuilder sb = new StringBuilder(1000);
+				WinApi.GetWindowText(fgWin, sb, 1000);
+				if (!sb.ToString().EndsWith(" - Microsoft Visual Studio")) return;
+			}
 
 			// Backup current clipboard content
 			clipboardBackup = ClipboardHelper.GetDataObject();

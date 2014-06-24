@@ -191,6 +191,16 @@ namespace Unclassified.TxEditor
 			set { Set("wizard.remember-location", value); }
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the text key wizard hotkey is restricted to
+		/// Visual Studio windows.
+		/// </summary>
+		public bool WizardHotkeyInVisualStudioOnly
+		{
+			get { return GetBool("wizard.hotkey-in-visual-studio-only", true); }
+			set { Set("wizard.hotkey-in-visual-studio-only", value); }
+		}
+
 		#endregion Section: wizard
 	}
 }

@@ -14,7 +14,8 @@
 	WindowStyle="SingleBorderWindow"
 	TextOptions.TextFormattingMode="Display"
 	Title="{Tx:T 'window.settings.title', Default='TxEditor Settings'}"
-	SizeToContent="WidthAndHeight">
+	SizeToContent="WidthAndHeight"
+	Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 
 	<Window.Resources>
 		<ui:NegationConverter x:Key="NegationConverter"/>
@@ -110,6 +111,29 @@
 				</Grid.ColumnDefinitions>
 
 				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding AskSaveUpgrade}" Content="{Tx:T 'window.settings.file.ask to upgrade', Default='Ask to upgrade when saving files in older format'}"/>
+			</Grid>
+		</TabItem>
+
+		<TabItem Header="Wizard">
+			<Grid Margin="4">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<CheckBox
+					Grid.Row="0" Grid.ColumnSpan="2"
+					HorizontalAlignment="Left" IsChecked="{Binding WizardHotkeyInVisualStudioOnly}"
+					Content="Restrict hotkey to Visual Studio windows"/>
+				<CheckBox
+					Grid.Row="1" Grid.ColumnSpan="2"
+					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding WizardRememberLocation}"
+					Content="Remember last window location"/>
 			</Grid>
 		</TabItem>
 	</TabControl>
