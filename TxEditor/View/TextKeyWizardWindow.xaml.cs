@@ -6,8 +6,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using TaskDialogInterop;
+using Unclassified.FieldLog;
 using Unclassified.TxEditor.Controls;
 using Unclassified.TxEditor.Converters;
 using Unclassified.TxEditor.ViewModel;
@@ -26,12 +28,10 @@ namespace Unclassified.TxEditor.View
 
 		#region Private data
 
-		private string exactMatchTextKey;   // TODO: remove
 		private string initialClipboardText;
 		private string parsedText;
 		private bool isPartialString;
 		private List<PlaceholderData> placeholders = new List<PlaceholderData>();
-		private int keySuggestPhase;   // TODO: remove?
 		private List<SuggestionViewModel> suggestions = new List<SuggestionViewModel>();
 
 		#endregion Private data
@@ -43,7 +43,16 @@ namespace Unclassified.TxEditor.View
 			InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.Manual;
-			SourceCSharpButton.IsChecked = true;
+			switch (App.Settings.WizardSourceCode)
+			{
+				case "C#":
+				default:
+					SourceCSharpButton.IsChecked = true;
+					break;
+				case "XAML":
+					SourceXamlButton.IsChecked = true;
+					break;
+			}
 		}
 
 		#endregion Constructors
@@ -56,8 +65,9 @@ namespace Unclassified.TxEditor.View
 
 		#region Window event handlers
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs args)
 		{
+			// Require a primary culture for the wizard
 			if (MainViewModel.Instance.LoadedCultureNames.Count == 0)
 			{
 				MessageBox.Show(
@@ -69,6 +79,7 @@ namespace Unclassified.TxEditor.View
 				return;
 			}
 
+			// Text input UI setup
 			TranslationText.HiddenChars = App.Settings.ShowHiddenChars;
 			TranslationText.FontSize = MainViewModel.Instance.FontSize;
 			if (App.Settings.MonospaceFont)
@@ -78,9 +89,11 @@ namespace Unclassified.TxEditor.View
 			}
 			TextOptions.SetTextFormattingMode(TranslationText, MainViewModel.Instance.TextFormattingMode);
 
+			// Read the source text from the clipboard
 			initialClipboardText = ReadClipboard();
 			if (initialClipboardText == null)
 			{
+				// Nothing to read, close the dialog again. There's nothing we can do.
 				Close();
 				return;
 			}
@@ -92,31 +105,8 @@ namespace Unclassified.TxEditor.View
 				ClipboardBackup = null;
 			}
 
-			ResetButton_Click(null, null);
-
-			suggestions.Clear();
-			ScanAllTexts(MainViewModel.Instance.RootTextKey);
-
-			if (exactMatchTextKey != null)
-			{
-				TextKeyText.Text = exactMatchTextKey;
-				keySuggestPhase = 2;
-				AutoSelectKeyText();
-			}
-			else if (!string.IsNullOrEmpty(prevTextKey))
-			{
-				TextKeyText.Text = prevTextKey;
-				keySuggestPhase = 1;
-				AutoSelectKeyText();
-			}
-			else
-			{
-				keySuggestPhase = 0;
-			}
-
-			// TODO: Find similar texts and suggest them with their text keys for selection in the ListBox
-			OtherKeysLabel.Visibility = Visibility.Collapsed;
-			OtherKeysList.Visibility = Visibility.Collapsed;
+			// Parse the source text and perform other keys lookup
+			Reset(true);
 
 			UpdateLayout();
 
@@ -136,7 +126,7 @@ namespace Unclassified.TxEditor.View
 			TextKeyText.Focus();
 		}
 
-		private void Window_LocationChanged(object sender, EventArgs e)
+		private void Window_LocationChanged(object sender, EventArgs args)
 		{
 			if (App.Settings != null && App.Settings.WizardRememberLocation)
 			{
@@ -145,7 +135,7 @@ namespace Unclassified.TxEditor.View
 			}
 		}
 
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+		private void Window_SizeChanged(object sender, SizeChangedEventArgs args)
 		{
 			if (App.Settings == null || !App.Settings.WizardRememberLocation)
 			{
@@ -158,53 +148,49 @@ namespace Unclassified.TxEditor.View
 
 		#region Control event handlers
 
-		private void SourceCSharpButton_Checked(object sender, RoutedEventArgs e)
+		private void SourceCSharpButton_Checked(object sender, RoutedEventArgs args)
 		{
 			SourceXamlButton.IsChecked = false;
 			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
 
 			// Re-evaluate the format and parameters
-			ResetButton_Click(null, null);
+			Reset(false);
 		}
 
-		private void SourceXamlButton_Checked(object sender, RoutedEventArgs e)
+		private void SourceXamlButton_Checked(object sender, RoutedEventArgs args)
 		{
 			SourceCSharpButton.IsChecked = false;
 			SetDefaultCheckbox.Visibility = Visibility.Visible;
 
 			// Re-evaluate the format and parameters
-			ResetButton_Click(null, null);
+			Reset(false);
 		}
 
-		private void TextKeyText_TextChanged(object sender, TextChangedEventArgs e)
+		private void OtherKeysList_MouseDoubleClick(object sender, MouseButtonEventArgs args)
 		{
-			if (TextKeyText.Text == "" && keySuggestPhase == 2)
+			if (args.ChangedButton == MouseButton.Left)
 			{
-				// Other matching key was first suggested and now entirely deleted.
-				// Suggest the previously entered key, if it's different.
-				if (prevTextKey != exactMatchTextKey)
+				SuggestionViewModel suggestion = OtherKeysList.SelectedItem as SuggestionViewModel;
+				if (suggestion != null)
 				{
-					TextKeyText.Text = prevTextKey;
-					keySuggestPhase = 1;
+					TextKeyText.Text = suggestion.TextKey;
 					AutoSelectKeyText();
-				}
-				else
-				{
-					// No further suggestions available.
-					keySuggestPhase = 0;
+					TextKeyText.Focus();
+					// TODO: Also update the translated text from suggestion.BaseText? Consider different parameter names!
 				}
 			}
 		}
 
-		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
+		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs args)
 		{
-			e.IsValid = MainViewModel.Instance.TextKeys.ContainsKey(e.TextKey);
+			args.IsValid = MainViewModel.Instance.TextKeys.ContainsKey(args.TextKey);
 		}
 
-		private void OKButton_Click(object sender, RoutedEventArgs e)
+		private void OKButton_Click(object sender, RoutedEventArgs args)
 		{
 			string textKey = TextKeyText.Text != null ? TextKeyText.Text.Trim() : "";
 
+			// Validate the entered text key
 			string errorMessage;
 			if (!TextKeyViewModel.ValidateName(textKey, out errorMessage))
 			{
@@ -215,26 +201,32 @@ namespace Unclassified.TxEditor.View
 					MessageBoxImage.Warning);
 				return;
 			}
-			// TODO: Find another source than parsedText, use the actual text key content instead
-			if (TranslationText.Text != parsedText &&
-				MainViewModel.Instance.TextKeys.ContainsKey(textKey))
+
+			// Check if the text key already exists but the translated text is different
+			TextKeyViewModel existingTextKeyVM;
+			if (MainViewModel.Instance.TextKeys.TryGetValue(textKey, out existingTextKeyVM))
 			{
-				TaskDialogResult result = TaskDialog.Show(
-					owner: this,
-					allowDialogCancellation: true,
-					title: "TxEditor",
-					mainInstruction: Tx.T("window.wizard.text key exists", "key", Tx.Q(textKey)),
-					content: Tx.T("window.wizard.text key exists.content"),
-					customButtons: new string[] { Tx.T("task dialog.button.overwrite"), Tx.T("task dialog.button.cancel") });
-				if (result.CustomButtonResult != 0)
+				if (TranslationText.Text != existingTextKeyVM.CultureTextVMs[0].Text)
 				{
-					return;
+					TaskDialogResult result = TaskDialog.Show(
+						owner: this,
+						allowDialogCancellation: true,
+						title: "TxEditor",
+						mainInstruction: Tx.T("window.wizard.text key exists", "key", Tx.Q(textKey)),
+						content: Tx.T("window.wizard.text key exists.content"),
+						customButtons: new string[] { Tx.T("task dialog.button.overwrite"), Tx.T("task dialog.button.cancel") });
+					if (result.CustomButtonResult != 0)
+					{
+						return;
+					}
 				}
 			}
 
 			// Backup current clipboard content
 			ClipboardBackup = ClipboardHelper.GetDataObject();
 
+			// Build the text to paste back into the source document, depending on the selected code
+			// language
 			if (SourceCSharpButton.IsChecked == true)
 			{
 				App.Settings.WizardSourceCode = "C#";
@@ -284,12 +276,81 @@ namespace Unclassified.TxEditor.View
 				Clipboard.SetText(code);
 			}
 
+			// Remember the text key for next time and close the wizard dialog window
 			prevTextKey = textKey;
 			DialogResult = true;
 			Close();
 		}
 
-		private void ResetButton_Click(object sender, RoutedEventArgs e)
+		private void ResetButton_Click(object sender, RoutedEventArgs args)
+		{
+			Reset(false);
+		}
+
+		private void CancelButton_Click(object sender, RoutedEventArgs args)
+		{
+			DialogResult = false;
+			Close();
+		}
+
+		#endregion Control event handlers
+
+		#region Support functions
+
+		private string ReadClipboard()
+		{
+			string str = null;
+			int retryCount = 20;
+			while (true)
+			{
+				try
+				{
+					str = Clipboard.GetText();
+					break;
+				}
+				catch (COMException ex)
+				{
+					retryCount--;
+					if (retryCount > 0)
+					{
+						System.Threading.Thread.Sleep(50);
+						continue;
+					}
+					else
+					{
+						FL.Error(ex, "Reading from clipboard");
+						MessageBox.Show(
+							Tx.T("window.wizard.error reading clipboard"),
+							Tx.T("msg.caption.error"),
+							MessageBoxButton.OK,
+							MessageBoxImage.Error);
+						return null;
+					}
+				}
+			}
+#if DEBUG
+			if (retryCount < 20)
+			{
+				MessageBox.Show(
+					"Tried reading the clipboard " + (20 - retryCount) + " times!",
+					Tx.T("msg.caption.warning"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
+			}
+#endif
+			return str;
+		}
+
+		private void UpdatePlaceholderName(PlaceholderData pd, string newName)
+		{
+			if (newName != pd.Name)
+			{
+				TranslationText.Text = TranslationText.Text.Replace("{" + pd.Name + "}", "{" + newName + "}");
+				pd.Name = newName;
+			}
+		}
+
+		private void Reset(bool setTextKey)
 		{
 			// Detect parameters in the code
 			placeholders.Clear();
@@ -520,78 +581,102 @@ namespace Unclassified.TxEditor.View
 					row++;
 				}
 			}
-		}
 
-		private void CancelButton_Click(object sender, RoutedEventArgs e)
-		{
-			DialogResult = false;
-			Close();
-		}
-
-		#endregion Control event handlers
-
-		#region Support functions
-
-		private string ReadClipboard()
-		{
-			string str = null;
-			int retryCount = 20;
-			while (true)
+			suggestions.Clear();
+			if (!String.IsNullOrEmpty(TranslationText.Text))
 			{
-				try
+				ScanAllTexts(MainViewModel.Instance.RootTextKey);
+			}
+			bool havePreviousTextKey = !String.IsNullOrEmpty(prevTextKey);
+			bool haveOtherKeys = suggestions.Count > 0;
+
+			// Order suggestions by relevance (descending), then by text key
+			suggestions.Sort((a, b) => a.ScoreNum != b.ScoreNum ? -a.ScoreNum.CompareTo(b.ScoreNum) : a.TextKey.CompareTo(b.TextKey));
+
+			string nearestMatch = suggestions.Count > 0 ? suggestions[0].BaseText : null;
+			bool haveExactMatch = nearestMatch == TranslationText.Text;
+
+			if (havePreviousTextKey)
+			{
+				// Store the previous text key with the IsDummy flag at the first position
+				suggestions.Insert(0, new SuggestionViewModel(null) { TextKey = prevTextKey, BaseText = "(previous text key)", IsDummy = true });
+			}
+
+			// Show the suggestions list if there is at least one other text key and at least two
+			// list items to select from (or the nearest text is not an exact match)
+			//if (haveOtherKeys &&
+			//    (suggestions.Count > 1 || !haveExactMatch))
+			//{
+				OtherKeysLabel.Visibility = Visibility.Visible;
+				OtherKeysList.Visibility = Visibility.Visible;
+			//}
+			//else
+			//{
+			//    OtherKeysLabel.Visibility = Visibility.Collapsed;
+			//    OtherKeysList.Visibility = Visibility.Collapsed;
+			//}
+			OtherKeysList.Items.Clear();
+			foreach (var suggestion in suggestions)
+			{
+				OtherKeysList.Items.Add(suggestion);
+			}
+
+			// Preset the text key input field if requested and possible
+			if (setTextKey)
+			{
+				if (haveExactMatch)
 				{
-					str = Clipboard.GetText();
-					break;
-				}
-				catch (COMException ex)
-				{
-					retryCount--;
-					if (retryCount > 0)
+					if (havePreviousTextKey)
 					{
-						System.Threading.Thread.Sleep(50);
-						continue;
+						// There's the previous key and more suggestions (with an exact match), take
+						// the first suggestion
+						TextKeyText.Text = suggestions[1].TextKey;
+						OtherKeysList.SelectedIndex = 1;
 					}
 					else
 					{
-						// TODO: Log exception
-						MessageBox.Show(
-							Tx.T("window.wizard.error reading clipboard"),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
-						return null;
+						// There's only other suggestions (with an exact match), take the first one
+						TextKeyText.Text = suggestions[0].TextKey;
+						OtherKeysList.SelectedIndex = 0;
 					}
+					AutoSelectKeyText();
 				}
-			}
-#if DEBUG
-			if (retryCount < 20)
-			{
-				MessageBox.Show(
-					"Tried reading the clipboard " + (20 - retryCount) + " times!",
-					Tx.T("msg.caption.warning"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
-			}
-#endif
-			return str;
-		}
-
-		private void UpdatePlaceholderName(PlaceholderData pd, string newName)
-		{
-			if (newName != pd.Name)
-			{
-				TranslationText.Text = TranslationText.Text.Replace("{" + pd.Name + "}", "{" + newName + "}");
-				pd.Name = newName;
+				else if (havePreviousTextKey)
+				{
+					// There's only the previous key, take that
+					TextKeyText.Text = prevTextKey;
+					OtherKeysList.SelectedIndex = 0;
+					AutoSelectKeyText();
+				}
+				// else: We have no exact match to suggest at the moment, leave the text key empty
 			}
 		}
 
 		private void ScanAllTexts(TextKeyViewModel tk)
 		{
+			int maxDistance = (int) Math.Round((float) TranslationText.Text.Length / 2, MidpointRounding.AwayFromZero);
 			if (tk.IsFullKey && tk.CultureTextVMs[0].Text == TranslationText.Text)
 			{
-				exactMatchTextKey = tk.TextKey;
+				suggestions.Add(new SuggestionViewModel(null) { TextKey = tk.TextKey, BaseText = tk.CultureTextVMs[0].Text, ScoreNum = 1000, IsExactMatch = true });
 			}
-
+			else if (tk.IsFullKey && !String.IsNullOrEmpty(tk.CultureTextVMs[0].Text))
+			{
+				// TODO: Maybe we should split both strings in words and compare them separately, only accepting if at least one word has a small distance
+				int distance = ComputeEditDistance(TranslationText.Text, tk.CultureTextVMs[0].Text);
+				if (distance <= maxDistance)
+				{
+					float score;
+					if (distance == 0)
+					{
+						score = 1000;
+					}
+					else
+					{
+						score = 100f / distance;
+					}
+					suggestions.Add(new SuggestionViewModel(null) { TextKey = tk.TextKey, BaseText = tk.CultureTextVMs[0].Text, ScoreNum = score });
+				}
+			}
 			foreach (TextKeyViewModel child in tk.Children)
 			{
 				ScanAllTexts(child);
@@ -600,19 +685,79 @@ namespace Unclassified.TxEditor.View
 
 		private void AutoSelectKeyText()
 		{
-			if (keySuggestPhase == 2)
+			Match m = Regex.Match(TextKeyText.Text, @"^((?:.*?:)?(?:[^.]*\.)*)([^.]*)$");
+			if (m.Success)
 			{
-				TextKeyText.SelectAll();
+				TextKeyText.SelectionStart = m.Groups[1].Length;
+				TextKeyText.SelectionLength = m.Groups[2].Length;
 			}
-			else if (keySuggestPhase == 1)
+		}
+
+		// Based on: https://gist.github.com/449595/cb33c2d0369551d1aa5b6ff5e6a802e21ba4ad5c
+		// (c) 2012 Matt Enright, MIT/X11 licence
+		// Modified to use float cost instead of int and different cost depending on the type of
+		// char difference.
+
+		/// <summary>
+		/// Computes the Damerau-Levenshtein distance between two strings.
+		/// </summary>
+		/// <param name="original"></param>
+		/// <param name="modified"></param>
+		/// <returns></returns>
+		public static int ComputeEditDistance(string original, string modified)
+		{
+			int len_orig = original.Length;
+			int len_diff = modified.Length;
+
+			var matrix = new float[len_orig + 1, len_diff + 1];
+			for (int i = 0; i <= len_orig; i++)
 			{
-				Match m = Regex.Match(TextKeyText.Text, @"^((?:.*?:)?(?:[^.]*\.)*)([^.]*)$");
-				if (m.Success)
+				matrix[i, 0] = i;
+			}
+			for (int j = 0; j <= len_diff; j++)
+			{
+				matrix[0, j] = j;
+			}
+			for (int i = 1; i <= len_orig; i++)
+			{
+				for (int j = 1; j <= len_diff; j++)
 				{
-					TextKeyText.SelectionStart = m.Groups[1].Length;
-					TextKeyText.SelectionLength = m.Groups[2].Length;
+					char c1 = modified[j - 1];
+					char c2 = original[i - 1];
+					float cost;
+					if (c1 == c2)
+					{
+						cost = 0;
+					}
+					else if (Char.ToLowerInvariant(c1) == Char.ToLowerInvariant(c2))
+					{
+						// Case-only differences have a smaller distance
+						cost = 0.5f;
+					}
+					else if (Char.IsLetter(c1) != Char.IsLetter(c2))
+					{
+						// Letter/non-letter differences have a greater distance
+						cost = 3;
+					}
+					else
+					{
+						cost = 1;
+					}
+					var vals = new float[]
+					{
+						matrix[i - 1, j] + 1,
+						matrix[i, j - 1] + 1,
+						matrix[i - 1, j - 1] + cost
+					};
+					matrix[i, j] = vals.Min();
+					// The Damerau (adjacent transposition) extension:
+					if (i > 1 && j > 1 && original[i - 1] == modified[j - 2] && original[i - 2] == modified[j - 1])
+					{
+						matrix[i, j] = Math.Min(matrix[i, j], matrix[i - 2, j - 2] + cost);
+					}
 				}
 			}
+			return (int) Math.Round(matrix[len_orig, len_diff], MidpointRounding.AwayFromZero);
 		}
 
 		#endregion Support functions

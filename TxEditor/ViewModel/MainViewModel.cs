@@ -3551,6 +3551,7 @@ namespace Unclassified.TxEditor.ViewModel
 					if (lastSelectedCulture != primaryCulture)
 						suggestion.TranslatedText = kvp.Key.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
 					suggestion.IsExactMatch = kvp.Value >= 100000;
+					suggestion.ScoreNum = kvp.Value;
 					if (suggestion.IsExactMatch)
 						suggestion.Score = Tx.T("suggestions.exact match");
 					else

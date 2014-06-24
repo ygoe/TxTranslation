@@ -51,7 +51,7 @@
 			<TextBlock
 				Grid.Row="0" Grid.Column="0"
 				VerticalAlignment="Center"
-				Text="{Tx:T 'window.wizard.source code', Default='Source code:'}"/>
+				Text="{Tx:TC 'window.wizard.source code', Default='Source code:'}"/>
 			<StackPanel
 				Grid.Row="0" Grid.Column="1"
 				Margin="8,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
@@ -62,28 +62,65 @@
 			<TextBlock
 				Name="OtherKeysLabel"
 				Grid.Row="1" Grid.Column="0"
-				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="{Tx:T 'window.wizard.similar keys', Default='Similar keys:'}"/>
+				Margin="0,6,0,0" VerticalAlignment="Top"
+				Text="{Tx:TC 'window.wizard.similar keys', Default='Similar keys:'}"/>
 			<ListBox
 				Name="OtherKeysList"
 				Grid.Row="1" Grid.Column="1"
-				Margin="8,4,0,0" MinHeight="60"/>
+				Margin="8,4,0,0" MinHeight="20" MaxHeight="400"
+				MouseDoubleClick="OtherKeysList_MouseDoubleClick">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<TextBlock
+								Grid.Row="0"
+								Text="{Binding TextKey}"/>
+							<TextBlock
+								x:Name="SecondLineTextBlock" Grid.Row="1" Margin="10,0,0,1" Opacity="0.6"
+								Text="{Binding BaseText}"/>
+						</Grid>
+						<DataTemplate.Triggers>
+							<DataTrigger Binding="{Binding IsDummy}" Value="True">
+								<Setter TargetName="SecondLineTextBlock" Property="TextBlock.FontStyle" Value="Italic"/>
+							</DataTrigger>
+							<DataTrigger Binding="{Binding IsExactMatch}" Value="True">
+								<Setter TargetName="SecondLineTextBlock" Property="TextBlock.Foreground" Value="Green"/>
+								<Setter TargetName="SecondLineTextBlock" Property="TextBlock.Opacity" Value="0.8"/>
+							</DataTrigger>
+							<MultiDataTrigger>
+								<MultiDataTrigger.Conditions>
+									<Condition Binding="{Binding IsExactMatch}" Value="True"/>
+									<Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Value="True"/>
+									<Condition Binding="{Binding IsFocused, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}}" Value="True"/>
+								</MultiDataTrigger.Conditions>
+								<MultiDataTrigger.Setters>
+									<Setter TargetName="SecondLineTextBlock" Property="TextBlock.Foreground" Value="PaleGreen"/>
+									<Setter TargetName="SecondLineTextBlock" Property="TextBlock.Opacity" Value="1"/>
+								</MultiDataTrigger.Setters>
+							</MultiDataTrigger>
+						</DataTemplate.Triggers>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 
 			<TextBlock
 				Grid.Row="2" Grid.Column="0"
 				Margin="0,4,0,0" VerticalAlignment="Center"
-				Text="{Tx:T 'window.wizard.text key', Default='Text key:'}"/>
+				Text="{Tx:TC 'window.wizard.text key', Default='Text key:'}"/>
 			<TextBox
 				Name="TextKeyText"
 				Grid.Row="2" Grid.Column="1"
 				Margin="8,4,0,0"
-				TextChanged="TextKeyText_TextChanged"
 				ui:TextBoxExtensions.DisableInsertKey="True"/>
 
 			<TextBlock
 				Grid.Row="3" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="{Tx:T 'window.wizard.translated text', Default='Translated text:'}"/>
+				Text="{Tx:TC 'window.wizard.translated text', Default='Translated text:'}"/>
 			<ctl:DecoratedTextBox
 				x:Name="TranslationText"
 				Grid.Row="3" Grid.Column="1"
@@ -103,7 +140,7 @@
 				x:Name="ParametersLabel"
 				Grid.Row="5" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="{Tx:T 'window.wizard.parameters', Default='Parameters:'}"/>
+				Text="{Tx:TC 'window.wizard.parameters', Default='Parameters:'}"/>
 			<Grid
 				x:Name="ParametersGrid"
 				Grid.Row="5" Grid.Column="1"
@@ -128,16 +165,16 @@
 			Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button
 				Name="OKButton"
-				Padding="12,1" MinWidth="75"
+				Padding="6,1" MinWidth="75"
 				IsDefault="True"
 				Content="{Tx:T 'window.wizard.button.save', Default='Save text'}"
 				Click="OKButton_Click"/>
 			<Button
-				Margin="8,0,0,0" Padding="12,1" MinWidth="75"
+				Margin="6,0,0,0" Padding="6,1" MinWidth="75"
 				Content="{Tx:T 'window.wizard.button.reset', Default='Reset'}"
 				Click="ResetButton_Click"/>
 			<Button
-				Margin="8,0,0,0" Padding="12,1" MinWidth="75"
+				Margin="6,0,0,0" Padding="6,1" MinWidth="75"
 				IsCancel="True"
 				Content="{Tx:T 'window.wizard.button.cancel', Default='Cancel'}"
 				Click="CancelButton_Click"/>

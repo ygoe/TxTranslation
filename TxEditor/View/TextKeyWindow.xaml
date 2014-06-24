@@ -66,12 +66,12 @@
 			Margin="10" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button
 				Name="OKButton"
-				Padding="12,1" MinWidth="75"
+				Padding="6,1" MinWidth="75"
 				IsDefault="True"
 				Content="OKButton"
 				Click="OKButton_Click"/>
 			<Button
-				Margin="8,0,0,0" Padding="12,1" MinWidth="75"
+				Margin="6,0,0,0" Padding="6,1" MinWidth="75"
 				IsCancel="True"
 				Content="{Tx:T 'window.text key.button.cancel', Default='Cancel'}"
 				Click="CancelButton_Click"/>

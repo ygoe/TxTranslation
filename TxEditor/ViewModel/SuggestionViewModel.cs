@@ -36,6 +36,13 @@ namespace Unclassified.TxEditor.ViewModel
 			set { CheckUpdate(value, ref score, "Score"); }
 		}
 
+		private float scoreNum;
+		public float ScoreNum
+		{
+			get { return scoreNum; }
+			set { CheckUpdate(value, ref scoreNum, "ScoreNum"); }
+		}
+
 		private bool isExactMatch;
 		public bool IsExactMatch
 		{

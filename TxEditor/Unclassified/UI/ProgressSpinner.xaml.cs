@@ -8,13 +8,23 @@ using System.Windows.Shapes;
 
 namespace Unclassified.UI
 {
+	/// <summary>
+	/// Provides an activity indicator that displays a rotating line.
+	/// </summary>
 	public partial class ProgressSpinner : UserControl
 	{
+		/// <summary>
+		/// Identifies the Color dependency property.
+		/// </summary>
 		public static DependencyProperty ColorProperty = DependencyProperty.Register(
 			"Color",
 			typeof(Color),
 			typeof(ProgressSpinner),
 			new PropertyMetadata(Colors.Black, ColorChanged));
+
+		/// <summary>
+		/// Gets or sets the color of the indicator line.
+		/// </summary>
 		public Color Color
 		{
 			get { return (Color) GetValue(ColorProperty); }
@@ -27,11 +37,18 @@ namespace Unclassified.UI
 			ctl.Recreate();
 		}
 
+		/// <summary>
+		/// Identifies the BackColor dependency property.
+		/// </summary>
 		public static DependencyProperty BackColorProperty = DependencyProperty.Register(
 			"BackColor",
 			typeof(Color),
 			typeof(ProgressSpinner),
 			new PropertyMetadata(Colors.White, BackColorChanged));
+
+		/// <summary>
+		/// Gets or sets the background color of the control.
+		/// </summary>
 		public Color BackColor
 		{
 			get { return (Color) GetValue(BackColorProperty); }
@@ -44,11 +61,18 @@ namespace Unclassified.UI
 			ctl.Recreate();
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the ProgressSpinner class.
+		/// </summary>
 		public ProgressSpinner()
 		{
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// Called when the value of the RenderSize property has changed.
+		/// </summary>
+		/// <param name="sizeInfo"></param>
 		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
 		{
 			base.OnRenderSizeChanged(sizeInfo);

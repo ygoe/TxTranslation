@@ -39,11 +39,20 @@ namespace Unclassified.UI
 		/// </summary>
 		public string Folder { get; private set; }
 
+		/// <summary>
+		/// Displays an OpenFolderDialog that is modal to the main window.
+		/// </summary>
+		/// <returns>true if the user clicked OK; false if the user clicked Cancel or closed the dialog box.</returns>
 		public bool? ShowDialog()
 		{
 			return ShowDialog(null);
 		}
 
+		/// <summary>
+		/// Displays an OpenFolderDialog that is modal to the specified window.
+		/// </summary>
+		/// <param name="owner">The window that serves as the top-level window for the dialog.</param>
+		/// <returns>true if the user clicked OK; false if the user clicked Cancel or closed the dialog box.</returns>
 		public bool? ShowDialog(IWin32Window owner)
 		{
 			if (Environment.OSVersion.Version.Major >= 6)
