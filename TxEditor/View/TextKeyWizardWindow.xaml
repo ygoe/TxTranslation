@@ -57,6 +57,7 @@
 				Margin="8,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
 				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="C#" Checked="SourceCSharpButton_Checked"/>
 				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="XAML" Checked="SourceXamlButton_Checked"/>
+				<ToggleButton Name="SourceAspxButton" Padding="6,1" Margin="4,0,0,0" Content="aspx" Checked="SourceAspxButton_Checked"/>
 			</StackPanel>
 
 			<TextBlock

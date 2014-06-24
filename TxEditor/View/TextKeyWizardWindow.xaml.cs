@@ -52,6 +52,9 @@ namespace Unclassified.TxEditor.View
 				case "XAML":
 					SourceXamlButton.IsChecked = true;
 					break;
+				case "aspx":
+					SourceAspxButton.IsChecked = true;
+					break;
 			}
 		}
 
@@ -150,7 +153,10 @@ namespace Unclassified.TxEditor.View
 
 		private void SourceCSharpButton_Checked(object sender, RoutedEventArgs args)
 		{
+			// Uncheck all other source code buttons
 			SourceXamlButton.IsChecked = false;
+			SourceAspxButton.IsChecked = false;
+
 			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
 
 			// Re-evaluate the format and parameters
@@ -159,8 +165,23 @@ namespace Unclassified.TxEditor.View
 
 		private void SourceXamlButton_Checked(object sender, RoutedEventArgs args)
 		{
+			// Uncheck all other source code buttons
 			SourceCSharpButton.IsChecked = false;
+			SourceAspxButton.IsChecked = false;
+
 			SetDefaultCheckbox.Visibility = Visibility.Visible;
+
+			// Re-evaluate the format and parameters
+			Reset(false);
+		}
+
+		private void SourceAspxButton_Checked(object sender, RoutedEventArgs args)
+		{
+			// Uncheck all other source code buttons
+			SourceCSharpButton.IsChecked = false;
+			SourceXamlButton.IsChecked = false;
+
+			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
 
 			// Re-evaluate the format and parameters
 			Reset(false);
@@ -274,6 +295,16 @@ namespace Unclassified.TxEditor.View
 				}
 				code += "}";
 				Clipboard.SetText(code);
+			}
+			if (SourceAspxButton.IsChecked == true)
+			{
+				App.Settings.WizardSourceCode = "aspx";
+
+				string keyString = textKey.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+				StringBuilder codeSb = new StringBuilder();
+				codeSb.Append("<%= Tx.T(\"" + keyString + "\") %>");
+				Clipboard.SetText(codeSb.ToString());
 			}
 
 			// Remember the text key for next time and close the wizard dialog window
@@ -531,6 +562,15 @@ namespace Unclassified.TxEditor.View
 				{
 					parsedText = initialClipboardText;
 					// TODO: Any further processing required?
+				}
+				if (SourceAspxButton.IsChecked == true)
+				{
+					// Decode HTML entities
+					parsedText = initialClipboardText
+						.Replace("&lt;", "<")
+						.Replace("&gt;", ">")
+						.Replace("&quot;", "\"")
+						.Replace("&amp;", "&");
 				}
 			}
 
