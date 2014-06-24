@@ -70,8 +70,6 @@ namespace Unclassified.TxEditor
 			// Make sure the settings are properly saved in the end
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
-			//ULog.SetDataBindingLog();
-
 			// Setup logging
 			//Tx.LogFileName = "tx.log";
 			//Tx.LogFileName = "";
@@ -98,8 +96,9 @@ namespace Unclassified.TxEditor
 				{
 					Tx.SetCulture(appCulture);
 				}
-				catch (Exception /*ex*/)
+				catch (Exception ex)
 				{
+					FL.Error(ex, "Setting application culture from configuration");
 					//MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					// Doing this leads to a XAML exception in the main window! o_O
 				}
@@ -125,11 +124,13 @@ namespace Unclassified.TxEditor
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Command line error", MessageBoxButton.OK, MessageBoxImage.Error);
+				FL.Error(ex, "Parsing command line");
+				MessageBox.Show("Command line error: " + ex.Message, "TxEditor", MessageBoxButton.OK, MessageBoxImage.Error);
 				Application.Current.Shutdown();
 			}
 
 			List<string> filesToLoad = new List<string>();
+			bool error = false;
 			foreach (string fileNameArg in cmdLine.FreeArguments)
 			{
 				if (!string.IsNullOrWhiteSpace(fileNameArg))
@@ -164,8 +165,16 @@ namespace Unclassified.TxEditor
 							}
 						}
 					}
-					// Ignore anything else
+					else
+					{
+						FL.Error("File/directory not found", fileNameArg);
+						error = true;
+					}
 				}
+			}
+			if (error)
+			{
+				MessageBox.Show("At least one of the files or directories specified at the command line could not be found.", "TxEditor", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 			// Scan for other files near the selected files

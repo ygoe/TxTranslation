@@ -110,7 +110,6 @@
     <Compile Include="Unclassified\UI\ColorMath.cs" />
     <Compile Include="Unclassified\UI\ComparerConverter.cs" />
     <Compile Include="Unclassified\UI\DelegateCommand.cs" />
-    <Compile Include="Unclassified\UI\FocusManager.cs" />
     <Compile Include="Unclassified\UI\ICollapsableToolbarItem.cs" />
     <Compile Include="Unclassified\UI\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
