@@ -380,7 +380,7 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="window.wizard.include default text">_Default-Text für Entwurfsansicht hinzufügen</text>
 		<text key="window.wizard.no culture added">Es wurde keine Kultur zum Wörterbuch hinzugefügt.</text>
 		<text key="window.wizard.parameters">Parameter</text>
-		<text key="window.wizard.similar keys">Ähnliche Schlüssel</text>
+		<text key="window.wizard.similar texts">Ähnliche Texte</text>
 		<text key="window.wizard.source code">Quelltext</text>
 		<text key="window.wizard.text key">Textschlüssel</text>
 		<text key="window.wizard.text key exists">Der Textschlüssel {key} existiert bereits.</text>
@@ -784,7 +784,7 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="window.wizard.include default text">Include _default text for design time</text>
 		<text key="window.wizard.no culture added">No culture added to the dictionary.</text>
 		<text key="window.wizard.parameters">Parameters</text>
-		<text key="window.wizard.similar keys">Similar keys</text>
+		<text key="window.wizard.similar texts">Similar texts</text>
 		<text key="window.wizard.source code">Source code</text>
 		<text key="window.wizard.text key">Text key</text>
 		<text key="window.wizard.text key exists">The text key {key} already exists.</text>

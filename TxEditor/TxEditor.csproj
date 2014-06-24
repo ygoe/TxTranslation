@@ -86,7 +86,6 @@
     <Compile Include="Converters\MonospaceFontConverter.cs" />
     <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Exceptions.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="FileNameHelper.cs" />
     <Compile Include="Unclassified\UI\MenuExtensions.cs" />
     <Compile Include="Unclassified\UI\MenuIconExtension.cs" />

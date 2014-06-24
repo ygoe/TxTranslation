@@ -64,7 +64,7 @@
 				Name="OtherKeysLabel"
 				Grid.Row="1" Grid.Column="0"
 				Margin="0,6,0,0" VerticalAlignment="Top"
-				Text="{Tx:TC 'window.wizard.similar keys', Default='Similar keys:'}"/>
+				Text="{Tx:TC 'window.wizard.similar texts', Default='Similar texts:'}"/>
 			<ListBox
 				Name="OtherKeysList"
 				Grid.Row="1" Grid.Column="1"
