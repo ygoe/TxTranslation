@@ -2212,82 +2212,6 @@ namespace Unclassified.TxLib
 
 		#region Combined abbreviated public methods
 
-		#region UT overloads
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key)
-		{
-			return U(T(key));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, int count)
-		{
-			return U(T(key, count));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, decimal count)
-		{
-			return U(T(key, count));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, params string[] data)
-		{
-			return U(T(key, data));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, Dictionary<string, string> data)
-		{
-			return U(T(key, data));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, int count, params string[] data)
-		{
-			return U(T(key, count, data));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, int count, Dictionary<string, string> data)
-		{
-			return U(T(key, count, data));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, decimal count, params string[] data)
-		{
-			return U(T(key, count, data));
-		}
-
-		/// <summary>
-		/// Combined abbreviation for the UpperCase and Text methods.
-		/// </summary>
-		public static string UT(string key, decimal count, Dictionary<string, string> data)
-		{
-			return U(T(key, count, data));
-		}
-
-		#endregion UT overloads
-
 		#region TC overloads
 
 		/// <summary>
@@ -2390,6 +2314,82 @@ namespace Unclassified.TxLib
 		}
 
 		#endregion TC overloads
+
+		#region UT overloads
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key)
+		{
+			return U(T(key));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, int count)
+		{
+			return U(T(key, count));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, decimal count)
+		{
+			return U(T(key, count));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, params string[] data)
+		{
+			return U(T(key, data));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, Dictionary<string, string> data)
+		{
+			return U(T(key, data));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, int count, params string[] data)
+		{
+			return U(T(key, count, data));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, int count, Dictionary<string, string> data)
+		{
+			return U(T(key, count, data));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, decimal count, params string[] data)
+		{
+			return U(T(key, count, data));
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the UpperCase and Text methods.
+		/// </summary>
+		public static string UT(string key, decimal count, Dictionary<string, string> data)
+		{
+			return U(T(key, count, data));
+		}
+
+		#endregion UT overloads
 
 		#region UTC overloads
 
@@ -2905,6 +2905,418 @@ namespace Unclassified.TxLib
 		}
 
 		#endregion QUTC overloads
+
+		#region PT overloads
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, int count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, decimal count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, data));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, data));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, int count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, int count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, decimal count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses and Text methods.
+		/// </summary>
+		public static string PT(string key, decimal count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data));
+			}
+		}
+
+		#endregion PT overloads
+
+		#region PTC overloads
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, int count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, decimal count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, data)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, data)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, int count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, int count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, decimal count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data)) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, Text and Colon methods.
+		/// </summary>
+		public static string PTC(string key, decimal count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(T(key, count, data)) + C();
+			}
+		}
+
+		#endregion PTC overloads
+
+		#region PUT overloads
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, int count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, decimal count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, data)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, data)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, int count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, int count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, decimal count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data)));
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase and Text methods.
+		/// </summary>
+		public static string PUT(string key, decimal count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data)));
+			}
+		}
+
+		#endregion PUT overloads
+
+		#region PUTC overloads
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, int count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, decimal count)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, data))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, data))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, int count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, int count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, decimal count, params string[] data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data))) + C();
+			}
+		}
+
+		/// <summary>
+		/// Combined abbreviation for the Parentheses, UpperCase, Text and Colon methods.
+		/// </summary>
+		public static string PUTC(string key, decimal count, Dictionary<string, string> data)
+		{
+			using (new ReadLock(rwlock))
+			{
+				return P(U(T(key, count, data))) + C();
+			}
+		}
+
+		#endregion PUTC overloads
 
 		#endregion Combined abbreviated public methods
 
