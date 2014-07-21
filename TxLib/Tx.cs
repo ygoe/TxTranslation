@@ -1176,61 +1176,72 @@ namespace Unclassified.TxLib
 			{
 				httpPreferredCultures = new string[0];
 			}
-
-			// Parse every item from the list
-			List<CulturePriority> cpList = new List<CulturePriority>();
-			float priority = 1;
-			int index = 0;
-			using (new ReadLock(rwlock))
+			else
 			{
-				foreach (string item in httpAcceptLanguage.Split(','))
+				// Parse every item from the list
+				List<CulturePriority> cpList = new List<CulturePriority>();
+				float priority = 1;
+				int index = 0;
+				using (new ReadLock(rwlock))
 				{
-					string[] parts = item.Split(';');
+					foreach (string item in httpAcceptLanguage.Split(','))
+					{
+						string[] parts = item.Split(';');
 
-					// Parse, validate and normalise culture name
-					string culture = parts[0].Trim().Replace('_', '-');
-					try
-					{
-						CultureInfo ci = CultureInfo.GetCultureInfo(culture);
-						culture = ci.Name;
-					}
-					catch (ArgumentException)
-					{
-						// .NET 4.0 will throw a CultureNotFoundException, which is inherited from ArgumentException
-						// Culture not found. Skip it, we couldn't support it anyway.
-						continue;
-					}
-					if (!languages.ContainsKey(culture))
-					{
-						// This locale is currently not loaded, so it cannot be supported.
-						continue;
-					}
-
-					// Parse the priority value for this culture name, if set.
-					// If no valid q value was found, the previous item's will be kept.
-					if (parts.Length > 1)
-					{
-						Match m = Regex.Match(parts[1].Trim(), @"q\s*=\s*([0-9.]+)");
-						if (m.Success)
+						// Parse, validate and normalise culture name
+						string culture = parts[0].Trim().Replace('_', '-');
+						try
 						{
-							priority = float.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture);
+							CultureInfo ci = CultureInfo.GetCultureInfo(culture);
+							culture = ci.Name;
 						}
+						catch (ArgumentException)
+						{
+							// .NET 4.0 will throw a CultureNotFoundException, which is inherited from ArgumentException
+							// Culture not found. Skip it, we couldn't support it anyway.
+							continue;
+						}
+
+						// Parse the priority value for this culture name, if set.
+						// If no valid q value was found, the previous item's will be kept.
+						if (parts.Length > 1)
+						{
+							Match m = Regex.Match(parts[1].Trim(), @"q\s*=\s*([0-9.]+)");
+							if (m.Success)
+							{
+								priority = float.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture);
+							}
+						}
+
+						cpList.Add(new CulturePriority(culture, priority, index++));
 					}
-
-					cpList.Add(new CulturePriority(culture, priority, index++));
 				}
-			}
 
-			httpPreferredCultures = cpList
-				.OrderByDescending(cp => cp.Priority)
-				.ThenBy(cp => cp.Index)
-				.Select(cp => cp.Culture)
-				.ToArray();
+				httpPreferredCultures = cpList
+					.OrderByDescending(cp => cp.Priority)
+					.ThenBy(cp => cp.Index)
+					.Select(cp => cp.Culture)
+					.ToArray();
+			}
 
 			if (httpPreferredCultures.Length > 0)
 			{
-				// Set the current thread's culture to the most preferred one
-				SetCulture(httpPreferredCultures[0]);
+				// Set the current thread's culture to the most preferred one that is supported
+				foreach (string culture in httpPreferredCultures)
+				{
+					if (languages.ContainsKey(culture) ||
+						culture.Length == 5 && languages.ContainsKey(culture.Substring(0, 2)))
+					{
+						SetCulture(culture);
+						return;
+					}
+				}
+			}
+			// No preferred culture is supported. Set the primary dictionary culture if available.
+			string pc = PrimaryCulture;
+			if (pc != null)
+			{
+				SetCulture(pc);
 			}
 			else
 			{
