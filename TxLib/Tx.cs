@@ -1433,11 +1433,15 @@ namespace Unclassified.TxLib
 			if (text == null)
 			{
 				// Text not found in the current language, use the key instead
-				int nsPos = text.IndexOf(':');
+				int nsPos = key.IndexOf(':');
 				if (nsPos > -1)
 				{
 					// Strip off the namespace part
-					text = text.Substring(nsPos + 1);
+					text = key.Substring(nsPos + 1);
+				}
+				else
+				{
+					text = key;
 				}
 			}
 			return text;
