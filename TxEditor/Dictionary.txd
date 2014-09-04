@@ -62,6 +62,10 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
 		<text key="msg.insert system keys.base culture">Die Systemschlüssel für die ausgewählte Kultur wurden hinzugefügt. Beachten Sie jedoch, dass diese Schlüssel auf ihre Basiskultur {name} angewiesen sein können. Ansonsten sind die möglicherweise unvollständig. Bitte fügen Sie ggf. auch die Basiskultur und deren Systemschlüssel hinzu.</text>
 		<text key="msg.insert system keys.base culture.title">Abhängigkeit von der Basiskultur</text>
+		<text key="msg.insert system keys.no culture selected">Es ist keine Kultur ausgewählt, für die Systemschlüssel hinzugefügt werden sollen.
+
+Wählen Sie bitte zuerst ein Texteingabefeld der gewünschten Kultur aus und versuchen Sie es erneut.</text>
+		<text key="msg.insert system keys.no culture selected.title">Keine Kultur ausgewählt</text>
 		<text key="msg.insert system keys.not available">Die ausgewählte Kultur {name} ist nicht verfügbar.
 
 TxEditor enthält nur Systemschlüssel für die Kulturen, die die Benutzer bereitstellen. Wenn Sie Ihre Systemschlüssel für diese Kultur an den Tx-Entwickler senden, können sie in zukünftigen Versionen aufgenommen werden und dadurch auch Ihren Arbeitsablauf erleichtern!
@@ -121,6 +125,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.namespace converted to text key">Namensraum in Textschlüssel umgewandelt.</text>
 		<text key="statusbar.new dictionary created">Neues Wörterbuch erstellt.</text>
 		<text key="statusbar.primary culture set">Hauptkultur auf {name} gesetzt.</text>
+		<text key="statusbar.system keys added">Systemschlüssel für Kultur {culture} hinzugefügt.</text>
 		<text key="statusbar.text key already exists">Der Textschlüssel existiert bereits und wurde jetzt ausgewählt.</text>
 		<text key="statusbar.text key converted to namespace">Textschlüssel in Namensraum umgewandelt.</text>
 		<text key="statusbar.text key copied">Textschlüssel in die Zwischenablage kopiert.</text>
@@ -463,6 +468,10 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
 		<text key="msg.insert system keys.base culture">The system keys for the selected culture were added. Note however that these keys may depend on its base culture {name}. Otherwise they may be incomplete. Please consider adding the base culture and adding their system keys as well.</text>
 		<text key="msg.insert system keys.base culture.title">Base culture dependency</text>
+		<text key="msg.insert system keys.no culture selected">There is no culture selected to add the system keys for.
+
+Please first focus a text input field of the desired culture and try again.</text>
+		<text key="msg.insert system keys.no culture selected.title">No culture selected</text>
 		<text key="msg.insert system keys.not available">The selected culture {name} is not available.
 
 TxEditor only contains system keys for those cultures that are provided by its users. Please consider submitting your system keys for this culture to the Tx developer to make them available in TxEditor in the future. This can also make your workflow easier!
@@ -522,6 +531,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.namespace converted to text key">Namespace converted to text key.</text>
 		<text key="statusbar.new dictionary created">New dictionary created.</text>
 		<text key="statusbar.primary culture set">Primary culture set to {name}.</text>
+		<text key="statusbar.system keys added">System keys for culture {culture} added.</text>
 		<text key="statusbar.text key already exists">The text key already exists and is now selected.</text>
 		<text key="statusbar.text key converted to namespace">Text key converted to namespace.</text>
 		<text key="statusbar.text key copied">Text key copied to the clipboard.</text>

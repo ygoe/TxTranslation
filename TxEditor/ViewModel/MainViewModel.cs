@@ -2858,6 +2858,7 @@ namespace Unclassified.TxEditor.ViewModel
 				if (xe != null)
 				{
 					LoadFromXml(culture, xe);
+					StatusText = Tx.T("statusbar.system keys added", "culture", culture);
 
 					if (culture.Length == 5)
 					{
@@ -2876,6 +2877,14 @@ namespace Unclassified.TxEditor.ViewModel
 						MessageBoxButton.OK,
 						MessageBoxImage.Warning);
 				}
+			}
+			else
+			{
+				MessageBox.Show(
+					Tx.T("msg.insert system keys.no culture selected"),
+					Tx.T("msg.insert system keys.no culture selected.title"),
+					MessageBoxButton.OK,
+					MessageBoxImage.Warning);
 			}
 		}
 
