@@ -1813,12 +1813,12 @@ namespace Unclassified.TxLib
 				sb.Append(dowAndDate);
 			}
 
-			if ((details & TxTime.AnyDate) != 0 && (details | TxTime.AnyTime) != 0)
+			if ((details & TxTime.AnyDate) != 0 && (details & TxTime.AnyTime) != 0)
 			{
 				sb.Append("\u2007");   // Non-breaking figure space
 			}
 
-			if ((details | TxTime.AnyTime) != 0)
+			if ((details & TxTime.AnyTime) != 0)
 			{
 				DateTimeFormatInfo fi = (DateTimeFormatInfo) CultureInfo.CurrentCulture.DateTimeFormat.Clone();
 				fi.AMDesignator = GetText(SystemKeys.TimeAM, false, fi.AMDesignator);
