@@ -1175,19 +1175,34 @@ namespace Unclassified.TxLib
 		/// and it must be called again after loading or reloading the translation files.
 		/// </summary>
 		/// <param name="httpAcceptLanguage">Value of the HTTP_ACCEPT_LANGUAGE request header.</param>
-		/// <remarks>
+		/// <param name="configPreference">Optional culture preference by the user configuration.</param>
+		/// <example>
+		/// The following code example shows how to pass the HTTP header data to this method:
+		/// <code>
 		/// Tx.SetWebCulture(HttpContext.Current.Request.ServerVariables["HTTP_ACCEPT_LANGUAGE"] as string);
-		/// </remarks>
-		public static void SetWebCulture(string httpAcceptLanguage)
+		/// </code>
+		/// </example>
+		public static void SetWebCulture(string httpAcceptLanguage, string configPreference = null)
 		{
 			if (string.IsNullOrEmpty(httpAcceptLanguage))
 			{
-				httpPreferredCultures = new string[0];
+				if (!string.IsNullOrEmpty(configPreference))
+				{
+					httpPreferredCultures = new[] { configPreference };
+				}
+				else
+				{
+					httpPreferredCultures = new string[0];
+				}
 			}
 			else
 			{
 				// Parse every item from the list
 				List<CulturePriority> cpList = new List<CulturePriority>();
+				if (!string.IsNullOrEmpty(configPreference))
+				{
+					cpList.Add(new CulturePriority(configPreference, float.MaxValue, -1));
+				}
 				float priority = 1;
 				int index = 0;
 				using (new ReadLock(rwlock))
