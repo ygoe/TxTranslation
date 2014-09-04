@@ -238,6 +238,10 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="Tx:date.year month abbr">MMM. yyyy</text>
 		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
 		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> und </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> oder </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">10000</text>
 		<text key="Tx:number.negative">−</text>
@@ -635,6 +639,10 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="Tx:date.year month abbr">MMM yyyy</text>
 		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
 		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> and </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> or </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>

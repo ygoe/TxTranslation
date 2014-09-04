@@ -8,6 +8,10 @@
 		<text key="Tx:date.year month abbr">MMM. yyyy</text>
 		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
 		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> und </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> oder </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">10000</text>
 		<text key="Tx:number.negative">−</text>
@@ -117,6 +121,10 @@
 		<text key="Tx:date.year month abbr">MMM yyyy</text>
 		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
 		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> and </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> or </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -234,6 +242,10 @@
 		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
 	</culture>
 	<culture name="es">
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> y </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> o </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -259,6 +271,10 @@
 		<text key="Tx:date.year month abbr">MMM yyyy</text>
 		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
 		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> et </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> ou </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -281,6 +297,10 @@
 		<text key="Tx:date.year month abbr">MMM. yyyy</text>
 		<text key="Tx:date.year month day abbr">d MMM. yyyy</text>
 		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> e </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> o </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -307,6 +327,10 @@
 		<text key="Tx:date.year month day abbr">yyyy/MM/dd</text>
 		<text key="Tx:date.year month day long">yyyy年M月d日</text>
 		<text key="Tx:date.year month long">yyyy年M月</text>
+		<text key="Tx:enum.and.combiner">、</text>
+		<text key="Tx:enum.and.last combiner">および</text>
+		<text key="Tx:enum.or.combiner">、</text>
+		<text key="Tx:enum.or.last combiner">又は</text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -323,6 +347,10 @@
 		<text key="Tx:date.year month abbr">MMM. yyyy</text>
 		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
 		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> i </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> czy </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
@@ -335,6 +363,10 @@
 		<text key="Tx:time.hour">"godz." H</text>
 	</culture>
 	<culture name="pt">
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> e </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> ou </text>
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>

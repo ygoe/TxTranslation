@@ -225,6 +225,14 @@ namespace Unclassified.TxLib
 			public const string TimeSpanNegMinutes = "Tx:time.span neg.minutes";
 			/// <summary>The system text key for seconds of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegSeconds = "Tx:time.span neg.seconds";
+			/// <summary>The system text key for combining items in a conjunctive (AND) enumeration.</summary>
+			public const string EnumAndCombiner = "Tx:enum.and.combiner";
+			/// <summary>The system text key for combining the last item in a conjunctive (AND) enumeration.</summary>
+			public const string EnumAndLastCombiner = "Tx:enum.and.last combiner";
+			/// <summary>The system text key for combining items in a disjunctive (OR) enumeration.</summary>
+			public const string EnumOrCombiner = "Tx:enum.or.combiner";
+			/// <summary>The system text key for combining the last item in a disjunctive (OR) enumeration.</summary>
+			public const string EnumOrLastCombiner = "Tx:enum.or.last combiner";
 		}
 
 		#endregion Constants
@@ -2078,6 +2086,221 @@ namespace Unclassified.TxLib
 		}
 
 		#endregion Date and time formatting
+
+		#region String enumeration formatting
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string EnumAnd(params string[] items)
+		{
+			return FormatEnum(true, false, false, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string EnumAnd(IEnumerable<string> items)
+		{
+			return FormatEnum(true, false, false, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings and transforms the first character of the
+		/// first item to upper case.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string UEnumAnd(params string[] items)
+		{
+			return FormatEnum(true, true, false, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings and transforms the first character of the
+		/// first item to upper case.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string UEnumAnd(IEnumerable<string> items)
+		{
+			return FormatEnum(true, true, false, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QEnumAnd(params string[] items)
+		{
+			return FormatEnum(true, false, true, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QEnumAnd(IEnumerable<string> items)
+		{
+			return FormatEnum(true, false, true, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings, transforms the first character of the
+		/// first item to upper case and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QUEnumAnd(params string[] items)
+		{
+			return FormatEnum(true, true, true, items);
+		}
+
+		/// <summary>
+		/// Formats a conjunctive enumeration of strings, transforms the first character of the
+		/// first item to upper case and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QUEnumAnd(IEnumerable<string> items)
+		{
+			return FormatEnum(true, true, true, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string EnumOr(params string[] items)
+		{
+			return FormatEnum(false, false, false, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string EnumOr(IEnumerable<string> items)
+		{
+			return FormatEnum(false, false, false, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings and transforms the first character of the
+		/// first item to upper case.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string UEnumOr(params string[] items)
+		{
+			return FormatEnum(false, true, false, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings and transforms the first character of the
+		/// first item to upper case.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string UEnumOr(IEnumerable<string> items)
+		{
+			return FormatEnum(false, true, false, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QEnumOr(params string[] items)
+		{
+			return FormatEnum(false, false, true, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QEnumOr(IEnumerable<string> items)
+		{
+			return FormatEnum(false, false, true, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings, transforms the first character of the
+		/// first item to upper case and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QUEnumOr(params string[] items)
+		{
+			return FormatEnum(false, true, true, items);
+		}
+
+		/// <summary>
+		/// Formats a disjunctive enumeration of strings, transforms the first character of the
+		/// first item to upper case and puts each item in quotation marks.
+		/// </summary>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		public static string QUEnumOr(IEnumerable<string> items)
+		{
+			return FormatEnum(false, true, true, items);
+		}
+
+		/// <summary>
+		/// Formats an enumeration of strings.
+		/// </summary>
+		/// <param name="and">true to use conjunctive (AND) combination, false to use disjunctive (OR) combination.</param>
+		/// <param name="upperCase">Indicates whether the first character of the first item is transformed to upper case.</param>
+		/// <param name="quote">Indicates whether each item is put in quotation marks.</param>
+		/// <param name="items">The string items to enumerate.</param>
+		/// <returns>The formatted string enumeration.</returns>
+		private static string FormatEnum(bool and, bool upperCase, bool quote, IEnumerable<string> items)
+		{
+			int count = items.Count();
+			int index = 0;
+			string combinerKey = and ? SystemKeys.EnumAndCombiner : SystemKeys.EnumOrCombiner;
+			string lastCombinerKey = and ? SystemKeys.EnumAndLastCombiner : SystemKeys.EnumOrLastCombiner;
+			StringBuilder sb = new StringBuilder();
+			foreach (string item in items)
+			{
+				if (index > 0)
+				{
+					if (index == count - 1)
+					{
+						sb.Append(GetText(lastCombinerKey, -1));
+					}
+					else
+					{
+						sb.Append(GetText(combinerKey, -1));
+					}
+				}
+				string item2 = item;
+				if (upperCase && index == 0)
+				{
+					item2 = UpperCase(item2);
+				}
+				if (quote)
+				{
+					item2 = Quote(item2);
+				}
+				sb.Append(item2);
+				index++;
+			}
+			return sb.ToString();
+		}
+
+		#endregion String enumeration formatting
 
 		#endregion Public translation and formatting methods
 
