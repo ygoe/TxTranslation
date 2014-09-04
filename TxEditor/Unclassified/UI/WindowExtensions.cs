@@ -11,6 +11,7 @@ namespace Unclassified.UI
 	public static class WindowExtensions
 	{
 		// Based on: http://stackoverflow.com/a/6024229/143684
+		// Really hide the icon: http://stackoverflow.com/a/25139586/143684
 
 		#region Native interop
 
@@ -85,6 +86,7 @@ namespace Unclassified.UI
 			uint exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 			SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_DLGMODALFRAME);
 			SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+			SendMessage(hwnd, WM_SETICON, new IntPtr(1), IntPtr.Zero);   // Important if there's a native icon resource in the .exe file
 			SendMessage(hwnd, WM_SETICON, IntPtr.Zero, IntPtr.Zero);
 		}
 
