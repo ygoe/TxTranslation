@@ -1635,7 +1635,7 @@ namespace Unclassified.TxEditor.ViewModel
 
 				// Restore original full key state first
 				destKey.IsFullKey = destWasFullKey;
-				if (!destWasFullKey)
+				if (!destWasFullKey && !selKey.IsFullKey)
 				{
 					TextKeys.Remove(destKey.TextKey);
 				}
