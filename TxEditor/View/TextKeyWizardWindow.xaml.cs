@@ -209,6 +209,9 @@ namespace Unclassified.TxEditor.View
 
 		private void OKButton_Click(object sender, RoutedEventArgs args)
 		{
+			// Unfocus parameter name TextBox to have its changes updated
+			OKButton.Focus();
+
 			string textKey = TextKeyText.Text != null ? TextKeyText.Text.Trim() : "";
 
 			// Validate the entered text key
@@ -260,8 +263,15 @@ namespace Unclassified.TxEditor.View
 					codeSb.Append("\" + ");
 				}
 				codeSb.Append("Tx.T(\"" + keyString + "\"");
+				var countPlaceholder = placeholders.FirstOrDefault(p => p.Name == "#");
+				if (countPlaceholder != null)
+				{
+					codeSb.Append(", ");
+					codeSb.Append(countPlaceholder.Code);
+				}
 				foreach (var pd in placeholders)
 				{
+					if (pd == countPlaceholder) continue;   // Already processed
 					codeSb.Append(", \"" + pd.Name.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"");
 					codeSb.Append(", ");
 					if (pd.IsQuoted)
