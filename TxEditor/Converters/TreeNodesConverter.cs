@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 using System.Windows.Data;
-using Unclassified.TxEditor.ViewModel;
+using Unclassified.TxEditor.ViewModels;
 using Unclassified.TxLib;
 
 namespace Unclassified.TxEditor.Converters

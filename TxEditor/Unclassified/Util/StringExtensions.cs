@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace Unclassified.Util
 {
@@ -10,29 +11,45 @@ namespace Unclassified.Util
 		#region String conversions
 
 		/// <summary>
-		/// Converts a string value into a safe file name. Invalid characters are each replaced
-		/// by an underline.
+		/// Converts a string value into a safe file name. Invalid characters and names are
+		/// replaced by an underline.
 		/// </summary>
 		/// <param name="str">Source string to convert.</param>
 		/// <returns></returns>
 		public static string ToFileName(this string str)
 		{
-			// TODO: Consider more restrictions
-			// See http://msdn.microsoft.com/en-us/library/aa365247%28v=vs.85%29.aspx
-			// * Maximum length (minus a bit for automatic numbering), maybe 100 chars?
-			// * Reserved names (NUL, CON, ., .., etc.)
-			// * No space at the beginning
-			// * No space or . at the end
-			return str
-				.Replace('"', '_')
-				.Replace('*', '_')
-				.Replace('/', '_')
-				.Replace(':', '_')
-				.Replace('<', '_')
-				.Replace('>', '_')
-				.Replace('?', '_')
-				.Replace('\\', '_')
-				.Replace('|', '_');
+			// Source: http://msdn.microsoft.com/en-us/library/aa365247%28v=vs.85%29.aspx
+
+			// Empty names are not allowed
+			if (string.IsNullOrWhiteSpace(str))
+			{
+				str = "_";
+			}
+
+			// Replace reserved characters
+			str = Regex.Replace(str, @"[\x00-\x1f<>:""/\|?*]+", "_");
+
+			// Mask reserved names, also with extensions
+			if (Regex.IsMatch(str, @"^(\.|\.\.|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\..*)?$", RegexOptions.IgnoreCase))
+			{
+				str = "_" + str;
+			}
+
+			// Remove spaces at the beginning or end, and dots at the end
+			// (Unicode whitespace is not removed here as it's not a problem for the file system.)
+			str = str.TrimStart(' ');
+			str = str.TrimEnd(' ', '.');
+
+			// The maximum length of a path is 260 chars. We only get a single component of it here
+			// and there will probably be added an extension, a counter value or other parts, so
+			// we'll be very conservative.
+			int maxLength = 100;
+			if (str.Length > maxLength)
+			{
+				str = str.Substring(0, maxLength);
+			}
+
+			return str;
 		}
 
 		/// <summary>

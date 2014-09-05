@@ -1,0 +1,55 @@
+﻿<Window
+	x:Class="Unclassified.TxEditor.Views.CultureWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
+	xmlns:ui="clr-namespace:Unclassified.UI"
+	mc:Ignorable="d"
+	d:DesignHeight="340" d:DesignWidth="500"
+	ResizeMode="NoResize"
+	WindowStartupLocation="CenterOwner"
+	ShowInTaskbar="False"
+	WindowStyle="SingleBorderWindow"
+	TextOptions.TextFormattingMode="Display"
+	Title="{Tx:T 'window.new culture.title', Default='Add new culture'}"
+	Loaded="Window_Loaded"
+	SizeToContent="WidthAndHeight">
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<TextBlock VerticalAlignment="Center" Text="{Tx:TC 'window.new culture.intro', Default='Please select the culture to add from the list, or type its code:'}"/>
+		<TextBox
+			Name="CodeText"
+			Grid.Column="1"
+			Margin="8,0,0,0" Width="50" HorizontalAlignment="Left"
+			TextChanged="CodeText_TextChanged"
+			ui:TextBoxExtensions.DisableInsertKey="True"/>
+
+		<ListBox
+			Name="CulturesList"
+			Grid.Row="1" Grid.ColumnSpan="2"
+			Margin="0,6,0,0" Height="200" MinWidth="450"
+			SelectionChanged="CulturesList_SelectionChanged"
+			MouseDoubleClick="CulturesList_MouseDoubleClick"/>
+
+		<StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Left">
+			<CheckBox Name="InsertSystemKeysCheckBox" VerticalAlignment="Center" Content="{Tx:T 'window.new culture.checkbox.insert system keys', Default='Insert system keys'}"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
+			<Button Name="AddButton" Padding="6,1" MinWidth="75" IsDefault="True" Click="AddButton_Click" Content="{Tx:T 'window.new culture.button.add culture', Default='Add culture'}"/>
+			<Button Name="CancelButton" Margin="6,0,0,0" Padding="6,1" MinWidth="75" IsCancel="True" Content="{Tx:T 'window.new culture.button.cancel', Default='Cancel'}"/>
+		</StackPanel>
+	</Grid>
+</Window>

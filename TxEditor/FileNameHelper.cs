@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TaskDialogInterop;
-using Unclassified.TxEditor.View;
+using Unclassified.TxEditor.Views;
 using Unclassified.TxLib;
 
 namespace Unclassified.TxEditor

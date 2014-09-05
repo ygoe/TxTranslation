@@ -1,0 +1,57 @@
+﻿<UserControl
+	x:Class="Unclassified.TxEditor.Views.TextKeyView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ui="clr-namespace:Unclassified.UI"
+	xmlns:v="clr-namespace:Unclassified.TxEditor.Views"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	mc:Ignorable="d"
+	d:DesignHeight="190" d:DesignWidth="572"
+	Focusable="False">
+	<UserControl.Resources>
+		<ui:BoolToVisibilityConverter x:Key="boolVis"/>
+	</UserControl.Resources>
+
+	<DockPanel>
+		<TextBlock
+			DockPanel.Dock="Top" Margin="13,12,13,12"
+			Text="{Binding TextKey, FallbackValue='TextKey'}"
+			FontSize="26" FontWeight="Light" TextOptions.TextFormattingMode="Ideal"/>
+
+		<Grid
+			DockPanel.Dock="Top" Margin="12,0,12,12"
+			Background="LemonChiffon"
+			Visibility="{Binding MainWindowVM.Settings.ShowComments, Converter={StaticResource boolVis}}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Image
+				Grid.Column="0" VerticalAlignment="Top" Margin="3,1,0,1"
+				Source="/Images/comment.png"/>
+			<TextBox
+				Grid.Column="1" Margin="4,0,0,0"
+				BorderThickness="0" Padding="2"
+				TextWrapping="Wrap" AcceptsReturn="True"
+				VerticalScrollBarVisibility="Auto" MaxLines="4"
+				Background="Transparent"
+				Text="{Binding Comment}"
+				ui:TextBoxExtensions.DisableInsertKey="True"/>
+		</Grid>
+
+		<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" Focusable="False" UseLayoutRounding="True">
+			<ItemsControl ItemsSource="{Binding CultureTextVMs}" Focusable="False">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<v:CultureTextView Margin="12,0,12,0"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+	</DockPanel>
+</UserControl>

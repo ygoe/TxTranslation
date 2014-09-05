@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Unclassified.FieldLog;
-using Unclassified.TxEditor.View;
-using Unclassified.TxEditor.ViewModel;
+using Unclassified.TxEditor.Views;
+using Unclassified.TxEditor.ViewModels;
 using Unclassified.TxLib;
 using Unclassified.Util;
 

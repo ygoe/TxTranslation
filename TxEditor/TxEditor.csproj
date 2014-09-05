@@ -127,47 +127,48 @@
     <Compile Include="Unclassified\Util\HotKey.cs" />
     <Compile Include="Unclassified\UI\Wpf32Window.cs" />
     <Compile Include="Unclassified\UI\TextBoxExtensions.cs" />
+    <Compile Include="Unclassified\Util\ThreadSafeRandom.cs" />
     <Compile Include="Unclassified\Util\UnicodeInfo.cs" />
     <Compile Include="Unclassified\Util\WinApi_Input.cs" />
     <Compile Include="Unclassified\Util\WinApi_Windows.cs" />
-    <Compile Include="ViewModel\CultureTextViewModel.cs" />
-    <Compile Include="ViewModel\DetailsMessageViewModel.cs" />
-    <Compile Include="ViewModel\SelectFileViewModel.cs" />
-    <Compile Include="ViewModel\SuggestionViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\QuantifiedTextViewModel.cs" />
-    <Compile Include="ViewModel\TextKeyViewModel.cs" />
+    <Compile Include="ViewModels\CultureTextViewModel.cs" />
+    <Compile Include="ViewModels\DetailsMessageViewModel.cs" />
+    <Compile Include="ViewModels\SelectFileViewModel.cs" />
+    <Compile Include="ViewModels\SuggestionViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\QuantifiedTextViewModel.cs" />
+    <Compile Include="ViewModels\TextKeyViewModel.cs" />
     <Compile Include="Converters\TreeNodesConverter.cs" />
-    <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="View\AboutWindow.xaml.cs">
+    <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\CultureTextView.xaml.cs">
+    <Compile Include="Views\CultureTextView.xaml.cs">
       <DependentUpon>CultureTextView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\CultureWindow.xaml.cs">
+    <Compile Include="Views\CultureWindow.xaml.cs">
       <DependentUpon>CultureWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\DetailsMessage.xaml.cs">
+    <Compile Include="Views\DetailsMessage.xaml.cs">
       <DependentUpon>DetailsMessage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SelectFileWindow.xaml.cs">
+    <Compile Include="Views\SelectFileWindow.xaml.cs">
       <DependentUpon>SelectFileWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SettingsWindow.xaml.cs">
+    <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TextKeyWindow.xaml.cs">
+    <Compile Include="Views\TextKeyWindow.xaml.cs">
       <DependentUpon>TextKeyWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\QuantifiedTextView.xaml.cs">
+    <Compile Include="Views\QuantifiedTextView.xaml.cs">
       <DependentUpon>QuantifiedTextView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TextKeyView.xaml.cs">
+    <Compile Include="Views\TextKeyView.xaml.cs">
       <DependentUpon>TextKeyView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TextKeyWizardWindow.xaml.cs">
+    <Compile Include="Views\TextKeyWizardWindow.xaml.cs">
       <DependentUpon>TextKeyWizardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\AcceptProblemButton.xaml">
@@ -194,27 +195,27 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CultureWindow.xaml">
+    <Page Include="Views\CultureWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\DetailsMessage.xaml">
+    <Page Include="Views\DetailsMessage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SelectFileWindow.xaml">
+    <Page Include="Views\SelectFileWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SettingsWindow.xaml">
+    <Page Include="Views\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TextKeyWindow.xaml">
+    <Page Include="Views\TextKeyWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -225,7 +226,7 @@
     <Compile Include="Controls\DecoratedTextBox.xaml.cs">
       <DependentUpon>DecoratedTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -245,23 +246,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AboutWindow.xaml">
+    <Page Include="Views\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CultureTextView.xaml">
+    <Page Include="Views\CultureTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\QuantifiedTextView.xaml">
+    <Page Include="Views\QuantifiedTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TextKeyView.xaml">
+    <Page Include="Views\TextKeyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TextKeyWizardWindow.xaml">
+    <Page Include="Views\TextKeyWizardWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -353,6 +353,45 @@ namespace Unclassified.Util
 
 		#endregion Sorted collections
 
+		#region Shuffling
+
+		// Source: http://stackoverflow.com/a/1262619/143684
+		/// <summary>
+		/// Shuffles a list.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements of <paramref name="list"/>.</typeparam>
+		/// <param name="list">The list to shuffle.</param>
+		/// <remarks>
+		/// This method is based on the Fisher-Yates shuffle.
+		/// </remarks>
+		public static void Shuffle<T>(this IList<T> list)
+		{
+			int n = list.Count;
+			while (n > 1)
+			{
+				n--;
+				int k = ThreadSafeRandom.Next(n + 1);
+				T value = list[k];
+				list[k] = list[n];
+				list[n] = value;
+			}
+		}
+
+		/// <summary>
+		/// Shuffles a copy of a list.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements of <paramref name="list"/>.</typeparam>
+		/// <param name="list">The list to shuffle.</param>
+		/// <returns>A new List instance with the shuffled items from <paramref name="list"/>.</returns>
+		public static List<T> ShuffleCopy<T>(this IEnumerable<T> list)
+		{
+			List<T> copy = new List<T>(list);
+			copy.Shuffle();
+			return copy;
+		}
+
+		#endregion Shuffling
+
 		#region INotifyCollectionChanged helpers
 
 		/// <summary>

@@ -135,6 +135,9 @@ namespace Unclassified.Util
 			{
 				args.Add(currentArg.ToString());
 			}
+
+			// Save parsed arguments
+			this.args = args.ToArray();
 		}
 
 		#endregion Custom arguments line parsing
