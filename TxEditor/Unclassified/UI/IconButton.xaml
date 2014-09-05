@@ -3,7 +3,8 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	x:Name="_this">
+	x:Name="_this"
+	KeyboardNavigation.IsTabStop="False">
 
 	<Button.Template>
 		<ControlTemplate>
@@ -19,7 +20,7 @@
 						VerticalAlignment="Center">
 						<Image.Style>
 							<Style TargetType="{x:Type Image}">
-								<Setter Property="Margin" Value="0,0,3,0"/>
+								<Setter Property="Margin" Value="0,0,4,0"/>
 								<Style.Triggers>
 									<Trigger Property="Button.IsEnabled" Value="False">
 										<Setter Property="Opacity" Value="0.4"/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -146,11 +147,17 @@ namespace Unclassified.UI
 		{
 			if (!raiseCanExecuteChangedPending)
 			{
-				Dispatcher.CurrentDispatcher.BeginInvoke(
-					(Action<EventArgs>) OnCanExecuteChanged,
-					DispatcherPriority.Loaded,
-					EventArgs.Empty);
-				raiseCanExecuteChangedPending = true;
+				// Don't do anything if not on the UI thread. The dispatcher event will never be
+				// fired there and probably there's nobody interested in changed properties
+				// anyway on that thread.
+				if (Dispatcher.CurrentDispatcher == Application.Current.Dispatcher)
+				{
+					Dispatcher.CurrentDispatcher.BeginInvoke(
+						(Action<EventArgs>) OnCanExecuteChanged,
+						DispatcherPriority.Loaded,
+						EventArgs.Empty);
+					raiseCanExecuteChangedPending = true;
+				}
 			}
 		}
 

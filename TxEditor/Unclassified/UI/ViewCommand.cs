@@ -123,7 +123,7 @@ namespace Unclassified.UI
 								var attr = attrs[0] as ViewCommandAttribute;
 								if (attr.CommandName == commandName)
 								{
-									int methodParamCount = method.GetParameters().Length;
+									int methodParamCount = method2.GetParameters().Length;
 									object[] newArgs = args;
 									// Fill optional parameters with Type.Missing
 									if (args.Length < methodParamCount)
