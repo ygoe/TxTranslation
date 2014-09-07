@@ -18,8 +18,6 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			this.cultureName = cultureName;
 
-			InitializeCommands();
-
 			TextKeyVM = textKeyVM;
 			LastOfLanguage = true;   // Change value once to set the brush value
 
@@ -221,7 +219,7 @@ namespace Unclassified.TxEditor.ViewModels
 		public DelegateCommand ToggleAcceptPlaceholdersCommand { get; private set; }
 		public DelegateCommand ToggleAcceptPunctuationCommand { get; private set; }
 
-		private void InitializeCommands()
+		protected override void InitializeCommands()
 		{
 			AddCount0Command = new DelegateCommand(OnAddCount0);
 			AddCount1Command = new DelegateCommand(OnAddCount1);

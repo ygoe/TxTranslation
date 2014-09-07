@@ -13,6 +13,11 @@
 #    . "$sourcePath\.local\sign_config.ps1"
 #    Sign-File "My.exe" "$signKeyFile" "$signPassword" 2
 #
+# The file sign_config.ps1 could contain this script:
+#
+#    $signKeyFile = ".local\signkey.pfx"
+#    $signPassword = "secret"
+#
 # This function tries to use multiple timestamping servers. If one fails, another server is
 # tried. If all fail, a second try is started after a few seconds delay. This process requires an
 # internet connection.

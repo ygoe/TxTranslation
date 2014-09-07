@@ -12,8 +12,6 @@ namespace Unclassified.TxEditor.ViewModels
 		public QuantifiedTextViewModel(CultureTextViewModel cultureTextVM)
 		{
 			CultureTextVM = cultureTextVM;
-
-			InitializeCommands();
 		}
 
 		#endregion Constructor
@@ -160,7 +158,7 @@ namespace Unclassified.TxEditor.ViewModels
 		public DelegateCommand ToggleAcceptPlaceholdersCommand { get; private set; }
 		public DelegateCommand ToggleAcceptPunctuationCommand { get; private set; }
 
-		private void InitializeCommands()
+		protected override void InitializeCommands()
 		{
 			DeleteCommand = new DelegateCommand(OnDelete);
 			ToggleAcceptMissingCommand = new DelegateCommand(() => { AcceptMissing = !AcceptMissing; });

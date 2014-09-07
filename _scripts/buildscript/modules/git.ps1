@@ -264,5 +264,5 @@ function Do-Git-Log($action)
 	[System.IO.File]::WriteAllText((MakeRootedPath($logFile)), $data)
 
 	# Open file in editor for manual edits of the raw changes
-	Invoke-Expression (MakeRootedPath($logFile))
+	Invoke-Expression ('"' + (MakeRootedPath($logFile)) + '"')
 }

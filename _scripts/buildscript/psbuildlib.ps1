@@ -51,6 +51,17 @@ function MakeRootedPath($path)
 	return $path
 }
 
+# Creates a directory if it does not exist.
+#
+function EnsureDirExists($path)
+{
+	$path = MakeRootedPath($path)
+	if (!(Test-Path "$path"))
+	{
+		New-Item -ItemType Directory "$path" -ErrorAction Stop | Out-Null
+	}
+}
+
 # Moves the cursor by $count columns.
 #
 function Move-Cursor($count)

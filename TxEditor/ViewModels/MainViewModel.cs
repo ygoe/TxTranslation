@@ -48,8 +48,6 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			Instance = this;
 
-			InitializeCommands();
-
 			TextKeys = new Dictionary<string, TextKeyViewModel>();
 			LoadedCultureNames = new HashSet<string>();
 			DeletedCultureNames = new HashSet<string>();
@@ -363,7 +361,7 @@ namespace Unclassified.TxEditor.ViewModels
 		public DelegateCommand SelectPreviousTextKeyCommand { get; private set; }
 		public DelegateCommand SelectNextTextKeyCommand { get; private set; }
 
-		private void InitializeCommands()
+		protected override void InitializeCommands()
 		{
 			// Toolbar
 			// File section

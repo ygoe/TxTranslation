@@ -39,7 +39,7 @@ function Delete-File($file, $time)
 
 # Executes a Windows application and waits for it to finish.
 #
-# $file = the file name of the application to execute.
+# $file = The file name of the application to execute.
 # $params = The command line parameters.
 #
 # This function halts the build process if the process returns an error return code.
@@ -54,7 +54,7 @@ function Exec-File($file, $params, $time)
 
 # Executes a console application.
 #
-# $file = the file name of the application to execute.
+# $file = The file name of the application to execute.
 # $params = The command line parameters.
 #
 # This function halts the build process if the process returns an error return code.
@@ -62,6 +62,15 @@ function Exec-File($file, $params, $time)
 function Exec-Console($file, $params, $time)
 {
 	$global:actions += @{ action = "Do-Exec-Console"; file = $file; params = $params; time = $time }
+}
+
+# Selects a file in the Windows Explorer.
+#
+# $file = The name of the file to select.
+#
+function Explorer-Select($file, $time)
+{
+	$global:actions += @{ action = "Do-Explorer-Select"; file = $file; time = $time }
 }
 
 # ==============================  FUNCTION IMPLEMENTATIONS  ==============================
@@ -211,4 +220,15 @@ function Do-Exec-Console($action)
 		WaitError "Execution failed"
 		exit 1
 	}
+}
+
+function Do-Explorer-Select($action)
+{
+	$file = $action.file
+	
+	Write-Host ""
+	Write-Host -ForegroundColor DarkCyan "Selecting $file in Explorer..."
+
+	$file = MakeRootedPath($file)
+	Start-Process "$env:SystemRoot\explorer.exe" "/select,`"$file`""
 }

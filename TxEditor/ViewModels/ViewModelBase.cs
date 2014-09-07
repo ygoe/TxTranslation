@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Input;
+using System.Linq.Expressions;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace Unclassified.TxEditor.ViewModels
@@ -13,6 +13,18 @@ namespace Unclassified.TxEditor.ViewModels
 	/// </summary>
 	internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
+		#region Constructor
+
+		/// <summary>
+		/// Initializes a new instance of the ViewModelBase class.
+		/// </summary>
+		public ViewModelBase()
+		{
+			InitializeCommands();
+		}
+
+		#endregion Constructor
+
 		#region Common view properties
 
 		private string displayName;
@@ -24,25 +36,59 @@ namespace Unclassified.TxEditor.ViewModels
 		public virtual string DisplayName
 		{
 			get { return displayName; }
-			set { CheckUpdate(value, ref displayName, "DisplayName"); }
+			set
+			{
+				if (value != displayName)
+				{
+					displayName = value;
+					OnDisplayNameChanged();
+					OnPropertyChanged("DisplayName");
+				}
+			}
+		}
+
+		/// <summary>
+		/// Raised when the DisplayName property on this object has a new value.
+		/// </summary>
+		protected virtual void OnDisplayNameChanged()
+		{
+		}
+
+		public override string ToString()
+		{
+			if (DisplayName != null)
+			{
+				return GetType().Name + ": " + DisplayName;
+			}
+			return base.ToString();
 		}
 
 		#endregion Common view properties
+
+		#region Commands support
+
+		/// <summary>
+		/// Initializes the commands in the ViewModel class.
+		/// </summary>
+		protected virtual void InitializeCommands()
+		{
+		}
+
+		#endregion Commands support
 
 		#region Property update helpers
 
 		/// <summary>
 		/// Checks whether the new property value has changed and updates the backing field.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T">Value type of the property.</typeparam>
 		/// <param name="value">New property value.</param>
 		/// <param name="field">Backing field.</param>
 		/// <param name="propertyNames">Names of the properties to notify updated.</param>
 		/// <returns>true if the value has changed, false otherwise.</returns>
 		protected bool CheckUpdate<T>(T value, ref T field, params string[] propertyNames)
 		{
-			if ((value == null) != (field == null) ||      // Exactly one is null
-				(value != null && !value.Equals(field)))   // Neither is null and they're not equal
+			if (!EqualityComparer<T>.Default.Equals(value, field))
 			{
 				field = value;
 				OnPropertyChanged(propertyNames);
@@ -104,6 +150,20 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
+		protected string SanitizeDate(string str)
+		{
+			if (string.IsNullOrWhiteSpace(str)) return null;
+			try
+			{
+				DateTime d = Convert.ToDateTime(str);
+				return d.ToShortDateString();
+			}
+			catch
+			{
+				return str.Trim();
+			}
+		}
+
 		#endregion Data input cleanup
 
 		#region Data validation
@@ -131,7 +191,7 @@ namespace Unclassified.TxEditor.ViewModels
 				// Don't do anything if not on the UI thread. The dispatcher event will never be
 				// fired there and probably there's nobody interested in changed properties
 				// anyway on that thread.
-				if (Dispatcher.CurrentDispatcher == TxEditor.Views.MainWindow.Instance.Dispatcher)
+				if (Dispatcher.CurrentDispatcher == Application.Current.Dispatcher)
 				{
 					validationPending = true;
 					Dispatcher.CurrentDispatcher.BeginInvoke((Action) delegate
@@ -222,18 +282,6 @@ namespace Unclassified.TxEditor.ViewModels
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		/// <summary>
-		/// Raises this object's PropertyChanged event once for each property.
-		/// </summary>
-		/// <param name="propertyNames">The properties that has a new value.</param>
-		protected void OnPropertyChanged(params string[] propertyNames)
-		{
-			foreach (string propertyName in propertyNames)
-			{
-				OnPropertyChanged(propertyName);
-			}
-		}
-
-		/// <summary>
 		/// Raises this object's PropertyChanged event.
 		/// </summary>
 		/// <param name="propertyName">The property that has a new value.</param>
@@ -242,39 +290,136 @@ namespace Unclassified.TxEditor.ViewModels
 #if DEBUG
 			if (!TypeDescriptor.GetProperties(this).OfType<PropertyDescriptor>().Any(d => d.Name == propertyName))
 			{
-				throw new NotImplementedException("Notifying a change of non-existing property " + this.GetType().Name + "." + propertyName);
+				throw new ArgumentException("Notifying a change of non-existing property " + this.GetType().Name + "." + propertyName);
 			}
 #endif
 
-			var handler = this.PropertyChanged;
+			var handler = PropertyChanged;
 			if (handler != null)
 			{
 				handler(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 
-		#endregion INotifyPropertyChanged Member
-
-		#region Data binding update
-
 		/// <summary>
-		/// Updates the data binding source of the currently focused TextBox to update the model
-		/// instance with the current user input.
+		/// Raises this object's PropertyChanged event for multiple properties.
 		/// </summary>
-		public void UpdateFocusedTextBox()
+		/// <param name="propertyNames">The properties that have a new value.</param>
+		protected void OnPropertyChanged(params string[] propertyNames)
 		{
-			// Source: http://stackoverflow.com/a/5631292/143684
-			TextBox focusedTextBox = Keyboard.FocusedElement as TextBox;
-			if (focusedTextBox != null)
+			// Only do all this work if somebody might listen to it
+			var handler = this.PropertyChanged;
+			if (handler != null)
 			{
-				var be = focusedTextBox.GetBindingExpression(TextBox.TextProperty);
-				if (be != null)
+				foreach (string propertyName in propertyNames)
 				{
-					be.UpdateSource();
+#if DEBUG
+					if (!TypeDescriptor.GetProperties(this).OfType<PropertyDescriptor>().Any(d => d.Name == propertyName))
+					{
+						throw new ArgumentException("Notifying a change of non-existing property " + this.GetType().Name + "." + propertyName);
+					}
+#endif
+
+					handler(this, new PropertyChangedEventArgs(propertyName));
 				}
 			}
 		}
 
-		#endregion Data binding update
+		/// <summary>
+		/// Raises this object's PropertyChanged event.
+		/// </summary>
+		/// <typeparam name="T">Value type of the property.</typeparam>
+		/// <param name="selectorExpression">A lambda expression that describes the property that has a new value.</param>
+		protected void OnPropertyChanged<TProperty>(Expression<Func<TProperty>> selectorExpression)
+		{
+			// This type of parameter can only be used with the params keyword if all passed
+			// member expressions have the same value type. When using object instead of the
+			// TProperty type parameter, the expression gets wrapped with some Convert method and
+			// is no longer a MemberExpression. So this only works for one property per method call.
+
+			// Only do all this work if somebody might listen to it
+			if (this.PropertyChanged != null)
+			{
+				if (selectorExpression == null)
+					throw new ArgumentNullException("selectorExpression");
+				MemberExpression body = selectorExpression.Body as MemberExpression;
+				if (body == null)
+					throw new ArgumentException("The body must be a member expression");
+				OnPropertyChanged(body.Member.Name);
+			}
+		}
+
+		#endregion INotifyPropertyChanged Member
 	}
+
+	#region Special view model classes
+
+	/// <summary>
+	/// Represents an empty view model with a display name.
+	/// </summary>
+	internal sealed class EmptyViewModel : ViewModelBase
+	{
+		/// <summary>
+		/// Initialises a new instance of the EmptyViewModel class.
+		/// </summary>
+		/// <param name="displayName">The display name of the new instance.</param>
+		public EmptyViewModel(string displayName)
+		{
+			DisplayName = displayName;
+		}
+	}
+
+	/// <summary>
+	/// Represents a view model for a value with a display name.
+	/// </summary>
+	/// <typeparam name="T">The type of the value.</typeparam>
+	internal class ValueViewModel<T> : ViewModelBase
+	{
+		/// <summary>
+		/// Initialises a new instance of the ValueViewModel class.
+		/// </summary>
+		/// <param name="displayName">The display name of the new instance.</param>
+		/// <param name="value">The value represented by the new instance.</param>
+		public ValueViewModel(string displayName, T value)
+		{
+			if (value == null)
+				throw new ArgumentNullException("value");
+
+			DisplayName = displayName;
+			Value = value;
+		}
+
+		/// <summary>
+		/// Gets the value represented by the current instance.
+		/// </summary>
+		public T Value { get; private set; }
+
+		/// <summary>
+		/// Determines whether the specified ValueViewModel instance represents the same value as
+		/// the current instance.
+		/// </summary>
+		/// <param name="obj">The ValueViewModel to compare with the current object.</param>
+		/// <returns>true if the specified ValueViewModel represents the same value as the current
+		/// instance; otherwise, false.</returns>
+		public override bool Equals(object obj)
+		{
+			ValueViewModel<T> other = obj as ValueViewModel<T>;
+			if (other != null)
+			{
+				return other.Value.Equals(this.Value);
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Overriden.
+		/// </summary>
+		/// <returns></returns>
+		public override int GetHashCode()
+		{
+			return Value.GetHashCode();
+		}
+	}
+
+	#endregion Special view model classes
 }
