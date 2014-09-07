@@ -22,7 +22,7 @@ AppPublisher=Yves Goergen
 AppPublisherURL=http://dev.unclassified.de/source/txtranslation
 AppName=TxEditor
 AppVersion={#ShortRevId}
-AppMutex=Unclassified.TxEditor
+AppMutex=Global\Unclassified.TxEditor,Unclassified.TxEditor
 AppId={{99B66B72-FF8D-4169-ADE6-062A9EF0EB13}
 MinVersion=0,5.01sp3
 
