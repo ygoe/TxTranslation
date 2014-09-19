@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using Unclassified.FieldLog;
-using Unclassified.TxEditor.Views;
 using Unclassified.TxEditor.ViewModels;
+using Unclassified.TxEditor.Views;
 using Unclassified.TxLib;
 using Unclassified.Util;
 
@@ -14,11 +15,6 @@ namespace Unclassified.TxEditor
 	public partial class App : Application
 	{
 		#region Static properties
-
-		/// <summary>
-		/// Gets the Settings instance used by the application.
-		/// </summary>
-		public static AppSettings Settings { get; private set; }
 
 		private static SplashScreen splashScreen;
 		/// <summary>
@@ -45,27 +41,13 @@ namespace Unclassified.TxEditor
 			GlobalMutex.Create("Unclassified.TxEditor");
 
 			// Set the image file's build action to "Resource" and "Never copy" for this to work.
-			splashScreen = new SplashScreen("Images/TxFlag_256.png");
-			splashScreen.Show(false, true);
+			if (!Debugger.IsAttached)
+			{
+				splashScreen = new SplashScreen("Images/TxFlag_256.png");
+				splashScreen.Show(false, true);
+			}
 
-			App app = new App();
-			app.InitializeComponent();
-			app.Run();
-		}
-
-		#endregion Application entry point
-
-		#region Constructors
-
-		public App()
-		{
-			// Initialise the settings system
-			Settings = new AppSettings(
-			Path.Combine(
-				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-				"Unclassified",
-				"TxTranslation",
-				"TxEditor.conf"));
+			InitializeSettings();
 
 			// Make sure the settings are properly saved in the end
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
@@ -101,8 +83,21 @@ namespace Unclassified.TxEditor
 					FL.Error(ex, "Setting application culture from configuration");
 					//MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 					// Doing this leads to a XAML exception in the main window! o_O
+					// TODO: Does it work now outside of the App constructor?
 				}
 			}
+
+			App app = new App();
+			app.InitializeComponent();
+			app.Run();
+		}
+
+		#endregion Application entry point
+
+		#region Constructors
+
+		public App()
+		{
 		}
 
 		#endregion Constructors
@@ -232,6 +227,22 @@ namespace Unclassified.TxEditor
 
 		#endregion Startup
 
+		#region Settings
+
+		/// <summary>
+		/// Provides properties to access the application settings.
+		/// </summary>
+		public static IAppSettings Settings { get; private set; }
+
+		private static void InitializeSettings()
+		{
+			Settings = SettingsAdapterFactory.New<IAppSettings>(
+				new FileSettingsStore(
+					SettingsHelper.GetAppDataPath(@"Unclassified\TxTranslation", "TxEditor.conf")));
+		}
+
+		#endregion Settings
+
 		#region Event handlers
 
 		/// <summary>
@@ -245,8 +256,7 @@ namespace Unclassified.TxEditor
 		{
 			if (Settings != null)
 			{
-				Settings.Dispose();
-				Settings = null;
+				Settings.SettingsStore.Dispose();
 			}
 		}
 

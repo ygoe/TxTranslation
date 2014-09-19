@@ -170,14 +170,14 @@ namespace Unclassified.TxEditor.Views
 
 			public override string ToString()
 			{
-				return Tx.U(App.Settings.NativeCultureNames ? CultureInfo.NativeName : CultureInfo.DisplayName) +
+				return Tx.U(App.Settings.View.NativeCultureNames ? CultureInfo.NativeName : CultureInfo.DisplayName) +
 					" [" + CultureInfo.IetfLanguageTag + "]";
 			}
 
 			public int CompareTo(object obj)
 			{
 				CultureItem other = (CultureItem) obj;
-				if (App.Settings.NativeCultureNames)
+				if (App.Settings.View.NativeCultureNames)
 					return CultureInfo.NativeName.CompareTo(other.CultureInfo.NativeName);
 				else
 					return CultureInfo.DisplayName.CompareTo(other.CultureInfo.DisplayName);

@@ -95,13 +95,15 @@
     <Compile Include="Unclassified\Util\CommandLineHelper.cs" />
     <Compile Include="Unclassified\Util\DelayedCall.cs" />
     <Compile Include="Unclassified\Util\EnumerableWalker.cs" />
+    <Compile Include="Unclassified\Util\FileSettingsStore.cs" />
     <Compile Include="Unclassified\Util\GlobalMutex.cs" />
     <Compile Include="Unclassified\Util\ListExtensions.cs" />
     <Compile Include="Unclassified\Util\NaturalSort.cs" />
     <Compile Include="Unclassified\Util\ObservableHashSet.cs" />
     <Compile Include="Unclassified\Util\OpLock.cs" />
     <Compile Include="Unclassified\Util\PropertyExtensions.cs" />
-    <Compile Include="Unclassified\Util\Settings.cs" />
+    <Compile Include="Unclassified\Util\SettingsAdapterFactory.cs" />
+    <Compile Include="Unclassified\Util\SettingsHelper.cs" />
     <Compile Include="Unclassified\Util\StringExtensions.cs" />
     <Compile Include="Unclassified\Util\TaskHelper.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />

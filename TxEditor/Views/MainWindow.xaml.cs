@@ -45,12 +45,9 @@ namespace Unclassified.TxEditor.Views
 
 			InitializeComponent();
 
-			WindowStartupLocation = WindowStartupLocation.Manual;
-			Left = App.Settings.GetInt("window.left", (int) SystemParameters.WorkArea.Left + 20);
-			Top = App.Settings.GetInt("window.top", (int) SystemParameters.WorkArea.Top + 20);
-			Width = App.Settings.GetInt("window.width", 950);
-			Height = App.Settings.GetInt("window.height", 600);
-			WindowState = (WindowState) App.Settings.GetInt("window.state", (int) WindowState.Normal);
+			Width = 950;
+			Height = 600;
+			SettingsHelper.BindWindowState(this, App.Settings.View.MainWindowState);
 		}
 
 		#endregion Constructors
@@ -84,28 +81,6 @@ namespace Unclassified.TxEditor.Views
 				args.Cancel = true;
 				return;
 			}
-		}
-
-		private void Window_Closed(object sender, EventArgs args)
-		{
-			App.Settings.SaveNow();
-		}
-
-		private void Window_LocationChanged(object sender, EventArgs args)
-		{
-			if (App.Settings != null)
-			{
-				App.Settings.Set("window.left", (int) RestoreBounds.Left);
-				App.Settings.Set("window.top", (int) RestoreBounds.Top);
-				App.Settings.Set("window.width", (int) RestoreBounds.Width);
-				App.Settings.Set("window.height", (int) RestoreBounds.Height);
-				App.Settings.Set("window.state", (int) WindowState);
-			}
-		}
-
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs args)
-		{
-			Window_LocationChanged(this, EventArgs.Empty);
 		}
 
 		private void Window_PreviewKeyDown(object sender, KeyEventArgs args)

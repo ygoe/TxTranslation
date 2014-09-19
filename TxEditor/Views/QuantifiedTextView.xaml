@@ -1,10 +1,10 @@
 ﻿<UserControl
 	x:Class="Unclassified.TxEditor.Views.QuantifiedTextView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:c="clr-namespace:Unclassified.TxEditor.Converters"
 	xmlns:ctl="clr-namespace:Unclassified.TxEditor.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:my="clr-namespace:Unclassified.TxEditor"
 	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
 	xmlns:ui="clr-namespace:Unclassified.UI"
@@ -72,9 +72,9 @@
 			CursorChar="{Binding CursorChar, Mode=OneWayToSource}"
 			TextKeyReferences="{Binding TextKeyReferences, Mode=OneWayToSource}"
 			PlaceholderText="{Tx:T 'msg.enter text', Default='Enter text'}"
-			HiddenChars="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.ShowHiddenChars}"
+			HiddenChars="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.View.ShowHiddenChars}"
 			FontSize="{Binding CultureTextVM.TextKeyVM.MainWindowVM.FontSize}"
-			FontFamily="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.MonospaceFont, Converter={StaticResource monospaceFontConverter}}"
+			FontFamily="{Binding CultureTextVM.TextKeyVM.MainWindowVM.Settings.View.MonospaceFont, Converter={StaticResource monospaceFontConverter}}"
 			TextOptions.TextFormattingMode="{Binding CultureTextVM.TextKeyVM.MainWindowVM.TextFormattingMode}"
 			ValidateKey="MyTextBox_ValidateKey"/>
 

@@ -59,13 +59,10 @@ namespace Unclassified.TxEditor.ViewModels
 			ClearViewHistory();
 			UpdateTitle();
 
-			FontScale = App.Settings.FontScale;
+			FontScale = App.Settings.View.FontScale;
 
-			App.Settings.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler((o, e) =>
-			{
-				if (e.PropertyName == "ShowSuggestions") UpdateSuggestionsLayout();
-				if (e.PropertyName == "SuggestionsHorizontalLayout") UpdateSuggestionsLayout();
-			});
+			App.Settings.View.OnPropertyChanged(s => s.ShowSuggestions, UpdateSuggestionsLayout);
+			App.Settings.View.OnPropertyChanged(s => s.SuggestionsHorizontalLayout, UpdateSuggestionsLayout);
 			UpdateSuggestionsLayout();
 		}
 
@@ -88,7 +85,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		#region Data properties
 
-		public AppSettings Settings
+		public IAppSettings Settings
 		{
 			get { return App.Settings; }
 		}
@@ -163,7 +160,7 @@ namespace Unclassified.TxEditor.ViewModels
 			{
 				if (CheckUpdate(value, ref fontScale, "FontScale", "FontSize", "TextFormattingMode"))
 				{
-					App.Settings.FontScale = fontScale;
+					App.Settings.View.FontScale = fontScale;
 				}
 			}
 		}
@@ -239,9 +236,9 @@ namespace Unclassified.TxEditor.ViewModels
 			{
 				if (CheckUpdate(value, ref suggestionsPanelWidth, "SuggestionsPanelWidth"))
 				{
-					if (App.Settings.ShowSuggestions && App.Settings.SuggestionsHorizontalLayout)
+					if (App.Settings.View.ShowSuggestions && App.Settings.View.SuggestionsHorizontalLayout)
 					{
-						App.Settings.SuggestionsWidth = suggestionsPanelWidth;
+						App.Settings.View.SuggestionsWidth = suggestionsPanelWidth;
 					}
 				}
 			}
@@ -255,9 +252,9 @@ namespace Unclassified.TxEditor.ViewModels
 			{
 				if (CheckUpdate(value, ref suggestionsPanelHeight, "SuggestionsPanelHeight"))
 				{
-					if (App.Settings.ShowSuggestions && !App.Settings.SuggestionsHorizontalLayout)
+					if (App.Settings.View.ShowSuggestions && !App.Settings.View.SuggestionsHorizontalLayout)
 					{
-						App.Settings.SuggestionsHeight = suggestionsPanelHeight;
+						App.Settings.View.SuggestionsHeight = suggestionsPanelHeight;
 					}
 				}
 			}
@@ -679,7 +676,7 @@ namespace Unclassified.TxEditor.ViewModels
 				// Saving existing format 1 file.
 				// Ask to upgrade to version 2 format.
 
-				if (App.Settings.AskSaveUpgrade)
+				if (App.Settings.File.AskSaveUpgrade)
 				{
 					var result = TaskDialog.Show(
 						owner: MainWindow.Instance,
@@ -700,7 +697,7 @@ namespace Unclassified.TxEditor.ViewModels
 					if (result.VerificationChecked == true)
 					{
 						// Remember to not ask again
-						App.Settings.AskSaveUpgrade = false;
+						App.Settings.File.AskSaveUpgrade = false;
 					}
 				}
 			}
@@ -1185,7 +1182,7 @@ namespace Unclassified.TxEditor.ViewModels
 			fgWin = WinApi.GetForegroundWindow();
 
 			// Require it to be Visual Studio, otherwise do nothing more
-			if (App.Settings.WizardHotkeyInVisualStudioOnly)
+			if (App.Settings.Wizard.HotkeyInVisualStudioOnly)
 			{
 				StringBuilder sb = new StringBuilder(1000);
 				WinApi.GetWindowText(fgWin, sb, 1000);
@@ -1950,7 +1947,10 @@ namespace Unclassified.TxEditor.ViewModels
 			if (primaryCultureFiles.Count > 1)
 			{
 				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
-				App.SplashScreen.Close(TimeSpan.Zero);
+				if (App.SplashScreen != null)
+				{
+					App.SplashScreen.Close(TimeSpan.Zero);
+				}
 				MessageBox.Show(
 					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
 					Tx.T("msg.caption.warning"),
@@ -2836,7 +2836,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public static string CultureInfoName(CultureInfo ci, bool includeCode = true)
 		{
-			return Tx.U(App.Settings.NativeCultureNames ? ci.NativeName : ci.DisplayName) +
+			return Tx.U(App.Settings.View.NativeCultureNames ? ci.NativeName : ci.DisplayName) +
 				(includeCode ? " [" + ci.IetfLanguageTag + "]" : "");
 		}
 
@@ -3028,9 +3028,12 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private void OnInit()
 		{
-			App.SplashScreen.Close(TimeSpan.FromMilliseconds(300));
-			// Work-around for implementation bug in SplashScreen.Close that steals the focus
-			MainWindow.Instance.Focus();
+			if (App.SplashScreen != null)
+			{
+				App.SplashScreen.Close(TimeSpan.FromMilliseconds(300));
+				// Work-around for implementation bug in SplashScreen.Close that steals the focus
+				MainWindow.Instance.Focus();
+			}
 
 			CheckNotifyReadonlyFiles();
 
@@ -3142,19 +3145,19 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private void UpdateSuggestionsLayout()
 		{
-			if (App.Settings.ShowSuggestions)
+			if (App.Settings.View.ShowSuggestions)
 			{
-				if (App.Settings.SuggestionsHorizontalLayout)
+				if (App.Settings.View.SuggestionsHorizontalLayout)
 				{
 					SuggestionsSplitterHeight = 0;
 					SuggestionsPanelHeight = 0;
 					SuggestionsSplitterWidth = 6;
-					SuggestionsPanelWidth = App.Settings.SuggestionsWidth;
+					SuggestionsPanelWidth = App.Settings.View.SuggestionsWidth;
 				}
 				else
 				{
 					SuggestionsSplitterHeight = 6;
-					SuggestionsPanelHeight = App.Settings.SuggestionsHeight;
+					SuggestionsPanelHeight = App.Settings.View.SuggestionsHeight;
 					SuggestionsSplitterWidth = 0;
 					SuggestionsPanelWidth = 0;
 				}

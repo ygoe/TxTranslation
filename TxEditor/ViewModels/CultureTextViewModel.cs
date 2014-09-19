@@ -25,7 +25,7 @@ namespace Unclassified.TxEditor.ViewModels
 				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0)) :
 				new SolidColorBrush(Color.FromArgb(20, 0, 192, 0));
 
-			if (App.Settings.NativeCultureNames)
+			if (App.Settings.View.NativeCultureNames)
 				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).NativeName);
 			else
 				cultureNativeName = Tx.U(CultureInfo.GetCultureInfo(cultureName).DisplayName);

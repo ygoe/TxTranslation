@@ -3,9 +3,9 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
 	xmlns:ui="clr-namespace:Unclassified.UI"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	mc:Ignorable="d"
 	d:DesignHeight="240" d:DesignWidth="700"
 	ResizeMode="NoResize"
@@ -45,7 +45,7 @@
 
 				<CheckBox
 					Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Left"
-					IsChecked="{Binding ShowComments}"
+					IsChecked="{Binding View.ShowComments}"
 					Content="Show text key comments"/>
 
 				<TextBlock
@@ -55,25 +55,25 @@
 				<TextBox
 					Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="8,4,0,0"
 					Width="300" AcceptsReturn="True" TextWrapping="Wrap"
-					Text="{Binding CharacterMap, UpdateSourceTrigger=PropertyChanged}"
+					Text="{Binding Input.CharacterMap, UpdateSourceTrigger=PropertyChanged}"
 					ui:TextBoxExtensions.DisableInsertKey="True"/>
 
 				<CheckBox
 					Grid.Row="2" Grid.ColumnSpan="3"
-					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding NativeCultureNames}"
+					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding View.NativeCultureNames}"
 					Content="Show native culture names instead of in the current UI language (applied later)"/>
 
 				<StackPanel
 					Grid.Row="3" Grid.ColumnSpan="3" Margin="0,6,0,0" Orientation="Horizontal">
 					<TextBlock VerticalAlignment="Center" Text="Suggestions layout:"/>
-					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding SuggestionsHorizontalLayout}">
+					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding View.SuggestionsHorizontalLayout}">
 						<Border Margin="2,0,0,0" Height="24" BorderThickness="1" BorderBrush="DimGray">
 							<Border Margin="15,0,0,0" Width="30" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#10000000">
 								<Border HorizontalAlignment="Right" Width="12" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#809acd32"/>
 							</Border>
 						</Border>
 					</RadioButton>
-					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding SuggestionsHorizontalLayout, Converter={StaticResource NegationConverter}}">
+					<RadioButton GroupName="SuggestionsHorizontalLayout" Margin="12,0,0,0" IsChecked="{Binding View.SuggestionsHorizontalLayout, Converter={StaticResource NegationConverter}}">
 						<Border Margin="2,0,0,0" Height="24" BorderThickness="1" BorderBrush="DimGray">
 							<Border Margin="15,0,0,0" Width="30" BorderThickness="1,0,0,0" BorderBrush="DimGray" Background="#10000000">
 								<Border VerticalAlignment="Bottom" Height="8" BorderThickness="0,1,0,0" BorderBrush="DimGray" Background="#809acd32"/>
@@ -110,7 +110,7 @@
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
-				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding AskSaveUpgrade}" Content="{Tx:T 'window.settings.file.ask to upgrade', Default='Ask to upgrade when saving files in older format'}"/>
+				<CheckBox Grid.Row="0" Grid.ColumnSpan="2" IsChecked="{Binding File.AskSaveUpgrade}" Content="{Tx:T 'window.settings.file.ask to upgrade', Default='Ask to upgrade when saving files in older format'}"/>
 			</Grid>
 		</TabItem>
 
@@ -128,11 +128,11 @@
 
 				<CheckBox
 					Grid.Row="0" Grid.ColumnSpan="2"
-					HorizontalAlignment="Left" IsChecked="{Binding WizardHotkeyInVisualStudioOnly}"
+					HorizontalAlignment="Left" IsChecked="{Binding Wizard.HotkeyInVisualStudioOnly}"
 					Content="Restrict hotkey to Visual Studio windows"/>
 				<CheckBox
 					Grid.Row="1" Grid.ColumnSpan="2"
-					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding WizardRememberLocation}"
+					Margin="0,6,0,0" HorizontalAlignment="Left" IsChecked="{Binding Wizard.RememberLocation}"
 					Content="Remember last window location"/>
 			</Grid>
 		</TabItem>

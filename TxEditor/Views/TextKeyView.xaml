@@ -22,7 +22,7 @@
 		<Grid
 			DockPanel.Dock="Top" Margin="12,0,12,12"
 			Background="LemonChiffon"
-			Visibility="{Binding MainWindowVM.Settings.ShowComments, Converter={StaticResource boolVis}}">
+			Visibility="{Binding MainWindowVM.Settings.View.ShowComments, Converter={StaticResource boolVis}}">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>

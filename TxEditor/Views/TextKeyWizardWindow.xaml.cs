@@ -43,7 +43,7 @@ namespace Unclassified.TxEditor.Views
 			InitializeComponent();
 
 			WindowStartupLocation = WindowStartupLocation.Manual;
-			switch (App.Settings.WizardSourceCode)
+			switch (App.Settings.Wizard.SourceCode)
 			{
 				case "C#":
 				default:
@@ -83,12 +83,12 @@ namespace Unclassified.TxEditor.Views
 			}
 
 			// Text input UI setup
-			TranslationText.HiddenChars = App.Settings.ShowHiddenChars;
+			TranslationText.HiddenChars = App.Settings.View.ShowHiddenChars;
 			TranslationText.FontSize = MainViewModel.Instance.FontSize;
-			if (App.Settings.MonospaceFont)
+			if (App.Settings.View.MonospaceFont)
 			{
 				MonospaceFontConverter monospaceFontConverter = new MonospaceFontConverter();
-				TranslationText.FontFamily = monospaceFontConverter.Convert(App.Settings.MonospaceFont, null, null, null) as FontFamily;
+				TranslationText.FontFamily = monospaceFontConverter.Convert(App.Settings.View.MonospaceFont, null, null, null) as FontFamily;
 			}
 			TextOptions.SetTextFormattingMode(TranslationText, MainViewModel.Instance.TextFormattingMode);
 
@@ -113,10 +113,13 @@ namespace Unclassified.TxEditor.Views
 
 			UpdateLayout();
 
-			if (App.Settings != null && App.Settings.WizardRememberLocation)
+			if (App.Settings != null &&
+				App.Settings.Wizard.RememberLocation &&
+				App.Settings.Wizard.WindowLeft != int.MinValue &&
+				App.Settings.Wizard.WindowTop != int.MinValue)
 			{
-				Left = App.Settings.GetInt("wizard.window.left", (int) (SystemParameters.WorkArea.Right - 40 - ActualWidth));
-				Top = App.Settings.GetInt("wizard.window.top", (int) (SystemParameters.WorkArea.Bottom - 40 - ActualHeight));
+				Left = App.Settings.Wizard.WindowLeft;
+				Top = App.Settings.Wizard.WindowTop;
 			}
 			else
 			{
@@ -131,16 +134,16 @@ namespace Unclassified.TxEditor.Views
 
 		private void Window_LocationChanged(object sender, EventArgs args)
 		{
-			if (App.Settings != null && App.Settings.WizardRememberLocation)
+			if (App.Settings != null && App.Settings.Wizard.RememberLocation)
 			{
-				App.Settings.Set("wizard.window.left", (int) RestoreBounds.Left);
-				App.Settings.Set("wizard.window.top", (int) RestoreBounds.Top);
+				App.Settings.Wizard.WindowLeft = (int) RestoreBounds.Left;
+				App.Settings.Wizard.WindowTop = (int) RestoreBounds.Top;
 			}
 		}
 
 		private void Window_SizeChanged(object sender, SizeChangedEventArgs args)
 		{
-			if (App.Settings == null || !App.Settings.WizardRememberLocation)
+			if (App.Settings == null || !App.Settings.Wizard.RememberLocation)
 			{
 				Left = SystemParameters.WorkArea.Right - 40 - ActualWidth;
 				Top = SystemParameters.WorkArea.Bottom - 40 - ActualHeight;
@@ -253,7 +256,7 @@ namespace Unclassified.TxEditor.Views
 			// language
 			if (SourceCSharpButton.IsChecked == true)
 			{
-				App.Settings.WizardSourceCode = "C#";
+				App.Settings.Wizard.SourceCode = "C#";
 
 				string keyString = textKey.Replace("\\", "\\\\").Replace("\"", "\\\"");
 
@@ -293,7 +296,7 @@ namespace Unclassified.TxEditor.Views
 			}
 			if (SourceXamlButton.IsChecked == true)
 			{
-				App.Settings.WizardSourceCode = "XAML";
+				App.Settings.Wizard.SourceCode = "XAML";
 
 				string keyString = textKey.Replace("\\", "\\\\").Replace("'", "\\'");
 				string defaultString = TranslationText.Text.Replace("\\", "\\\\").Replace("'", "\\'");
@@ -308,7 +311,7 @@ namespace Unclassified.TxEditor.Views
 			}
 			if (SourceAspxButton.IsChecked == true)
 			{
-				App.Settings.WizardSourceCode = "aspx";
+				App.Settings.Wizard.SourceCode = "aspx";
 
 				string keyString = textKey.Replace("\\", "\\\\").Replace("\"", "\\\"");
 
