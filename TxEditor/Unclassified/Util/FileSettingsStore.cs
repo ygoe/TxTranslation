@@ -63,13 +63,13 @@ namespace Unclassified.Util
 		/// <summary>
 		/// DelayedCall to save the settings back to the file.
 		/// </summary>
-		private DelayedCall delayedSave = null;
+		private DelayedCall saveDc;
 
 		/// <summary>
 		/// Indicates whether the settings file was opened in read-only mode. This prevents any
 		/// write access to the settings and will never save the file back.
 		/// </summary>
-		private bool readOnly = false;
+		private bool readOnly;
 
 		/// <summary>
 		/// File encryption password. Encryption is only used if the password is not null or empty.
@@ -130,6 +130,15 @@ namespace Unclassified.Util
 			this.password = password;
 			this.readOnly = readOnly;
 			Load(fileName);
+			
+			if (DelayedCall.SupportsSynchronization)
+			{
+				saveDc = DelayedCall.Create(Save, SaveDelay);
+			}
+			else
+			{
+				saveDc = DelayedCall.CreateAsync(Save, SaveDelay);
+			}
 		}
 
 		#endregion Constructors
@@ -203,16 +212,7 @@ namespace Unclassified.Util
 					store[key] = newValue;
 					OnPropertyChanged(key);
 
-					if (delayedSave != null && delayedSave.IsWaiting) delayedSave.Cancel();
-					if (delayedSave != null) delayedSave.Dispose();
-					if (DelayedCall.SupportsSynchronization)
-					{
-						delayedSave = DelayedCall.Start(Save, SaveDelay);
-					}
-					else
-					{
-						delayedSave = DelayedCall.StartAsync(Save, SaveDelay);
-					}
+					saveDc.Reset();
 				}
 			}
 		}
@@ -233,16 +233,34 @@ namespace Unclassified.Util
 					store.Remove(key);
 					OnPropertyChanged(key);
 
-					if (delayedSave != null && delayedSave.IsWaiting) delayedSave.Cancel();
-					if (delayedSave != null) delayedSave.Dispose();
-					if (DelayedCall.SupportsSynchronization)
-					{
-						delayedSave = DelayedCall.Start(Save, SaveDelay);
-					}
-					else
-					{
-						delayedSave = DelayedCall.StartAsync(Save, SaveDelay);
-					}
+					saveDc.Reset();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Renames a setting key in the settings store.
+		/// </summary>
+		/// <param name="oldKey">The old setting key to rename.</param>
+		/// <param name="newKey">The new setting key.</param>
+		public void Rename(string oldKey, string newKey)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+				if (readOnly) throw new InvalidOperationException("This SettingsStore instance is created in read-only mode.");
+
+				if (store.ContainsKey(oldKey))
+				{
+					object data = store[oldKey];
+					
+					store.Remove(oldKey);
+					OnPropertyChanged(oldKey);
+
+					store[newKey] = data;
+					OnPropertyChanged(newKey);
+
+					saveDc.Reset();
 				}
 			}
 		}
@@ -953,10 +971,11 @@ namespace Unclassified.Util
 			lock (syncLock)
 			{
 				if (isDisposed) throw new ObjectDisposedException("");
+				if (readOnly) throw new InvalidOperationException("This SettingsStore instance is created in read-only mode.");
 
-				if (delayedSave != null && delayedSave.IsWaiting)
+				if (saveDc.IsWaiting)
 				{
-					delayedSave.Cancel();
+					saveDc.Cancel();
 					Save();
 				}
 			}
@@ -1207,11 +1226,12 @@ namespace Unclassified.Util
 			{
 				if (!isDisposed)
 				{
-					SaveNow();
+					if (!readOnly)
+						SaveNow();
 					isDisposed = true;
 					store.Clear();
-					if (delayedSave != null) delayedSave.Dispose();
-					delayedSave = null;
+					saveDc.Dispose();
+					saveDc = null;
 				}
 			}
 		}

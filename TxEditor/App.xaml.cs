@@ -239,6 +239,40 @@ namespace Unclassified.TxEditor
 			Settings = SettingsAdapterFactory.New<IAppSettings>(
 				new FileSettingsStore(
 					SettingsHelper.GetAppDataPath(@"Unclassified\TxTranslation", "TxEditor.conf")));
+
+			// Update settings format from old version
+			if (string.IsNullOrEmpty(App.Settings.LastStartedAppVersion))
+			{
+				Settings.SettingsStore.Rename("app-culture", "AppCulture");
+				Settings.SettingsStore.Rename("file.ask-save-upgrade", "File.AskSaveUpgrade");
+				Settings.SettingsStore.Rename("input.charmap", "Input.CharacterMap");
+				Settings.SettingsStore.Rename("view.comments", "View.ShowComments");
+				Settings.SettingsStore.Rename("view.monospace-font", "View.MonospaceFont");
+				Settings.SettingsStore.Rename("view.hidden-chars", "View.ShowHiddenChars");
+				Settings.SettingsStore.Rename("view.charmap", "View.ShowCharacterMap");
+				Settings.SettingsStore.Rename("view.font-scale", "View.FontScale");
+				Settings.SettingsStore.Rename("view.native-culture-names", "View.NativeCultureNames");
+				Settings.SettingsStore.Rename("view.suggestions", "View.ShowSuggestions");
+				Settings.SettingsStore.Rename("view.suggestions.horizontal-layout", "View.SuggestionsHorizontalLayout");
+				Settings.SettingsStore.Rename("view.suggestions.width", "View.SuggestionsWidth");
+				Settings.SettingsStore.Rename("view.suggestions.height", "View.SuggestionsHeight");
+				Settings.SettingsStore.Rename("wizard.source-code", "Wizard.SourceCode");
+				Settings.SettingsStore.Rename("wizard.remember-location", "Wizard.RememberLocation");
+				Settings.SettingsStore.Rename("wizard.hotkey-in-visual-studio-only", "Wizard.HotkeyInVisualStudioOnly");
+				Settings.SettingsStore.Rename("window.left", "View.MainWindowState.Left");
+				Settings.SettingsStore.Rename("window.top", "View.MainWindowState.Top");
+				Settings.SettingsStore.Rename("window.width", "View.MainWindowState.Width");
+				Settings.SettingsStore.Rename("window.height", "View.MainWindowState.Height");
+				Settings.View.MainWindowState.IsMaximized = Settings.SettingsStore.GetInt("window.state") == 2;
+				Settings.SettingsStore.Remove("window.state");
+				Settings.SettingsStore.Rename("wizard.window.left", "Wizard.WindowLeft");
+				Settings.SettingsStore.Rename("wizard.window.top", "Wizard.WindowTop");
+			}
+
+			// Remember the version of the application.
+			// If we need to react on settings changes from previous application versions, here is
+			// the place to check the version currently in the settings, before it's overwritten.
+			App.Settings.LastStartedAppVersion = FL.AppVersion;
 		}
 
 		#endregion Settings
@@ -252,7 +286,7 @@ namespace Unclassified.TxEditor
 		/// The processing time in this event is limited. All handlers of this event together must
 		/// not take more than ca. 3 seconds. The processing will then be terminated.
 		/// </remarks>
-		private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
 		{
 			if (Settings != null)
 			{

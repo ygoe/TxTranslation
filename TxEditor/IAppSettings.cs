@@ -6,6 +6,11 @@ namespace Unclassified.TxEditor
 	public interface IAppSettings : ISettings
 	{
 		/// <summary>
+		/// Gets or sets the last started version of the application.
+		/// </summary>
+		string LastStartedAppVersion { get; set; }
+
+		/// <summary>
 		/// Gets or sets the culture to use for the application user interface. Empty for default.
 		/// </summary>
 		string AppCulture { get; set; }

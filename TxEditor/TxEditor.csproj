@@ -77,7 +77,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="IAppSettings.cs" />
     <Compile Include="Controls\AcceptProblemButton.xaml.cs">
       <DependentUpon>AcceptProblemButton.xaml</DependentUpon>
     </Compile>

@@ -966,6 +966,13 @@ namespace Unclassified.Util
 		/// <param name="key">The setting key to remove.</param>
 		void Remove(string key);
 
+		/// <summary>
+		/// Renames a setting key in the settings store.
+		/// </summary>
+		/// <param name="oldKey">The old setting key to rename.</param>
+		/// <param name="newKey">The new setting key.</param>
+		void Rename(string oldKey, string newKey);
+	
 		#endregion Set methods
 
 		#region Get methods
