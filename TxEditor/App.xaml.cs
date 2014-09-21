@@ -87,6 +87,21 @@ namespace Unclassified.TxEditor
 				}
 			}
 
+			// FieldLog application error dialog localisation
+			FL.AppErrorDialogTitle = Tx.T("fieldlog.AppErrorDialogTitle");
+			FL.AppErrorDialogContinuable = Tx.T("fieldlog.AppErrorDialogContinuable");
+			FL.AppErrorDialogTerminating = Tx.T("fieldlog.AppErrorDialogTerminating");
+			FL.AppErrorDialogContext = Tx.T("fieldlog.AppErrorDialogContext");
+			FL.AppErrorDialogLogPath = Tx.T("fieldlog.AppErrorDialogLogPath");
+			FL.AppErrorDialogNoLog = Tx.T("fieldlog.AppErrorDialogNoLog");
+			FL.AppErrorDialogConsoleAction = Tx.T("fieldlog.AppErrorDialogConsoleAction");
+			FL.AppErrorDialogTimerNote = Tx.T("fieldlog.AppErrorDialogTimerNote");
+			FL.AppErrorDialogDetails = Tx.T("fieldlog.AppErrorDialogDetails");
+			FL.AppErrorDialogSendLogs = Tx.T("fieldlog.AppErrorDialogSendLogs");
+			FL.AppErrorDialogNext = Tx.T("fieldlog.AppErrorDialogNext");
+			FL.AppErrorDialogTerminate = Tx.T("fieldlog.AppErrorDialogTerminate");
+			FL.AppErrorDialogContinue = Tx.T("fieldlog.AppErrorDialogContinue");
+
 			App app = new App();
 			app.InitializeComponent();
 			app.Run();

@@ -4,6 +4,17 @@
         <name>Unclassified.FieldLog</name>
     </assembly>
     <members>
+        <member name="T:Unclassified.FieldLog.AppErrorDialog">
+            <summary>
+            The application error dialog.
+            </summary>
+        </member>
+        <member name="M:Unclassified.FieldLog.AppErrorDialog.ShowError(System.Boolean,System.String,System.Object)">
+            <summary>
+            Shows the application error dialog. This is the only method that is called to show or
+            update an error dialog. If a dialog is already open, the error is added to it.
+            </summary>
+        </member>
         <member name="T:Unclassified.FieldLog.CheckTimeThread">
             <summary>
             Implements a thread that monitors the system time and rebases FieldLog's clock on a change.
@@ -223,6 +234,12 @@
             <param name="ex">The Exception instance.</param>
             <param name="customStackTrace">A StackTrace that shall be logged instead of the StackTrace from the Exception instance.</param>
         </member>
+        <member name="M:Unclassified.FieldLog.FieldLogException.ToString">
+            <summary>
+            Returns the exception message.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Unclassified.FieldLog.FieldLogException.Write(Unclassified.FieldLog.FieldLogFileWriter)">
             <summary>
             Writes the exception fields to the log file writer.
@@ -275,6 +292,12 @@
             Initialises a new instance of the FieldLogStackFrame class.
             </summary>
             <param name="stackFrame">The StackFrame instance.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FieldLogStackFrame.ToString">
+            <summary>
+            Returns the type and method name.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Unclassified.FieldLog.FieldLogStackFrame.Write(Unclassified.FieldLog.FieldLogFileWriter)">
             <summary>
@@ -2238,6 +2261,16 @@
             This method is not available in the NET20 build.
             </remarks>
         </member>
+        <member name="M:Unclassified.FieldLog.FL.BreakIfStackTraceLength(System.Int32)">
+            <summary>
+            Breaks the debugged process if the stack trace is currently at least the thecified
+            number of frames long. This method can be used to halt for debugging before Visual
+            Studio can't display the complete stack trace anymore, or a StackOverflowException is
+            thrown by the runtime (which prevents any further analysis of the stack). Does nothing
+            if no debugger is attached.
+            </summary>
+            <param name="minLength">The minimum length of the stack trace to break for.</param>
+        </member>
         <member name="M:Unclassified.FieldLog.FL.CheckAddBuffer(System.Int32)">
             <summary>
             Checks the current buffer size and adds it to the sending queue and creates a new one.
@@ -2436,20 +2469,14 @@
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTitle">
             <summary>Gets or sets the application error user dialog title.</summary>
         </member>
-        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinuableGui">
-            <summary>Gets or sets the application error user dialog intro for GUI applications if the application can be continued.</summary>
-        </member>
-        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinuableConsole">
-            <summary>Gets or sets the application error user dialog intro for console applications if the application can be continued.</summary>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinuable">
+            <summary>Gets or sets the application error user dialog intro if the application can be continued.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTerminating">
             <summary>Gets or sets the application error user dialog intro if the application will be terminated.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContext">
             <summary>Gets or sets the application error user dialog context caption, including a colon at the end.</summary>
-        </member>
-        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogNote">
-            <summary>Gets or sets the application error user dialog note at the end of the message.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogLogPath">
             <summary>Gets or sets the application error user dialog text describing the log path.</summary>
@@ -2462,6 +2489,21 @@
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTimerNote">
             <summary>Gets or sets the application error user dialog text informing about the safety timer.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogDetails">
+            <summary>Gets or sets the application error user dialog label for error details.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogSendLogs">
+            <summary>Gets or sets the application error user dialog label for sending logs.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogNext">
+            <summary>Gets or sets the application error user dialog label for the next error.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTerminate">
+            <summary>Gets or sets the application error user dialog label to terminate.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinue">
+            <summary>Gets or sets the application error user dialog label to continue.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppUptime">
             <summary>
@@ -3425,6 +3467,26 @@
         <member name="P:Unclassified.FieldLog.OSInfo.ScreenDpi">
             <summary>
             Gets the logical resolution of the screen. 100 % is 96 dpi.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsWindowsXPOrNewer">
+            <summary>
+            Gets a value indicating whether the OS version is Windows XP/Server 2003 or newer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsWindowsVistaOrNewer">
+            <summary>
+            Gets a value indicating whether the OS version is Windows Vista/Server 2008 or newer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsWindows7OrNewer">
+            <summary>
+            Gets a value indicating whether the OS version is Windows 7/Server 2008 R2 or newer.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.OSInfo.IsWindows8OrNewer">
+            <summary>
+            Gets a value indicating whether the OS version is Windows 8/Server 2012 or newer.
             </summary>
         </member>
         <member name="T:Unclassified.FieldLog.OSType">
