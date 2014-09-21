@@ -81,9 +81,7 @@ namespace Unclassified.TxEditor
 				catch (Exception ex)
 				{
 					FL.Error(ex, "Setting application culture from configuration");
-					//MessageBox.Show("Error settings configured application UI culture.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					// Doing this leads to a XAML exception in the main window! o_O
-					// TODO: Does it work now outside of the App constructor?
+					MessageBox.Show("The configured application UI culture cannot be set.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
 
