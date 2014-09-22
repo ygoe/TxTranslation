@@ -811,6 +811,7 @@ namespace Unclassified.TxLib
 
 			// Add the dummy binding as well as the binding for the number value.
 			multiBinding.Bindings.Add(binding);
+			multiBinding.Bindings.Add(binding);   // We don't have a timer binding here but need to fill the slot
 			multiBinding.Bindings.Add(TimeBinding);
 
 			// The converter will invoke the actual formatting of the value.
