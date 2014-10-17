@@ -372,6 +372,7 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
 		<text key="validation.more">, weitere Fehler</text>
 		<text key="window.load select file.button.cancel">Abbrechen</text>
+		<text key="window.load select file.button.load all files">_Alle Dateien laden</text>
 		<text key="window.load select file.button.load file">Datei laden</text>
 		<text key="window.load select file.intro">Wählen Sie eine Datei zum Laden aus:</text>
 		<text key="window.new culture.button.add culture">Kultur hinzufügen</text>
@@ -798,6 +799,7 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
 		<text key="validation.more">, more errors</text>
 		<text key="window.load select file.button.cancel">Cancel</text>
+		<text key="window.load select file.button.load all files">Load _all files</text>
 		<text key="window.load select file.button.load file">Load file</text>
 		<text key="window.load select file.intro">Select a file to load:</text>
 		<text key="window.new culture.button.add culture">Add culture</text>

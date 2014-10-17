@@ -66,6 +66,11 @@
 				Content="{Tx:T 'window.load select file.button.load file', Default='Load file'}"
 				Click="OKButton_Click"/>
 			<Button
+				Name="AllButton"
+				Margin="6,0,0,0" Padding="6,1" MinWidth="75" Visibility="{Binding AllButtonVisibility}"
+				Content="{Tx:T 'window.load select file.button.load all files', Default='Load all files'}"
+				Click="AllButton_Click"/>
+			<Button
 				Margin="6,0,0,0" Padding="6,1" MinWidth="75"
 				IsCancel="True"
 				Content="{Tx:T 'window.load select file.button.cancel', Default='Cancel'}"

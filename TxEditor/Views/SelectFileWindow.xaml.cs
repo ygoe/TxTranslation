@@ -44,6 +44,20 @@ namespace Unclassified.TxEditor.Views
 			Close();
 		}
 
+		private void AllButton_Click(object sender, RoutedEventArgs e)
+		{
+			SelectFileViewModel vm = DataContext as SelectFileViewModel;
+			string[] files = new string[FileList.Items.Count];
+			for (int i = 0; i < FileList.Items.Count; i++)
+			{
+				files[i] = System.IO.Path.Combine(vm.BaseDir, FileList.Items[i] as string);
+			}
+			vm.SelectedFileNames = files;
+
+			DialogResult = true;
+			Close();
+		}
+
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
 		{
 			DialogResult = false;

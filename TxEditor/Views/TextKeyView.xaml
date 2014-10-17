@@ -21,8 +21,17 @@
 
 		<Grid
 			DockPanel.Dock="Top" Margin="12,0,12,12"
-			Background="LemonChiffon"
 			Visibility="{Binding MainWindowVM.Settings.View.ShowComments, Converter={StaticResource boolVis}}">
+			<Grid.Style>
+				<Style TargetType="Grid">
+					<Setter Property="Background" Value="LemonChiffon"/>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Text, ElementName=CommentTextBox}" Value="">
+							<Setter Property="Background" Value="WhiteSmoke"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Grid.Style>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
@@ -35,6 +44,7 @@
 				Grid.Column="0" VerticalAlignment="Top" Margin="3,1,0,1"
 				Source="/Images/comment.png"/>
 			<TextBox
+				Name="CommentTextBox"
 				Grid.Column="1" Margin="4,0,0,0"
 				BorderThickness="0" Padding="2"
 				TextWrapping="Wrap" AcceptsReturn="True"

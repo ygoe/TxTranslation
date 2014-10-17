@@ -69,6 +69,11 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
+		public Visibility AllButtonVisibility
+		{
+			get { return foundFiles.Count > 1 ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
 		#endregion Data properties
 
 		#region BackgroundWorker
@@ -88,12 +93,13 @@ namespace Unclassified.TxEditor.ViewModels
 					str = str.Substring(baseDir.Length);
 				}
 				foundFiles.InsertSorted(str, (a, b) => string.Compare(a, b, StringComparison.InvariantCultureIgnoreCase));
+				OnPropertyChanged(() => AllButtonVisibility);
 			}
 		}
 
 		private void scanBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			OnPropertyChanged("SpinnerVisibility");
+			OnPropertyChanged(() => SpinnerVisibility);
 			if (e.Error != null)
 			{
 				FL.Error(e.Error);
