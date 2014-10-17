@@ -3990,6 +3990,11 @@ namespace Unclassified.TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		private static string GetCultureText(string culture, string key, int count)
 		{
+			if (culture == null)
+				throw new ArgumentNullException("The culture name must not be null.");
+			if (key == null)
+				throw new ArgumentNullException("The text key must not be null.");
+
 			// This method is only called from GetText which already holds a read lock,
 			// so no additional locking is needed here.
 
@@ -4002,7 +4007,7 @@ namespace Unclassified.TxLib
 				if (language.TryGetValue(key, out textItem))
 				{
 					string text;
-					if (count != -1)
+					if (count > -1)
 					{
 						// A count value is specified, search for a matching text value.
 						// First try a direct match
