@@ -12,12 +12,7 @@ namespace Unclassified.TxEditor.Views
 		public TextKeyWindow()
 		{
 			InitializeComponent();
-		}
-
-		protected override void OnSourceInitialized(EventArgs e)
-		{
 			this.HideIcon();
-			base.OnSourceInitialized(e);
 		}
 
 		public string TextKey

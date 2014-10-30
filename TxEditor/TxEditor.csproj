@@ -152,8 +152,14 @@
     <Compile Include="Views\CultureWindow.xaml.cs">
       <DependentUpon>CultureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Unclassified\UI\DateTimeTextBox.xaml.cs">
+      <DependentUpon>DateTimeTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DetailsMessage.xaml.cs">
       <DependentUpon>DetailsMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DateTimeWindow.xaml.cs">
+      <DependentUpon>DateTimeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SelectFileWindow.xaml.cs">
       <DependentUpon>SelectFileWindow.xaml</DependentUpon>
@@ -201,7 +207,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Unclassified\UI\DateTimeTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DetailsMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DateTimeWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

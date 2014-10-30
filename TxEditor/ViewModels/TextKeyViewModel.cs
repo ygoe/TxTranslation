@@ -184,6 +184,14 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
+		public bool IsSystemKeyNoTemplate
+		{
+			get
+			{
+				return !MainWindowVM.IsTemplateFile && textKey.StartsWith("Tx:");
+			}
+		}
+
 		#endregion Public properties
 
 		#region Overridden methods

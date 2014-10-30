@@ -1,13 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<translation xml:space="preserve">
+<translation xml:space="preserve" template="true">
 	<culture name="de">
 		<text key="Tx:date.day">d.</text>
-		<text key="Tx:date.month day">dd.MM.</text>
-		<text key="Tx:date.month day abbr">d. MMM.</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM. yyyy</text>
-		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
-		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:date.day.tab">dd.</text>
+		<text key="Tx:date.month.abbr">MMM.</text>
+		<text key="Tx:date.month day">d.M.</text>
+		<text key="Tx:date.month day.abbr">d. MMM.</text>
+		<text key="Tx:date.month day.long">d. MMMM</text>
+		<text key="Tx:date.month day.tab">dd.MM.</text>
+		<text key="Tx:date.year month">M'/'yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM. yyyy</text>
+		<text key="Tx:date.year month.tab">MM'/'yyyy</text>
+		<text key="Tx:date.year month day">d.M.yyyy</text>
+		<text key="Tx:date.year month day.abbr">d. MMM. yyyy</text>
+		<text key="Tx:date.year month day.long">d. MMMM yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> und </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -16,12 +22,19 @@
 		<text key="Tx:number.group separator threshold">10000</text>
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}.</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">„</text>
 		<text key="Tx:quote end">“</text>
 		<text key="Tx:quote nested begin">‚</text>
 		<text key="Tx:quote nested end">‘</text>
-		<text key="Tx:time.hour">H "Uhr"</text>
+		<text key="Tx:time.hour">H "Uhr"</text>
+		<text key="Tx:time.hour.tab">HH "Uhr"</text>
+		<text key="Tx:time.hour minute">HH:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH:mm:ss.fff</text>
 		<text key="Tx:time.never">nie</text>
 		<text key="Tx:time.now">jetzt</text>
 		<text key="Tx:time.relative">in {interval}</text>
@@ -50,7 +63,6 @@
 		<text key="Tx:time.relative neg.seconds" count="1">{#} Sekunde</text>
 		<text key="Tx:time.relative neg.years">{#} Jahren</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.relative separator"> </text>
 		<text key="Tx:time.relative span">für {interval}</text>
 		<text key="Tx:time.relative span.days">{#} Tage</text>
 		<text key="Tx:time.relative span.days" count="1">{#} Tag</text>
@@ -90,7 +102,7 @@
 		<text key="Tx:time.span.seconds" count="1">{#} Sekunde</text>
 		<text key="Tx:time.span.years">{#} Jahre</text>
 		<text key="Tx:time.span.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.span neg">{interval} davor</text>
+		<text key="Tx:time.span neg">{interval} vorher</text>
 		<text key="Tx:time.span neg.days">{#} Tage</text>
 		<text key="Tx:time.span neg.days" count="1">{#} Tag</text>
 		<text key="Tx:time.span neg.hours">{#} Stunden</text>
@@ -106,21 +118,43 @@
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute second">H:mm:ss</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms">H:mm:ss.fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH:mm:ss.fff</text>
 	</culture>
 	<culture name="de-CH">
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">‹</text>
 		<text key="Tx:quote nested end">›</text>
+		<text key="Tx:time.hour minute">H.mm</text>
+		<text key="Tx:time.hour minute.tab">HH.mm</text>
+		<text key="Tx:time.hour minute second">H.mm.ss</text>
+		<text key="Tx:time.hour minute second.tab">HH.mm.ss</text>
+		<text key="Tx:time.hour minute second ms">H.mm.ss,fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH.mm.ss,fff</text>
 	</culture>
 	<culture name="en" primary="true">
-		<text key="Tx:date.month day">d/M</text>
-		<text key="Tx:date.month day abbr">d MMM</text>
-		<text key="Tx:date.month day long">d MMMM</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
-		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:date.day" comment="Default: %d" />
+		<text key="Tx:date.day.tab" comment="Default: dd" />
+		<text key="Tx:date.dow with date" comment="Default: {dow}, {date}" />
+		<text key="Tx:date.month.abbr" comment="Default: MMM" />
+		<text key="Tx:date.month.long" comment="Default: MMMM" />
+		<text key="Tx:date.month day" comment="Default: MM-dd">d/M</text>
+		<text key="Tx:date.month day.abbr" comment="Default: d MMM">d MMM</text>
+		<text key="Tx:date.month day.long" comment="Default: M">d MMMM</text>
+		<text key="Tx:date.month day.tab" comment="Default: MM-dd">dd/MM</text>
+		<text key="Tx:date.year" comment="Default: yyyy" />
+		<text key="Tx:date.year month" comment="Default: yyyy-MM">M/yyyy</text>
+		<text key="Tx:date.year month.abbr" comment="Default: MMM yyyy">MMM yyyy</text>
+		<text key="Tx:date.year month.long" comment="Default: Y" />
+		<text key="Tx:date.year month.tab" comment="Default: yyyy-MM">MM/yyyy</text>
+		<text key="Tx:date.year month day" comment="Default: d">d/M/yyyy</text>
+		<text key="Tx:date.year month day.abbr" comment="Default: d MMM yyyy">d MMM yyyy</text>
+		<text key="Tx:date.year month day.long" comment="Default: d MMMM yyyy">d MMMM yyyy</text>
+		<text key="Tx:date.year month day.tab" comment="Default: d">dd/MM/yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> and </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -135,15 +169,23 @@
 		<text key="Tx:number.ordinal" count="11" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="12" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}th</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">“</text>
 		<text key="Tx:quote end">”</text>
 		<text key="Tx:quote nested begin">‘</text>
 		<text key="Tx:quote nested end">’</text>
-		<text key="Tx:time.hour">H "o'clock"</text>
-		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
+		<text key="Tx:time.am">am</text>
+		<text key="Tx:time.hour" comment="Default: %H">h tt</text>
+		<text key="Tx:time.hour.tab" comment="Default: HH">hh tt</text>
+		<text key="Tx:time.hour minute" comment="Default: t">h:mm tt</text>
+		<text key="Tx:time.hour minute.tab" comment="Default: t">HH:mm</text>
+		<text key="Tx:time.hour minute second" comment="Default: T">h:mm:ss tt</text>
+		<text key="Tx:time.hour minute second.tab" comment="Default: T">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms" comment="Default: H:mm:ss.fff">h:mm:ss.fff tt</text>
+		<text key="Tx:time.hour minute second ms.tab" comment="Default: HH:mm:ss.fff">HH:mm:ss.fff</text>
 		<text key="Tx:time.never">never</text>
 		<text key="Tx:time.now">now</text>
+		<text key="Tx:time.pm">pm</text>
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative.days">{#} days</text>
 		<text key="Tx:time.relative.days" count="1">{#} day</text>
@@ -170,7 +212,6 @@
 		<text key="Tx:time.relative neg.seconds" count="1">{#} second</text>
 		<text key="Tx:time.relative neg.years">{#} years</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} year</text>
-		<text key="Tx:time.relative separator"> </text>
 		<text key="Tx:time.relative span">for {interval}</text>
 		<text key="Tx:time.relative span.days">{#} days</text>
 		<text key="Tx:time.relative span.days" count="1">{#} day</text>
@@ -224,24 +265,30 @@
 		<text key="Tx:time.span neg.years">{#} years</text>
 		<text key="Tx:time.span neg.years" count="1">{#} year</text>
 	</culture>
-	<culture name="en-AU">
-		<text key="Tx:time.am">am</text>
-		<text key="Tx:time.hour">h tt</text>
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
-		<text key="Tx:time.pm">pm</text>
-	</culture>
+	<culture name="en-AU" />
 	<culture name="en-US">
 		<text key="Tx:date.month day">M/d</text>
-		<text key="Tx:date.month day abbr">MMM d</text>
-		<text key="Tx:date.month day long">MMMM d</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">MMM d, yyyy</text>
-		<text key="Tx:date.year month day long">MMMM d, yyyy</text>
-		<text key="Tx:time.hour">h tt</text>
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
+		<text key="Tx:date.month day.abbr">MMM d</text>
+		<text key="Tx:date.month day.long">MMMM d</text>
+		<text key="Tx:date.month day.tab">MM/dd</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">M/d/yyyy</text>
+		<text key="Tx:date.year month day.abbr">MMM d, yyyy</text>
+		<text key="Tx:date.year month day.long">MMMM d, yyyy</text>
+		<text key="Tx:date.year month day.tab">MM/dd/yyyy</text>
 	</culture>
 	<culture name="es">
+		<text key="Tx:date.month day">d/M</text>
+		<text key="Tx:date.month day.abbr">d MMM</text>
+		<text key="Tx:date.month day.long">d MMMM</text>
+		<text key="Tx:date.month day.tab">dd/MM</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">d/M/yyyy</text>
+		<text key="Tx:date.year month day.long">d' de 'MMMM' de 'yyyy</text>
+		<text key="Tx:date.year month day.tab">dd/MM/yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> y </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -255,22 +302,38 @@
 		<text key="Tx:number.ordinal" count="11" mod="100">{#}.º</text>
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}.º</text>
 		<text key="Tx:number.ordinal f">{#}.ª</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">‹</text>
 		<text key="Tx:quote nested end">›</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">nunca</text>
+		<text key="Tx:time.now">ahora</text>
+		<text key="Tx:time.relative">en {interval}</text>
+		<text key="Tx:time.relative neg">hace {interval}</text>
+		<text key="Tx:time.relative span">durante {interval}</text>
+		<text key="Tx:time.relative span neg">desde hace {interval}</text>
+		<text key="Tx:time.span">{interval} más tarde</text>
+		<text key="Tx:time.span neg">{interval} antes</text>
 	</culture>
 	<culture name="fr">
 		<text key="Tx:byte unit">o</text>
 		<text key="Tx:colon"> :</text>
 		<text key="Tx:date.dow with date">{dow} {date}</text>
-		<text key="Tx:date.month day">dd/MM</text>
-		<text key="Tx:date.month day abbr">d MMM</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
-		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:date.month day">d/M</text>
+		<text key="Tx:date.month day.abbr">d MMM</text>
+		<text key="Tx:date.month day.long">d MMMM</text>
+		<text key="Tx:date.month day.tab">dd/MM</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">d/M/yyyy</text>
+		<text key="Tx:date.year month day.abbr">d MMM yyyy</text>
+		<text key="Tx:date.year month day.long">d MMMM yyyy</text>
+		<text key="Tx:date.year month day.tab">dd/MM/yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> et </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -281,22 +344,38 @@
 		<text key="Tx:number.ordinal">{#}ᵉ</text>
 		<text key="Tx:number.ordinal" count="1">{#}ᵉʳ</text>
 		<text key="Tx:number.ordinal f" count="1">{#}ʳᵉ</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">« </text>
 		<text key="Tx:quote end"> »</text>
 		<text key="Tx:quote nested begin">“</text>
 		<text key="Tx:quote nested end">”</text>
-		<text key="Tx:time.hour">H "h"</text>
+		<text key="Tx:time.hour">H "h"</text>
+		<text key="Tx:time.hour.tab">HH "h"</text>
 		<text key="Tx:time.hour minute">H "h" mm</text>
+		<text key="Tx:time.hour minute.tab">HH "h" mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">jamais</text>
+		<text key="Tx:time.now">maintenant</text>
+		<text key="Tx:time.relative">en {interval}</text>
+		<text key="Tx:time.relative neg">il y a {interval}</text>
+		<text key="Tx:time.relative span">pour {interval}</text>
+		<text key="Tx:time.relative span neg">depuis {interval}</text>
+		<text key="Tx:time.span">{interval} plus tard</text>
+		<text key="Tx:time.span neg">{interval} avant</text>
 	</culture>
 	<culture name="it">
 		<text key="Tx:date.dow with date">{dow} {date}</text>
-		<text key="Tx:date.month day">dd/MM</text>
-		<text key="Tx:date.month day abbr">d MMM.</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM. yyyy</text>
-		<text key="Tx:date.year month day abbr">d MMM. yyyy</text>
-		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:date.month.abbr">MMM.</text>
+		<text key="Tx:date.month day">d/M</text>
+		<text key="Tx:date.month day.abbr">d MMM.</text>
+		<text key="Tx:date.month day.long">d MMMM</text>
+		<text key="Tx:date.month day.tab">dd/MM</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM. yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">d/M/yyyy</text>
+		<text key="Tx:date.year month day.abbr">d MMM. yyyy</text>
+		<text key="Tx:date.year month day.long">d MMMM yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> e </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -306,27 +385,40 @@
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}º</text>
 		<text key="Tx:number.ordinal f">{#}ª</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">«</text>
 		<text key="Tx:quote nested end">»</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">mai</text>
+		<text key="Tx:time.now">adesso</text>
+		<text key="Tx:time.relative">in {interval}</text>
+		<text key="Tx:time.relative neg">{interval} fa</text>
+		<text key="Tx:time.relative span">per {interval}</text>
+		<text key="Tx:time.relative span neg">da {interval}</text>
+		<text key="Tx:time.span">{interval} più tardi</text>
+		<text key="Tx:time.span neg">{interval} prima</text>
 	</culture>
 	<culture name="ja">
 		<text key="Tx:date.dow with date">{date} ({dow})</text>
-		<text key="Tx:date.month">M</text>
-		<text key="Tx:date.month abbr">M月</text>
+		<text key="Tx:date.month.abbr">M月</text>
+		<text key="Tx:date.month.long">M月</text>
 		<text key="Tx:date.month day">M/d</text>
-		<text key="Tx:date.month day abbr">M/d</text>
-		<text key="Tx:date.month day long">M月d日</text>
-		<text key="Tx:date.month long">M月</text>
+		<text key="Tx:date.month day.abbr">M月d日</text>
+		<text key="Tx:date.month day.long">M月d日</text>
+		<text key="Tx:date.month day.tab">MM/dd</text>
 		<text key="Tx:date.year">yyyy年</text>
-		<text key="Tx:date.year month">yyyy年M月</text>
-		<text key="Tx:date.year month abbr">yyyy年M月</text>
-		<text key="Tx:date.year month day">yyyy/MM/dd</text>
-		<text key="Tx:date.year month day abbr">yyyy/MM/dd</text>
-		<text key="Tx:date.year month day long">yyyy年M月d日</text>
-		<text key="Tx:date.year month long">yyyy年M月</text>
+		<text key="Tx:date.year month">yyyy/M</text>
+		<text key="Tx:date.year month.abbr">yyyy年M月</text>
+		<text key="Tx:date.year month.long">yyyy年M月</text>
+		<text key="Tx:date.year month.tab">yyyy/MM</text>
+		<text key="Tx:date.year month day">yyyy/M/d</text>
+		<text key="Tx:date.year month day.abbr">yyyy年M月d日</text>
+		<text key="Tx:date.year month day.long">yyyy年M月d日</text>
+		<text key="Tx:date.year month day.tab">yyyy/MM/dd</text>
 		<text key="Tx:enum.and.combiner">、</text>
 		<text key="Tx:enum.and.last combiner">および</text>
 		<text key="Tx:enum.or.combiner">、</text>
@@ -334,19 +426,72 @@
 		<text key="Tx:number.group separator"> </text>
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">「</text>
 		<text key="Tx:quote end">」</text>
 		<text key="Tx:quote nested begin">『</text>
 		<text key="Tx:quote nested end">』</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">ネバー</text>
+		<text key="Tx:time.now">今</text>
+		<text key="Tx:time.relative">{interval}間</text>
+		<text key="Tx:time.relative neg">{interval}前</text>
+	</culture>
+	<culture name="nl">
+		<text key="Tx:date.month day">d-M</text>
+		<text key="Tx:date.month day.abbr">d MMM</text>
+		<text key="Tx:date.month day.long">d MMMM</text>
+		<text key="Tx:date.month day.tab">dd-MM</text>
+		<text key="Tx:date.year month">M-yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">d-M-yyyy</text>
+		<text key="Tx:date.year month day.abbr">d MMM yyyy</text>
+		<text key="Tx:date.year month day.long">d MMMM yyyy</text>
+		<text key="Tx:date.year month day.tab">dd-MM-yyyy</text>
+		<text key="Tx:enum.and.combiner">, </text>
+		<text key="Tx:enum.and.last combiner"> en </text>
+		<text key="Tx:enum.or.combiner">, </text>
+		<text key="Tx:enum.or.last combiner"> of </text>
+		<text key="Tx:number.group separator"> </text>
+		<text key="Tx:number.group separator threshold">1</text>
+		<text key="Tx:number.negative">−</text>
+		<text key="Tx:number.ordinal">{#}e</text>
+		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:quote begin">‘</text>
+		<text key="Tx:quote end">’</text>
+		<text key="Tx:quote nested begin">“</text>
+		<text key="Tx:quote nested end">”</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">nooit</text>
+		<text key="Tx:time.now">nu</text>
+		<text key="Tx:time.relative">in {interval}</text>
+		<text key="Tx:time.relative neg">{interval} geleden</text>
+		<text key="Tx:time.relative span">voor {interval}</text>
+		<text key="Tx:time.relative span.days">dagen</text>
+		<text key="Tx:time.relative span.days" count="1">een dag</text>
+		<text key="Tx:time.relative span neg">sinds {interval}</text>
+		<text key="Tx:time.span">{interval} later</text>
+		<text key="Tx:time.span neg">{interval} voor</text>
 	</culture>
 	<culture name="pl">
 		<text key="Tx:date.day">d.</text>
-		<text key="Tx:date.month day">dd.MM.</text>
-		<text key="Tx:date.month day abbr">d. MMM.</text>
-		<text key="Tx:date.year month abbr">MMM. yyyy</text>
-		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
-		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:date.day.tab">dd.</text>
+		<text key="Tx:date.month.abbr">MMM.</text>
+		<text key="Tx:date.month day">d.M.</text>
+		<text key="Tx:date.month day.abbr">d. MMM.</text>
+		<text key="Tx:date.month day.tab">dd.MM.</text>
+		<text key="Tx:date.year month">M'/'yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM. yyyy</text>
+		<text key="Tx:date.year month.tab">MM'/'yyyy</text>
+		<text key="Tx:date.year month day">d.M.yyyy</text>
+		<text key="Tx:date.year month day.abbr">d. MMM. yyyy</text>
+		<text key="Tx:date.year month day.long">d. MMMM yyyy</text>
+		<text key="Tx:date.year month day.tab">dd.MM.yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> i </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -355,14 +500,36 @@
 		<text key="Tx:number.group separator threshold">1</text>
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}.</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">„</text>
 		<text key="Tx:quote end">”</text>
 		<text key="Tx:quote nested begin">«</text>
 		<text key="Tx:quote nested end">»</text>
-		<text key="Tx:time.hour">"godz." H</text>
+		<text key="Tx:time.hour">"godz." H</text>
+		<text key="Tx:time.hour.tab">"godz." HH</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second">H:mm:ss</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms">H:mm:ss.fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH:mm:ss.fff</text>
+		<text key="Tx:time.never">nigdy</text>
+		<text key="Tx:time.now">teraz</text>
+		<text key="Tx:time.relative">w ciągu {interval}</text>
+		<text key="Tx:time.relative neg">{interval} temu</text>
+		<text key="Tx:time.relative span">przez {interval}</text>
+		<text key="Tx:time.relative span neg">od {interval}</text>
+		<text key="Tx:time.span">{interval} później</text>
+		<text key="Tx:time.span neg">{interval} przed</text>
 	</culture>
 	<culture name="pt">
+		<text key="Tx:date.month day">d/M</text>
+		<text key="Tx:date.month day.tab">dd/MM</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">d/M/yyyy</text>
+		<text key="Tx:date.year month day.long">d' de 'MMMM' de 'yyyy</text>
+		<text key="Tx:date.year month day.tab">dd/MM/yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> e </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -372,10 +539,21 @@
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}.º</text>
 		<text key="Tx:number.ordinal f">{#}.ª</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">“</text>
 		<text key="Tx:quote end">”</text>
 		<text key="Tx:quote nested begin">‘</text>
 		<text key="Tx:quote nested end">’</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.never">nunca</text>
+		<text key="Tx:time.now">agora</text>
+		<text key="Tx:time.relative">em {interval}</text>
+		<text key="Tx:time.relative neg">{interval} atrás</text>
+		<text key="Tx:time.relative span">durante {interval}</text>
+		<text key="Tx:time.relative span neg">desde {interval}</text>
+		<text key="Tx:time.span">{interval} mais tarde</text>
+		<text key="Tx:time.span neg">{interval} antes</text>
 	</culture>
 </translation>

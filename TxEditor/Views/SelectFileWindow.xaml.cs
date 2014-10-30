@@ -13,15 +13,10 @@ namespace Unclassified.TxEditor.Views
 		public SelectFileWindow()
 		{
 			InitializeComponent();
+			this.HideIcon();
 		}
 
 		#endregion Constructor
-
-		protected override void OnSourceInitialized(EventArgs e)
-		{
-			this.HideIcon();
-			base.OnSourceInitialized(e);
-		}
 
 		#region Control event handlers
 

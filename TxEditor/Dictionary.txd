@@ -69,7 +69,10 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.delete text key.multiple.only selected">Nur ausgewählte Schlüssel löschen</text>
 		<text key="msg.enter text">Text hier eingeben</text>
 		<text key="msg.import file.add new culture">Neue Kultur {culture} aus importierter Datei hinzufügen?</text>
-		<text key="msg.import file.add new culture.desc">Die Datei „{name}“ enthält die Kultur {culture}, die diesem Wörterbuch noch nicht hinzugefügt wurde.</text>
+		<text key="msg.import file.add new culture.apply to all">Für alle neuen Kulturen</text>
+		<text key="msg.import file.add new culture.desc">Die Datei „{name}“ enthält die Kultur {culture}, die diesem Wörterbuch noch nicht hinzugefügt wurde.
+
+Wenn Sie abbrechen, könnten bereits manche Daten importiert worden sein.</text>
 		<text key="msg.import file.title">Dateien zum Importieren auswählen</text>
 		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
@@ -91,6 +94,8 @@ Um eine Übersicht der aktuell unterstützten Kulturen zu erhalten, öffnen Sie 
 		<text key="msg.load file.invalid file.desc">Die ausgewählte Datei „{name}“ ist kein Tx-Wörterbuch oder die Datei ist beschädigt.
 
 {msg}</text>
+		<text key="msg.load file.mixed templates">Vorlagen- und Nicht-Vorlagen-Dateien können nicht gleichzeitig geladen werden.</text>
+		<text key="msg.load file.mixed templates.desc">Datei: {name}</text>
 		<text key="msg.load file.multiple primary cultures">Mehrere Dateien waren als Hauptkultur gekennzeichnet: {list}
 Die Hauptkultur ist jetzt auf {name} eingestellt.</text>
 		<text key="msg.load file.other cultures for prefix">Es gibt weitere Kulturdateien für diesen Präfix.</text>
@@ -121,6 +126,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="msg.save.upgrade to format 2.dont ask again">Nicht wieder fragen</text>
 		<text key="msg.set primary culture">Möchten Sie die Hauptkultur auf {name} ändern?</text>
 		<text key="msg.set primary culture.desc">Die Hauptkultur wird verwendet, um nicht übersetzte Texte zu finden. Sie dient auch als Grundlage, um Inkonsistenzen zu finden, und alle Textschlüsselkommentare sind ihr zugeordnet. Die Kommentare werden in die neue Hauptkultur verschoben.</text>
+		<text key="msg.system key no template">Dies ist ein Systemschlüssel und das geladene Wörterbuch ist keine Vorlage. Sie sollten in diesem Wörterbuch keine Änderungen vornehmen, sondern stattdessen die Vorlagendatei bearbeiten und die Systemschlüssel erneut importieren, um die Wiederverwendbarkeit zu verbessern.</text>
 		<text key="statusbar.char info.no character at cursor">Kein Zeichen beim Cursor</text>
 		<text key="statusbar.culture added">Neue Kultur {name} hinzugefügt.</text>
 		<text key="statusbar.culture deleted">Kultur {name} gelöscht.</text>
@@ -250,12 +256,18 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="tooltip.delete quantified text">Diesen quantifizierten Text löschen</text>
 		<text key="tooltip.refresh quantified text order">Sortierreihenfolge der quantifizierten Texte aktualisieren</text>
 		<text key="Tx:date.day">d.</text>
-		<text key="Tx:date.month day">dd.MM.</text>
-		<text key="Tx:date.month day abbr">d. MMM.</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM. yyyy</text>
-		<text key="Tx:date.year month day abbr">d. MMM. yyyy</text>
-		<text key="Tx:date.year month day long">d. MMMM yyyy</text>
+		<text key="Tx:date.day.tab">dd.</text>
+		<text key="Tx:date.month.abbr">MMM.</text>
+		<text key="Tx:date.month day">d.M.</text>
+		<text key="Tx:date.month day.abbr">d. MMM.</text>
+		<text key="Tx:date.month day.long">d. MMMM</text>
+		<text key="Tx:date.month day.tab">dd.MM.</text>
+		<text key="Tx:date.year month">M'/'yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM. yyyy</text>
+		<text key="Tx:date.year month.tab">MM'/'yyyy</text>
+		<text key="Tx:date.year month day">d.M.yyyy</text>
+		<text key="Tx:date.year month day.abbr">d. MMM. yyyy</text>
+		<text key="Tx:date.year month day.long">d. MMMM yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> und </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -264,12 +276,19 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="Tx:number.group separator threshold">10000</text>
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}.</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">„</text>
 		<text key="Tx:quote end">“</text>
 		<text key="Tx:quote nested begin">‚</text>
 		<text key="Tx:quote nested end">‘</text>
-		<text key="Tx:time.hour">H "Uhr"</text>
+		<text key="Tx:time.hour">H "Uhr"</text>
+		<text key="Tx:time.hour.tab">HH "Uhr"</text>
+		<text key="Tx:time.hour minute">HH:mm</text>
+		<text key="Tx:time.hour minute.tab">HH:mm</text>
+		<text key="Tx:time.hour minute second">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH:mm:ss.fff</text>
 		<text key="Tx:time.never">nie</text>
 		<text key="Tx:time.now">jetzt</text>
 		<text key="Tx:time.relative">in {interval}</text>
@@ -298,7 +317,6 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="Tx:time.relative neg.seconds" count="1">{#} Sekunde</text>
 		<text key="Tx:time.relative neg.years">{#} Jahren</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.relative separator"> </text>
 		<text key="Tx:time.relative span">für {interval}</text>
 		<text key="Tx:time.relative span.days">{#} Tage</text>
 		<text key="Tx:time.relative span.days" count="1">{#} Tag</text>
@@ -338,7 +356,7 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="Tx:time.span.seconds" count="1">{#} Sekunde</text>
 		<text key="Tx:time.span.years">{#} Jahre</text>
 		<text key="Tx:time.span.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.span neg">{interval} davor</text>
+		<text key="Tx:time.span neg">{interval} vorher</text>
 		<text key="Tx:time.span neg.days">{#} Tage</text>
 		<text key="Tx:time.span neg.days" count="1">{#} Tag</text>
 		<text key="Tx:time.span neg.hours">{#} Stunden</text>
@@ -371,6 +389,28 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="validation.key name.starts with colon">Schlüssel beginnt mit einem Doppelpunkt (:).</text>
 		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
 		<text key="validation.more">, weitere Fehler</text>
+		<text key="window.date and time formats.abbrev">Abgekürzt</text>
+		<text key="window.date and time formats.culture">Kultur</text>
+		<text key="window.date and time formats.d">Tag</text>
+		<text key="window.date and time formats.date">Datum</text>
+		<text key="window.date and time formats.h">Stunde</text>
+		<text key="window.date and time formats.hm" acceptpunctuation="true">Std., Min.</text>
+		<text key="window.date and time formats.hms" acceptpunctuation="true">Std., Min., Sek.</text>
+		<text key="window.date and time formats.include dow">Wochentag anzeigen</text>
+		<text key="window.date and time formats.long">Lang</text>
+		<text key="window.date and time formats.m">Monat</text>
+		<text key="window.date and time formats.md">Monat, Tag</text>
+		<text key="window.date and time formats.net formats">.NET-Formate</text>
+		<text key="window.date and time formats.relative time">Relative Zeitangabe</text>
+		<text key="window.date and time formats.short">Kurz</text>
+		<text key="window.date and time formats.tabular">Tabellarisch</text>
+		<text key="window.date and time formats.time">Zeit</text>
+		<text key="window.date and time formats.time span">Zeitspanne</text>
+		<text key="window.date and time formats.time to display">Ausgewählte Zeit</text>
+		<text key="window.date and time formats.title">Datums- und Zeitformate</text>
+		<text key="window.date and time formats.tx formats">Tx-Formate</text>
+		<text key="window.date and time formats.ym">Jahr, Monat</text>
+		<text key="window.date and time formats.ymd">Jahr, Monat, Tag</text>
 		<text key="window.load select file.button.cancel">Abbrechen</text>
 		<text key="window.load select file.button.load all files">_Alle Dateien laden</text>
 		<text key="window.load select file.button.load file">Datei laden</text>
@@ -412,6 +452,11 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
+		<text key="Tx:time.hour minute">H:mm</text>
+		<text key="Tx:time.hour minute second">H:mm:ss</text>
+		<text key="Tx:time.hour minute second.tab">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms">H:mm:ss.fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH:mm:ss.fff</text>
 	</culture>
 	<culture name="de-CH">
 		<text key="statusbar.text size">Textgrösse</text>
@@ -419,6 +464,12 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">‹</text>
 		<text key="Tx:quote nested end">›</text>
+		<text key="Tx:time.hour minute">H.mm</text>
+		<text key="Tx:time.hour minute.tab">HH.mm</text>
+		<text key="Tx:time.hour minute second">H.mm.ss</text>
+		<text key="Tx:time.hour minute second.tab">HH.mm.ss</text>
+		<text key="Tx:time.hour minute second ms">H.mm.ss,fff</text>
+		<text key="Tx:time.hour minute second ms.tab">HH.mm.ss,fff</text>
 	</culture>
 	<culture name="en" primary="true">
 		<text key="contextmenu.text key.convert to namespace">Convert to namespace</text>
@@ -489,7 +540,10 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.delete text key.multiple.only selected">Only delete selected keys</text>
 		<text key="msg.enter text">Enter text here</text>
 		<text key="msg.import file.add new culture">Add new culture {culture} from imported file?</text>
-		<text key="msg.import file.add new culture.desc">The file “{name}” contains the culture {culture} which is not yet added to this dictionary.</text>
+		<text key="msg.import file.add new culture.apply to all">Apply to all new cultures</text>
+		<text key="msg.import file.add new culture.desc">The file “{name}” contains the culture {culture} which is not yet added to this dictionary.
+
+If you choose to cancel, some data may already have been imported.</text>
 		<text key="msg.import file.title">Select files to import</text>
 		<text key="msg.incomplete key selected">Incomplete text key selected</text>
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
@@ -511,6 +565,8 @@ For an overview of currently supported cultures, please open the file Template.t
 		<text key="msg.load file.invalid file.desc">The selected file “{name}” is not a Tx dictionary or the file is corrupted.
 
 {msg}</text>
+		<text key="msg.load file.mixed templates">Loading mixed template and non-template files is not allowed.</text>
+		<text key="msg.load file.mixed templates.desc">File: {name}</text>
 		<text key="msg.load file.multiple primary cultures">Multiple files were marked as primary culture: {list}
 The primary culture is now set to {name}.</text>
 		<text key="msg.load file.other cultures for prefix">There are additional culture files for this prefix.</text>
@@ -541,6 +597,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="msg.save.upgrade to format 2.dont ask again">Don’t ask again</text>
 		<text key="msg.set primary culture">Are you sure to switch the primary culture to {name}?</text>
 		<text key="msg.set primary culture.desc">The primary culture is used as fallback to find untranslated texts. It also serves as reference to find inconsistencies and all text key comments are assigned to it. The comments will be moved to the new primary culture.</text>
+		<text key="msg.system key no template">This is a system key and the loaded dictionary is not a template. You should not make any modifications in this dictionary but edit the template file instead and reimport the system keys for better reusability.</text>
 		<text key="statusbar.char info.no character at cursor">No character at cursor</text>
 		<text key="statusbar.culture added">New culture {name} added.</text>
 		<text key="statusbar.culture deleted">Culture {name} deleted.</text>
@@ -669,13 +726,24 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="tooltip.add quantified text 1">Add quantified text for count 1</text>
 		<text key="tooltip.delete quantified text">Delete this quantified text</text>
 		<text key="tooltip.refresh quantified text order">Refresh sort order of the quantified texts</text>
-		<text key="Tx:date.month day">d/M</text>
-		<text key="Tx:date.month day abbr">d MMM</text>
-		<text key="Tx:date.month day long">d MMMM</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">d MMM yyyy</text>
-		<text key="Tx:date.year month day long">d MMMM yyyy</text>
+		<text key="Tx:date.day" comment="Default: %d" />
+		<text key="Tx:date.day.tab" comment="Default: dd" />
+		<text key="Tx:date.dow with date" comment="Default: {dow}, {date}" />
+		<text key="Tx:date.month.abbr" comment="Default: MMM" />
+		<text key="Tx:date.month.long" comment="Default: MMMM" />
+		<text key="Tx:date.month day" comment="Default: MM-dd">d/M</text>
+		<text key="Tx:date.month day.abbr" comment="Default: d MMM">d MMM</text>
+		<text key="Tx:date.month day.long" comment="Default: M">d MMMM</text>
+		<text key="Tx:date.month day.tab" comment="Default: MM-dd">dd/MM</text>
+		<text key="Tx:date.year" comment="Default: yyyy" />
+		<text key="Tx:date.year month" comment="Default: yyyy-MM">M/yyyy</text>
+		<text key="Tx:date.year month.abbr" comment="Default: MMM yyyy">MMM yyyy</text>
+		<text key="Tx:date.year month.long" comment="Default: Y" />
+		<text key="Tx:date.year month.tab" comment="Default: yyyy-MM">MM/yyyy</text>
+		<text key="Tx:date.year month day" comment="Default: d">d/M/yyyy</text>
+		<text key="Tx:date.year month day.abbr" comment="Default: d MMM yyyy">d MMM yyyy</text>
+		<text key="Tx:date.year month day.long" comment="Default: d MMMM yyyy">d MMMM yyyy</text>
+		<text key="Tx:date.year month day.tab" comment="Default: d">dd/MM/yyyy</text>
 		<text key="Tx:enum.and.combiner">, </text>
 		<text key="Tx:enum.and.last combiner"> and </text>
 		<text key="Tx:enum.or.combiner">, </text>
@@ -690,15 +758,23 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="Tx:number.ordinal" count="11" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="12" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}th</text>
-		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:number.unit separator"> </text>
 		<text key="Tx:quote begin">“</text>
 		<text key="Tx:quote end">”</text>
 		<text key="Tx:quote nested begin">‘</text>
 		<text key="Tx:quote nested end">’</text>
-		<text key="Tx:time.hour">H "o'clock"</text>
-		<text key="Tx:time.hour minute second ms">HH:mm:ss.fff</text>
+		<text key="Tx:time.am">am</text>
+		<text key="Tx:time.hour" comment="Default: %H">h tt</text>
+		<text key="Tx:time.hour.tab" comment="Default: HH">hh tt</text>
+		<text key="Tx:time.hour minute" comment="Default: t">h:mm tt</text>
+		<text key="Tx:time.hour minute.tab" comment="Default: t">HH:mm</text>
+		<text key="Tx:time.hour minute second" comment="Default: T">h:mm:ss tt</text>
+		<text key="Tx:time.hour minute second.tab" comment="Default: T">HH:mm:ss</text>
+		<text key="Tx:time.hour minute second ms" comment="Default: H:mm:ss.fff">h:mm:ss.fff tt</text>
+		<text key="Tx:time.hour minute second ms.tab" comment="Default: HH:mm:ss.fff">HH:mm:ss.fff</text>
 		<text key="Tx:time.never">never</text>
 		<text key="Tx:time.now">now</text>
+		<text key="Tx:time.pm">pm</text>
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative.days">{#} days</text>
 		<text key="Tx:time.relative.days" count="1">{#} day</text>
@@ -725,7 +801,6 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="Tx:time.relative neg.seconds" count="1">{#} second</text>
 		<text key="Tx:time.relative neg.years">{#} years</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} year</text>
-		<text key="Tx:time.relative separator"> </text>
 		<text key="Tx:time.relative span">for {interval}</text>
 		<text key="Tx:time.relative span.days">{#} days</text>
 		<text key="Tx:time.relative span.days" count="1">{#} day</text>
@@ -798,6 +873,28 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="validation.key name.starts with colon">Key starts with a colon (:).</text>
 		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
 		<text key="validation.more">, more errors</text>
+		<text key="window.date and time formats.abbrev">Abbreviated</text>
+		<text key="window.date and time formats.culture">Culture</text>
+		<text key="window.date and time formats.d">Day</text>
+		<text key="window.date and time formats.date">Date</text>
+		<text key="window.date and time formats.h">Hour</text>
+		<text key="window.date and time formats.hm">Hour, min</text>
+		<text key="window.date and time formats.hms">Hour, min, sec</text>
+		<text key="window.date and time formats.include dow">Include day of week</text>
+		<text key="window.date and time formats.long">Long</text>
+		<text key="window.date and time formats.m">Month</text>
+		<text key="window.date and time formats.md">Month, day</text>
+		<text key="window.date and time formats.net formats">.NET formats</text>
+		<text key="window.date and time formats.relative time">Relative time</text>
+		<text key="window.date and time formats.short">Short</text>
+		<text key="window.date and time formats.tabular">Tabular</text>
+		<text key="window.date and time formats.time">Time</text>
+		<text key="window.date and time formats.time span">Time span</text>
+		<text key="window.date and time formats.time to display">Time to display</text>
+		<text key="window.date and time formats.title">Date and time formats</text>
+		<text key="window.date and time formats.tx formats">Tx formats</text>
+		<text key="window.date and time formats.ym">Year, month</text>
+		<text key="window.date and time formats.ymd">Year, month, day</text>
 		<text key="window.load select file.button.cancel">Cancel</text>
 		<text key="window.load select file.button.load all files">Load _all files</text>
 		<text key="window.load select file.button.load file">Load file</text>
@@ -837,21 +934,18 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="window.wizard.text key exists.content">If you continue, the existing text (in the primary culture) will be overwritten with the text entered in this dialog.</text>
 		<text key="window.wizard.translated text">Translation</text>
 	</culture>
-	<culture name="en-AU">
-		<text key="Tx:time.am">am</text>
-		<text key="Tx:time.hour">h tt</text>
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
-		<text key="Tx:time.pm">pm</text>
-	</culture>
+	<culture name="en-AU" />
 	<culture name="en-US">
 		<text key="Tx:date.month day">M/d</text>
-		<text key="Tx:date.month day abbr">MMM d</text>
-		<text key="Tx:date.month day long">MMMM d</text>
-		<text key="Tx:date.year month">MM/yyyy</text>
-		<text key="Tx:date.year month abbr">MMM yyyy</text>
-		<text key="Tx:date.year month day abbr">MMM d, yyyy</text>
-		<text key="Tx:date.year month day long">MMMM d, yyyy</text>
-		<text key="Tx:time.hour">h tt</text>
-		<text key="Tx:time.hour minute second ms">h:mm:ss.fff tt</text>
+		<text key="Tx:date.month day.abbr">MMM d</text>
+		<text key="Tx:date.month day.long">MMMM d</text>
+		<text key="Tx:date.month day.tab">MM/dd</text>
+		<text key="Tx:date.year month">M/yyyy</text>
+		<text key="Tx:date.year month.abbr">MMM yyyy</text>
+		<text key="Tx:date.year month.tab">MM/yyyy</text>
+		<text key="Tx:date.year month day">M/d/yyyy</text>
+		<text key="Tx:date.year month day.abbr">MMM d, yyyy</text>
+		<text key="Tx:date.year month day.long">MMMM d, yyyy</text>
+		<text key="Tx:date.year month day.tab">MM/dd/yyyy</text>
 	</culture>
 </translation>

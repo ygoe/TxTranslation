@@ -47,7 +47,9 @@ namespace Unclassified.Util
 
 		public static UnicodeCharacter GetChar(int codePoint)
 		{
-			return characters[codePoint];
+			UnicodeCharacter uc;
+			characters.TryGetValue(codePoint, out uc);
+			return uc;
 		}
 	}
 

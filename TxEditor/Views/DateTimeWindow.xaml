@@ -1,0 +1,204 @@
+﻿<Window
+	x:Class="Unclassified.TxEditor.Views.DateTimeWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
+	xmlns:ui="clr-namespace:Unclassified.UI"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	mc:Ignorable="d"
+	d:DesignHeight="700" d:DesignWidth="700"
+	ResizeMode="NoResize"
+	WindowStartupLocation="CenterOwner"
+	ShowInTaskbar="False"
+	WindowStyle="SingleBorderWindow"
+	TextOptions.TextFormattingMode="Display"
+	Title="{Tx:T 'window.date and time formats.title', Default='Date and time formats'}"
+	Loaded="Window_Loaded"
+	KeyDown="Window_KeyDown"
+	SizeToContent="WidthAndHeight">
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{Tx:TC 'window.date and time formats.culture', Default='Culture'}"/>
+		<ComboBox
+			Name="CulturesList"
+			Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4"
+			Margin="8,0,0,0" MinWidth="500"
+			DisplayMemberPath="DisplayName"
+			SelectionChanged="CulturesList_SelectionChanged"/>
+
+		<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,8,0,0" VerticalAlignment="Center" Text="{Tx:TC 'window.date and time formats.time to display', Default='Time to display'}"/>
+		<ui:DateTimeTextBox
+			x:Name="DateTimeSelector" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4"
+			Margin="8,8,0,0" HorizontalAlignment="Left"
+			SelectedTimeChanged="DateTimeTextBox_SelectedTimeChanged"/>
+
+		<TextBlock Grid.Row="2" Grid.Column="1" Margin="12,8,0,0" Text="{Tx:T 'window.date and time formats.short', Default='Short'}"/>
+		<TextBlock Grid.Row="2" Grid.Column="2" Margin="12,8,0,0" Text="{Tx:T 'window.date and time formats.tabular', Default='Tabular'}"/>
+		<TextBlock Grid.Row="2" Grid.Column="3" Margin="12,8,0,0" Text="{Tx:T 'window.date and time formats.abbrev', Default='Abbreviated'}"/>
+		<TextBlock Grid.Row="2" Grid.Column="4" Margin="12,8,0,0" Text="{Tx:T 'window.date and time formats.long', Default='Long'}"/>
+
+		<Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,0,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="{Tx:T 'window.date and time formats.net formats', Default='.NET formats'}" FontWeight="Bold"/>
+			<Border Grid.Column="1" VerticalAlignment="Center" Margin="6,2,0,0" BorderThickness="0,1,0,0" BorderBrush="Gray"/>
+		</Grid>
+
+		<TextBlock Grid.Row="4" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.ym', Default='Year, month'}"/>
+		<TextBlock Grid.Row="4" Grid.Column="4" Name="YearMonthLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="5" Grid.Column="4" Name="YearMonthFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="6" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.date', Default='Date'}"/>
+		<TextBlock Grid.Row="6" Grid.Column="1" Name="ShortDateLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="7" Grid.Column="1" Name="ShortDateFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="6" Grid.Column="4" Name="LongDateLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="7" Grid.Column="4" Name="LongDateFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="8" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.md', Default='Month, day'}"/>
+		<TextBlock Grid.Row="8" Grid.Column="4" Name="MonthDayLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="9" Grid.Column="4" Name="MonthDayFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="10" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.time', Default='Time'}"/>
+		<TextBlock Grid.Row="10" Grid.Column="1" Name="ShortTimeLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="11" Grid.Column="1" Name="ShortTimeFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="10" Grid.Column="4" Name="LongTimeLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="11" Grid.Column="4" Name="LongTimeFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<Grid Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,0,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Text="{Tx:T 'window.date and time formats.tx formats', Default='Tx formats'}" FontWeight="Bold"/>
+			<Border Grid.Column="1" VerticalAlignment="Center" Margin="6,2,0,0" BorderThickness="0,1,0,0" BorderBrush="Gray"/>
+		</Grid>
+
+		<TextBlock Grid.Row="13" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.ym', Default='Year, month'}"/>
+		<TextBlock Grid.Row="13" Grid.Column="1" Name="TxYMShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="14" Grid.Column="1" Name="TxYMShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="13" Grid.Column="2" Name="TxYMTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="14" Grid.Column="2" Name="TxYMTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="13" Grid.Column="3" Name="TxYMAbbrLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="14" Grid.Column="3" Name="TxYMAbbrFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="13" Grid.Column="4" Name="TxYMLongLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="14" Grid.Column="4" Name="TxYMLongFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="15" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.ymd', Default='Year, month, day'}"/>
+		<TextBlock Grid.Row="15" Grid.Column="1" Name="TxYMDShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="16" Grid.Column="1" Name="TxYMDShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="15" Grid.Column="2" Name="TxYMDTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="16" Grid.Column="2" Name="TxYMDTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="15" Grid.Column="3" Name="TxYMDAbbrLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="16" Grid.Column="3" Name="TxYMDAbbrFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="15" Grid.Column="4" Name="TxYMDLongLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="16" Grid.Column="4" Name="TxYMDLongFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="17" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.m', Default='Month'}"/>
+		<TextBlock Grid.Row="17" Grid.Column="1" Name="TxMShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="18" Grid.Column="1" Name="TxMShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="17" Grid.Column="2" Name="TxMTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="18" Grid.Column="2" Name="TxMTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="17" Grid.Column="3" Name="TxMAbbrLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="18" Grid.Column="3" Name="TxMAbbrFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="17" Grid.Column="4" Name="TxMLongLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="18" Grid.Column="4" Name="TxMLongFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="19" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.md', Default='Month, day'}"/>
+		<TextBlock Grid.Row="19" Grid.Column="1" Name="TxMDShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="20" Grid.Column="1" Name="TxMDShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="19" Grid.Column="2" Name="TxMDTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="20" Grid.Column="2" Name="TxMDTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="19" Grid.Column="3" Name="TxMDAbbrLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="20" Grid.Column="3" Name="TxMDAbbrFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="19" Grid.Column="4" Name="TxMDLongLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="20" Grid.Column="4" Name="TxMDLongFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="21" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.d', Default='Day'}"/>
+		<TextBlock Grid.Row="21" Grid.Column="1" Name="TxDShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="22" Grid.Column="1" Name="TxDShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="21" Grid.Column="2" Name="TxDTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="22" Grid.Column="2" Name="TxDTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<StackPanel Grid.Row="23" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="12,4,0,0">
+			<TextBlock Text="{Tx:TC 'window.date and time formats.include dow', Default='Include day of week'}"/>
+			<CheckBox
+				Name="TxDowAbbrCheckBox" Margin="8,0,0,0"
+				Content="{Tx:T 'window.date and time formats.abbrev', Default='Abbreviated'}"
+				Checked="TxDowAbbrCheckBox_Checked" Unchecked="TxDowAbbrCheckBox_Checked"/>
+			<CheckBox
+				Name="TxDowLongCheckBox" Margin="8,0,0,0"
+				Content="{Tx:T 'window.date and time formats.long', Default='Long'}"
+				Checked="TxDowLongCheckBox_Checked" Unchecked="TxDowLongCheckBox_Checked"/>
+		</StackPanel>
+
+		<TextBlock Grid.Row="24" Grid.Column="0" Margin="0,10,0,0" Text="{Tx:TC 'window.date and time formats.h', Default='Hour'}"/>
+		<TextBlock Grid.Row="24" Grid.Column="1" Name="TxHShortLabel" Margin="12,10,0,0"/>
+		<TextBlock Grid.Row="25" Grid.Column="1" Name="TxHShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="24" Grid.Column="2" Name="TxHTabLabel" Margin="12,10,0,0"/>
+		<TextBlock Grid.Row="25" Grid.Column="2" Name="TxHTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="26" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.hm', Default='Hour, min'}"/>
+		<TextBlock Grid.Row="26" Grid.Column="1" Name="TxHMShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="27" Grid.Column="1" Name="TxHMShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="26" Grid.Column="2" Name="TxHMTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="27" Grid.Column="2" Name="TxHMTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="28" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.hms', Default='Hour, min, sec'}"/>
+		<TextBlock Grid.Row="28" Grid.Column="1" Name="TxHMSShortLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="29" Grid.Column="1" Name="TxHMSShortFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+		<TextBlock Grid.Row="28" Grid.Column="2" Name="TxHMSTabLabel" Margin="12,4,0,0"/>
+		<TextBlock Grid.Row="29" Grid.Column="2" Name="TxHMSTabFormatLabel" Margin="12,0,0,0" Opacity="0.4"/>
+
+		<TextBlock Grid.Row="30" Grid.Column="0" Margin="0,10,0,0" Text="{Tx:TC 'window.date and time formats.relative time', Default='Relative time'}"/>
+		<TextBlock Grid.Row="30" Grid.Column="1" Grid.ColumnSpan="4" Name="RelativeTimeLabel" Margin="12,10,0,0"/>
+
+		<TextBlock Grid.Row="31" Grid.Column="0" Margin="0,4,0,0" Text="{Tx:TC 'window.date and time formats.time span', Default='Time span'}"/>
+		<TextBlock Grid.Row="31" Grid.Column="1" Grid.ColumnSpan="4" Name="RelativeTimeSpanLabel" Margin="12,4,0,0"/>
+	</Grid>
+</Window>

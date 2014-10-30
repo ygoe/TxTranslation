@@ -9,14 +9,9 @@ namespace Unclassified.TxEditor.Views
 		public SettingsWindow()
 		{
 			InitializeComponent();
+			this.HideIcon();
 
 			DataContext = App.Settings;
-		}
-
-		protected override void OnSourceInitialized(EventArgs e)
-		{
-			this.HideIcon();
-			base.OnSourceInitialized(e);
 		}
 	}
 }

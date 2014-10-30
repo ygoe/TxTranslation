@@ -39,6 +39,8 @@ namespace Unclassified.TxEditor.ViewModels
 		private List<TextKeyViewModel> viewHistory = new List<TextKeyViewModel>();
 		private int viewHistoryIndex;
 		private OpFlag navigatingHistory = new OpFlag();
+		private DateTimeWindow dateTimeWindow;
+		private bool? importNewCultures;
 
 		#endregion Private data
 
@@ -96,6 +98,11 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return fileModified; }
 			set
 			{
+				if (value && !dateTimeWindow.IsClosed())   // Extension method, accepts null
+				{
+					dateTimeWindow.UpdateView();
+				}
+
 				if (CheckUpdate(value, ref fileModified, "FileModified"))
 				{
 					UpdateTitle();
@@ -110,6 +117,8 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return primaryCulture; }
 			set { CheckUpdate(value, ref primaryCulture, "PrimaryCulture"); }
 		}
+
+		public bool IsTemplateFile { get; set; }
 
 		private bool problemFilterActive;
 		public bool ProblemFilterActive
@@ -439,11 +448,13 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			if (!CheckModifiedSaved()) return;
 
+			if (!dateTimeWindow.IsClosed()) dateTimeWindow.Close();
 			RootTextKey.Children.Clear();
 			TextKeys.Clear();
 			LoadedCultureNames.Clear();
 			DeletedCultureNames.Clear();
 			PrimaryCulture = null;
+			IsTemplateFile = false;
 			ProblemKeys.Clear();
 			StatusText = Tx.T("statusbar.new dictionary created");
 			loadedFilePath = null;
@@ -865,6 +876,24 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private void OnViewDateTimeFormats()
 		{
+			if (dateTimeWindow.IsClosed())   // Extension method, accepts null
+			{
+				dateTimeWindow = new DateTimeWindow();
+				dateTimeWindow.Owner = MainWindow.Instance;
+			}
+			if (!string.IsNullOrEmpty(SelectedCulture))
+			{
+				dateTimeWindow.Culture = SelectedCulture;
+			}
+			else if (!string.IsNullOrEmpty(PrimaryCulture))
+			{
+				dateTimeWindow.Culture = PrimaryCulture;
+			}
+			else
+			{
+				return;
+			}
+			dateTimeWindow.Show();
 		}
 
 		private bool CanSetPrimaryCulture()
@@ -1926,6 +1955,7 @@ namespace Unclassified.TxEditor.ViewModels
 			ClearReadonlyFiles();
 			string prevPrimaryCulture = null;
 			List<string> primaryCultureFiles = new List<string>();
+			importNewCultures = null;
 			foreach (string _fileName in fileNames.Distinct())
 			{
 				string fileName = _fileName;
@@ -1944,6 +1974,7 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				prevPrimaryCulture = PrimaryCulture;
 			}
+			importNewCultures = null;
 			if (primaryCultureFiles.Count > 1)
 			{
 				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
@@ -2005,6 +2036,36 @@ namespace Unclassified.TxEditor.ViewModels
 				{
 					return false;
 				}
+			}
+
+			// Don't mix template and non-template files (not relevant when importing a file)
+			if (!importing)
+			{
+				var templateAttr = xmlDoc.DocumentElement.Attributes["template"];
+				bool fileIsTemplate = templateAttr != null && templateAttr.Value == "true";
+				if (fileIsTemplate && !IsTemplateFile && LoadedCultureNames.Count > 0 ||
+					!fileIsTemplate && IsTemplateFile)
+				{
+					FL.Warning("Trying to mix template and non-template files on loading");
+					var result = TaskDialog.Show(
+						owner: MainWindow.Instance,
+						allowDialogCancellation: true,
+						title: "TxEditor",
+						mainIcon: VistaTaskDialogIcon.Warning,
+						mainInstruction: Tx.T("msg.load file.mixed templates"),
+						content: Tx.T("msg.load file.mixed templates.desc", "name", fileName),
+						customButtons: new string[] { Tx.T("task dialog.button.skip file"), Tx.T("task dialog.button.cancel") });
+
+					if (result.CustomButtonResult == 0)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				IsTemplateFile = fileIsTemplate;
 			}
 
 			// Try to recognise the culture name from the file name
@@ -2073,24 +2134,48 @@ namespace Unclassified.TxEditor.ViewModels
 				CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
 				if (importing && !LoadedCultureNames.Contains(ci.Name))
 				{
-					var result = TaskDialog.Show(
-						owner: MainWindow.Instance,
-						allowDialogCancellation: true,
-						title: "TxEditor",
-						mainInstruction: Tx.T("msg.import file.add new culture", "culture", ci.Name),
-						content: Tx.T("msg.import file.add new culture.desc", "name", fileName, "culture", ci.Name),
-						customButtons: new string[] { Tx.T("task dialog.button.add culture"), Tx.T("task dialog.button.skip culture"), Tx.T("task dialog.button.cancel") });
-
-					if (result.CustomButtonResult == 0)
+					if (importNewCultures == true)
 					{
+						// Continue with this culture
 					}
-					else if (result.CustomButtonResult == 1)
+					else if (importNewCultures == false)
 					{
+						// Continue with next culture
 						return true;
 					}
 					else
 					{
-						return false;
+						var result = TaskDialog.Show(
+							owner: MainWindow.Instance,
+							allowDialogCancellation: true,
+							title: "TxEditor",
+							mainInstruction: Tx.T("msg.import file.add new culture", "culture", ci.Name),
+							content: Tx.T("msg.import file.add new culture.desc", "name", fileName, "culture", ci.Name),
+							customButtons: new string[] { Tx.T("task dialog.button.add culture"), Tx.T("task dialog.button.skip culture"), Tx.T("task dialog.button.cancel") },
+							verificationText: Tx.T("msg.import file.add new culture.apply to all"));
+
+						if (result.CustomButtonResult == 0)
+						{
+							if (result.VerificationChecked == true)
+							{
+								importNewCultures = true;
+							}
+							// Continue with this culture
+						}
+						else if (result.CustomButtonResult == 1)
+						{
+							if (result.VerificationChecked == true)
+							{
+								importNewCultures = false;
+							}
+							// Continue with next culture
+							return true;
+						}
+						else
+						{
+							// Cancel import
+							return false;
+						}
 					}
 				}
 				LoadFromXml(ci.Name, xe);
@@ -2426,6 +2511,12 @@ namespace Unclassified.TxEditor.ViewModels
 						primaryAttr.Value = "true";
 						xmlDoc.DocumentElement.Attributes.Append(primaryAttr);
 					}
+					if (IsTemplateFile)
+					{
+						var templateAttr = xmlDoc.CreateAttribute("template");
+						templateAttr.Value = "true";
+						xmlDoc.DocumentElement.Attributes.Append(templateAttr);
+					}
 					WriteToXml(cultureName, xmlDoc.DocumentElement);
 
 					// Write xmlDoc to file
@@ -2518,6 +2609,12 @@ namespace Unclassified.TxEditor.ViewModels
 				var spaceAttr = xmlDoc.CreateAttribute("xml:space");
 				spaceAttr.Value = "preserve";
 				xmlDoc.DocumentElement.Attributes.Append(spaceAttr);
+				if (IsTemplateFile)
+				{
+					var templateAttr = xmlDoc.CreateAttribute("template");
+					templateAttr.Value = "true";
+					xmlDoc.DocumentElement.Attributes.Append(templateAttr);
+				}
 
 				foreach (var cultureName in LoadedCultureNames.OrderBy(cn => cn))
 				{
@@ -2622,6 +2719,7 @@ namespace Unclassified.TxEditor.ViewModels
 				{
 					if (!string.IsNullOrEmpty(cultureTextVM.Text) ||
 						textKeyVM.IsEmpty() && cultureName == PrimaryCulture && !textKeyVM.TextKey.StartsWith("Tx:") ||   // Save empty text keys in the primary culture at least (not for system keys)
+						cultureName == PrimaryCulture && !string.IsNullOrWhiteSpace(textKeyVM.Comment) ||   // Always keep comments in the primary culture
 						cultureTextVM.AcceptMissing || cultureTextVM.AcceptPlaceholders || cultureTextVM.AcceptPunctuation)   // Keep accept flags
 					{
 						var textElement = xe.OwnerDocument.CreateElement("text");
@@ -2730,6 +2828,79 @@ namespace Unclassified.TxEditor.ViewModels
 		}
 
 		#endregion XML saving methods
+
+		#region GetSystemTexts
+
+		public Dictionary<string, Dictionary<string, Dictionary<int, string>>> GetSystemTexts()
+		{
+			var languages = new Dictionary<string, Dictionary<string, Dictionary<int, string>>>();
+			foreach (var cultureName in LoadedCultureNames.OrderBy(cn => cn))
+			{
+				var language = new Dictionary<string, Dictionary<int, string>>();
+				languages[cultureName] = language;
+				WriteToDictionary(cultureName, language);
+			}
+			return languages;
+		}
+
+		private void WriteToDictionary(string cultureName, Dictionary<string, Dictionary<int, string>> dict)
+		{
+			WriteTextKeysToDictionary(cultureName, dict, RootTextKey);
+		}
+
+		private void WriteTextKeysToDictionary(string cultureName, Dictionary<string, Dictionary<int, string>> dict, TextKeyViewModel textKeyVM)
+		{
+			if (textKeyVM.IsFullKey && textKeyVM.TextKey != null)
+			{
+				var cultureTextVM = textKeyVM.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
+				if (cultureTextVM != null)
+				{
+					if (!string.IsNullOrEmpty(cultureTextVM.Text) && textKeyVM.TextKey.StartsWith("Tx:"))
+					{
+						if (!string.IsNullOrEmpty(cultureTextVM.Text))
+						{
+							if (!dict.ContainsKey(textKeyVM.TextKey))
+							{
+								dict[textKeyVM.TextKey] = new Dictionary<int, string>();
+							}
+							dict[textKeyVM.TextKey][-1] = cultureTextVM.Text;
+						}
+					}
+					foreach (var quantifiedTextVM in cultureTextVM.QuantifiedTextVMs.OrderBy(qt => qt.Count).ThenBy(qt => qt.Modulo))
+					{
+						if (quantifiedTextVM.Count < 0)
+						{
+							continue;
+						}
+						if (quantifiedTextVM.Modulo != 0 &&
+							(quantifiedTextVM.Modulo < 2 && quantifiedTextVM.Modulo > 1000))
+						{
+							continue;
+						}
+						if (!string.IsNullOrEmpty(quantifiedTextVM.Text))
+						{
+							int count = quantifiedTextVM.Count;
+							if (quantifiedTextVM.Modulo != 0)
+							{
+								// Encode the modulo value into the quantifier.
+								count = (quantifiedTextVM.Modulo << 16) | count;
+							}
+							if (!dict.ContainsKey(textKeyVM.TextKey))
+							{
+								dict[textKeyVM.TextKey] = new Dictionary<int, string>();
+							}
+							dict[textKeyVM.TextKey][count] = quantifiedTextVM.Text;
+						}
+					}
+				}
+			}
+			foreach (TextKeyViewModel child in textKeyVM.Children.OrderBy(tk => tk.DisplayName))
+			{
+				WriteTextKeysToDictionary(cultureName, dict, child);
+			}
+		}
+
+		#endregion GetSystemTexts
 
 		#region Text validation
 

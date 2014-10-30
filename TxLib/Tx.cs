@@ -93,30 +93,40 @@ namespace Unclassified.TxLib
 			public const string DateYear = "Tx:date.year";
 			/// <summary>The system text key for the date format containing a year and month.</summary>
 			public const string DateYearMonth = "Tx:date.year month";
+			/// <summary>The system text key for the date format containing a year and month in tabular form (fixed-length).</summary>
+			public const string DateYearMonthTab = "Tx:date.year month.tab";
 			/// <summary>The system text key for the date format containing a year and abbreviated month.</summary>
-			public const string DateYearMonthAbbr = "Tx:date.year month abbr";
+			public const string DateYearMonthAbbr = "Tx:date.year month.abbr";
 			/// <summary>The system text key for the date format containing a year and long month.</summary>
-			public const string DateYearMonthLong = "Tx:date.year month long";
+			public const string DateYearMonthLong = "Tx:date.year month.long";
 			/// <summary>The system text key for the date format containing a year, month and day.</summary>
 			public const string DateYearMonthDay = "Tx:date.year month day";
+			/// <summary>The system text key for the date format containing a year, month and day in tabular form (fixed-length).</summary>
+			public const string DateYearMonthDayTab = "Tx:date.year month day.tab";
 			/// <summary>The system text key for the date format containing a year, abbreviated month and day.</summary>
-			public const string DateYearMonthDayAbbr = "Tx:date.year month day abbr";
+			public const string DateYearMonthDayAbbr = "Tx:date.year month day.abbr";
 			/// <summary>The system text key for the date format containing a year, long month and day.</summary>
-			public const string DateYearMonthDayLong = "Tx:date.year month day long";
+			public const string DateYearMonthDayLong = "Tx:date.year month day.long";
 			/// <summary>The system text key for the date format containing a month only.</summary>
 			public const string DateMonth = "Tx:date.month";
+			/// <summary>The system text key for the date format containing a month only in tabular form (fixed-length).</summary>
+			public const string DateMonthTab = "Tx:date.month.tab";
 			/// <summary>The system text key for the date format containing an abbreviated month only.</summary>
-			public const string DateMonthAbbr = "Tx:date.month abbr";
+			public const string DateMonthAbbr = "Tx:date.month.abbr";
 			/// <summary>The system text key for the date format containing a long month only.</summary>
-			public const string DateMonthLong = "Tx:date.month long";
+			public const string DateMonthLong = "Tx:date.month.long";
 			/// <summary>The system text key for the date format containing a month and day.</summary>
 			public const string DateMonthDay = "Tx:date.month day";
+			/// <summary>The system text key for the date format containing a month and day in tabular form (fixed-length).</summary>
+			public const string DateMonthDayTab = "Tx:date.month day.tab";
 			/// <summary>The system text key for the date format containing an abbreviated month and day.</summary>
-			public const string DateMonthDayAbbr = "Tx:date.month day abbr";
+			public const string DateMonthDayAbbr = "Tx:date.month day.abbr";
 			/// <summary>The system text key for the date format containing a long month and day.</summary>
-			public const string DateMonthDayLong = "Tx:date.month day long";
+			public const string DateMonthDayLong = "Tx:date.month day.long";
 			/// <summary>The system text key for the date format containing a day only.</summary>
 			public const string DateDay = "Tx:date.day";
+			/// <summary>The system text key for the date format containing a day only in tabular form (fixed-length).</summary>
+			public const string DateDayTab = "Tx:date.day.tab";
 			/// <summary>The system text key for the date format containing a year and quarter.</summary>
 			public const string DateYearQuarter = "Tx:date.year quarter";
 			/// <summary>The system text key for the date format containing a quarter only.</summary>
@@ -125,12 +135,20 @@ namespace Unclassified.TxLib
 			public const string DateDowWithDate = "Tx:date.dow with date";
 			/// <summary>The system text key for the time format containing an hour, minute, second and millisecond.</summary>
 			public const string TimeHourMinuteSecondMs = "Tx:time.hour minute second ms";
+			/// <summary>The system text key for the time format containing an hour, minute, second and millisecond in tabular form (fixed-length).</summary>
+			public const string TimeHourMinuteSecondMsTab = "Tx:time.hour minute second ms.tab";
 			/// <summary>The system text key for the time format containing an hour, minute and second.</summary>
 			public const string TimeHourMinuteSecond = "Tx:time.hour minute second";
+			/// <summary>The system text key for the time format containing an hour, minute and second in tabular form (fixed-length).</summary>
+			public const string TimeHourMinuteSecondTab = "Tx:time.hour minute second.tab";
 			/// <summary>The system text key for the time format containing an hour and minute.</summary>
 			public const string TimeHourMinute = "Tx:time.hour minute";
+			/// <summary>The system text key for the time format containing an hour and minute in tabular form (fixed-length).</summary>
+			public const string TimeHourMinuteTab = "Tx:time.hour minute.tab";
 			/// <summary>The system text key for the time format containing an hour only.</summary>
 			public const string TimeHour = "Tx:time.hour";
+			/// <summary>The system text key for the time format containing an hour only in tabular form (fixed-length).</summary>
+			public const string TimeHourTab = "Tx:time.hour.tab";
 			/// <summary>The system text key for the time AM indicator.</summary>
 			public const string TimeAM = "Tx:time.am";
 			/// <summary>The system text key for the time PM indicator.</summary>
@@ -268,6 +286,12 @@ namespace Unclassified.TxLib
 		/// </remarks>
 		private static Dictionary<string, Dictionary<string, Dictionary<int, string>>> languages =
 			new Dictionary<string, Dictionary<string, Dictionary<int, string>>>();
+
+		/// <summary>
+		/// Dictionary backup. Used to store the original data while the system texts are
+		/// temporarily replaced for TxEditor purposed for date and time preview.
+		/// </summary>
+		private static Dictionary<string, Dictionary<string, Dictionary<int, string>>> languagesBackup;
 
 		/// <remarks>
 		/// Access to this object is synchronised through rwlock.
@@ -941,6 +965,68 @@ namespace Unclassified.TxLib
 				languages.Clear();
 			}
 			RaiseDictionaryChanged();
+		}
+
+		/// <summary>
+		/// Replaces the system keys (Tx:*) by the provided texts. This is only intended to be used
+		/// by the date and time preview in TxEditor.
+		/// </summary>
+		/// <param name="systemTexts"></param>
+		public static void ReplaceSystemTexts(Dictionary<string, Dictionary<string, Dictionary<int, string>>> systemTexts)
+		{
+			// Keep a backup of the original data to restore it later
+			if (languagesBackup == null)
+			{
+				languagesBackup = languages;
+			}
+			// And be sure to work on a copy of the dictionary before modifying it
+			languages = new Dictionary<string, Dictionary<string, Dictionary<int, string>>>(languagesBackup);
+
+			// Remove all Tx:* keys
+			foreach (var language in languages)
+			{
+				foreach (var key in language.Value.Keys.ToArray())
+				{
+					if (key.StartsWith("Tx:"))
+					{
+						language.Value.Remove(key);
+					}
+				}
+			}
+
+			// Insert the new texts
+			foreach (var languageCode in systemTexts.Keys)
+			{
+				Dictionary<string, Dictionary<int, string>> language;
+				if (!languages.TryGetValue(languageCode, out language))
+				{
+					language = new Dictionary<string, Dictionary<int, string>>();
+					languages[languageCode] = language;
+				}
+
+				var languageSystemTexts = systemTexts[languageCode];
+				foreach (var kvp in languageSystemTexts)
+				{
+					if (kvp.Key.StartsWith("Tx:"))
+					{
+						language[kvp.Key] = kvp.Value;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Restores the system keys (Tx:*) after they were replaced by the
+		/// <see cref="ReplaceSystemTexts"/> method. This is only intended to be used by the date
+		/// and time preview in TxEditor.
+		/// </summary>
+		public static void RestoreSystemTexts()
+		{
+			if (languagesBackup != null)
+			{
+				languages = languagesBackup;
+				languagesBackup = null;
+			}
 		}
 
 		#endregion Load methods
@@ -1727,79 +1813,112 @@ namespace Unclassified.TxLib
 		/// </summary>
 		/// <param name="time">DateTime value to format.</param>
 		/// <param name="details">Details to include in the formatted string.</param>
+		/// <param name="returnFormat">true to return the time format string instead of the formatted value.
+		/// The <paramref name="time"/> value is ignored here.</param>
 		/// <returns></returns>
-		public static string Time(DateTime time, TxTime details)
+		public static string Time(DateTime time, TxTime details, bool returnFormat = false)
 		{
 			string dowStr = null;
 			StringBuilder sb = new StringBuilder();
 
 			// Day of week
-			if ((details & TxTime.Dow) != 0)
+			if ((details & TxTime.DowAbbr) != 0)
 			{
-				dowStr = time.ToString("ddd");
+				if (returnFormat)
+					dowStr = "ddd";
+				else
+					dowStr = time.ToString("ddd");
 			}
 			if ((details & TxTime.DowLong) != 0)
 			{
-				dowStr = time.ToString("dddd");
+				if (returnFormat)
+					dowStr = "dddd";
+				else
+					dowStr = time.ToString("dddd");
 			}
 
 			// Date combinations
 			Dictionary<string, string> data;
+			string dateFormat = null;
 			switch (details & TxTime.AnyDate)
 			{
 				case TxTime.Year:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYear, false, "yyyy")));
+					dateFormat = GetText(SystemKeys.DateYear, false, "yyyy");
 					break;
 				case TxTime.YearMonth:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonth, false, "yyyy-MM")));
+					dateFormat = GetText(SystemKeys.DateYearMonth, false, "yyyy-MM");
+					break;
+				case TxTime.YearMonthTab:
+					dateFormat = GetText(SystemKeys.DateYearMonthTab, false, "yyyy-MM");
 					break;
 				case TxTime.YearMonthAbbr:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthAbbr, false, "MMM yyyy")));
+					dateFormat = GetText(SystemKeys.DateYearMonthAbbr, false, "MMM yyyy");
 					break;
 				case TxTime.YearMonthLong:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthLong, false, "Y")));
+					dateFormat = GetText(SystemKeys.DateYearMonthLong, false, "Y");
 					break;
 				case TxTime.YearMonthDay:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDay, false, "d")));
+					dateFormat = GetText(SystemKeys.DateYearMonthDay, false, "d");
+					break;
+				case TxTime.YearMonthDayTab:
+					dateFormat = GetText(SystemKeys.DateYearMonthDayTab, false, "d");
 					break;
 				case TxTime.YearMonthDayAbbr:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDayAbbr, false, "d MMM yyyy")));
+					dateFormat = GetText(SystemKeys.DateYearMonthDayAbbr, false, "d MMM yyyy");
 					break;
 				case TxTime.YearMonthDayLong:
-					sb.Append(time.ToString(GetText(SystemKeys.DateYearMonthDayLong, false, "d MMMM yyyy")));
+					dateFormat = GetText(SystemKeys.DateYearMonthDayLong, false, "d MMMM yyyy");
 					break;
 				case TxTime.Month:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonth, false, "%M")));
+					dateFormat = GetText(SystemKeys.DateMonth, false, "%M");
+					break;
+				case TxTime.MonthTab:
+					dateFormat = GetText(SystemKeys.DateMonthTab, false, "MM");
 					break;
 				case TxTime.MonthAbbr:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonthAbbr, false, "MMM")));
+					dateFormat = GetText(SystemKeys.DateMonthAbbr, false, "MMM");
 					break;
 				case TxTime.MonthLong:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonthLong, false, "MMMM")));
+					dateFormat = GetText(SystemKeys.DateMonthLong, false, "MMMM");
 					break;
 				case TxTime.MonthDay:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDay, false, "MM-dd")));
+					dateFormat = GetText(SystemKeys.DateMonthDay, false, "MM-dd");
+					break;
+				case TxTime.MonthDayTab:
+					dateFormat = GetText(SystemKeys.DateMonthDayTab, false, "MM-dd");
 					break;
 				case TxTime.MonthDayAbbr:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDayAbbr, false, "dd MMM")));
+					dateFormat = GetText(SystemKeys.DateMonthDayAbbr, false, "d MMM");
 					break;
 				case TxTime.MonthDayLong:
-					sb.Append(time.ToString(GetText(SystemKeys.DateMonthDayLong, false, "M")));
+					dateFormat = GetText(SystemKeys.DateMonthDayLong, false, "M");
 					break;
 				case TxTime.Day:
-					sb.Append(time.ToString(GetText(SystemKeys.DateDay, false, "%d")));
+					dateFormat = GetText(SystemKeys.DateDay, false, "%d");
+					break;
+				case TxTime.DayTab:
+					dateFormat = GetText(SystemKeys.DateDayTab, false, "dd");
 					break;
 				case TxTime.YearQuarter:
+					if (returnFormat) return "?";   // This cannot be expressed as a date format
 					data = new Dictionary<string, string>();
 					data["year"] = time.Year.ToString();
 					data["quarter"] = ((time.Month - 1) / 3 + 1).ToString();
 					sb.Append(ResolveData(GetText(SystemKeys.DateYearQuarter, false, "Q{quarter}'/'{year}"), "", -1, data));
 					break;
 				case TxTime.Quarter:
+					if (returnFormat) return "?";   // This cannot be expressed as a date format
 					data = new Dictionary<string, string>();
 					data["quarter"] = ((time.Month - 1) / 3 + 1).ToString();
 					sb.Append(ResolveData(GetText(SystemKeys.DateQuarter, false, "Q{quarter}"), "", -1, data));
 					break;
+			}
+			if (dateFormat != null)
+			{
+				if (returnFormat)
+					sb.Append(dateFormat);
+				else
+					sb.Append(time.ToString(dateFormat));
 			}
 
 			if (dowStr != null && sb.Length > 0)
@@ -1815,7 +1934,7 @@ namespace Unclassified.TxLib
 
 			if ((details & TxTime.AnyDate) != 0 && (details & TxTime.AnyTime) != 0)
 			{
-				sb.Append("\u2007");   // Non-breaking figure space
+				sb.Append("\u2004");   // Three-Per-Em Space, or Thick Space
 			}
 
 			if ((details & TxTime.AnyTime) != 0)
@@ -1825,20 +1944,40 @@ namespace Unclassified.TxLib
 				fi.PMDesignator = GetText(SystemKeys.TimePM, false, fi.PMDesignator);
 
 				// Time combinations
+				string timeFormat = null;
 				switch (details & TxTime.AnyTime)
 				{
 					case TxTime.HourMinuteSecondMs:
-						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinuteSecondMs, false, "HH:mm:ss.fff"), fi));
+						timeFormat = GetText(SystemKeys.TimeHourMinuteSecondMs, false, "H:mm:ss.fff");
+						break;
+					case TxTime.HourMinuteSecondMsTab:
+						timeFormat = GetText(SystemKeys.TimeHourMinuteSecondMsTab, false, "HH:mm:ss.fff");
 						break;
 					case TxTime.HourMinuteSecond:
-						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinuteSecond, false, "T"), fi));
+						timeFormat = GetText(SystemKeys.TimeHourMinuteSecond, false, "T");
+						break;
+					case TxTime.HourMinuteSecondTab:
+						timeFormat = GetText(SystemKeys.TimeHourMinuteSecondTab, false, "T");
 						break;
 					case TxTime.HourMinute:
-						sb.Append(time.ToString(GetText(SystemKeys.TimeHourMinute, false, "t"), fi));
+						timeFormat = GetText(SystemKeys.TimeHourMinute, false, "t");
+						break;
+					case TxTime.HourMinuteTab:
+						timeFormat = GetText(SystemKeys.TimeHourMinuteTab, false, "t");
 						break;
 					case TxTime.Hour:
-						sb.Append(time.ToString(GetText(SystemKeys.TimeHour, false, "%H"), fi));
+						timeFormat = GetText(SystemKeys.TimeHour, false, "%H");
 						break;
+					case TxTime.HourTab:
+						timeFormat = GetText(SystemKeys.TimeHourTab, false, "HH");
+						break;
+				}
+				if (timeFormat != null)
+				{
+					if (returnFormat)
+						sb.Append(timeFormat);
+					else
+						sb.Append(time.ToString(timeFormat, fi));
 				}
 			}
 
@@ -1846,10 +1985,17 @@ namespace Unclassified.TxLib
 			{
 				if (details != TxTime.Zone)
 				{
-					sb.Append("\xA0");   // Non-breaking space
+					sb.Append(" ");
 				}
-				sb.Append(time.ToString("zzz"));
+				if (returnFormat)
+					sb.Append("zzz");
+				else
+					sb.Append(time.ToString("zzz"));
 			}
+
+			// Simple hack to remove all % characters that are required for single-character custom date formats
+			if (returnFormat && sb.Length > 2)
+				return sb.ToString().Replace("%", "");
 
 			return sb.ToString();
 		}
@@ -4407,68 +4553,83 @@ namespace Unclassified.TxLib
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentMonthAbbr = 0x4,
+		FragmentMonthTab = 0x4,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentMonthLong = 0x8,
+		FragmentMonthAbbr = 0x8,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentDay = 0x10,
+		FragmentMonthLong = 0x10,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentQuarter = 0x20,
+		FragmentDay = 0x20,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentDayTab = 0x40,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentQuarter = 0x80,
 
 		/// <summary>
 		/// The day of the week in abbreviated form.
 		/// </summary>
-		Dow = 0x40,
+		DowAbbr = 0x100,
 		/// <summary>
 		/// The day of the week in full.
 		/// </summary>
-		DowLong = 0x80,
+		DowLong = 0x200,
 
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentHour = 0x100,
+		FragmentHour = 0x400,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentMinute = 0x200,
+		FragmentHourTab = 0x800,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentSecond = 0x400,
+		FragmentMinute = 0x1000,
 		/// <summary>
 		/// Internal value, do not use.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		FragmentMs = 0x800,
+		FragmentSecond = 0x2000,
+		/// <summary>
+		/// Internal value, do not use.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		FragmentMs = 0x4000,
 
 		/// <summary>
 		/// The time zone.
 		/// </summary>
-		Zone = 0x1000,
+		Zone = 0x8000,
 
 		/// <summary>
 		/// Internal value, do not use. Combines all date-related fragment values.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		AnyDate = FragmentYear | FragmentMonth | FragmentMonthAbbr | FragmentMonthLong | FragmentDay | FragmentQuarter,
+		AnyDate = FragmentYear | FragmentMonth | FragmentMonthTab | FragmentMonthAbbr | FragmentMonthLong | FragmentDay | FragmentDayTab | FragmentQuarter,
 		/// <summary>
 		/// Internal value, do not use. Combines all time-related fragment values.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		AnyTime = FragmentHour | FragmentMinute | FragmentSecond | FragmentMs,
+		AnyTime = FragmentHour | FragmentHourTab | FragmentMinute | FragmentSecond | FragmentMs,
 
 		/// <summary>
 		/// The year alone.
@@ -4478,6 +4639,10 @@ namespace Unclassified.TxLib
 		/// The year and month in numeric form.
 		/// </summary>
 		YearMonth = FragmentYear | FragmentMonth,
+		/// <summary>
+		/// The year and month in numeric form for tabular display (fixed-length).
+		/// </summary>
+		YearMonthTab = FragmentYear | FragmentMonthTab,
 		/// <summary>
 		/// The year and month in abbreviated form.
 		/// </summary>
@@ -4491,6 +4656,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		YearMonthDay = FragmentYear | FragmentMonth | FragmentDay,
 		/// <summary>
+		/// The year, month and day in numeric form for tabular display (fixed-length).
+		/// </summary>
+		YearMonthDayTab = FragmentYear | FragmentMonthTab | FragmentDayTab,
+		/// <summary>
 		/// The year, month and day in abbreviated form.
 		/// </summary>
 		YearMonthDayAbbr = FragmentYear | FragmentMonthAbbr | FragmentDay,
@@ -4502,6 +4671,10 @@ namespace Unclassified.TxLib
 		/// The month alone in numeric form.
 		/// </summary>
 		Month = FragmentMonth,
+		/// <summary>
+		/// The month alone in numeric form for tabular display (fixed-length).
+		/// </summary>
+		MonthTab = FragmentMonthTab,
 		/// <summary>
 		/// The month alone in abbreviated form.
 		/// </summary>
@@ -4515,6 +4688,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		MonthDay = FragmentMonth | FragmentDay,
 		/// <summary>
+		/// The month and day in numeric form for tabular display (fixed-length).
+		/// </summary>
+		MonthDayTab = FragmentMonthTab | FragmentDayTab,
+		/// <summary>
 		/// The month and day in abbreviated form.
 		/// </summary>
 		MonthDayAbbr = FragmentMonthAbbr | FragmentDay,
@@ -4526,6 +4703,10 @@ namespace Unclassified.TxLib
 		/// The day alone.
 		/// </summary>
 		Day = FragmentDay,
+		/// <summary>
+		/// The day alone for tabular display (fixed-length).
+		/// </summary>
+		DayTab = FragmentDayTab,
 		/// <summary>
 		/// The year and quarter.
 		/// </summary>
@@ -4540,17 +4721,33 @@ namespace Unclassified.TxLib
 		/// </summary>
 		HourMinuteSecondMs = FragmentHour | FragmentMinute | FragmentSecond | FragmentMs,
 		/// <summary>
+		/// The time of day with hour, minute, second and millisecond for tabular display (fixed-length).
+		/// </summary>
+		HourMinuteSecondMsTab = FragmentHourTab | FragmentMinute | FragmentSecond | FragmentMs,
+		/// <summary>
 		/// The time of day with hour, minute and second.
 		/// </summary>
 		HourMinuteSecond = FragmentHour | FragmentMinute | FragmentSecond,
+		/// <summary>
+		/// The time of day with hour, minute and second for tabular display (fixed-length).
+		/// </summary>
+		HourMinuteSecondTab = FragmentHourTab | FragmentMinute | FragmentSecond,
 		/// <summary>
 		/// The time of day with hour and minute.
 		/// </summary>
 		HourMinute = FragmentHour | FragmentMinute,
 		/// <summary>
+		/// The time of day with hour and minute for tabular display (fixed-length).
+		/// </summary>
+		HourMinuteTab = FragmentHourTab | FragmentMinute,
+		/// <summary>
 		/// The time of day with the hour alone.
 		/// </summary>
 		Hour = FragmentHour,
+		/// <summary>
+		/// The time of day with the hour alone for tabular display (fixed-length).
+		/// </summary>
+		HourTab = FragmentHourTab,
 	}
 
 	#endregion Date and time format enumeration

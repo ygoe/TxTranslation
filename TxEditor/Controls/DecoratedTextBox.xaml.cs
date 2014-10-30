@@ -461,16 +461,16 @@ namespace Unclassified.TxEditor.Controls
 								decos.Add(tb);
 								break;
 							case ' ':
-							case '\u2002':
-							case '\u2003':
-							case '\u2004':
-							case '\u2005':
-							case '\u2006':
-							case '\u2008':
-							case '\u2009':
-							case '\u200a':
-							case '\u200b':
-							case '\u205f':
+							case '\u2002':   // en space
+							case '\u2003':   // em space
+							case '\u2004':   // 3 per em space
+							case '\u2005':   // 4 per em space
+							case '\u2006':   // 6 per em space
+							case '\u2008':   // punctuation space
+							case '\u2009':   // thin space
+							case '\u200a':   // hair space
+							case '\u200b':   // zero-width space
+							case '\u205f':   // medium mathematical space
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
@@ -489,9 +489,8 @@ namespace Unclassified.TxEditor.Controls
 								grid1.Children.Insert(0, tb);
 								decos.Add(tb);
 								break;
-							case '\xa0':
-							case '\u2007':
-							case '\u202f':
+							case '\xa0':     // no-break space
+							case '\u2007':   // figure space (non-breaking)
 								tb = new TextBlock();
 								tb.HorizontalAlignment = HorizontalAlignment.Left;
 								tb.VerticalAlignment = VerticalAlignment.Top;
@@ -506,6 +505,25 @@ namespace Unclassified.TxEditor.Controls
 									tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
 								}
 								tb.Text = "°";
+								tb.Foreground = Brushes.DarkGray;
+								grid1.Children.Insert(0, tb);
+								decos.Add(tb);
+								break;
+							case '\u202f':   // narrow no-break space
+								tb = new TextBlock();
+								tb.HorizontalAlignment = HorizontalAlignment.Left;
+								tb.VerticalAlignment = VerticalAlignment.Top;
+								if (!double.IsNaN(width))
+								{
+									tb.Margin = new Thickness(startRect.Left - 10, startRect.Top, 0, 0);
+									tb.Width = width + 20;
+									tb.TextAlignment = TextAlignment.Center;
+								}
+								else
+								{
+									tb.Margin = new Thickness(startRect.Left, startRect.Top, 0, 0);
+								}
+								tb.Text = "'";
 								tb.Foreground = Brushes.DarkGray;
 								grid1.Children.Insert(0, tb);
 								decos.Add(tb);

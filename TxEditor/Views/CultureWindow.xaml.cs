@@ -22,6 +22,7 @@ namespace Unclassified.TxEditor.Views
 		public CultureWindow()
 		{
 			InitializeComponent();
+			this.HideIcon();
 
 			Stream templateStream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Unclassified.TxEditor.Template.txd");
 			if (templateStream != null)
@@ -33,12 +34,6 @@ namespace Unclassified.TxEditor.Views
 			InsertSystemKeysCheckBox.IsEnabled = false;
 			AddButton.IsEnabled = false;
 			LoadCultures();
-		}
-
-		protected override void OnSourceInitialized(EventArgs e)
-		{
-			this.HideIcon();
-			base.OnSourceInitialized(e);
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
