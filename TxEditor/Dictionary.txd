@@ -47,6 +47,9 @@
 Die automatische Wiederherstellung ist fehlgeschlagen.
 
 {msg}</text>
+		<text key="msg.cannot write file.v2 no backup">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden.
+
+{msg}</text>
 		<text key="msg.cannot write file.v2 restored">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde aus der Sicherungskopie wiederhergestellt.
 
 {msg}</text>
@@ -68,6 +71,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.delete text key.multiple.content mixed">Sie haben vollständige Textschlüssel ausgewählt, die weitere Unterschlüssel enthalten. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Nur ausgewählte Schlüssel löschen</text>
 		<text key="msg.enter text">Text hier eingeben</text>
+		<text key="msg.export.title">Datei zum Exportieren der ausgewählten Schlüssel auswählen</text>
 		<text key="msg.import file.add new culture">Neue Kultur {culture} aus importierter Datei hinzufügen?</text>
 		<text key="msg.import file.add new culture.apply to all">Für alle neuen Kulturen</text>
 		<text key="msg.import file.add new culture.desc">Die Datei „{name}“ enthält die Kultur {culture}, die diesem Wörterbuch noch nicht hinzugefügt wurde.
@@ -130,6 +134,7 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die geladene Datei. Beachten Si
 		<text key="statusbar.char info.no character at cursor">Kein Zeichen beim Cursor</text>
 		<text key="statusbar.culture added">Neue Kultur {name} hinzugefügt.</text>
 		<text key="statusbar.culture deleted">Kultur {name} gelöscht.</text>
+		<text key="statusbar.exported">Export abgeschlossen.</text>
 		<text key="statusbar.file saved">Datei gespeichert.</text>
 		<text key="statusbar.n files imported">{#} Dateien importiert, </text>
 		<text key="statusbar.n files imported" count="1">Datei importiert, </text>
@@ -518,6 +523,9 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 Automatic restoring of the backup file failed.
 
 {msg}</text>
+		<text key="msg.cannot write file.v2 no backup" comment="File write exception for file format v2 (single file), restore failed">Cannot write the dictionary file “{name}”.
+
+{msg}</text>
 		<text key="msg.cannot write file.v2 restored" comment="File write exception for file format v2 (single file), the backup was restored">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been restored from its backup.
 
 {msg}</text>
@@ -539,6 +547,7 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.delete text key.multiple.content mixed">You have selected full text keys that also contain other subkeys. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Only delete selected keys</text>
 		<text key="msg.enter text">Enter text here</text>
+		<text key="msg.export.title">Select file to export selected keys to</text>
 		<text key="msg.import file.add new culture">Add new culture {culture} from imported file?</text>
 		<text key="msg.import file.add new culture.apply to all">Apply to all new cultures</text>
 		<text key="msg.import file.add new culture.desc">The file “{name}” contains the culture {culture} which is not yet added to this dictionary.
@@ -601,6 +610,7 @@ Please check the access rights on the loaded file. Also consider version control
 		<text key="statusbar.char info.no character at cursor">No character at cursor</text>
 		<text key="statusbar.culture added">New culture {name} added.</text>
 		<text key="statusbar.culture deleted">Culture {name} deleted.</text>
+		<text key="statusbar.exported">Export completed.</text>
 		<text key="statusbar.file saved">File saved.</text>
 		<text key="statusbar.n files imported">{#} files imported, </text>
 		<text key="statusbar.n files imported" count="1">File imported, </text>

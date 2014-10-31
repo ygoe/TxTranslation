@@ -807,11 +807,29 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private bool CanExportKeys()
 		{
-			return false;
+			return selectedTextKeys != null && selectedTextKeys.Count > 0;
 		}
 
 		private void OnExportKeys()
 		{
+			// Ask for new file name and version
+			SaveFileDialog dlg = new SaveFileDialog();
+			dlg.AddExtension = true;
+			dlg.CheckPathExists = true;
+			dlg.DefaultExt = ".txd";
+			dlg.Filter = Tx.T("file filter.tx dictionary files") + " (*.txd)|*.txd|" +
+				Tx.T("file filter.all files") + " (*.*)|*.*";
+			dlg.OverwritePrompt = true;
+			dlg.Title = Tx.T("msg.export.title");
+			if (dlg.ShowDialog(MainWindow.Instance) == true)
+			{
+				string filePath = Path.GetDirectoryName(dlg.FileName);
+				string filePrefix = Path.GetFileNameWithoutExtension(dlg.FileName);
+				if (WriteToXmlFile(Path.Combine(filePath, filePrefix), true))
+				{
+					StatusText = Tx.T("statusbar.exported");
+				}
+			}
 		}
 
 		#endregion File section
@@ -1007,6 +1025,7 @@ namespace Unclassified.TxEditor.ViewModels
 		public void TextKeySelectionChanged(IList selectedItems)
 		{
 			selectedTextKeys = selectedItems.OfType<TextKeyViewModel>().ToList();
+			ExportKeysCommand.RaiseCanExecuteChanged();
 			DeleteTextKeyCommand.RaiseCanExecuteChanged();
 			RenameTextKeyCommand.RaiseCanExecuteChanged();
 			DuplicateTextKeyCommand.RaiseCanExecuteChanged();
@@ -2442,9 +2461,9 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		/// <param name="fileNamePrefix">Path and file name prefix, without culture name and extension.</param>
 		/// <returns>true, if the file was saved successfully, false otherwise.</returns>
-		private bool WriteToXmlFile(string fileNamePrefix)
+		private bool WriteToXmlFile(string fileNamePrefix, bool exporting = false)
 		{
-			if (fileVersion == 1)
+			if (fileVersion == 1 && !exporting)
 			{
 				// Check all files for read-only attribute
 				foreach (var cultureName in LoadedCultureNames.Union(DeletedCultureNames).Distinct())
@@ -2517,7 +2536,7 @@ namespace Unclassified.TxEditor.ViewModels
 						templateAttr.Value = "true";
 						xmlDoc.DocumentElement.Attributes.Append(templateAttr);
 					}
-					WriteToXml(cultureName, xmlDoc.DocumentElement);
+					WriteToXml(cultureName, xmlDoc.DocumentElement, exporting);
 
 					// Write xmlDoc to file
 					try
@@ -2559,7 +2578,7 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				DeletedCultureNames.Clear();
 			}
-			else if (fileVersion == 2)
+			else if (fileVersion == 2 || exporting)
 			{
 				// Check file for read-only attribute
 				FileInfo fi = new FileInfo(fileNamePrefix + ".txd");
@@ -2574,6 +2593,7 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 
 				// Delete previous backup and move current file to backup
+				bool haveBackup = false;
 				if (File.Exists(fileNamePrefix + ".txd"))
 				{
 					try
@@ -2592,6 +2612,7 @@ namespace Unclassified.TxEditor.ViewModels
 					try
 					{
 						File.Move(fileNamePrefix + ".txd", fileNamePrefix + ".txd.bak");
+						haveBackup = true;
 					}
 					catch (Exception ex)
 					{
@@ -2609,7 +2630,7 @@ namespace Unclassified.TxEditor.ViewModels
 				var spaceAttr = xmlDoc.CreateAttribute("xml:space");
 				spaceAttr.Value = "preserve";
 				xmlDoc.DocumentElement.Attributes.Append(spaceAttr);
-				if (IsTemplateFile)
+				if (IsTemplateFile && !exporting)
 				{
 					var templateAttr = xmlDoc.CreateAttribute("template");
 					templateAttr.Value = "true";
@@ -2629,7 +2650,7 @@ namespace Unclassified.TxEditor.ViewModels
 						primaryAttr.Value = "true";
 						cultureElement.Attributes.Append(primaryAttr);
 					}
-					WriteToXml(cultureName, cultureElement);
+					WriteToXml(cultureName, cultureElement, exporting);
 				}
 
 				// Write xmlDoc to file
@@ -2640,21 +2661,32 @@ namespace Unclassified.TxEditor.ViewModels
 				catch (Exception ex)
 				{
 					// Try to restore the backup file
-					try
+					if (haveBackup)
 					{
-						File.Delete(fileNamePrefix + ".txd");
-						File.Move(fileNamePrefix + ".txd.bak", fileNamePrefix + ".txd");
+						try
+						{
+							File.Delete(fileNamePrefix + ".txd");
+							File.Move(fileNamePrefix + ".txd.bak", fileNamePrefix + ".txd");
 
-						MessageBox.Show(
-							Tx.T("msg.cannot write file.v2 restored", "name", fileNamePrefix + ".txd", "msg", ex.Message),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+							MessageBox.Show(
+								Tx.T("msg.cannot write file.v2 restored", "name", fileNamePrefix + ".txd", "msg", ex.Message),
+								Tx.T("msg.caption.error"),
+								MessageBoxButton.OK,
+								MessageBoxImage.Error);
+						}
+						catch (Exception ex2)
+						{
+							MessageBox.Show(
+								Tx.T("msg.cannot write file.v2", "name", fileNamePrefix + ".txd", "msg", ex2.Message, "firstmsg", ex.Message),
+								Tx.T("msg.caption.error"),
+								MessageBoxButton.OK,
+								MessageBoxImage.Error);
+						}
 					}
-					catch (Exception ex2)
+					else
 					{
 						MessageBox.Show(
-							Tx.T("msg.cannot write file.v2", "name", fileNamePrefix + ".txd", "msg", ex2.Message, "firstmsg", ex.Message),
+							Tx.T("msg.cannot write file.v2 no backup", "name", fileNamePrefix + ".txd", "msg", ex.Message),
 							Tx.T("msg.caption.error"),
 							MessageBoxButton.OK,
 							MessageBoxImage.Error);
@@ -2705,14 +2737,15 @@ namespace Unclassified.TxEditor.ViewModels
 			File.Move(fileName + ".tmp", fileName);
 		}
 
-		private void WriteToXml(string cultureName, XmlElement xe)
+		private void WriteToXml(string cultureName, XmlElement xe, bool exporting)
 		{
-			WriteTextKeysToXml(cultureName, xe, RootTextKey);
+			WriteTextKeysToXml(cultureName, xe, RootTextKey, exporting);
 		}
 
-		private void WriteTextKeysToXml(string cultureName, XmlElement xe, TextKeyViewModel textKeyVM)
+		private void WriteTextKeysToXml(string cultureName, XmlElement xe, TextKeyViewModel textKeyVM, bool exporting)
 		{
-			if (textKeyVM.IsFullKey && textKeyVM.TextKey != null)
+			if (textKeyVM.IsFullKey && textKeyVM.TextKey != null &&
+				(!exporting || textKeyVM.IsSelectedRecursive()))
 			{
 				var cultureTextVM = textKeyVM.CultureTextVMs.FirstOrDefault(vm => vm.CultureName == cultureName);
 				if (cultureTextVM != null)
@@ -2823,7 +2856,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			foreach (TextKeyViewModel child in textKeyVM.Children.OrderBy(tk => tk.DisplayName))
 			{
-				WriteTextKeysToXml(cultureName, xe, child);
+				WriteTextKeysToXml(cultureName, xe, child, exporting);
 			}
 		}
 

@@ -232,6 +232,21 @@ namespace Unclassified.TxEditor.ViewModels
 		}
 
 		/// <summary>
+		/// Returns a value indicating whether the text key or any parent is selected.
+		/// </summary>
+		/// <returns></returns>
+		public bool IsSelectedRecursive()
+		{
+			if (IsSelected) return true;
+			TextKeyViewModel parentVM = Parent as TextKeyViewModel;
+			if (parentVM != null)
+			{
+				return parentVM.IsSelectedRecursive();
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Adds something to the Remarks value. If Remarks is currently empty, the new text is
 		/// set. Otherwise, a "more errors" text is added (only once).
 		/// </summary>
