@@ -73,6 +73,9 @@ namespace Unclassified.TxLib
 			public const string QuoteNestedBegin = "Tx:quote nested begin";
 			/// <summary>The system text key for a closing nested quotation mark.</summary>
 			public const string QuoteNestedEnd = "Tx:quote nested end";
+			/// <summary>The system text key for the unit name of a byte.</summary>
+			public const string ByteUnit = "Tx:byte unit";
+			
 			/// <summary>The system text key for a negative number indicator.</summary>
 			public const string NumberNegative = "Tx:number.negative";
 			/// <summary>The system text key for a number decimal separator.</summary>
@@ -87,8 +90,7 @@ namespace Unclassified.TxLib
 			public const string NumberOrdinal = "Tx:number.ordinal";
 			/// <summary>The system text key for a female ordinal number suffix.</summary>
 			public const string NumberOrdinalFeminin = "Tx:number.ordinal f";
-			/// <summary>The system text key for the unit name of a byte.</summary>
-			public const string ByteUnit = "Tx:byte unit";
+			
 			/// <summary>The system text key for the date format containing a year only.</summary>
 			public const string DateYear = "Tx:date.year";
 			/// <summary>The system text key for the date format containing a year and month.</summary>
@@ -133,6 +135,7 @@ namespace Unclassified.TxLib
 			public const string DateQuarter = "Tx:date.quarter";
 			/// <summary>The system text key for the date format containing a day of week with date.</summary>
 			public const string DateDowWithDate = "Tx:date.dow with date";
+
 			/// <summary>The system text key for the time format containing an hour, minute, second and millisecond.</summary>
 			public const string TimeHourMinuteSecondMs = "Tx:time.hour minute second ms";
 			/// <summary>The system text key for the time format containing an hour, minute, second and millisecond in tabular form (fixed-length).</summary>
@@ -153,16 +156,16 @@ namespace Unclassified.TxLib
 			public const string TimeAM = "Tx:time.am";
 			/// <summary>The system text key for the time PM indicator.</summary>
 			public const string TimePM = "Tx:time.pm";
+
 			/// <summary>The system text key for the separator between two levels of a relative time.</summary>
 			public const string TimeRelativeSeparator = "Tx:time.relative separator";
 			/// <summary>The system text key for the current time.</summary>
 			public const string TimeNow = "Tx:time.now";
 			/// <summary>The system text key for the unset time.</summary>
 			public const string TimeNever = "Tx:time.never";
+			
 			/// <summary>The system text key for a relative point in time in the future. Uses the {interval} placeholder.</summary>
 			public const string TimeRelative = "Tx:time.relative";
-			/// <summary>The system text key for a relative point in time in the past. Uses the {interval} placeholder.</summary>
-			public const string TimeRelativeNeg = "Tx:time.relative neg";
 			/// <summary>The system text key for years of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeYears = "Tx:time.relative.years";
 			/// <summary>The system text key for months of a relative point in time in the future. Uses the {#} count placeholder.</summary>
@@ -175,6 +178,9 @@ namespace Unclassified.TxLib
 			public const string TimeRelativeMinutes = "Tx:time.relative.minutes";
 			/// <summary>The system text key for seconds of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeSeconds = "Tx:time.relative.seconds";
+			
+			/// <summary>The system text key for a relative point in time in the past. Uses the {interval} placeholder.</summary>
+			public const string TimeRelativeNeg = "Tx:time.relative neg";
 			/// <summary>The system text key for years of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegYears = "Tx:time.relative neg.years";
 			/// <summary>The system text key for months of a relative point in time in the past. Uses the {#} count placeholder.</summary>
@@ -187,10 +193,9 @@ namespace Unclassified.TxLib
 			public const string TimeRelativeNegMinutes = "Tx:time.relative neg.minutes";
 			/// <summary>The system text key for seconds of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegSeconds = "Tx:time.relative neg.seconds";
+			
 			/// <summary>The system text key for a relative time span into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpanRelative = "Tx:time.relative span";
-			/// <summary>The system text key for a relative time span into the past. Uses the {interval} placeholder.</summary>
-			public const string TimeSpanRelativeNeg = "Tx:time.relative span neg";
 			/// <summary>The system text key for years of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeYears = "Tx:time.relative span.years";
 			/// <summary>The system text key for months of a relative time span into the future. Uses the {#} count placeholder.</summary>
@@ -203,6 +208,9 @@ namespace Unclassified.TxLib
 			public const string TimeSpanRelativeMinutes = "Tx:time.relative span.minutes";
 			/// <summary>The system text key for seconds of a relative time span into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeSeconds = "Tx:time.relative span.seconds";
+
+			/// <summary>The system text key for a relative time span into the past. Uses the {interval} placeholder.</summary>
+			public const string TimeSpanRelativeNeg = "Tx:time.relative span neg";
 			/// <summary>The system text key for years of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegYears = "Tx:time.relative span neg.years";
 			/// <summary>The system text key for months of a relative time span into the past. Uses the {#} count placeholder.</summary>
@@ -215,10 +223,9 @@ namespace Unclassified.TxLib
 			public const string TimeSpanRelativeNegMinutes = "Tx:time.relative span neg.minutes";
 			/// <summary>The system text key for seconds of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegSeconds = "Tx:time.relative span neg.seconds";
+			
 			/// <summary>The system text key for a relative time span going into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpan = "Tx:time.span";
-			/// <summary>The system text key for a relative time span going into the past. Uses the {interval} placeholder.</summary>
-			public const string TimeSpanNeg = "Tx:time.span neg";
 			/// <summary>The system text key for years of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanYears = "Tx:time.span.years";
 			/// <summary>The system text key for months of a relative time span going into the future. Uses the {#} count placeholder.</summary>
@@ -231,6 +238,9 @@ namespace Unclassified.TxLib
 			public const string TimeSpanMinutes = "Tx:time.span.minutes";
 			/// <summary>The system text key for seconds of a relative time span going into the future. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanSeconds = "Tx:time.span.seconds";
+
+			/// <summary>The system text key for a relative time span going into the past. Uses the {interval} placeholder.</summary>
+			public const string TimeSpanNeg = "Tx:time.span neg";
 			/// <summary>The system text key for years of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegYears = "Tx:time.span neg.years";
 			/// <summary>The system text key for months of a relative time span going into the past. Uses the {#} count placeholder.</summary>
@@ -243,6 +253,7 @@ namespace Unclassified.TxLib
 			public const string TimeSpanNegMinutes = "Tx:time.span neg.minutes";
 			/// <summary>The system text key for seconds of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegSeconds = "Tx:time.span neg.seconds";
+			
 			/// <summary>The system text key for combining items in a conjunctive (AND) enumeration.</summary>
 			public const string EnumAndCombiner = "Tx:enum.and.combiner";
 			/// <summary>The system text key for combining the last item in a conjunctive (AND) enumeration.</summary>
@@ -2233,6 +2244,57 @@ namespace Unclassified.TxLib
 		/// <returns></returns>
 		private static string FormatTimeInterval(DateTimeInterval interval, string[] keys)
 		{
+			// First count the number of levels we will have
+			int levelCount = 0;
+			if (interval.Years > 0) levelCount++;
+			if (interval.Months > 0) levelCount++;
+			if (interval.Days > 0) levelCount++;
+			if (interval.Hours > 0) levelCount++;
+			if (interval.Minutes > 0) levelCount++;
+			if (interval.Seconds > 0) levelCount++;
+
+			// If it's one, first try to use the wording for a single level
+			if (levelCount == 1)
+			{
+				if (interval.Years > 0)
+				{
+					string text = GetText(keys[0] + ".single", interval.Years);
+					if (text != null)
+						return ResolveData(text, keys[0] + ".single", interval.Years, (Dictionary<string, string>) null);
+				}
+				else if (interval.Months > 0)
+				{
+					string text = GetText(keys[1] + ".single", interval.Months);
+					if (text != null)
+						return ResolveData(text, keys[1] + ".single", interval.Months, (Dictionary<string, string>) null);
+				}
+				else if (interval.Days > 0)
+				{
+					string text = GetText(keys[2] + ".single", interval.Days);
+					if (text != null)
+						return ResolveData(text, keys[2] + ".single", interval.Days, (Dictionary<string, string>) null);
+				}
+				else if (interval.Hours > 0)
+				{
+					string text = GetText(keys[3] + ".single", interval.Hours);
+					if (text != null)
+						return ResolveData(text, keys[3] + ".single", interval.Hours, (Dictionary<string, string>) null);
+				}
+				else if (interval.Minutes > 0)
+				{
+					string text = GetText(keys[4] + ".single", interval.Minutes);
+					if (text != null)
+						return ResolveData(text, keys[4] + ".single", interval.Minutes, (Dictionary<string, string>) null);
+				}
+				else if (interval.Seconds > 0)
+				{
+					string text = GetText(keys[5] + ".single", interval.Seconds);
+					if (text != null)
+						return ResolveData(text, keys[5] + ".single", interval.Seconds, (Dictionary<string, string>) null);
+				}
+			}
+
+			// Now use the regular texts for every other case
 			List<string> levels = new List<string>();
 			if (interval.Years > 0 && levels.Count < 2)
 				levels.Add(ResolveData(GetText(keys[0], interval.Years), keys[0], interval.Years, (Dictionary<string, string>) null));
@@ -2246,7 +2308,6 @@ namespace Unclassified.TxLib
 				levels.Add(ResolveData(GetText(keys[4], interval.Minutes), keys[4], interval.Minutes, (Dictionary<string, string>) null));
 			if (interval.Seconds > 0 && levels.Count < 2)
 				levels.Add(ResolveData(GetText(keys[5], interval.Seconds), keys[5], interval.Seconds, (Dictionary<string, string>) null));
-
 			return string.Join(GetText(SystemKeys.TimeRelativeSeparator, " "), levels.ToArray());
 		}
 

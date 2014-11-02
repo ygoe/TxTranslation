@@ -40,81 +40,153 @@
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative.days">{#} Tagen</text>
 		<text key="Tx:time.relative.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative.days.single">{#} Tagen</text>
+		<text key="Tx:time.relative.days.single" count="1">einem Tag</text>
 		<text key="Tx:time.relative.hours">{#} Stunden</text>
 		<text key="Tx:time.relative.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative.hours.single">{#} Stunden</text>
+		<text key="Tx:time.relative.hours.single" count="1">einer Stunde</text>
 		<text key="Tx:time.relative.minutes">{#} Minuten</text>
 		<text key="Tx:time.relative.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.relative.minutes.single" count="1">einer Minute</text>
 		<text key="Tx:time.relative.months">{#} Monaten</text>
 		<text key="Tx:time.relative.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative.months.single">{#} Monaten</text>
+		<text key="Tx:time.relative.months.single" count="1">einem Monat</text>
 		<text key="Tx:time.relative.seconds">{#} Sekunden</text>
 		<text key="Tx:time.relative.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.relative.seconds.single" count="1">einer Sekunde</text>
 		<text key="Tx:time.relative.years">{#} Jahren</text>
 		<text key="Tx:time.relative.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.relative.years.single">{#} Jahren</text>
+		<text key="Tx:time.relative.years.single" count="1">einem Jahr</text>
 		<text key="Tx:time.relative neg">vor {interval}</text>
 		<text key="Tx:time.relative neg.days">{#} Tagen</text>
 		<text key="Tx:time.relative neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative neg.days.single">{#} Tagen</text>
+		<text key="Tx:time.relative neg.days.single" count="1">einem Tag</text>
 		<text key="Tx:time.relative neg.hours">{#} Stunden</text>
 		<text key="Tx:time.relative neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative neg.hours.single">{#} Stunden</text>
+		<text key="Tx:time.relative neg.hours.single" count="1">einer Stunde</text>
 		<text key="Tx:time.relative neg.minutes">{#} Minuten</text>
 		<text key="Tx:time.relative neg.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative neg.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.relative neg.minutes.single" count="1">einer Minute</text>
 		<text key="Tx:time.relative neg.months">{#} Monaten</text>
 		<text key="Tx:time.relative neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative neg.months.single">{#} Monaten</text>
+		<text key="Tx:time.relative neg.months.single" count="1">einem Monat</text>
 		<text key="Tx:time.relative neg.seconds">{#} Sekunden</text>
 		<text key="Tx:time.relative neg.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative neg.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.relative neg.seconds.single" count="1">einer Sekunde</text>
 		<text key="Tx:time.relative neg.years">{#} Jahren</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.relative span">für {interval}</text>
+		<text key="Tx:time.relative neg.years.single">{#} Jahren</text>
+		<text key="Tx:time.relative neg.years.single" count="1">einem Jahr</text>
+		<text key="Tx:time.relative span">{interval} später</text>
 		<text key="Tx:time.relative span.days">{#} Tage</text>
 		<text key="Tx:time.relative span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span.days.single">{#} Tage</text>
+		<text key="Tx:time.relative span.days.single" count="1">einen Tag</text>
 		<text key="Tx:time.relative span.hours">{#} Stunden</text>
 		<text key="Tx:time.relative span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span.hours.single">{#} Stunden</text>
+		<text key="Tx:time.relative span.hours.single" count="1">eine Stunde</text>
 		<text key="Tx:time.relative span.minutes">{#} Minuten</text>
 		<text key="Tx:time.relative span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.relative span.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.relative span.minutes.single" count="1">eine Minute</text>
 		<text key="Tx:time.relative span.months">{#} Monate</text>
 		<text key="Tx:time.relative span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span.months.single">{#} Monate</text>
+		<text key="Tx:time.relative span.months.single" count="1">einen Monat</text>
 		<text key="Tx:time.relative span.seconds">{#} Sekunden</text>
 		<text key="Tx:time.relative span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.relative span.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.relative span.seconds.single" count="1">eine Sekunde</text>
 		<text key="Tx:time.relative span.years">{#} Jahre</text>
 		<text key="Tx:time.relative span.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.relative span neg">seit {interval}</text>
-		<text key="Tx:time.relative span neg.days">{#} Tagen</text>
+		<text key="Tx:time.relative span.years.single">{#} Jahre</text>
+		<text key="Tx:time.relative span.years.single" count="1">ein Jahr</text>
+		<text key="Tx:time.relative span neg">{interval} vorher</text>
+		<text key="Tx:time.relative span neg.days">{#} Tage</text>
 		<text key="Tx:time.relative span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.relative span neg.days.single">{#} Tage</text>
+		<text key="Tx:time.relative span neg.days.single" count="1">einen Tag</text>
 		<text key="Tx:time.relative span neg.hours">{#} Stunden</text>
 		<text key="Tx:time.relative span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.relative span neg.hours.single">{#} Stunden</text>
+		<text key="Tx:time.relative span neg.hours.single" count="1">eine Stunde</text>
 		<text key="Tx:time.relative span neg.minutes">{#} Minuten</text>
 		<text key="Tx:time.relative span neg.minutes" count="1">{#} Minute</text>
-		<text key="Tx:time.relative span neg.months">{#} Monaten</text>
+		<text key="Tx:time.relative span neg.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.relative span neg.minutes.single" count="1">eine Minute</text>
+		<text key="Tx:time.relative span neg.months">{#} Monate</text>
 		<text key="Tx:time.relative span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.relative span neg.months.single">{#} Monate</text>
+		<text key="Tx:time.relative span neg.months.single" count="1">einen Monat</text>
 		<text key="Tx:time.relative span neg.seconds">{#} Sekunden</text>
 		<text key="Tx:time.relative span neg.seconds" count="1">{#} Sekunde</text>
-		<text key="Tx:time.relative span neg.years">{#} Jahren</text>
+		<text key="Tx:time.relative span neg.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.relative span neg.seconds.single" count="1">eine Sekunde</text>
+		<text key="Tx:time.relative span neg.years">{#} Jahre</text>
 		<text key="Tx:time.relative span neg.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.span">{interval} später</text>
+		<text key="Tx:time.relative span neg.years.single">{#} Jahre</text>
+		<text key="Tx:time.relative span neg.years.single" count="1">ein Jahr</text>
+		<text key="Tx:time.span">für {interval}</text>
 		<text key="Tx:time.span.days">{#} Tage</text>
 		<text key="Tx:time.span.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span.days.single">{#} Tage</text>
+		<text key="Tx:time.span.days.single" count="1">einen Tag</text>
 		<text key="Tx:time.span.hours">{#} Stunden</text>
 		<text key="Tx:time.span.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span.hours.single">{#} Stunden</text>
+		<text key="Tx:time.span.hours.single" count="1">eine Stunde</text>
 		<text key="Tx:time.span.minutes">{#} Minuten</text>
 		<text key="Tx:time.span.minutes" count="1">{#} Minute</text>
+		<text key="Tx:time.span.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.span.minutes.single" count="1">eine Minute</text>
 		<text key="Tx:time.span.months">{#} Monate</text>
 		<text key="Tx:time.span.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span.months.single">{#} Monate</text>
+		<text key="Tx:time.span.months.single" count="1">einen Monat</text>
 		<text key="Tx:time.span.seconds">{#} Sekunden</text>
 		<text key="Tx:time.span.seconds" count="1">{#} Sekunde</text>
+		<text key="Tx:time.span.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.span.seconds.single" count="1">eine Sekunde</text>
 		<text key="Tx:time.span.years">{#} Jahre</text>
 		<text key="Tx:time.span.years" count="1">{#} Jahr</text>
-		<text key="Tx:time.span neg">{interval} vorher</text>
-		<text key="Tx:time.span neg.days">{#} Tage</text>
+		<text key="Tx:time.span.years.single">{#} Jahre</text>
+		<text key="Tx:time.span.years.single" count="1">ein Jahr</text>
+		<text key="Tx:time.span neg">seit {interval}</text>
+		<text key="Tx:time.span neg.days">{#} Tagen</text>
 		<text key="Tx:time.span neg.days" count="1">{#} Tag</text>
+		<text key="Tx:time.span neg.days.single">{#} Tagen</text>
+		<text key="Tx:time.span neg.days.single" count="1">einem Tag</text>
 		<text key="Tx:time.span neg.hours">{#} Stunden</text>
 		<text key="Tx:time.span neg.hours" count="1">{#} Stunde</text>
+		<text key="Tx:time.span neg.hours.single">{#} Stunden</text>
+		<text key="Tx:time.span neg.hours.single" count="1">einer Stunde</text>
 		<text key="Tx:time.span neg.minutes">{#} Minuten</text>
 		<text key="Tx:time.span neg.minutes" count="1">{#} Minute</text>
-		<text key="Tx:time.span neg.months">{#} Monate</text>
+		<text key="Tx:time.span neg.minutes.single">{#} Minuten</text>
+		<text key="Tx:time.span neg.minutes.single" count="1">einer Minute</text>
+		<text key="Tx:time.span neg.months">{#} Monaten</text>
 		<text key="Tx:time.span neg.months" count="1">{#} Monat</text>
+		<text key="Tx:time.span neg.months.single">{#} Monaten</text>
+		<text key="Tx:time.span neg.months.single" count="1">einem Monat</text>
 		<text key="Tx:time.span neg.seconds">{#} Sekunden</text>
 		<text key="Tx:time.span neg.seconds" count="1">{#} Sekunde</text>
-		<text key="Tx:time.span neg.years">{#} Jahre</text>
+		<text key="Tx:time.span neg.seconds.single">{#} Sekunden</text>
+		<text key="Tx:time.span neg.seconds.single" count="1">einer Sekunde</text>
+		<text key="Tx:time.span neg.years">{#} Jahren</text>
 		<text key="Tx:time.span neg.years" count="1">{#} Jahr</text>
+		<text key="Tx:time.span neg.years.single">{#} Jahren</text>
+		<text key="Tx:time.span neg.years.single" count="1">einem Jahr</text>
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
@@ -137,9 +209,11 @@
 		<text key="Tx:time.hour minute second ms.tab">HH.mm.ss,fff</text>
 	</culture>
 	<culture name="en" primary="true">
+		<text key="Tx:byte unit" comment="Default: B" />
+		<text key="Tx:colon" comment="Can be used to insert additional spacing like for French." />
 		<text key="Tx:date.day" comment="Default: %d" />
 		<text key="Tx:date.day.tab" comment="Default: dd" />
-		<text key="Tx:date.dow with date" comment="Default: {dow}, {date}" />
+		<text key="Tx:date.dow with date" comment="Combines a day of week with a date. Default: {dow}, {date}" />
 		<text key="Tx:date.month.abbr" comment="Default: MMM" />
 		<text key="Tx:date.month.long" comment="Default: MMMM" />
 		<text key="Tx:date.month day" comment="Default: MM-dd">d/M</text>
@@ -159,22 +233,23 @@
 		<text key="Tx:enum.and.last combiner"> and </text>
 		<text key="Tx:enum.or.combiner">, </text>
 		<text key="Tx:enum.or.last combiner"> or </text>
-		<text key="Tx:number.group separator"> </text>
-		<text key="Tx:number.group separator threshold">1</text>
-		<text key="Tx:number.negative">−</text>
-		<text key="Tx:number.ordinal">{#}th</text>
+		<text key="Tx:number.group separator" comment="Number thousands group separator. International recommendation is a narrow non-breaking space."> </text>
+		<text key="Tx:number.group separator threshold" comment="The minimum value for thousands group separators to be used at all.">1</text>
+		<text key="Tx:number.negative" comment="Negative number prefix.">−</text>
+		<text key="Tx:number.ordinal" comment="Ordinal numbers, male or default.">{#}th</text>
 		<text key="Tx:number.ordinal" count="1" mod="10">{#}st</text>
 		<text key="Tx:number.ordinal" count="2" mod="10">{#}nd</text>
 		<text key="Tx:number.ordinal" count="3" mod="10">{#}rd</text>
 		<text key="Tx:number.ordinal" count="11" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="12" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}th</text>
-		<text key="Tx:number.unit separator"> </text>
-		<text key="Tx:quote begin">“</text>
-		<text key="Tx:quote end">”</text>
-		<text key="Tx:quote nested begin">‘</text>
-		<text key="Tx:quote nested end">’</text>
-		<text key="Tx:time.am">am</text>
+		<text key="Tx:number.ordinal f" comment="Ordinal numbers, female if special." />
+		<text key="Tx:number.unit separator" comment="Separator between a number and its unit. Should be a non-breaking space. Should only be used for relatively short unit symbols, not longer names."> </text>
+		<text key="Tx:quote begin" comment="Opening regular quotation mark.">“</text>
+		<text key="Tx:quote end" comment="Closing regular quotation mark.">”</text>
+		<text key="Tx:quote nested begin" comment="Opening nested/secondary quotation mark.">‘</text>
+		<text key="Tx:quote nested end" comment="Closing nested/secondary quotation mark.">’</text>
+		<text key="Tx:time.am" comment="a.m. (ante meridiem), used for 12-hour clocks.">am</text>
 		<text key="Tx:time.hour" comment="Default: %H">h tt</text>
 		<text key="Tx:time.hour.tab" comment="Default: HH">hh tt</text>
 		<text key="Tx:time.hour minute" comment="Default: t">h:mm tt</text>
@@ -183,87 +258,159 @@
 		<text key="Tx:time.hour minute second.tab" comment="Default: T">HH:mm:ss</text>
 		<text key="Tx:time.hour minute second ms" comment="Default: H:mm:ss.fff">h:mm:ss.fff tt</text>
 		<text key="Tx:time.hour minute second ms.tab" comment="Default: HH:mm:ss.fff">HH:mm:ss.fff</text>
-		<text key="Tx:time.never">never</text>
-		<text key="Tx:time.now">now</text>
-		<text key="Tx:time.pm">pm</text>
-		<text key="Tx:time.relative">in {interval}</text>
+		<text key="Tx:time.never" comment="No point in time.">never</text>
+		<text key="Tx:time.now" comment="At the current time.">now</text>
+		<text key="Tx:time.pm" comment="p.m. (post meridiem), used for 12-hour clocks.">pm</text>
+		<text key="Tx:time.relative" comment="A point in time in the future.">in {interval}</text>
 		<text key="Tx:time.relative.days">{#} days</text>
 		<text key="Tx:time.relative.days" count="1">{#} day</text>
+		<text key="Tx:time.relative.days.single">{#} days</text>
+		<text key="Tx:time.relative.days.single" count="1">a day</text>
 		<text key="Tx:time.relative.hours">{#} hours</text>
 		<text key="Tx:time.relative.hours" count="1">{#} hour</text>
+		<text key="Tx:time.relative.hours.single">{#} hours</text>
+		<text key="Tx:time.relative.hours.single" count="1">an hour</text>
 		<text key="Tx:time.relative.minutes">{#} minutes</text>
 		<text key="Tx:time.relative.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative.minutes.single">{#} minutes</text>
+		<text key="Tx:time.relative.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.relative.months">{#} months</text>
 		<text key="Tx:time.relative.months" count="1">{#} month</text>
+		<text key="Tx:time.relative.months.single">{#} months</text>
+		<text key="Tx:time.relative.months.single" count="1">a month</text>
 		<text key="Tx:time.relative.seconds">{#} seconds</text>
 		<text key="Tx:time.relative.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative.seconds.single">{#} seconds</text>
+		<text key="Tx:time.relative.seconds.single" count="1">a second</text>
 		<text key="Tx:time.relative.years">{#} years</text>
 		<text key="Tx:time.relative.years" count="1">{#} year</text>
-		<text key="Tx:time.relative neg">{interval} ago</text>
+		<text key="Tx:time.relative.years.single">{#} years</text>
+		<text key="Tx:time.relative.years.single" count="1">a year</text>
+		<text key="Tx:time.relative neg" comment="A point in time in the past.">{interval} ago</text>
 		<text key="Tx:time.relative neg.days">{#} days</text>
 		<text key="Tx:time.relative neg.days" count="1">{#} day</text>
+		<text key="Tx:time.relative neg.days.single">{#} days</text>
+		<text key="Tx:time.relative neg.days.single" count="1">a day</text>
 		<text key="Tx:time.relative neg.hours">{#} hours</text>
 		<text key="Tx:time.relative neg.hours" count="1">{#} hour</text>
+		<text key="Tx:time.relative neg.hours.single">{#} hours</text>
+		<text key="Tx:time.relative neg.hours.single" count="1">an hour</text>
 		<text key="Tx:time.relative neg.minutes">{#} minutes</text>
 		<text key="Tx:time.relative neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative neg.minutes.single">{#} minutes</text>
+		<text key="Tx:time.relative neg.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.relative neg.months">{#} months</text>
 		<text key="Tx:time.relative neg.months" count="1">{#} month</text>
+		<text key="Tx:time.relative neg.months.single">{#} months</text>
+		<text key="Tx:time.relative neg.months.single" count="1">a month</text>
 		<text key="Tx:time.relative neg.seconds">{#} seconds</text>
 		<text key="Tx:time.relative neg.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative neg.seconds.single">{#} seconds</text>
+		<text key="Tx:time.relative neg.seconds.single" count="1">a second</text>
 		<text key="Tx:time.relative neg.years">{#} years</text>
 		<text key="Tx:time.relative neg.years" count="1">{#} year</text>
-		<text key="Tx:time.relative span">for {interval}</text>
+		<text key="Tx:time.relative neg.years.single">{#} years</text>
+		<text key="Tx:time.relative neg.years.single" count="1">a year</text>
+		<text key="Tx:time.relative span" comment="A point in time after another unspecified time.">{interval} later</text>
 		<text key="Tx:time.relative span.days">{#} days</text>
 		<text key="Tx:time.relative span.days" count="1">{#} day</text>
+		<text key="Tx:time.relative span.days.single">{#} days</text>
+		<text key="Tx:time.relative span.days.single" count="1">a day</text>
 		<text key="Tx:time.relative span.hours">{#} hours</text>
 		<text key="Tx:time.relative span.hours" count="1">{#} hour</text>
+		<text key="Tx:time.relative span.hours.single">{#} hours</text>
+		<text key="Tx:time.relative span.hours.single" count="1">an hour</text>
 		<text key="Tx:time.relative span.minutes">{#} minutes</text>
 		<text key="Tx:time.relative span.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative span.minutes.single">{#} minutes</text>
+		<text key="Tx:time.relative span.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.relative span.months">{#} months</text>
 		<text key="Tx:time.relative span.months" count="1">{#} month</text>
+		<text key="Tx:time.relative span.months.single">{#} months</text>
+		<text key="Tx:time.relative span.months.single" count="1">a month</text>
 		<text key="Tx:time.relative span.seconds">{#} seconds</text>
 		<text key="Tx:time.relative span.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative span.seconds.single">{#} seconds</text>
+		<text key="Tx:time.relative span.seconds.single" count="1">a second</text>
 		<text key="Tx:time.relative span.years">{#} years</text>
 		<text key="Tx:time.relative span.years" count="1">{#} year</text>
-		<text key="Tx:time.relative span neg">for {interval}</text>
+		<text key="Tx:time.relative span.years.single">{#} years</text>
+		<text key="Tx:time.relative span.years.single" count="1">a year</text>
+		<text key="Tx:time.relative span neg" comment="A point in time before another unspecified time.">{interval} before</text>
 		<text key="Tx:time.relative span neg.days">{#} days</text>
 		<text key="Tx:time.relative span neg.days" count="1">{#} day</text>
+		<text key="Tx:time.relative span neg.days.single">{#} days</text>
+		<text key="Tx:time.relative span neg.days.single" count="1">a day</text>
 		<text key="Tx:time.relative span neg.hours">{#} hours</text>
 		<text key="Tx:time.relative span neg.hours" count="1">{#} hour</text>
+		<text key="Tx:time.relative span neg.hours.single">{#} hours</text>
+		<text key="Tx:time.relative span neg.hours.single" count="1">an hour</text>
 		<text key="Tx:time.relative span neg.minutes">{#} minutes</text>
 		<text key="Tx:time.relative span neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.relative span neg.minutes.single">{#} minutes</text>
+		<text key="Tx:time.relative span neg.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.relative span neg.months">{#} months</text>
 		<text key="Tx:time.relative span neg.months" count="1">{#} month</text>
+		<text key="Tx:time.relative span neg.months.single">{#} months</text>
+		<text key="Tx:time.relative span neg.months.single" count="1">a month</text>
 		<text key="Tx:time.relative span neg.seconds">{#} seconds</text>
 		<text key="Tx:time.relative span neg.seconds" count="1">{#} second</text>
+		<text key="Tx:time.relative span neg.seconds.single">{#} seconds</text>
+		<text key="Tx:time.relative span neg.seconds.single" count="1">a second</text>
 		<text key="Tx:time.relative span neg.years">{#} years</text>
 		<text key="Tx:time.relative span neg.years" count="1">{#} year</text>
-		<text key="Tx:time.span">{interval} later</text>
+		<text key="Tx:time.relative span neg.years.single">{#} years</text>
+		<text key="Tx:time.relative span neg.years.single" count="1">a year</text>
+		<text key="Tx:time.span" comment="A time span from now on into the future or based at an unspecified time.">for {interval}</text>
 		<text key="Tx:time.span.days">{#} days</text>
 		<text key="Tx:time.span.days" count="1">{#} day</text>
+		<text key="Tx:time.span.days.single">{#} days</text>
+		<text key="Tx:time.span.days.single" count="1">a day</text>
 		<text key="Tx:time.span.hours">{#} hours</text>
 		<text key="Tx:time.span.hours" count="1">{#} hour</text>
+		<text key="Tx:time.span.hours.single">{#} hours</text>
+		<text key="Tx:time.span.hours.single" count="1">an hour</text>
 		<text key="Tx:time.span.minutes">{#} minutes</text>
 		<text key="Tx:time.span.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.span.minutes.single">{#} minutes</text>
+		<text key="Tx:time.span.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.span.months">{#} months</text>
 		<text key="Tx:time.span.months" count="1">{#} month</text>
+		<text key="Tx:time.span.months.single">{#} months</text>
+		<text key="Tx:time.span.months.single" count="1">a month</text>
 		<text key="Tx:time.span.seconds">{#} seconds</text>
 		<text key="Tx:time.span.seconds" count="1">{#} second</text>
+		<text key="Tx:time.span.seconds.single">{#} seconds</text>
+		<text key="Tx:time.span.seconds.single" count="1">a second</text>
 		<text key="Tx:time.span.years">{#} years</text>
 		<text key="Tx:time.span.years" count="1">{#} year</text>
-		<text key="Tx:time.span neg">{interval} before</text>
+		<text key="Tx:time.span.years.single">{#} years</text>
+		<text key="Tx:time.span.years.single" count="1">a year</text>
+		<text key="Tx:time.span neg" comment="A time span from the past until now.">for {interval}</text>
 		<text key="Tx:time.span neg.days">{#} days</text>
 		<text key="Tx:time.span neg.days" count="1">{#} day</text>
+		<text key="Tx:time.span neg.days.single">{#} days</text>
+		<text key="Tx:time.span neg.days.single" count="1">a day</text>
 		<text key="Tx:time.span neg.hours">{#} hours</text>
 		<text key="Tx:time.span neg.hours" count="1">{#} hour</text>
+		<text key="Tx:time.span neg.hours.single">{#} hours</text>
+		<text key="Tx:time.span neg.hours.single" count="1">an hour</text>
 		<text key="Tx:time.span neg.minutes">{#} minutes</text>
 		<text key="Tx:time.span neg.minutes" count="1">{#} minute</text>
+		<text key="Tx:time.span neg.minutes.single">{#} minutes</text>
+		<text key="Tx:time.span neg.minutes.single" count="1">a minute</text>
 		<text key="Tx:time.span neg.months">{#} months</text>
 		<text key="Tx:time.span neg.months" count="1">{#} month</text>
+		<text key="Tx:time.span neg.months.single">{#} months</text>
+		<text key="Tx:time.span neg.months.single" count="1">a month</text>
 		<text key="Tx:time.span neg.seconds">{#} seconds</text>
 		<text key="Tx:time.span neg.seconds" count="1">{#} second</text>
+		<text key="Tx:time.span neg.seconds.single">{#} seconds</text>
+		<text key="Tx:time.span neg.seconds.single" count="1">a second</text>
 		<text key="Tx:time.span neg.years">{#} years</text>
 		<text key="Tx:time.span neg.years" count="1">{#} year</text>
+		<text key="Tx:time.span neg.years.single">{#} years</text>
+		<text key="Tx:time.span neg.years.single" count="1">a year</text>
 	</culture>
 	<culture name="en-AU" />
 	<culture name="en-US">
@@ -314,10 +461,10 @@
 		<text key="Tx:time.now">ahora</text>
 		<text key="Tx:time.relative">en {interval}</text>
 		<text key="Tx:time.relative neg">hace {interval}</text>
-		<text key="Tx:time.relative span">durante {interval}</text>
-		<text key="Tx:time.relative span neg">desde hace {interval}</text>
-		<text key="Tx:time.span">{interval} más tarde</text>
-		<text key="Tx:time.span neg">{interval} antes</text>
+		<text key="Tx:time.relative span">{interval} más tarde</text>
+		<text key="Tx:time.relative span neg">{interval} antes</text>
+		<text key="Tx:time.span">durante {interval}</text>
+		<text key="Tx:time.span neg">desde hace {interval}</text>
 	</culture>
 	<culture name="fr">
 		<text key="Tx:byte unit">o</text>
@@ -358,10 +505,10 @@
 		<text key="Tx:time.now">maintenant</text>
 		<text key="Tx:time.relative">en {interval}</text>
 		<text key="Tx:time.relative neg">il y a {interval}</text>
-		<text key="Tx:time.relative span">pour {interval}</text>
-		<text key="Tx:time.relative span neg">depuis {interval}</text>
-		<text key="Tx:time.span">{interval} plus tard</text>
-		<text key="Tx:time.span neg">{interval} avant</text>
+		<text key="Tx:time.relative span">{interval} plus tard</text>
+		<text key="Tx:time.relative span neg">{interval} avant</text>
+		<text key="Tx:time.span">pour {interval}</text>
+		<text key="Tx:time.span neg">depuis {interval}</text>
 	</culture>
 	<culture name="it">
 		<text key="Tx:date.dow with date">{dow} {date}</text>
@@ -397,10 +544,10 @@
 		<text key="Tx:time.now">adesso</text>
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative neg">{interval} fa</text>
-		<text key="Tx:time.relative span">per {interval}</text>
-		<text key="Tx:time.relative span neg">da {interval}</text>
-		<text key="Tx:time.span">{interval} più tardi</text>
-		<text key="Tx:time.span neg">{interval} prima</text>
+		<text key="Tx:time.relative span">{interval} più tardi</text>
+		<text key="Tx:time.relative span neg">{interval} prima</text>
+		<text key="Tx:time.span">per {interval}</text>
+		<text key="Tx:time.span neg">da {interval}</text>
 	</culture>
 	<culture name="ja">
 		<text key="Tx:date.dow with date">{date} ({dow})</text>
@@ -471,12 +618,14 @@
 		<text key="Tx:time.now">nu</text>
 		<text key="Tx:time.relative">in {interval}</text>
 		<text key="Tx:time.relative neg">{interval} geleden</text>
-		<text key="Tx:time.relative span">voor {interval}</text>
-		<text key="Tx:time.relative span.days">dagen</text>
-		<text key="Tx:time.relative span.days" count="1">een dag</text>
-		<text key="Tx:time.relative span neg">sinds {interval}</text>
-		<text key="Tx:time.span">{interval} later</text>
-		<text key="Tx:time.span neg">{interval} voor</text>
+		<text key="Tx:time.relative span">{interval} later</text>
+		<text key="Tx:time.relative span neg">{interval} voor</text>
+		<text key="Tx:time.span">voor {interval}</text>
+		<text key="Tx:time.span.days">{#} dagen</text>
+		<text key="Tx:time.span.days" count="1">{#} dag</text>
+		<text key="Tx:time.span.days.single">{#} dagen</text>
+		<text key="Tx:time.span.days.single" count="1">een dag</text>
+		<text key="Tx:time.span neg">sinds {interval}</text>
 	</culture>
 	<culture name="pl">
 		<text key="Tx:date.day">d.</text>
@@ -517,10 +666,10 @@
 		<text key="Tx:time.now">teraz</text>
 		<text key="Tx:time.relative">w ciągu {interval}</text>
 		<text key="Tx:time.relative neg">{interval} temu</text>
-		<text key="Tx:time.relative span">przez {interval}</text>
-		<text key="Tx:time.relative span neg">od {interval}</text>
-		<text key="Tx:time.span">{interval} później</text>
-		<text key="Tx:time.span neg">{interval} przed</text>
+		<text key="Tx:time.relative span">{interval} później</text>
+		<text key="Tx:time.relative span neg">{interval} przed</text>
+		<text key="Tx:time.span">przez {interval}</text>
+		<text key="Tx:time.span neg">od {interval}</text>
 	</culture>
 	<culture name="pt">
 		<text key="Tx:date.month day">d/M</text>
@@ -551,9 +700,9 @@
 		<text key="Tx:time.now">agora</text>
 		<text key="Tx:time.relative">em {interval}</text>
 		<text key="Tx:time.relative neg">{interval} atrás</text>
-		<text key="Tx:time.relative span">durante {interval}</text>
-		<text key="Tx:time.relative span neg">desde {interval}</text>
-		<text key="Tx:time.span">{interval} mais tarde</text>
-		<text key="Tx:time.span neg">{interval} antes</text>
+		<text key="Tx:time.relative span">{interval} mais tarde</text>
+		<text key="Tx:time.relative span neg">{interval} antes</text>
+		<text key="Tx:time.span">durante {interval}</text>
+		<text key="Tx:time.span neg">desde {interval}</text>
 	</culture>
 </translation>
