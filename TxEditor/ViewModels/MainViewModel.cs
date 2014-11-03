@@ -3060,6 +3060,7 @@ namespace Unclassified.TxEditor.ViewModels
 				if (xe != null)
 				{
 					LoadFromXml(culture, xe);
+					FileModified = true;
 					StatusText = Tx.T("statusbar.system keys added", "culture", culture);
 
 					if (culture.Length == 5)
