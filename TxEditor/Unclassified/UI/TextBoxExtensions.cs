@@ -40,8 +40,11 @@ namespace Unclassified.UI
 		/// <summary>
 		/// Identifies the DisableInsertKey XAML attached property.
 		/// </summary>
-		public static readonly DependencyProperty DisableInsertKeyProperty =
-			DependencyProperty.RegisterAttached("DisableInsertKey", typeof(bool), typeof(TextBoxExtensions), new PropertyMetadata(false, OnDisableInsertKeyChanged));
+		public static readonly DependencyProperty DisableInsertKeyProperty = DependencyProperty.RegisterAttached(
+			name: "DisableInsertKey",
+			propertyType: typeof(bool),
+			ownerType: typeof(TextBoxExtensions),
+			defaultMetadata: new PropertyMetadata(false, OnDisableInsertKeyChanged));
 
 		private static void OnDisableInsertKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
@@ -95,11 +98,16 @@ namespace Unclassified.UI
 		/// <summary>
 		/// Identifies the UpdateDelay XAML attached property.
 		/// </summary>
-		public static readonly DependencyProperty UpdateDelayProperty =
-			DependencyProperty.RegisterAttached("UpdateDelay", typeof(int), typeof(TextBoxExtensions), new PropertyMetadata(0, OnUpdateDelayChanged));
+		public static readonly DependencyProperty UpdateDelayProperty = DependencyProperty.RegisterAttached(
+			name: "UpdateDelay",
+			propertyType: typeof(int),
+			ownerType: typeof(TextBoxExtensions),
+			defaultMetadata: new PropertyMetadata(0, OnUpdateDelayChanged));
 
-		private static readonly DependencyProperty UpdateDelayCallProperty =
-			DependencyProperty.RegisterAttached("UpdateDelayCall", typeof(DelayedCall), typeof(TextBoxExtensions));
+		private static readonly DependencyProperty UpdateDelayCallProperty = DependencyProperty.RegisterAttached(
+			name: "UpdateDelayCall",
+			propertyType: typeof(DelayedCall),
+			ownerType: typeof(TextBoxExtensions));
 
 		private static void OnUpdateDelayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{

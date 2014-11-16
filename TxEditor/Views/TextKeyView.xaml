@@ -71,7 +71,7 @@
 				TextWrapping="Wrap" AcceptsReturn="True"
 				VerticalScrollBarVisibility="Auto" MaxLines="4"
 				Background="Transparent"
-				Text="{Binding Comment}"
+				Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"
 				ui:TextBoxExtensions.DisableInsertKey="True"/>
 		</Grid>
 
