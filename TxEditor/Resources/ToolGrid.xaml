@@ -7,8 +7,8 @@
 		<Setter Property="BorderBrush" Value="{x:Null}"/>
 	</Style>
 
-
-
+	<!-- region ToolGrid -->
+	
 	<Style x:Key="ToolGridStyle" TargetType="Grid">
 		<Setter Property="Background">
 			<Setter.Value>
@@ -53,4 +53,174 @@
 			<GradientStop Color="Transparent" Offset="1"/>
 		</LinearGradientBrush.GradientStops>
 	</LinearGradientBrush>
+
+	<!-- endregion ToolGrid -->
+
+	<!-- region ToolButton -->
+
+	<!-- Generated with Blend from ToolBar.ButtonStyleKey on Windows 7, updated colours from Windows 8.1 screenshots -->
+	<Style x:Key="ToolButtonStyle" TargetType="{x:Type Button}">
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="Padding" Value="2"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border
+						x:Name="Bd"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Background="{TemplateBinding Background}"
+						Padding="{TemplateBinding Padding}"
+						SnapsToDevicePixels="True">
+						<ContentPresenter
+							ContentTemplate="{TemplateBinding ContentTemplate}"
+							Content="{TemplateBinding Content}"
+							ContentStringFormat="{TemplateBinding ContentStringFormat}"
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" TargetName="Bd" Value="#A4CEF9"/>
+							<Setter Property="Background" TargetName="Bd" Value="#E8EFF7"/>
+						</Trigger>
+						<Trigger Property="IsKeyboardFocused" Value="True">
+							<Setter Property="BorderBrush" TargetName="Bd" Value="#A4CEF9"/>
+							<Setter Property="Background" TargetName="Bd" Value="#E8EFF7"/>
+						</Trigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter Property="BorderBrush" TargetName="Bd" Value="#62A2E4"/>
+							<Setter Property="Background" TargetName="Bd" Value="#C9E0F7"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- Generated with Blend from ToolBar.ToggleButtonStyleKey on Windows 7, updated colours from Windows 8.1 screenshots -->
+	<Style x:Key="ToolToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="Padding" Value="2"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Border
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Background="{TemplateBinding Background}"
+						Padding="{TemplateBinding Padding}"
+						SnapsToDevicePixels="True">
+						<ContentPresenter
+							ContentTemplate="{TemplateBinding ContentTemplate}"
+							Content="{TemplateBinding Content}"
+							ContentStringFormat="{TemplateBinding ContentStringFormat}"
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="BorderBrush" Value="#62A2E4"/>
+							<Setter Property="Background" Value="#C9E0F7"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" Value="#A4CEF9"/>
+							<Setter Property="Background" Value="#E8EFF7"/>
+						</Trigger>
+						<Trigger Property="IsKeyboardFocused" Value="True">
+							<Setter Property="BorderBrush" Value="#A4CEF9"/>
+							<Setter Property="Background" Value="#E8EFF7"/>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver" Value="True"/>
+								<Condition Property="IsChecked" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="BorderBrush" Value="#7AB0E7"/>
+							<Setter Property="Background" Value="#D5E6F7"/>
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsKeyboardFocused" Value="True"/>
+								<Condition Property="IsChecked" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="BorderBrush" Value="#7AB0E7"/>
+							<Setter Property="Background" Value="#D5E6F7"/>
+						</MultiTrigger>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter Property="BorderBrush" Value="#62A2E4"/>
+							<Setter Property="Background" Value="#C9E0F7"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- Generated with Blend from ToolBar.TextBoxStyleKey on Windows 7 (modified), updated colours from Windows 8.1 screenshots -->
+	<Style x:Key="ToolTextBoxStyle" TargetType="{x:Type TextBox}">
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+		<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+		<Setter Property="BorderBrush" Value="#1C000000"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Margin" Value="1,0"/>
+		<Setter Property="Padding" Value="2"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="MinHeight" Value="18"/>
+		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type TextBox}">
+					<Border
+						x:Name="Border"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Background="{TemplateBinding Background}"
+						SnapsToDevicePixels="True">
+						<ScrollViewer x:Name="PART_ContentHost" MinHeight="18" VerticalAlignment="Center"/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+							<Setter Property="Background" TargetName="Border" Value="#F7F7F7"/>
+							<Setter Property="BorderBrush" TargetName="Border" Value="#B5B2B5"/>
+						</Trigger>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" TargetName="Border" Value="#A4CEF9"/>
+						</Trigger>
+						<Trigger Property="IsKeyboardFocusWithin" Value="True">
+							<Setter Property="BorderBrush" TargetName="Border" Value="#A4CEF9"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- endregion ToolButton -->
 </ResourceDictionary>
