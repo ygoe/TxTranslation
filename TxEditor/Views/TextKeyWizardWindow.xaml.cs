@@ -450,8 +450,11 @@ namespace Unclassified.TxEditor.Views
 							{
 								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
 								var pd = new PlaceholderData(placeholders.Count + 1, code);
-								placeholders.Add(pd);
-								parsedText += "{" + pd.Name + "}";
+								if (pd.Code != "")
+								{
+									placeholders.Add(pd);
+									parsedText += "{" + pd.Name + "}";
+								}
 							}
 
 							// Handled 2 characters
@@ -466,8 +469,11 @@ namespace Unclassified.TxEditor.Views
 							{
 								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
 								var pd = new PlaceholderData(placeholders.Count + 1, code);
-								placeholders.Add(pd);
-								parsedText += "{" + pd.Name + "}";
+								if (pd.Code != "")
+								{
+									placeholders.Add(pd);
+									parsedText += "{" + pd.Name + "}";
+								}
 							}
 						}
 						else if (inStringLiteral && !isVerbatimString && ch == '\\')
@@ -562,8 +568,11 @@ namespace Unclassified.TxEditor.Views
 						// Some non-string content is still left (parameter at the end)
 						string code = initialClipboardText.Substring(lastStringEnd);
 						var pd = new PlaceholderData(placeholders.Count + 1, code);
-						placeholders.Add(pd);
-						parsedText += "{" + pd.Name + "}";
+						if (pd.Code != "")
+						{
+							placeholders.Add(pd);
+							parsedText += "{" + pd.Name + "}";
+						}
 					}
 					if (isPartialString && inStringLiteral && stringContent.Length > 0)
 					{
