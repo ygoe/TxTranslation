@@ -44,6 +44,9 @@
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Unclassified.TxEditor.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MultiSelectTreeView, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -73,10 +76,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </ApplicationDefinition>
     <Compile Include="IAppSettings.cs" />
     <Compile Include="Controls\AcceptProblemButton.xaml.cs">
       <DependentUpon>AcceptProblemButton.xaml</DependentUpon>
@@ -87,6 +90,7 @@
     <Compile Include="Converters\UnicodeInfoConverter.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="FileNameHelper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Unclassified\UI\MenuExtensions.cs" />
     <Compile Include="Unclassified\UI\MenuIconExtension.cs" />
     <Compile Include="Unclassified\UI\MenuIconImage.cs" />
