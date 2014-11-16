@@ -18,6 +18,15 @@ namespace Unclassified.TxEditor
 		{
 			base.OnStartup(e);
 
+			// Fix WPF's dumb Aero2 theme if we're on Windows 8 or newer
+			if (OSInfo.IsWindows8OrNewer)
+			{
+				Resources.MergedDictionaries.Add(new ResourceDictionary
+				{
+					Source = new Uri("/Resources/RealWindows8.xaml", UriKind.RelativeOrAbsolute)
+				});
+			}
+
 			// Initialise and show the main window
 
 			CommandLineHelper cmdLine = new CommandLineHelper();
