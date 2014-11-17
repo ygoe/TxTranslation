@@ -316,6 +316,23 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
+		/// Updates the position of an item in a list, sorted by the specified comparison delegate.
+		/// </summary>
+		/// <typeparam name="T">Type of the list items.</typeparam>
+		/// <param name="list">The list in which to move the item.</param>
+		/// <param name="item">The item to move to the new position.</param>
+		/// <param name="comparison">The comparison for sorting the items.</param>
+		/// <returns>The new index of the item in the list. -1 if the item is not in the list.</returns>
+		public static int UpdateSorted<T>(this IList<T> list, T item, Comparison<T> comparison)
+		{
+			if (list.Remove(item))
+			{
+				return list.InsertSorted(item, comparison);
+			}
+			return -1;
+		}
+
+		/// <summary>
 		/// Sorts the items in a list by the specified key.
 		/// </summary>
 		/// <typeparam name="T">Type of the list items.</typeparam>
@@ -430,5 +447,72 @@ namespace Unclassified.Util
 		}
 
 		#endregion INotifyCollectionChanged helpers
+
+		#region Repetition
+
+		/// <summary>
+		/// Invokes the action a number of times.
+		/// </summary>
+		/// <param name="count">The number of invocations.</param>
+		/// <param name="action">The action to invoke.</param>
+		public static void Times(this int count, Action action)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				action();
+			}
+		}
+
+		/// <summary>
+		/// Invokes the action a number of times.
+		/// </summary>
+		/// <param name="count">The number of invocations.</param>
+		/// <param name="action">The action to invoke. The first parameter is the zero-based iteration.</param>
+		public static void Times(this int count, Action<int> action)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				action(i);
+			}
+		}
+
+		#endregion Repetition
+
+		#region Searching
+
+		/// <summary>
+		/// Returns the index of the first element that matches the predicate, or -1.
+		/// </summary>
+		/// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+		/// <param name="source">The sequence whose elements to apply the predicate to.</param>
+		/// <param name="predicate">A function to test each element for a condition.</param>
+		/// <returns></returns>
+		public static int IndexOf<T>(this IEnumerable<T> source, Predicate<T> predicate)
+		{
+			int index = 0;
+			foreach (T item in source)
+			{
+				if (predicate(item)) return index;
+				index++;
+			}
+			return -1;
+		}
+
+		#endregion Searching
+
+		#region List conversion
+
+		/// <summary>
+		/// Creates an <see cref="ObservableCollection&lt;T&gt;"/> from an <see cref="IEnumerable&lt;T&gt;"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+		/// <param name="source">The <see cref="IEnumerable&lt;T&gt;"/> to create an <see cref="ObservableCollection&lt;T&gt;"/> from.</param>
+		/// <returns>An <see cref="ObservableCollection&lt;T&gt;"/> that contains elements from the input sequence.</returns>
+		public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+		{
+			return new ObservableCollection<T>(source);
+		}
+
+		#endregion List conversion
 	}
 }

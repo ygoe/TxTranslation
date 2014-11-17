@@ -75,6 +75,15 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
+		/// Posts an Action to the Dispatcher queue for execution.
+		/// </summary>
+		/// <param name="action">Action to post to the queue.</param>
+		public static void Post(Action action)
+		{
+			Dispatcher.CurrentDispatcher.BeginInvoke(action, DispatcherPriority.Normal);
+		}
+
+		/// <summary>
 		/// Posts an Action to the Dispatcher queue for execution when all loading has been done.
 		/// </summary>
 		/// <param name="action">Action to post to the queue.</param>

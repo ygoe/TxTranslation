@@ -99,7 +99,7 @@
 		</TabItem>
 
 		<TabItem Header="{Tx:T 'window.settings.file', Default='File'}">
-			<Grid Margin="4">
+			<Grid Margin="4" UseLayoutRounding="True">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
@@ -115,7 +115,7 @@
 		</TabItem>
 
 		<TabItem Header="Wizard">
-			<Grid Margin="4">
+			<Grid Margin="4" UseLayoutRounding="True">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>

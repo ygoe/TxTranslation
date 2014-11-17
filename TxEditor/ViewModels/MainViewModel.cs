@@ -1997,9 +1997,9 @@ namespace Unclassified.TxEditor.ViewModels
 			if (primaryCultureFiles.Count > 1)
 			{
 				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
-				if (Program.SplashScreen != null)
+				if (App.SplashScreen != null)
 				{
-					Program.SplashScreen.Close(TimeSpan.Zero);
+					App.SplashScreen.Close(TimeSpan.Zero);
 				}
 				MessageBox.Show(
 					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
@@ -3233,9 +3233,9 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private void OnInit()
 		{
-			if (Program.SplashScreen != null)
+			if (App.SplashScreen != null)
 			{
-				Program.SplashScreen.Close(TimeSpan.FromMilliseconds(300));
+				App.SplashScreen.Close(TimeSpan.FromMilliseconds(300));
 				// Work-around for implementation bug in SplashScreen.Close that steals the focus
 				MainWindow.Instance.Focus();
 			}

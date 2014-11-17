@@ -10,24 +10,26 @@ namespace Unclassified.TxEditor
 {
 	internal class Program
 	{
-		#region Static properties
-
-		private static SplashScreen splashScreen;
-		/// <summary>
-		/// Gets the application splash screen.
-		/// </summary>
-		public static SplashScreen SplashScreen { get { return splashScreen; } }
-
-		#endregion Static properties
-
-		#region Application entry point
-
 		/// <summary>
 		/// Application entry point.
 		/// </summary>
+		/// <remarks>
+		/// The App class is set to the build action "ApplicationDefinition" which also generates a
+		/// Main method suitable as application entry point. Therefore, this class must be selected
+		/// as start object in the project configuration. If the App class was set up otherwise,
+		/// Visual Studio would not find the application-wide resources in the App.xaml file and
+		/// mark all such StaticResource occurences in XAML files as an error.
+		/// </remarks>
 		[STAThread]
 		public static void Main()
 		{
+			// Set the image file's build action to "Resource" and "Never copy" for this to work.
+			if (!Debugger.IsAttached)
+			{
+				App.SplashScreen = new SplashScreen("Images/TxFlag_256.png");
+				App.SplashScreen.Show(false, true);
+			}
+
 			// Set up FieldLog
 			FL.AcceptLogFileBasePath();
 			FL.RegisterPresentationTracing();
@@ -35,13 +37,6 @@ namespace Unclassified.TxEditor
 
 			// Keep the setup away
 			GlobalMutex.Create("Unclassified.TxEditor");
-
-			// Set the image file's build action to "Resource" and "Never copy" for this to work.
-			if (!Debugger.IsAttached)
-			{
-				splashScreen = new SplashScreen("Images/TxFlag_256.png");
-				splashScreen.Show(false, true);
-			}
 
 			App.InitializeSettings();
 
@@ -101,10 +96,6 @@ namespace Unclassified.TxEditor
 			app.Run();
 		}
 
-		#endregion Application entry point
-
-		#region Event handlers
-
 		/// <summary>
 		/// Called when the current process exits.
 		/// </summary>
@@ -119,7 +110,5 @@ namespace Unclassified.TxEditor
 				App.Settings.SettingsStore.Dispose();
 			}
 		}
-
-		#endregion Event handlers
 	}
 }

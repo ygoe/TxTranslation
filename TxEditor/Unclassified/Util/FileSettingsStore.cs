@@ -221,7 +221,8 @@ namespace Unclassified.Util
 		/// Removes a setting key from the settings store.
 		/// </summary>
 		/// <param name="key">The setting key to remove.</param>
-		public void Remove(string key)
+		/// <returns>true if the value was deleted, false if it did not exist.</returns>
+		public bool Remove(string key)
 		{
 			lock (syncLock)
 			{
@@ -234,7 +235,9 @@ namespace Unclassified.Util
 					OnPropertyChanged(key);
 
 					saveDc.Reset();
+					return true;
 				}
+				return false;
 			}
 		}
 
@@ -243,7 +246,8 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <param name="oldKey">The old setting key to rename.</param>
 		/// <param name="newKey">The new setting key.</param>
-		public void Rename(string oldKey, string newKey)
+		/// <returns>true if the value was renamed, false if it did not exist.</returns>
+		public bool Rename(string oldKey, string newKey)
 		{
 			lock (syncLock)
 			{
@@ -261,7 +265,9 @@ namespace Unclassified.Util
 					OnPropertyChanged(newKey);
 
 					saveDc.Reset();
+					return true;
 				}
+				return false;
 			}
 		}
 

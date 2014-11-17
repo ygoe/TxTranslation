@@ -13,11 +13,26 @@
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="Padding" Value="1"/>
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Rectangle
+									Margin="2" SnapsToDevicePixels="True"
+									Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type Button}">
 					<Grid>
-						<Border x:Name="Chrome" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" Padding="1">
+						<Border x:Name="Chrome" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" Padding="1">
 							<Border.BorderBrush>
 								<SolidColorBrush x:Name="BrBrush" Color="#ACACAC"/>
 							</Border.BorderBrush>
@@ -38,30 +53,30 @@
 							<VisualStateGroup x:Name="CommonStates">
 								<VisualState x:Name="Normal">
 									<Storyboard>
+										<ColorAnimation To="#ACACAC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
 										<ColorAnimation To="#F0F0F0" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.5"/>
 										<ColorAnimation To="#E5E5E5" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.5"/>
-										<ColorAnimation To="#ACACAC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
+										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
 										<ColorAnimation To="#F0F4F9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.25"/>
 										<ColorAnimation To="#E0ECF9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.25"/>
-										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Pressed">
 									<Storyboard>
-										<ColorAnimation To="#DBEDFD" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.05"/>
-										<ColorAnimation To="#C4E0FC" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.05"/>
-										<ColorAnimation To="#569DE5" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.05"/>
+										<ColorAnimation To="#569DE5" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#DBEDFD" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.25"/>
+										<ColorAnimation To="#C4E0FC" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.25"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
+										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
 										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0"/>
 										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0"/>
-										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -83,6 +98,105 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+	<Style TargetType="{x:Type ToggleButton}">
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="1"/>
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Rectangle
+									Margin="2" SnapsToDevicePixels="True"
+									Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Grid>
+						<Border x:Name="Chrome" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" Padding="1">
+							<Border.BorderBrush>
+								<SolidColorBrush x:Name="BrBrush" Color="#ACACAC"/>
+							</Border.BorderBrush>
+							<Border.Background>
+								<LinearGradientBrush x:Name="BgBrush" EndPoint="0,1" StartPoint="0,0">
+									<GradientStop Color="#F0F0F0" Offset="0"/>
+									<GradientStop Color="#E5E5E5" Offset="1"/>
+								</LinearGradientBrush>
+							</Border.Background>
+							<ContentPresenter
+								Margin="{TemplateBinding Padding}"
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								RecognizesAccessKey="True"
+								SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+						</Border>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard>
+										<ColorAnimation To="#ACACAC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
+										<ColorAnimation To="#F0F0F0" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.5"/>
+										<ColorAnimation To="#E5E5E5" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.5"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#F0F4F9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.25"/>
+										<ColorAnimation To="#E0ECF9" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ColorAnimation To="#569DE5" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#DBEDFD" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0.25"/>
+										<ColorAnimation To="#C4E0FC" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[0].(GradientStop.Color)" Duration="0:0:0"/>
+										<ColorAnimation To="#EFEFEF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="(GradientBrush.GradientStops)[1].(GradientStop.Color)" Duration="0:0:0"/>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter TargetName="Chrome" Property="BorderBrush" Value="#569DE5"/>
+							<Setter TargetName="Chrome" Property="Background">
+								<Setter.Value>
+									<LinearGradientBrush x:Name="BgBrush" EndPoint="0,1" StartPoint="0,0">
+										<GradientStop Color="#DBEDFD" Offset="0"/>
+										<GradientStop Color="#C4E0FC" Offset="1"/>
+									</LinearGradientBrush>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+						<Trigger Property="IsFocused" Value="True">
+							<Setter TargetName="Chrome" Property="BorderBrush" Value="#569DE5"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="#ADADAD"/>
+							<Setter TargetName="Chrome" Property="BorderBrush" Value="#D9D9D9"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
 	<!-- endregion Button -->
 
@@ -90,7 +204,9 @@
 
 	<Style TargetType="{x:Type TextBox}">
 		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Background" Value="White"/>
 		<Setter Property="Padding" Value="1,2,1,2"/>
+		<Setter Property="Foreground" Value="Black"/>
 		<Setter Property="AllowDrop" Value="True"/>
 		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
 		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
@@ -98,7 +214,7 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type TextBox}">
 					<Grid>
-						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}">
+						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="#ABADB3" x:Name="BrBrush"/>
 							</Border.BorderBrush>
@@ -112,18 +228,21 @@
 								<VisualState x:Name="Normal">
 									<Storyboard>
 										<ColorAnimation To="#ABADB3" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
-										<DoubleAnimation To="1.0" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.1"/>
+										<DoubleAnimation To="1.0" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.1"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
-										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
+										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#40FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.1"/>
+										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.1"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
 										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -139,29 +258,29 @@
 		</Setter>
 	</Style>
 	<Style TargetType="{x:Type PasswordBox}">
-		<Setter Property="Background" Value="White"/>
-		<Setter Property="FontFamily" Value="Times New Roman"/>
-		<Setter Property="PasswordChar" Value="•"/>
-		<Setter Property="Foreground" Value="Black"/>
-		<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
 		<Setter Property="BorderThickness" Value="1"/>
-		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="Background" Value="White"/>
 		<Setter Property="Padding" Value="1,2,1,2"/>
-		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="Foreground" Value="Black"/>
 		<Setter Property="AllowDrop" Value="True"/>
 		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
 		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="PasswordChar" Value="•"/>
+		<!--Setter Property="FontFamily" Value="Times New Roman"/-->
+		<!--Setter Property="HorizontalContentAlignment" Value="Left"/-->
+		<!--Setter Property="KeyboardNavigation.TabNavigation" Value="None"/-->
+		<!--Setter Property="FocusVisualStyle" Value="{x:Null}"/-->
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type PasswordBox}">
 					<Grid>
-						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}">
-							<Border.Background>
-								<SolidColorBrush Color="{TemplateBinding Background}" x:Name="BgBrush"/>
-							</Border.Background>
+						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="#ABADB3" x:Name="BrBrush"/>
 							</Border.BorderBrush>
+							<Border.Background>
+								<SolidColorBrush Color="{TemplateBinding Background}" x:Name="BgBrush"/>
+							</Border.Background>
 							<ScrollViewer x:Name="PART_ContentHost" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 						</Border>
 						<VisualStateManager.VisualStateGroups>
@@ -169,18 +288,21 @@
 								<VisualState x:Name="Normal">
 									<Storyboard>
 										<ColorAnimation To="#ABADB3" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
-										<DoubleAnimation To="1.0" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.1"/>
+										<DoubleAnimation To="1.0" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.1"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="Disabled">
 									<Storyboard>
-										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
-										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0"/>
+										<ColorAnimation To="#D9D9D9" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#40FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.1"/>
+										<DoubleAnimation To="0.6" Storyboard.TargetName="PART_ContentHost" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.1"/>
 									</Storyboard>
 								</VisualState>
 								<VisualState x:Name="MouseOver">
 									<Storyboard>
 										<ColorAnimation To="#7EB4EA" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0"/>
 									</Storyboard>
 								</VisualState>
 							</VisualStateGroup>
@@ -197,4 +319,245 @@
 	</Style>
 
 	<!-- endregion TextBox -->
+	
+	<!-- region CheckBox -->
+
+	<Style TargetType="{x:Type CheckBox}">
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Rectangle
+									Width="11" Height="11" SnapsToDevicePixels="True"
+									HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,-0.4,0,0.4"
+									Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type CheckBox}">
+					<Grid Background="Transparent" SnapsToDevicePixels="True">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Border
+							BorderThickness="1" Margin="0,-0.4,0,0.4"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+							<Border.BorderBrush>
+								<SolidColorBrush x:Name="BrBrush" Color="#707070"/>
+							</Border.BorderBrush>
+							<Border.Background>
+								<SolidColorBrush x:Name="BgBrush" Color="#FFFFFF"/>
+							</Border.Background>
+							<Grid Name="markGrid">
+								<Path
+									Name="optionMark"
+									Width="11" Height="11"
+									HorizontalAlignment="Center" VerticalAlignment="Center"
+									Data="M1.9,5.0 L5.1,8.0 L9.5,1.8"
+									Stroke="#000000" StrokeThickness="2" Opacity="0" Stretch="None"/>
+								<Rectangle x:Name="indeterminateMark" Fill="#000000" Margin="3" Opacity="0"/>
+							</Grid>
+						</Border>
+						<ContentPresenter
+							Grid.Column="1"
+							Focusable="False"
+							Margin="{TemplateBinding Padding}"
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							RecognizesAccessKey="True"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard>
+										<ColorAnimation To="#707070" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ColorAnimation To="#3399FF" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#F3F9FF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ColorAnimation To="#007CDE" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#D9ECFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ColorAnimation To="#BCBCBC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#E6E6E6" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasContent" Value="True">
+							<Setter Property="FocusVisualStyle">
+								<Setter.Value>
+									<Style>
+										<Setter Property="Control.Template">
+											<Setter.Value>
+												<ControlTemplate>
+													<Rectangle
+														Margin="15,0,-1,0" SnapsToDevicePixels="True"
+														Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+												</ControlTemplate>
+											</Setter.Value>
+										</Setter>
+									</Style>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="Padding" Value="3,0,0,0"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="#ADADAD"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+							<Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="{x:Null}">
+							<Setter Property="Opacity" TargetName="optionMark" Value="0"/>
+							<Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- endregion CheckBox -->
+
+	<!-- region RadioButton -->
+
+	<Style TargetType="{x:Type RadioButton}">
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="FocusVisualStyle">
+			<Setter.Value>
+				<Style>
+					<Setter Property="Control.Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Ellipse
+									Width="11" Height="11" SnapsToDevicePixels="True"
+									HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,-0.4,0,0.4"
+									Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type RadioButton}">
+					<Grid Background="Transparent" SnapsToDevicePixels="True">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Ellipse
+							StrokeThickness="1" Margin="0,-0.4,0,0.4"
+							Width="13" Height="13" SnapsToDevicePixels="True"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+							<Ellipse.Stroke>
+								<SolidColorBrush x:Name="BrBrush" Color="#707070"/>
+							</Ellipse.Stroke>
+							<Ellipse.Fill>
+								<SolidColorBrush x:Name="BgBrush" Color="#FFFFFF"/>
+							</Ellipse.Fill>
+						</Ellipse>
+						<Ellipse
+							Name="optionMark"
+							Fill="Black" Margin="0,-0.4,0,0.4" Opacity="0"
+							Width="7" Height="7" SnapsToDevicePixels="True"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							HorizontalAlignment="Center"/>
+						<ContentPresenter
+							Grid.Column="1"
+							Focusable="False"
+							Margin="{TemplateBinding Padding}"
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							RecognizesAccessKey="True"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal">
+									<Storyboard>
+										<ColorAnimation To="#707070" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
+										<ColorAnimation To="#FFFFFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.5"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ColorAnimation To="#3399FF" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#F3F9FF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ColorAnimation To="#007CDE" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#D9ECFF" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ColorAnimation To="#BCBCBC" Storyboard.TargetName="BrBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+										<ColorAnimation To="#E6E6E6" Storyboard.TargetName="BgBrush" Storyboard.TargetProperty="Color" Duration="0:0:0.25"/>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="HasContent" Value="True">
+							<Setter Property="FocusVisualStyle">
+								<Setter.Value>
+									<Style>
+										<Setter Property="Control.Template">
+											<Setter.Value>
+												<ControlTemplate>
+													<Rectangle
+														Margin="15,0,-1,0" SnapsToDevicePixels="True"
+														Stroke="Black" StrokeThickness="1" StrokeDashArray="0.5 1.5"/>
+												</ControlTemplate>
+											</Setter.Value>
+										</Setter>
+									</Style>
+								</Setter.Value>
+							</Setter>
+							<Setter Property="Padding" Value="3,0,0,0"/>
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Foreground" Value="#ADADAD"/>
+						</Trigger>
+						<Trigger Property="IsChecked" Value="True">
+							<Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- endregion RadioButton -->
 </ResourceDictionary>

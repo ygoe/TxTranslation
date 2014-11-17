@@ -78,9 +78,9 @@ namespace Unclassified.TxEditor
 				if (otherCultures.Count > 0)
 				{
 					otherCultures.Sort();
-					if (Program.SplashScreen != null)
+					if (App.SplashScreen != null)
 					{
-						Program.SplashScreen.Close(TimeSpan.Zero);
+						App.SplashScreen.Close(TimeSpan.Zero);
 					}
 					var result = TaskDialog.Show(
 						owner: MainWindow.Instance,

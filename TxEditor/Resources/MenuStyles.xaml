@@ -20,12 +20,12 @@
 				<Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
 			</Trigger>
 			<Trigger Property="Role" Value="SubmenuHeader">
-				<Setter Property="Padding" Value="5,4,2,3"/>
+				<Setter Property="Padding" Value="8,4,2,3"/>
 				<!-- Changed from 2,3,2,3 -->
 				<Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
 			</Trigger>
 			<Trigger Property="Role" Value="SubmenuItem">
-				<Setter Property="Padding" Value="5,4,2,3"/>
+				<Setter Property="Padding" Value="8,4,2,3"/>
 				<!-- Changed from 2,3,2,3 -->
 			</Trigger>
 		</Style.Triggers>

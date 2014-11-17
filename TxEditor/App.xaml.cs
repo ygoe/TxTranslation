@@ -12,6 +12,8 @@ namespace Unclassified.TxEditor
 {
 	public partial class App : Application
 	{
+		public static SplashScreen SplashScreen { get; set; }
+
 		#region Startup
 
 		protected override void OnStartup(StartupEventArgs e)
@@ -165,6 +167,7 @@ namespace Unclassified.TxEditor
 					SettingsHelper.GetAppDataPath(@"Unclassified\TxTranslation", "TxEditor.conf")));
 
 			// Update settings format from old version
+			FL.TraceData("LastStartedAppVersion", Settings.LastStartedAppVersion);
 			if (string.IsNullOrEmpty(Settings.LastStartedAppVersion))
 			{
 				Settings.SettingsStore.Rename("app-culture", "AppCulture");

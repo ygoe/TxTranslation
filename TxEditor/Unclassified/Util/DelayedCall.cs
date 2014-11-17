@@ -11,14 +11,14 @@ namespace Unclassified.Util
 	/// <a href="http://dev.unclassified.de/de/source/delayedcall">Project website</a>
 	/// </remarks>
 	/// <example>
-	/// <code>
+	/// <code lang="C#"><![CDATA[
 	/// // Variable to keep track of the instance. This is not required for normal operation.
 	/// private DelayedCall dc = null;
 	///
 	/// private void button1_Click(object sender, EventArgs e)
 	/// {
 	///     // Change button text in 2 seconds
-	///     dc = DelayedCall&lt;string&gt;.Start(SetButtonText, "I was clicked", 2000);
+	///     dc = DelayedCall<string>.Start(SetButtonText, "I was clicked", 2000);
 	/// }
 	///
 	/// private void SetButtonText(string newText)
@@ -36,7 +36,7 @@ namespace Unclassified.Util
 	///     // Now start the timeout with 0.5 seconds
 	///     exitDelay.Reset(500);
 	/// }
-	/// </code>
+	/// ]]></code>
 	/// </example>
 	public class DelayedCall : IDisposable
 	{

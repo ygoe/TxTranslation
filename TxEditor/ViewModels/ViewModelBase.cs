@@ -257,7 +257,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			else if (more > 0)
 			{
-				// I18N - TODO: Is this method used at all?
+				// I18N - Not currently used
 				dict["zzz"] = "(" + more + " weitere Meldungen werden nicht angezeigt)";
 			}
 			return dict;
@@ -270,6 +270,41 @@ namespace Unclassified.TxEditor.ViewModels
 		/// <param name="objs">The list of objects to validate. Derived classes should add child objects to this list.</param>
 		protected virtual void AddErrorSubObjects(List<object> objs)
 		{
+		}
+
+		private Dictionary<string, string> propertyErrorMessages = new Dictionary<string, string>();
+
+		/// <summary>
+		/// Sets a validation error message for a property.
+		/// </summary>
+		/// <param name="propertyName">The name of the property to validate.</param>
+		/// <param name="message">The error message.</param>
+		protected void SetPropertyError(string propertyName, string message)
+		{
+			propertyErrorMessages[propertyName] = message;
+			RaiseValidationUpdated();
+		}
+
+		/// <summary>
+		/// Clears the validation error message for a property.
+		/// </summary>
+		/// <param name="propertyName">The name of the property to validate.</param>
+		protected void ClearPropertyError(string propertyName)
+		{
+			propertyErrorMessages.Remove(propertyName);
+			RaiseValidationUpdated();
+		}
+
+		/// <summary>
+		/// Returns the validation error message for a property.
+		/// </summary>
+		/// <param name="propertyName">The name of the property to validate.</param>
+		/// <returns>The error message if set; otherwise, null.</returns>
+		protected string GetPropertyError(string propertyName)
+		{
+			string msg;
+			propertyErrorMessages.TryGetValue(propertyName, out msg);
+			return msg;
 		}
 
 		#endregion Data validation

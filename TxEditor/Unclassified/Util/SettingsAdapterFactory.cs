@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
@@ -78,10 +79,8 @@ namespace Unclassified.Util
 			// <param name="prefix">The settings path prefix for the new object. (For internal use, leave it unset.)</param>
 
 			//string fileName = assemblyBuilder.GetName().Name + ".dll";
-			//if (!File.Exists(fileName))
-			//{
-			//    assemblyBuilder.Save(fileName);
-			//}
+			//System.IO.File.Delete(fileName);
+			//assemblyBuilder.Save(fileName);
 			// Verify the assembly with "peverify.exe" from the .NET command prompt.
 
 			return (TInterface) Activator.CreateInstance(generatedTypes[interfaceType], settingsStore, null);
@@ -567,6 +566,8 @@ namespace Unclassified.Util
 			return methodBuilder;
 		}
 
+#pragma warning disable 1720   // Expression will always cause a System.NullReferenceException because the default value of 'generic type' is null
+
 		/// <summary>
 		/// Creates the getter method for a property.
 		/// </summary>
@@ -596,63 +597,69 @@ namespace Unclassified.Util
 			{
 				propType = propType.GetEnumUnderlyingType();
 			}
-			
-			string storeGetMethod;
+
+			MethodInfo storeGetMethod;
+			MethodInfo storeGetMethodWithDefault = null;
 			if (propType == typeof(bool))
 			{
-				storeGetMethod = "GetBool";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetBool(default(string)));
+				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetBool(default(string), default(bool)));
 			}
 			else if (propType == typeof(bool[]))
 			{
-				storeGetMethod = "GetBoolArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetBoolArray(default(string)));
 			}
 			else if (propType == typeof(int))
 			{
-				storeGetMethod = "GetInt";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetInt(default(string)));
+				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetInt(default(string), default(int)));
 			}
 			else if (propType == typeof(int[]))
 			{
-				storeGetMethod = "GetIntArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetIntArray(default(string)));
 			}
 			else if (propType == typeof(long))
 			{
-				storeGetMethod = "GetLong";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetLong(default(string)));
+				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetLong(default(string), default(long)));
 			}
 			else if (propType == typeof(long[]))
 			{
-				storeGetMethod = "GetLongArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetLongArray(default(string)));
 			}
 			else if (propType == typeof(double))
 			{
-				storeGetMethod = "GetDouble";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetDouble(default(string)));
+				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetDouble(default(string), default(double)));
 			}
 			else if (propType == typeof(double[]))
 			{
-				storeGetMethod = "GetDoubleArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetDoubleArray(default(string)));
 			}
 			else if (propType == typeof(string))
 			{
-				storeGetMethod = "GetString";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetString(default(string)));
+				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetString(default(string), default(string)));
 			}
 			else if (propType == typeof(string[]))
 			{
-				storeGetMethod = "GetStringArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetStringArray(default(string)));
 			}
 			else if (propType == typeof(DateTime))
 			{
-				storeGetMethod = "GetDateTime";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetDateTime(default(string)));
 			}
 			else if (propType == typeof(DateTime[]))
 			{
-				storeGetMethod = "GetDateTimeArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetDateTimeArray(default(string)));
 			}
 			else if (propType == typeof(TimeSpan))
 			{
-				storeGetMethod = "GetTimeSpan";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetTimeSpan(default(string)));
 			}
 			else if (propType == typeof(TimeSpan[]))
 			{
-				storeGetMethod = "GetTimeSpanArray";
+				storeGetMethod = methodof(() => default(ISettingsStore).GetTimeSpanArray(default(string)));
 			}
 			else
 			{
@@ -688,27 +695,22 @@ namespace Unclassified.Util
 						ilGen.Emit(OpCodes.Ldc_I4_1);
 					else
 						ilGen.Emit(OpCodes.Ldc_I4_0);
-					ilGen.GenerateCallVirt<ISettingsStore, string, bool>(storeGetMethod);
 				}
 				else if (propType == typeof(int))
 				{
 					ilGen.Emit(OpCodes.Ldc_I4, Convert.ToInt32(defAttr.Value, CultureInfo.InvariantCulture));
-					ilGen.GenerateCallVirt<ISettingsStore, string, int>(storeGetMethod);
 				}
 				else if (propType == typeof(long))
 				{
 					ilGen.Emit(OpCodes.Ldc_I8, Convert.ToInt64(defAttr.Value, CultureInfo.InvariantCulture));
-					ilGen.GenerateCallVirt<ISettingsStore, string, long>(storeGetMethod);
 				}
 				else if (propType == typeof(double))
 				{
 					ilGen.Emit(OpCodes.Ldc_R8, Convert.ToDouble(defAttr.Value, CultureInfo.InvariantCulture));
-					ilGen.GenerateCallVirt<ISettingsStore, string, double>(storeGetMethod);
 				}
 				else if (propType == typeof(string))
 				{
 					ilGen.Emit(OpCodes.Ldstr, Convert.ToString(defAttr.Value, CultureInfo.InvariantCulture));
-					ilGen.GenerateCallVirt<ISettingsStore, string, string>(storeGetMethod);
 				}
 				else
 				{
@@ -716,10 +718,11 @@ namespace Unclassified.Util
 						"The property type does not support default values: " +
 						propertyInfo.DeclaringType.Name + "." + propertyInfo.Name);
 				}
+				ilGen.GenerateCallVirt(storeGetMethodWithDefault);
 			}
 			else
 			{
-				ilGen.GenerateCallVirt<ISettingsStore, string>(storeGetMethod);
+				ilGen.GenerateCallVirt(storeGetMethod);
 			}
 			ilGen.Emit(OpCodes.Ret);
 
@@ -765,7 +768,7 @@ namespace Unclassified.Util
 			{
 				ilGen.Emit(OpCodes.Box, propertyInfo.PropertyType);
 			}
-			ilGen.GenerateCallVirt<ISettingsStore, string, object>("Set");
+			ilGen.GenerateCallVirt(methodof(() => default(ISettingsStore).Set(default(string), default(object))));
 
 			// return;
 			ilGen.MarkLabel(exitLabel);
@@ -776,6 +779,8 @@ namespace Unclassified.Util
 
 			return methodBuilder;
 		}
+
+#pragma warning restore 1720
 
 		/// <summary>
 		/// Creates a property.
@@ -927,6 +932,53 @@ namespace Unclassified.Util
 			ilGen.EmitCall(OpCodes.Callvirt, typeof(TType).GetMethod(methodName, new[] { typeof(TArg1), typeof(TArg2), typeof(TArg3), typeof(TArg4) }), null);
 		}
 
+		private static void GenerateCall(this ILGenerator ilGen, MethodInfo methodInfo)
+		{
+			ilGen.EmitCall(OpCodes.Call, methodInfo, null);
+		}
+
+		private static void GenerateCallVirt(this ILGenerator ilGen, MethodInfo methodInfo)
+		{
+			ilGen.EmitCall(OpCodes.Callvirt, methodInfo, null);
+		}
+
+		// Source: http://stackoverflow.com/q/1213862/143684
+		private static MethodInfo methodof(Expression<Action> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
+		private static MethodInfo methodof<T>(Expression<Action<T>> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
+		private static MethodInfo methodof<T1, T2>(Expression<Action<T1, T2>> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
+		private static MethodInfo methodof<TResult>(Expression<Func<TResult>> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
+		private static MethodInfo methodof<T, TResult>(Expression<Func<T, TResult>> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
+		private static MethodInfo methodof<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
+		{
+			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			return body.Method;
+		}
+
 		#endregion ILGenerator extension methods
 	}
 
@@ -964,15 +1016,17 @@ namespace Unclassified.Util
 		/// Removes a setting key from the settings store.
 		/// </summary>
 		/// <param name="key">The setting key to remove.</param>
-		void Remove(string key);
+		/// <returns>true if the value was deleted, false if it did not exist.</returns>
+		bool Remove(string key);
 
 		/// <summary>
 		/// Renames a setting key in the settings store.
 		/// </summary>
 		/// <param name="oldKey">The old setting key to rename.</param>
 		/// <param name="newKey">The new setting key.</param>
-		void Rename(string oldKey, string newKey);
-	
+		/// <returns>true if the value was renamed, false if it did not exist.</returns>
+		bool Rename(string oldKey, string newKey);
+
 		#endregion Set methods
 
 		#region Get methods

@@ -141,42 +141,58 @@ namespace Unclassified.Util
 
 		#endregion String conversions
 
-		#region Tabular number formatting
+		#region Number parsing
 
 		/// <summary>
-		/// Formats a number for readable right-aligned Unicode text.
+		/// Converts the current string to an <see cref="Int32"/> value. Throws an exception if the
+		/// string cannot be converted.
 		/// </summary>
-		/// <param name="value">The number value to format.</param>
-		/// <param name="decimals">The number of decimals to show. Trailing zeros are replaced with equally wide spaces.</param>
-		/// <returns>Formatted number string.</returns>
-		public static string FormatTabular(this double value, int decimals)
+		/// <param name="str">The string to convert.</param>
+		/// <returns>The converted value.</returns>
+		public static int ToInt32(this string str)
 		{
-			string str = value.ToString("N" + decimals);
-			if (decimals > 0)
-			{
-				// Has decimal places and a decimal separator
-				int trailingZeros = 0;
-				while (str.EndsWith("0"))
-				{
-					// One more trailing zero
-					trailingZeros++;
-					str = str.Substring(0, str.Length - 1);
-				}
-				if (trailingZeros == decimals)
-				{
-					// All decimal places removed, also replace the decimal separator
-					str = str.Substring(0, str.Length - 1);
-					str += "\u00a0";   // No-break Space
-				}
-				while (trailingZeros-- > 0)
-				{
-					// Fill up with spaces
-					str += "\u2007";   // Figure Space, no-break
-				}
-			}
-			return str;
+			return Convert.ToInt32(str);
 		}
 
-		#endregion Tabular number formatting
+		/// <summary>
+		/// Converts the current string to an <see cref="Int32"/> value, if possible, or returns the
+		/// fallback value instead.
+		/// </summary>
+		/// <param name="str">The string to convert.</param>
+		/// <param name="fallback">The fallback value to return if the string cannot be converted.</param>
+		/// <returns>The converted value.</returns>
+		public static int TryToInt32(this string str, int fallback = 0)
+		{
+			int i;
+			if (!int.TryParse(str, out i)) i = fallback;
+			return i;
+		}
+
+		/// <summary>
+		/// Converts the current string to an <see cref="Int64"/> value. Throws an exception if the
+		/// string cannot be converted.
+		/// </summary>
+		/// <param name="str">The string to convert.</param>
+		/// <returns>The converted value.</returns>
+		public static long ToInt64(this string str)
+		{
+			return Convert.ToInt64(str);
+		}
+
+		/// <summary>
+		/// Converts the current string to an <see cref="Int64"/> value, if possible, or returns the
+		/// fallback value instead.
+		/// </summary>
+		/// <param name="str">The string to convert.</param>
+		/// <param name="fallback">The fallback value to return if the string cannot be converted.</param>
+		/// <returns>The converted value.</returns>
+		public static long TryToInt64(this string str, long fallback = 0)
+		{
+			long l;
+			if (!long.TryParse(str, out l)) l = fallback;
+			return l;
+		}
+
+		#endregion Number parsing
 	}
 }
