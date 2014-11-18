@@ -60,11 +60,12 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return children; }
 			set
 			{
-				children = value;
-				OnPropertyChanged("Children");
-
-				visibleChildren = new ListCollectionView(children);
-				OnPropertyChanged("VisibleChildren");
+				if (CheckUpdate(value, ref children, "Children"))
+				{
+					visibleChildren = new ListCollectionView(children);
+					visibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
+					OnPropertyChanged("VisibleChildren");
+				}
 			}
 		}
 
@@ -93,12 +94,7 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return isExpanded; }
 			set
 			{
-				if (value != isExpanded)
-				{
-					isExpanded = value;
-					OnPropertyChanged("IsExpanded");
-				}
-
+				CheckUpdate(value, ref isExpanded, "IsExpanded");
 				if (isExpanded)
 				{
 					// Expand all the way up to the root.
@@ -165,9 +161,8 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return isSelected; }
 			set
 			{
-				if (value != isSelected)
+				if (CheckUpdate(value, ref isSelected))
 				{
-					isSelected = value;
 					OnIsSelectedChanged();
 					OnPropertyChanged("IsSelected");
 				}
@@ -188,10 +183,8 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return isVisible; }
 			set
 			{
-				if (value != isVisible)
+				if (CheckUpdate(value, ref isVisible, "IsVisible"))
 				{
-					isVisible = value;
-					OnPropertyChanged("IsVisible");
 					if (!value)
 					{
 						// Invisible items can no longer be selected
@@ -208,27 +201,13 @@ namespace Unclassified.TxEditor.ViewModels
 		public bool IsEnabled
 		{
 			get { return isEnabled; }
-			set
-			{
-				if (value != isEnabled)
-				{
-					isEnabled = value;
-					OnPropertyChanged("IsEnabled");
-				}
-			}
+			set { CheckUpdate(value, ref isEnabled, "IsEnabled"); }
 		}
 
 		public int SortIndex
 		{
 			get { return sortIndex; }
-			set
-			{
-				if (value != sortIndex)
-				{
-					sortIndex = value;
-					OnPropertyChanged("SortIndex");
-				}
-			}
+			set { CheckUpdate(value, ref sortIndex, "SortIndex"); }
 		}
 
 		public virtual bool TryDeselect()
@@ -250,9 +229,8 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return parent; }
 			set
 			{
-				if (value != parent)
+				if (CheckUpdate(value, ref parent))
 				{
-					parent = value;
 					OnParentChanged();
 					OnPropertyChanged("Parent");
 				}
@@ -265,7 +243,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public override string ToString()
 		{
-			return "{TreeViewItemViewModel " + DisplayName + "}";
+			return GetType().Name + ": " + DisplayName;
 		}
 
 		#endregion Presentation Members
