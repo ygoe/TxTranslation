@@ -30,7 +30,8 @@ if (IsSelected("build-debug"))
 if ((IsSelected("build-release")) -or (IsSelected("commit")))
 {
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
-	Exec-Console "_tools\PdbConvert.exe" "$sourcePath\TxEditor\bin\Release\* /srcbase $sourcePath /optimize /gz /outfile $sourcePath\.local\TxTranslation-$revId.pdb.xml.gz" 1
+	EnsureDirExists ".local"
+	Exec-Console "_tools\PdbConvert.exe" "$sourcePath\TxEditor\bin\Release\* /srcbase $sourcePath /optimize /outfile $sourcePath\.local\TxTranslation-$revId.pdbx" 1
 
 	if (IsSelected("sign-lib"))
 	{
@@ -66,7 +67,7 @@ if (IsSelected("install"))
 if (IsSelected("commit"))
 {
 	Delete-File "Setup\bin\TxSetup-$revId.exe" 0
-	Delete-File ".local\TxTranslation-$revId.pdb.xml.gz" 0
+	Delete-File ".local\TxTranslation-$revId.pdbx" 0
 	Git-Commit 1
 }
 

@@ -45,6 +45,9 @@ namespace Unclassified.UI
 			}
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the MenuIconImage class.
+		/// </summary>
 		public MenuIconImage()
 		{
 			Style imgStyle = new Style(typeof(Image));

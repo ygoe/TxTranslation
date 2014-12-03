@@ -12,10 +12,27 @@ namespace Unclassified.UI
 	internal static class MenuExtensions
 	{
 		/// <summary>
+		/// Sets the visibility of each menu item by the availability of its command.
+		/// </summary>
+		/// <param name="menu">The menu to update.</param>
+		/// <remarks>
+		/// Before calling this method, the data binding must be completed.
+		/// </remarks>
+		public static void SetVisibilityFromCommands(this MenuBase menu)
+		{
+			foreach (var menuItem in menu.Items.OfType<MenuItem>())
+			{
+				menuItem.Visibility =
+					menuItem.Command != null && menuItem.Command.CanExecute(null) ?
+					Visibility.Visible : Visibility.Collapsed;
+			}
+		}
+		
+		/// <summary>
 		/// Hides all separators at the beginning and end of the menu and reduces multiple
 		/// subsequent separators to a single one.
 		/// </summary>
-		/// <param name="menu">The menu to reduce the separators in.</param>
+		/// <param name="menu">The menu to update.</param>
 		public static void ReduceSeparators(this MenuBase menu)
 		{
 			// First, show all separators
@@ -66,6 +83,16 @@ namespace Unclassified.UI
 					prevSeparatorVisible = false;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Returns a value indicating whether the menu has any visible items.
+		/// </summary>
+		/// <param name="menu"></param>
+		/// <returns></returns>
+		public static bool AnyVisibleItems(this MenuBase menu)
+		{
+			return menu.Items.OfType<MenuItem>().Any(mi => mi.Visibility == Visibility.Visible);
 		}
 	}
 }

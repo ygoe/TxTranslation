@@ -20,13 +20,10 @@ namespace Unclassified.TxEditor
 		{
 			base.OnStartup(e);
 
-			// Fix WPF's dumb Aero2 theme if we're on Windows 8 or newer
+			// Fix WPF's built-in themes
 			if (OSInfo.IsWindows8OrNewer)
 			{
-				Resources.MergedDictionaries.Add(new ResourceDictionary
-				{
-					Source = new Uri("/Resources/RealWindows8.xaml", UriKind.RelativeOrAbsolute)
-				});
+				ReAddResourceDictionary("/Resources/RealWindows8.xaml");
 			}
 
 			// Initialise and show the main window
@@ -144,6 +141,19 @@ namespace Unclassified.TxEditor
 
 			// Show the main window
 			view.Show();
+		}
+
+		private void ReAddResourceDictionary(string url)
+		{
+			var resDict = Resources.MergedDictionaries.FirstOrDefault(r => r.Source.OriginalString == url);
+			if (resDict != null)
+			{
+				Resources.MergedDictionaries.Remove(resDict);
+			}
+			Resources.MergedDictionaries.Add(new ResourceDictionary
+			{
+				Source = new Uri(url, UriKind.RelativeOrAbsolute)
+			});
 		}
 
 		#endregion Startup

@@ -483,7 +483,7 @@ namespace Unclassified.Util
 		/// <summary>
 		/// Returns the index of the first element that matches the predicate, or -1.
 		/// </summary>
-		/// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+		/// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
 		/// <param name="source">The sequence whose elements to apply the predicate to.</param>
 		/// <param name="predicate">A function to test each element for a condition.</param>
 		/// <returns></returns>
