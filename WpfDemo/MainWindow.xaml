@@ -2,7 +2,7 @@
 	x:Class="WpfDemo.MainWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:Tx="http://dev.unclassified.de/source/txtranslation"
+	xmlns:Tx="http://unclassified.software/source/txtranslation"
 	TextOptions.TextFormattingMode="Display"
 	Title="TxTranslator Demo" Height="350" Width="525">
 	

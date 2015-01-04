@@ -1,6 +1,6 @@
 ﻿// TxLib – Tx Translation & Localisation for .NET and WPF
 // © Yves Goergen, Made in Germany
-// Website: http://dev.unclassified.de/source/txtranslation
+// Website: http://unclassified.software/source/txtranslation
 //
 // This library is free software: you can redistribute it and/or modify it under the terms of
 // the GNU Lesser General Public License as published by the Free Software Foundation, version 3.
@@ -41,4 +41,4 @@ using System.Windows.Markup;
 #endif
 
 [assembly: ComVisible(false)]
-[assembly: XmlnsDefinition("http://dev.unclassified.de/source/txtranslation", "Unclassified.TxLib")]
+[assembly: XmlnsDefinition("http://unclassified.software/source/txtranslation", "Unclassified.TxLib")]

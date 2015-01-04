@@ -8,7 +8,7 @@ namespace Unclassified.Util
 	/// Implements a timer that invokes a method after a user-defined timeout.
 	/// </summary>
 	/// <remarks>
-	/// <a href="http://dev.unclassified.de/de/source/delayedcall">Project website</a>
+	/// <a href="http://unclassified.software/source/delayedcall">Project website</a>
 	/// </remarks>
 	/// <example>
 	/// <code lang="C#"><![CDATA[
