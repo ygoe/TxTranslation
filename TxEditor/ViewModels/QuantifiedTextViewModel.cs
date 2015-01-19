@@ -20,13 +20,12 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public CultureTextViewModel CultureTextVM { get; private set; }
 
-		private int count;
 		public int Count
 		{
-			get { return count; }
+			get { return GetValue<int>("Count"); }
 			set
 			{
-				if (CheckUpdate(value, ref count, "Count"))
+				if (SetValue(value, "Count"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -34,13 +33,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private int modulo;
 		public int Modulo
 		{
-			get { return modulo; }
+			get { return GetValue<int>("Modulo"); }
 			set
 			{
-				if (CheckUpdate(value, ref modulo, "Modulo"))
+				if (SetValue(value, "Modulo"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -48,13 +46,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private string text;
 		public string Text
 		{
-			get { return text; }
+			get { return GetValue<string>("Text"); }
 			set
 			{
-				if (CheckUpdate(value, ref text, "Text"))
+				if (SetValue(value, "Text"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -62,34 +59,30 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool isMissing;
 		public bool IsMissing
 		{
-			get { return isMissing; }
-			set { CheckUpdate(value, ref isMissing, "IsMissing"); }
+			get { return GetValue<bool>("IsMissing"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsMissing"); }
 		}
 
-		private bool isPlaceholdersProblem;
 		public bool IsPlaceholdersProblem
 		{
-			get { return isPlaceholdersProblem; }
-			set { CheckUpdate(value, ref isPlaceholdersProblem, "IsPlaceholdersProblem"); }
+			get { return GetValue<bool>("IsPlaceholdersProblem"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsPlaceholdersProblem"); }
 		}
 
-		private bool isPunctuationProblem;
 		public bool IsPunctuationProblem
 		{
-			get { return isPunctuationProblem; }
-			set { CheckUpdate(value, ref isPunctuationProblem, "IsPunctuationProblem"); }
+			get { return GetValue<bool>("IsPunctuationProblem"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsPunctuationProblem"); }
 		}
 
-		private bool acceptMissing;
 		public bool AcceptMissing
 		{
-			get { return acceptMissing; }
+			get { return GetValue<bool>("AcceptMissing"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptMissing, "AcceptMissing"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptMissing"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -97,13 +90,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool acceptPlaceholders;
 		public bool AcceptPlaceholders
 		{
-			get { return acceptPlaceholders; }
+			get { return GetValue<bool>("AcceptPlaceholders"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptPlaceholders, "AcceptPlaceholders"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptPlaceholders"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -111,13 +103,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool acceptPunctuation;
 		public bool AcceptPunctuation
 		{
-			get { return acceptPunctuation; }
+			get { return GetValue<bool>("AcceptPunctuation"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptPunctuation, "AcceptPunctuation"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptPunctuation"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					CultureTextVM.TextKeyVM.MainWindowVM.FileModified = true;
@@ -134,13 +125,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private StringCollection textKeyReferences;
 		public StringCollection TextKeyReferences
 		{
-			get { return textKeyReferences; }
+			get { return GetValue<StringCollection>("TextKeyReferences"); }
 			set
 			{
-				if (CheckUpdate(value, ref textKeyReferences, "TextKeyReferences"))
+				if (SetValue(value, "TextKeyReferences"))
 				{
 					CultureTextVM.TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 				}

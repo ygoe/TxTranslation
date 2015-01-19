@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml;
 using Unclassified.FieldLog;
+using Unclassified.UI;
 using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModels

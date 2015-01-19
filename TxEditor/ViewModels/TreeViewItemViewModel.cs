@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModels
 {
@@ -13,31 +14,23 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private static readonly TreeViewItemViewModel DummyChild = new TreeViewItemViewModel();
 
-		private ObservableCollection<TreeViewItemViewModel> children;
-		private ListCollectionView visibleChildren;
-		private TreeViewItemViewModel parent;
-
-		private bool isExpanded;
-		private bool isSelected;
-		private bool isVisible = true;
-		private bool isEnabled = true;
-		private int sortIndex;
-
 		#endregion Private data
 
 		#region Constructors
 
 		protected TreeViewItemViewModel(TreeViewItemViewModel parent, bool lazyLoadChildren)
 		{
-			this.parent = parent;
+			IsVisible = true;
+			IsEnabled = true;
+			Parent = parent;
 
-			children = new ObservableCollection<TreeViewItemViewModel>();
+			Children = new ObservableCollection<TreeViewItemViewModel>();
 
-			visibleChildren = new ListCollectionView(children);
-			visibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
+			VisibleChildren = new ListCollectionView(Children);
+			VisibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
 
 			if (lazyLoadChildren)
-				children.Add(DummyChild);
+				Children.Add(DummyChild);
 		}
 
 		/// <summary>
@@ -46,6 +39,8 @@ namespace Unclassified.TxEditor.ViewModels
 		private TreeViewItemViewModel()
 		{
 			DisplayName = "Dummy";
+			IsVisible = true;
+			IsEnabled = true;
 		}
 
 		#endregion Constructors
@@ -57,13 +52,13 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public ObservableCollection<TreeViewItemViewModel> Children
 		{
-			get { return children; }
+			get { return GetValue<ObservableCollection<TreeViewItemViewModel>>("Children"); }
 			set
 			{
-				if (CheckUpdate(value, ref children, "Children"))
+				if (SetValue(value, "Children"))
 				{
-					visibleChildren = new ListCollectionView(children);
-					visibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
+					VisibleChildren = new ListCollectionView(Children);
+					VisibleChildren.Filter = item => (item is TreeViewItemViewModel) && (item as TreeViewItemViewModel).IsVisible;
 					OnPropertyChanged("VisibleChildren");
 				}
 			}
@@ -72,10 +67,7 @@ namespace Unclassified.TxEditor.ViewModels
 		/// <summary>
 		/// Gets the visible child items of this object.
 		/// </summary>
-		public CollectionView VisibleChildren
-		{
-			get { return visibleChildren; }
-		}
+		public CollectionView VisibleChildren { get; private set; }
 
 		/// <summary>
 		/// Gets a value indicating whether this object's Children have not yet been populated.
@@ -91,16 +83,16 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsExpanded
 		{
-			get { return isExpanded; }
+			get { return GetValue<bool>("IsExpanded"); }
 			set
 			{
-				CheckUpdate(value, ref isExpanded, "IsExpanded");
-				if (isExpanded)
+				SetValue(BooleanBoxes.Box(value), "IsExpanded");
+				if (IsExpanded)
 				{
 					// Expand all the way up to the root.
-					if (parent != null)
+					if (Parent != null)
 					{
-						parent.IsExpanded = true;
+						Parent.IsExpanded = true;
 					}
 					// Lazy load the child items, if necessary.
 					if (HasDummyChild)
@@ -131,7 +123,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public void ExpandNoParent(bool allowAsync)
 		{
-			if (!isExpanded)
+			if (!IsExpanded)
 			{
 				if (!Application.Current.Dispatcher.CheckAccess())
 				{
@@ -139,11 +131,10 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				else
 				{
-					isExpanded = true;
-					OnPropertyChanged("IsExpanded");
+					IsExpanded = true;
 
 					// Lazy load the child items, if necessary.
-					if (isExpanded && HasDummyChild)
+					if (IsExpanded && HasDummyChild)
 					{
 						Children.Remove(DummyChild);
 						LoadChildren(allowAsync);
@@ -158,17 +149,11 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsSelected
 		{
-			get { return isSelected; }
-			set
-			{
-				if (CheckUpdate(value, ref isSelected))
-				{
-					OnIsSelectedChanged();
-					OnPropertyChanged("IsSelected");
-				}
-			}
+			get { return GetValue<bool>("IsSelected"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsSelected"); }
 		}
 
+		[PropertyChangedHandler("IsSelected")]
 		protected virtual void OnIsSelectedChanged()
 		{
 		}
@@ -180,19 +165,19 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsVisible
 		{
-			get { return isVisible; }
+			get { return GetValue<bool>("IsVisible"); }
 			set
 			{
-				if (CheckUpdate(value, ref isVisible, "IsVisible"))
+				if (SetValue(BooleanBoxes.Box(value), "IsVisible"))
 				{
 					if (!value)
 					{
 						// Invisible items can no longer be selected
 						IsSelected = false;
 					}
-					if (parent != null)
+					if (Parent != null)
 					{
-						parent.RefreshVisibleChildrenItem(this);
+						Parent.RefreshVisibleChildrenItem(this);
 					}
 				}
 			}
@@ -200,14 +185,14 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool IsEnabled
 		{
-			get { return isEnabled; }
-			set { CheckUpdate(value, ref isEnabled, "IsEnabled"); }
+			get { return GetValue<bool>("IsEnabled"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsEnabled"); }
 		}
 
 		public int SortIndex
 		{
-			get { return sortIndex; }
-			set { CheckUpdate(value, ref sortIndex, "SortIndex"); }
+			get { return GetValue<int>("SortIndex"); }
+			set { SetValue(value, "SortIndex"); }
 		}
 
 		public virtual bool TryDeselect()
@@ -226,17 +211,11 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public TreeViewItemViewModel Parent
 		{
-			get { return parent; }
-			set
-			{
-				if (CheckUpdate(value, ref parent))
-				{
-					OnParentChanged();
-					OnPropertyChanged("Parent");
-				}
-			}
+			get { return GetValue<TreeViewItemViewModel>("Parent"); }
+			set { SetValue(value, "Parent"); }
 		}
 
+		[PropertyChangedHandler("Parent")]
 		protected virtual void OnParentChanged()
 		{
 		}
@@ -347,7 +326,7 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </remarks>
 		private void RefreshVisibleChildrenItem(TreeViewItemViewModel item)
 		{
-			var ev = visibleChildren as IEditableCollectionView;
+			var ev = VisibleChildren as IEditableCollectionView;
 			if (ev != null)
 			{
 				ev.EditItem(item);

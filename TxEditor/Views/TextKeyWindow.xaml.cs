@@ -52,11 +52,7 @@ namespace Unclassified.TxEditor.Views
 			string errorMessage;
 			if (!TextKeyViewModel.ValidateName(TextKey, out errorMessage))
 			{
-				MessageBox.Show(
-					Tx.T("msg.invalid text key entered", "msg", errorMessage),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.invalid text key entered", "msg", errorMessage));
 				return;
 			}
 

@@ -19,40 +19,24 @@
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
-		<text key="msg.cannot backup file.v1">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert, aber manche Dateien wurden vielleicht schon als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
-
-{msg}</text>
-		<text key="msg.cannot backup file.v2">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert.
-
-{msg}</text>
+		<text key="msg.cannot backup file.v1">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert, aber manche Dateien wurden vielleicht schon als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.</text>
+		<text key="msg.cannot backup file.v2">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert.</text>
 		<text key="msg.cannot copy namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum kopiert werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
 		<text key="msg.cannot create namespace key">Sie können den Namensraum-Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als normaler Schlüssel existiert.</text>
 		<text key="msg.cannot create non-namespace key">Sie können den Textschlüssel {key} nicht erstellen, weil der Wurzelschlüssel bereits als Namensraum existiert.</text>
-		<text key="msg.cannot delete backup file">Die vorherige Sicherungskopie „{name}“ kann nicht gelöscht werden. Es wurden keine neuen Daten gespeichert.
-
-{msg}</text>
+		<text key="msg.cannot delete backup file">Die vorherige Sicherungskopie „{name}“ kann nicht gelöscht werden. Es wurden keine neuen Daten gespeichert.</text>
 		<text key="msg.cannot delete new backup file.v1">Mindestens eine neue Sicherungskopie konnte nicht wieder gelöscht werden. Alle Daten wurden gespeichert.</text>
-		<text key="msg.cannot delete new backup file.v2">Die neue Sicherungskopie „{name}“ konnte nicht wieder gelöscht werden. Alle Daten wurden gespeichert.
-
-{msg}</text>
+		<text key="msg.cannot delete new backup file.v2">Die neue Sicherungskopie „{name}“ konnte nicht wieder gelöscht werden. Alle Daten wurden gespeichert.</text>
 		<text key="msg.cannot move namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum verschoben werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
 		<text key="msg.cannot save unsupported file version">Nicht unterstützte Dateiversion {ver} kann nicht gespeichert werden. Wie wurde diese Datei geladen?</text>
-		<text key="msg.cannot write file.v1">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Manche neuen Daten sind ungespeichert und manche Dateien wurden vielleicht als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
-
-{msg}</text>
+		<text key="msg.cannot write file.v1">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Manche neuen Daten sind ungespeichert und manche Dateien wurden vielleicht als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.</text>
 		<text key="msg.cannot write file.v2">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.
 
 {firstmsg}
 
-Die automatische Wiederherstellung ist fehlgeschlagen.
-
-{msg}</text>
-		<text key="msg.cannot write file.v2 no backup">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden.
-
-{msg}</text>
-		<text key="msg.cannot write file.v2 restored">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde aus der Sicherungskopie wiederhergestellt.
-
-{msg}</text>
+Die automatische Wiederherstellung ist fehlgeschlagen.</text>
+		<text key="msg.cannot write file.v2 no backup">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden.</text>
+		<text key="msg.cannot write file.v2 restored">Die Wörterbuchdatei „{name}“ kann nicht geschrieben werden. Es wurden keine neuen Daten gespeichert. Die Wörterbuchdatei wurde aus der Sicherungskopie wiederhergestellt.</text>
 		<text key="msg.cannot write to read-only file">Die Datei, in die gespeichert werden soll, ist als schreibgeschützt markiert.
 
 Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Versionsverwaltungssysteme, die die Dateien zuerst auschecken müssen.</text>
@@ -62,7 +46,6 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.convert to namespace.not a root child">Der Textschlüssel {key} ist nicht auf der obersten Ebene und kann nicht in einen Namensraum umgewandelt werden.</text>
 		<text key="msg.convert to text key.contains point">Der Namensraum {key} enthält einen Punkt (.) und kann nicht in einen Textschlüssel umgewandelt werden.</text>
 		<text key="msg.delete culture">Möchten Sie die Kultur {name} wirklich löschen?</text>
-		<text key="msg.delete culture.title">Kultur löschen</text>
 		<text key="msg.delete text key">Textschlüssel {key} löschen.</text>
 		<text key="msg.delete text key.content">Sind Sie sicher, dass Sie den ausgewählten Textschlüssel mit allen Texten für alle Kulturen löschen möchten? Dieser Vorgang kann nicht rückgängig gemacht werden.</text>
 		<text key="msg.delete text key.multiple">{#} Textschlüssel löschen.</text>
@@ -71,6 +54,8 @@ Bitte prüfen Sie die Zugriffsberechtigungen auf die Datei. Beachten Sie auch Ve
 		<text key="msg.delete text key.multiple.content mixed">Sie haben vollständige Textschlüssel ausgewählt, die weitere Unterschlüssel enthalten. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Nur ausgewählte Schlüssel löschen</text>
 		<text key="msg.enter text">Text hier eingeben</text>
+		<text key="msg.error.details logged">Details wurden im Fehlerprotokoll aufgezeichnet.</text>
+		<text key="msg.error.unexpected error">Ein unerwarteter Fehler ist aufgetreten.</text>
 		<text key="msg.export.title">Datei zum Exportieren der ausgewählten Schlüssel auswählen</text>
 		<text key="msg.import file.add new culture">Neue Kultur {culture} aus importierter Datei hinzufügen?</text>
 		<text key="msg.import file.add new culture.apply to all">Für alle neuen Kulturen</text>
@@ -81,17 +66,14 @@ Wenn Sie abbrechen, könnten bereits manche Daten importiert worden sein.</text>
 		<text key="msg.incomplete key selected">Unvollständiger Textschlüssel ausgewählt</text>
 		<text key="msg.incomplete key selected.desc">Dies ist nur ein Segment eines Textschlüssels. Wählen Sie einen vollständigen Textschlüssel aus, um ihn anzuzeigen und zu bearbeiten.</text>
 		<text key="msg.insert system keys.base culture">Die Systemschlüssel für die ausgewählte Kultur wurden hinzugefügt. Beachten Sie jedoch, dass diese Schlüssel auf ihre Basiskultur {name} angewiesen sein können. Ansonsten sind die möglicherweise unvollständig. Bitte fügen Sie ggf. auch die Basiskultur und deren Systemschlüssel hinzu.</text>
-		<text key="msg.insert system keys.base culture.title">Abhängigkeit von der Basiskultur</text>
 		<text key="msg.insert system keys.no culture selected">Es ist keine Kultur ausgewählt, für die Systemschlüssel hinzugefügt werden sollen.
 
 Wählen Sie bitte zuerst ein Texteingabefeld der gewünschten Kultur aus und versuchen Sie es erneut.</text>
-		<text key="msg.insert system keys.no culture selected.title">Keine Kultur ausgewählt</text>
 		<text key="msg.insert system keys.not available">Die ausgewählte Kultur {name} ist nicht verfügbar.
 
 TxEditor enthält nur Systemschlüssel für die Kulturen, die die Benutzer bereitstellen. Wenn Sie Ihre Systemschlüssel für diese Kultur an den Tx-Entwickler senden, können sie in zukünftigen Versionen aufgenommen werden und dadurch auch Ihren Arbeitsablauf erleichtern!
 
 Um eine Übersicht der aktuell unterstützten Kulturen zu erhalten, öffnen Sie bitte die Datei Template.txd im TxEditor-Quelltext.</text>
-		<text key="msg.insert system keys.not available.title">Kultur nicht unterstützt</text>
 		<text key="msg.invalid text key entered">Ungültiger Textschlüssel eingegeben: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">Dateien mit verschiedenen Präfixen können nicht geladen werden.</text>
 		<text key="msg.load file.invalid file">Die Datei kann nicht geladen werden.</text>
@@ -567,40 +549,24 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
-		<text key="msg.cannot backup file.v1" comment="Move to backup exception for file format v1 (multiple files)">Cannot rename the file “{name}” for backup. No new data was saved but some files may have been renamed to their backup and you need to restore them.
-
-{msg}</text>
-		<text key="msg.cannot backup file.v2" comment="Move to backup exception for file format v2 (single file)">Cannot rename the file “{name}” for backup. No new data was saved.
-
-{msg}</text>
+		<text key="msg.cannot backup file.v1" comment="Move to backup exception for file format v1 (multiple files)">Cannot rename the file “{name}” for backup. No new data was saved but some files may have been renamed to their backup and you need to restore them.</text>
+		<text key="msg.cannot backup file.v2" comment="Move to backup exception for file format v2 (single file)">Cannot rename the file “{name}” for backup. No new data was saved.</text>
 		<text key="msg.cannot copy namespace">A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.</text>
 		<text key="msg.cannot create namespace key">You cannot create the namespace text key {key} because the root key already exists as regular key.</text>
 		<text key="msg.cannot create non-namespace key">You cannot create the text key {key} because the root key already exists as namespace.</text>
-		<text key="msg.cannot delete backup file">Cannot delete the previous backup file “{name}”. No new data was saved.
-
-{msg}</text>
+		<text key="msg.cannot delete backup file">Cannot delete the previous backup file “{name}”. No new data was saved.</text>
 		<text key="msg.cannot delete new backup file.v1" comment="Exception here does not stop, just report that something has happened afterwards">One or more new backup files cannot be deleted again. All data has been saved.</text>
-		<text key="msg.cannot delete new backup file.v2">The new backup file “{name}” cannot be deleted again. All data has been saved.
-
-{msg}</text>
+		<text key="msg.cannot delete new backup file.v2">The new backup file “{name}” cannot be deleted again. All data has been saved.</text>
 		<text key="msg.cannot move namespace">A namespace cannot be nested or moved to another tree position. Please enter a normal name for the namespace.</text>
 		<text key="msg.cannot save unsupported file version">Unsupported file version {ver} cannot be saved. How was that loaded?</text>
-		<text key="msg.cannot write file.v1" comment="File write exception for file format v1 (multiple files)">Cannot write the dictionary file “{name}”. Some new data is unsaved and some files may have been renamed to their backup and you need to restore them.
-
-{msg}</text>
+		<text key="msg.cannot write file.v1" comment="File write exception for file format v1 (multiple files)">Cannot write the dictionary file “{name}”. Some new data is unsaved and some files may have been renamed to their backup and you need to restore them.</text>
 		<text key="msg.cannot write file.v2" comment="File write exception for file format v2 (single file), restore failed">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been renamed to its backup and you need to restore it.
 
 {firstmsg}
 
-Automatic restoring of the backup file failed.
-
-{msg}</text>
-		<text key="msg.cannot write file.v2 no backup" comment="File write exception for file format v2 (single file), restore failed">Cannot write the dictionary file “{name}”.
-
-{msg}</text>
-		<text key="msg.cannot write file.v2 restored" comment="File write exception for file format v2 (single file), the backup was restored">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been restored from its backup.
-
-{msg}</text>
+Automatic restoring of the backup file failed.</text>
+		<text key="msg.cannot write file.v2 no backup" comment="File write exception for file format v2 (single file), restore failed">Cannot write the dictionary file “{name}”.</text>
+		<text key="msg.cannot write file.v2 restored" comment="File write exception for file format v2 (single file), the backup was restored">Cannot write the dictionary file “{name}”. No new data was saved. The dictionary file has been restored from its backup.</text>
 		<text key="msg.cannot write to read-only file">The file you are trying to save to is marked read-only.
 
 Please check the access rights on the file. Also consider version control systems that may first need to check out the file.</text>
@@ -610,7 +576,6 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.convert to namespace.not a root child">The text key {key} is not on the top level and cannot be converted to a namespace.</text>
 		<text key="msg.convert to text key.contains point">The namespace {key} contains a point (.) and cannot be converted to a text key.</text>
 		<text key="msg.delete culture">Are you sure to delete the culture {name}?</text>
-		<text key="msg.delete culture.title">Delete culture</text>
 		<text key="msg.delete text key">Deleting text key {key}.</text>
 		<text key="msg.delete text key.content">Are you sure to delete the selected text key with the texts of all cultures? This cannot be undone.</text>
 		<text key="msg.delete text key.multiple">Deleting {#} text keys.</text>
@@ -619,6 +584,8 @@ Please check the access rights on the file. Also consider version control system
 		<text key="msg.delete text key.multiple.content mixed">You have selected full text keys that also contain other subkeys. {=msg.delete text key.multiple.content}</text>
 		<text key="msg.delete text key.multiple.only selected">Only delete selected keys</text>
 		<text key="msg.enter text">Enter text here</text>
+		<text key="msg.error.details logged">Details are written to the error log file.</text>
+		<text key="msg.error.unexpected error">An unexpected error occured.</text>
 		<text key="msg.export.title">Select file to export selected keys to</text>
 		<text key="msg.import file.add new culture">Add new culture {culture} from imported file?</text>
 		<text key="msg.import file.add new culture.apply to all">Apply to all new cultures</text>
@@ -629,17 +596,14 @@ If you choose to cancel, some data may already have been imported.</text>
 		<text key="msg.incomplete key selected">Incomplete text key selected</text>
 		<text key="msg.incomplete key selected.desc">This is only a segment of a text key. Select a complete text key’s node to display and edit it.</text>
 		<text key="msg.insert system keys.base culture">The system keys for the selected culture were added. Note however that these keys may depend on its base culture {name}. Otherwise they may be incomplete. Please consider adding the base culture and adding their system keys as well.</text>
-		<text key="msg.insert system keys.base culture.title">Base culture dependency</text>
 		<text key="msg.insert system keys.no culture selected">There is no culture selected to add the system keys for.
 
 Please first focus a text input field of the desired culture and try again.</text>
-		<text key="msg.insert system keys.no culture selected.title">No culture selected</text>
 		<text key="msg.insert system keys.not available">The selected culture {name} is not available.
 
 TxEditor only contains system keys for those cultures that are provided by its users. Please consider submitting your system keys for this culture to the Tx developer to make them available in TxEditor in the future. This can also make your workflow easier!
 
 For an overview of currently supported cultures, please open the file Template.txd from the TxEditor source code.</text>
-		<text key="msg.insert system keys.not available.title">Culture not supported</text>
 		<text key="msg.invalid text key entered">Invalid text key entered: {msg}</text>
 		<text key="msg.load file.cannot load different prefixes">You cannot load files with different prefixes.</text>
 		<text key="msg.load file.invalid file">Cannot load the file.</text>

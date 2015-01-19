@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModels
 {

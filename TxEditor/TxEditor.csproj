@@ -91,11 +91,14 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="FileNameHelper.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Unclassified\UI\BooleanBoxes.cs" />
     <Compile Include="Unclassified\UI\MenuExtensions.cs" />
     <Compile Include="Unclassified\UI\MenuIconExtension.cs" />
     <Compile Include="Unclassified\UI\MenuIconImage.cs" />
+    <Compile Include="Unclassified\UI\ViewModelBase.cs" />
     <Compile Include="Unclassified\UI\WindowExtensions.cs" />
     <Compile Include="Unclassified\Util\ClipboardHelper.cs" />
+    <Compile Include="Unclassified\Util\CollectionDictionary.cs" />
     <Compile Include="Unclassified\Util\CommandLineHelper.cs" />
     <Compile Include="Unclassified\Util\DelayedCall.cs" />
     <Compile Include="Unclassified\Util\EnumerableWalker.cs" />
@@ -146,7 +149,6 @@
     <Compile Include="ViewModels\TextKeyViewModel.cs" />
     <Compile Include="Converters\TreeNodesConverter.cs" />
     <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>

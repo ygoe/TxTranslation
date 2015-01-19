@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Unclassified.TxLib;
 using Unclassified.Util;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModels
 {
@@ -15,12 +16,11 @@ namespace Unclassified.TxEditor.ViewModels
 		public TextKeyViewModel(string textKey, bool isFullKey, TreeViewItemViewModel parent, MainViewModel mainWindowVM)
 			: base(parent, false)
 		{
-			this.textKey = textKey;
-			this.isFullKey = isFullKey;
+			CultureTextVMs = new ObservableCollection<CultureTextViewModel>();
+			TextKey = textKey;
+			IsFullKey = isFullKey;
 
 			MainWindowVM = mainWindowVM;
-
-			cultureTextVMs = new ObservableCollection<CultureTextViewModel>();
 
 			UpdateIcon();
 		}
@@ -31,153 +31,135 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public MainViewModel MainWindowVM { get; private set; }
 
-		private string textKey;
-		public string TextKey
-		{
-			get { return textKey; }
-		}
+		public string TextKey { get; private set; }
 
-		private bool hasOwnProblem;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key item itself or any of its child
 		/// items has a problem. This does not count towards the text keys with problems counter.
 		/// </summary>
 		public bool HasOwnProblem
 		{
-			get { return hasOwnProblem; }
-			set
+			get { return GetValue<bool>("HasOwnProblem"); }
+			set { SetValue(BooleanBoxes.Box(value), "HasOwnProblem"); }
+		}
+
+		[PropertyChangedHandler("HasOwnProblem")]
+		private void OnHasOwnProblemChanged()
+		{
+			// Remove from previous list
+			if (!HasOwnProblem)   // was true
 			{
-				if (value != hasOwnProblem)
-				{
-					// Remove from previous list
-					if (hasOwnProblem)
-					{
-						MainWindowVM.ProblemKeys.Remove(this);
-					}
+				MainWindowVM.ProblemKeys.Remove(this);
+			}
 
-					hasOwnProblem = value;
-					UpdateIcon();
+			UpdateIcon();
 
-					// Add to new list
-					if (hasOwnProblem && IsFullKey)
-					{
-						MainWindowVM.ProblemKeys.Add(this);
-					}
-
-					OnPropertyChanged("HasOwnProblem");
-				}
+			// Add to new list
+			if (HasOwnProblem && IsFullKey)
+			{
+				MainWindowVM.ProblemKeys.Add(this);
 			}
 		}
 
-		private bool hasProblem;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key item itself has a problem. This
 		/// is explained in the Remarks property and such keys are counted in the problems counter.
 		/// </summary>
 		public bool HasProblem
 		{
-			get { return hasProblem; }
+			get { return GetValue<bool>("HasProblem"); }
 			set
 			{
-				if (CheckUpdate(value, ref hasProblem, "HasProblem"))
+				if (SetValue(BooleanBoxes.Box(value), "HasProblem"))
 				{
 					UpdateIcon();
 				}
 			}
 		}
 
-		private bool isAccepted;
 		/// <summary>
 		/// Gets or sets a value indicating whether an existing problem with this text key is
 		/// marked as accepted.
 		/// </summary>
 		public bool IsAccepted
 		{
-			get { return isAccepted; }
+			get { return GetValue<bool>("IsAccepted"); }
 			set
 			{
-				if (CheckUpdate(value, ref isAccepted, "IsAccepted"))
+				if (SetValue(BooleanBoxes.Box(value), "IsAccepted"))
 				{
 					UpdateIcon();
 				}
 			}
 		}
 
-		private bool isNamespace;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key represents a namespace node.
 		/// </summary>
 		public bool IsNamespace
 		{
-			get { return isNamespace; }
+			get { return GetValue<bool>("IsNamespace"); }
 			set
 			{
-				if (CheckUpdate(value, ref isNamespace, "IsNamespace"))
+				if (SetValue(BooleanBoxes.Box(value), "IsNamespace"))
 				{
 					UpdateIcon();
 				}
 			}
 		}
 
-		private bool isFullKey;
 		/// <summary>
 		/// Gets or sets a value indicating whether the text key represents a full text key or
 		/// only a key segment node.
 		/// </summary>
 		public bool IsFullKey
 		{
-			get { return isFullKey; }
+			get { return GetValue<bool>("IsFullKey"); }
 			set
 			{
-				if (value != isFullKey)
+				if (SetValue(BooleanBoxes.Box(value), "IsFullKey"))
 				{
-					isFullKey = value;
-
-					if (!isFullKey)
-					{
-						Comment = null;
-						CultureTextVMs.Clear();
-					}
-
 					UpdateIcon();
-					OnPropertyChanged("IsFullKey");
 				}
 			}
 		}
 
-		private ObservableCollection<CultureTextViewModel> cultureTextVMs;
-		public ObservableCollection<CultureTextViewModel> CultureTextVMs
+		[PropertyChangedHandler("IsFullKey")]
+		private void OnIsFullKeyChanged()
 		{
-			get { return cultureTextVMs; }
+			if (!IsFullKey)
+			{
+				Comment = null;
+				CultureTextVMs.Clear();
+			}
 		}
 
-		private string imageSource;
+		public ObservableCollection<CultureTextViewModel> CultureTextVMs { get; private set; }
+
 		public string ImageSource
 		{
-			get { return imageSource; }
-			set { CheckUpdate(value, ref imageSource, "ImageSource"); }
+			get { return GetValue<string>("ImageSource"); }
+			set { SetValue(value, "ImageSource"); }
 		}
 
-		private string remarks;
 		public string Remarks
 		{
-			get { return remarks; }
-			set { CheckUpdate(value, ref remarks, "Remarks"); }
+			get { return GetValue<string>("Remarks"); }
+			set { SetValue(value, "Remarks"); }
 		}
 
-		private string comment;
 		public string Comment
 		{
-			get { return comment; }
+			get { return GetValue<string>("Comment"); }
 			set
 			{
-				if (CheckUpdate(value, ref comment, "Comment"))
+				if (SetValue(value, "Comment"))
 				{
 					// Only set the toolbar indicator if this key is selected, to prevent switching
 					// it on while loading a dictionary and building the model instances.
 					if (IsSelected)
 					{
-						MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(comment);
+						MainWindowVM.HaveComment = !string.IsNullOrWhiteSpace(Comment);
 					}
 					MainWindowVM.FileModified = true;
 				}
@@ -188,7 +170,7 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			get
 			{
-				return !MainWindowVM.IsTemplateFile && textKey.StartsWith("Tx:");
+				return !MainWindowVM.IsTemplateFile && TextKey.StartsWith("Tx:");
 			}
 		}
 
@@ -198,7 +180,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public override string ToString()
 		{
-			return "TextKeyViewModel " + textKey;
+			return "TextKeyViewModel " + TextKey;
 		}
 
 		protected override void OnIsSelectedChanged()
@@ -583,10 +565,10 @@ namespace Unclassified.TxEditor.ViewModels
 		public void UpdateCultureTextSeparators()
 		{
 			string prevLang = null;
-			for (int i = cultureTextVMs.Count - 1; i >= 0; i--)
+			for (int i = CultureTextVMs.Count - 1; i >= 0; i--)
 			{
-				string lang = cultureTextVMs[i].CultureName.Substring(0, 2);
-				cultureTextVMs[i].LastOfLanguage = lang != prevLang;
+				string lang = CultureTextVMs[i].CultureName.Substring(0, 2);
+				CultureTextVMs[i].LastOfLanguage = lang != prevLang;
 				prevLang = lang;
 			}
 		}
@@ -667,12 +649,12 @@ namespace Unclassified.TxEditor.ViewModels
 			else
 				DisplayName = newKey;
 
-			if (textKeys != null && textKeys.ContainsKey(textKey))
+			if (textKeys != null && textKeys.ContainsKey(TextKey))
 			{
-				textKeys.Remove(textKey);
+				textKeys.Remove(TextKey);
 				textKeys.Add(newKey, this);
 			}
-			textKey = newKey;
+			TextKey = newKey;
 			OnPropertyChanged("TextKey");
 		}
 
@@ -693,15 +675,15 @@ namespace Unclassified.TxEditor.ViewModels
 
 			foreach (TextKeyViewModel child in Children)
 			{
-				affectedKeys += child.ReplaceKeyRecursive(textKey, newKey, textKeys);
+				affectedKeys += child.ReplaceKeyRecursive(TextKey, newKey, textKeys);
 			}
 
-			if (textKeys.ContainsKey(textKey))
+			if (textKeys.ContainsKey(TextKey))
 			{
-				textKeys.Remove(textKey);
+				textKeys.Remove(TextKey);
 				textKeys.Add(newKey, this);
 			}
-			textKey = newKey;
+			TextKey = newKey;
 			OnPropertyChanged("TextKey");
 			return affectedKeys;
 		}
@@ -715,13 +697,13 @@ namespace Unclassified.TxEditor.ViewModels
 		/// <returns>Number of affected keys.</returns>
 		private int ReplaceKeyRecursive(string oldKey, string newKey, Dictionary<string, TextKeyViewModel> textKeys)
 		{
-			string oldTextKey = textKey;
-			textKey = textKey.ReplaceStart(oldKey, newKey);
+			string oldTextKey = TextKey;
+			TextKey = TextKey.ReplaceStart(oldKey, newKey);
 			OnPropertyChanged("TextKey");
 			if (textKeys.ContainsKey(oldTextKey))
 			{
 				textKeys.Remove(oldTextKey);
-				textKeys.Add(textKey, this);
+				textKeys.Add(TextKey, this);
 			}
 			int affectedKeys = IsFullKey ? 1 : 0;
 
@@ -742,9 +724,9 @@ namespace Unclassified.TxEditor.ViewModels
 		/// <returns></returns>
 		public TextKeyViewModel Clone()
 		{
-			TextKeyViewModel clone = new TextKeyViewModel(this.textKey, this.isFullKey, this.Parent, this.MainWindowVM);
-			clone.comment = this.comment;
-			clone.isNamespace = this.isNamespace;
+			TextKeyViewModel clone = new TextKeyViewModel(this.TextKey, this.IsFullKey, this.Parent, this.MainWindowVM);
+			clone.Comment = this.Comment;
+			clone.IsNamespace = this.IsNamespace;
 			foreach (CultureTextViewModel ctVM in CultureTextVMs)
 			{
 				clone.CultureTextVMs.Add(ctVM.Clone(clone));
@@ -810,7 +792,7 @@ namespace Unclassified.TxEditor.ViewModels
 				{
 					myChild = sourceChild.Clone();
 					myChild.Parent = this;
-					myChild.SetKey(this.textKey + "." + sourceChild.DisplayName, null);
+					myChild.SetKey(this.TextKey + "." + sourceChild.DisplayName, null);
 					Children.Add(myChild);
 				}
 				myChild.MergeChildrenRecursive(sourceChild);

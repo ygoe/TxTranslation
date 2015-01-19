@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModels
 {
@@ -8,53 +9,48 @@ namespace Unclassified.TxEditor.ViewModels
 	{
 		public MainViewModel MainWindowVM { get; private set; }
 
-		private string textKey;
 		public string TextKey
 		{
-			get { return textKey; }
-			set { CheckUpdate(value, ref textKey, "TextKey"); }
+			get { return GetValue<string>("TextKey"); }
+			set { SetValue(value, "TextKey"); }
 		}
 
-		private string baseText;
 		public string BaseText
 		{
-			get { return baseText; }
-			set { CheckUpdate(value, ref baseText, "BaseText"); }
+			get { return GetValue<string>("BaseText"); }
+			set { SetValue(value, "BaseText"); }
 		}
 
-		private string translatedText;
 		public string TranslatedText
 		{
-			get { return translatedText; }
-			set { CheckUpdate(value, ref translatedText, "TranslatedText"); }
+			get { return GetValue<string>("TranslatedText"); }
+			set { SetValue(value, "TranslatedText"); }
 		}
 
-		private string score;
 		public string Score
 		{
-			get { return score; }
-			set { CheckUpdate(value, ref score, "Score"); }
+			get { return GetValue<string>("Score"); }
+			set { SetValue(value, "Score"); }
 		}
 
-		private float scoreNum;
 		public float ScoreNum
 		{
-			get { return scoreNum; }
-			set { CheckUpdate(value, ref scoreNum, "ScoreNum"); }
+			get { return GetValue<float>("ScoreNum"); }
+			set { SetValue(value, "ScoreNum"); }
 		}
 
-		private bool isExactMatch;
 		public bool IsExactMatch
 		{
-			get { return isExactMatch; }
-			set { CheckUpdate(value, ref isExactMatch, "IsExactMatch", "BaseWeight"); }
+			get { return GetValue<bool>("IsExactMatch"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsExactMatch"); }
 		}
 
+		[NotifiesOn("IsExactMatch")]
 		public FontWeight BaseWeight
 		{
 			get
 			{
-				if (isExactMatch)
+				if (IsExactMatch)
 				{
 					return FontWeights.Bold;
 				}
@@ -65,11 +61,10 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool isDummy;
 		public bool IsDummy
 		{
-			get { return isDummy; }
-			set { CheckUpdate(value, ref isDummy, "IsDummy"); }
+			get { return GetValue<bool>("IsDummy"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsDummy"); }
 		}
 
 		public SuggestionViewModel(MainViewModel mainWindowVM)

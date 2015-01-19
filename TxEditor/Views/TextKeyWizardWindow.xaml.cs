@@ -73,11 +73,7 @@ namespace Unclassified.TxEditor.Views
 			// Require a primary culture for the wizard
 			if (MainViewModel.Instance.LoadedCultureNames.Count == 0)
 			{
-				MessageBox.Show(
-					Tx.T("window.wizard.no culture added"),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("window.wizard.no culture added"));
 				Close();
 				return;
 			}
@@ -221,11 +217,7 @@ namespace Unclassified.TxEditor.Views
 			string errorMessage;
 			if (!TextKeyViewModel.ValidateName(textKey, out errorMessage))
 			{
-				MessageBox.Show(
-					Tx.T("msg.invalid text key entered", "msg", errorMessage),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.invalid text key entered", "msg", errorMessage));
 				return;
 			}
 
@@ -362,12 +354,7 @@ namespace Unclassified.TxEditor.Views
 					}
 					else
 					{
-						FL.Error(ex, "Reading from clipboard");
-						MessageBox.Show(
-							Tx.T("window.wizard.error reading clipboard"),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("window.wizard.error reading clipboard"), ex, "Reading from clipboard");
 						return null;
 					}
 				}
@@ -375,11 +362,7 @@ namespace Unclassified.TxEditor.Views
 #if DEBUG
 			if (retryCount < 20)
 			{
-				MessageBox.Show(
-					"Tried reading the clipboard " + (20 - retryCount) + " times!",
-					Tx.T("msg.caption.warning"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage("Tried reading the clipboard " + (20 - retryCount) + " times!");
 			}
 #endif
 			return str;

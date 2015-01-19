@@ -92,10 +92,9 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return App.Settings; }
 		}
 
-		private bool fileModified;
 		public bool FileModified
 		{
-			get { return fileModified; }
+			get { return GetValue<bool>("FileModified"); }
 			set
 			{
 				if (value && !dateTimeWindow.IsClosed())   // Extension method, accepts null
@@ -103,7 +102,7 @@ namespace Unclassified.TxEditor.ViewModels
 					dateTimeWindow.UpdateView();
 				}
 
-				if (CheckUpdate(value, ref fileModified, "FileModified"))
+				if (SetValue(BooleanBoxes.Box(value), "FileModified"))
 				{
 					UpdateTitle();
 					SaveCommand.RaiseCanExecuteChanged();
@@ -111,53 +110,54 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private string primaryCulture;
 		public string PrimaryCulture
 		{
-			get { return primaryCulture; }
-			set { CheckUpdate(value, ref primaryCulture, "PrimaryCulture"); }
+			get { return GetValue<string>("PrimaryCulture"); }
+			set { SetValue(value, "PrimaryCulture"); }
 		}
 
 		public bool IsTemplateFile { get; set; }
 
-		private bool problemFilterActive;
 		public bool ProblemFilterActive
 		{
-			get { return problemFilterActive; }
+			get { return GetValue<bool>("ProblemFilterActive"); }
 			set
 			{
-				if (CheckUpdate(value, ref problemFilterActive, "ProblemFilterActive"))
+				if (SetValue(BooleanBoxes.Box(value), "ProblemFilterActive"))
 				{
 					UpdateSearch();
 				}
 			}
 		}
 
-		private string cursorChar;
 		public string CursorChar
 		{
-			get { return cursorChar; }
-			set { CheckUpdate(value, ref cursorChar, "CursorChar", "CursorCharCodePoint", "CursorCharName", "CursorCharCategory", "CursorCharVisibility"); }
+			get { return GetValue<string>("CursorChar"); }
+			set { SetValue(value, "CursorChar"); }
 		}
 
+		[NotifiesOn("CursorChar")]
 		public string CursorCharCodePoint
 		{
-			get { return cursorChar != null ? "U+" + ((int) cursorChar[0]).ToString("X4") : ""; }
+			get { return CursorChar != null ? "U+" + ((int) CursorChar[0]).ToString("X4") : ""; }
 		}
 
+		[NotifiesOn("CursorChar")]
 		public string CursorCharName
 		{
-			get { return cursorChar != null ? UnicodeInfo.GetChar(cursorChar[0]).Name : ""; }
+			get { return CursorChar != null ? UnicodeInfo.GetChar(CursorChar[0]).Name : ""; }
 		}
 
+		[NotifiesOn("CursorChar")]
 		public string CursorCharCategory
 		{
-			get { return cursorChar != null ? UnicodeInfo.GetChar(cursorChar[0]).Category : Tx.T("statusbar.char info.no character at cursor"); }
+			get { return CursorChar != null ? UnicodeInfo.GetChar(CursorChar[0]).Category : Tx.T("statusbar.char info.no character at cursor"); }
 		}
 
+		[NotifiesOn("CursorChar")]
 		public Visibility CursorCharVisibility
 		{
-			get { return cursorChar != null ? Visibility.Visible : Visibility.Collapsed; }
+			get { return CursorChar != null ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		// TODO: Move entirely to AppSettings
@@ -186,101 +186,93 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return FontSize < 16 ? TextFormattingMode.Display : TextFormattingMode.Ideal; }
 		}
 
-		private string statusText;
 		public string StatusText
 		{
-			get { return statusText; }
+			get { return GetValue<string>("StatusText"); }
 			set
 			{
-				if (CheckUpdate(value, ref statusText, "StatusText"))
+				if (SetValue(value, "StatusText"))
 				{
-					ViewCommandManager.Invoke("AnimateStatusText", statusText);
+					ViewCommandManager.Invoke("AnimateStatusText", StatusText);
 				}
 			}
 		}
 
-		private string selectedCulture;
 		public string SelectedCulture
 		{
-			get { return selectedCulture; }
+			get { return GetValue<string>("SelectedCulture"); }
 			set
 			{
-				if (CheckUpdate(value, ref selectedCulture, "SelectedCulture"))
+				if (SetValue(value, "SelectedCulture"))
 				{
 					DeleteCultureCommand.RaiseCanExecuteChanged();
 					SetPrimaryCultureCommand.RaiseCanExecuteChanged();
-					if (selectedCulture != null)
+					if (SelectedCulture != null)
 					{
-						LastSelectedCulture = selectedCulture;
+						LastSelectedCulture = SelectedCulture;
 					}
 				}
 			}
 		}
 
-		private string lastSelectedCulture;
 		public string LastSelectedCulture
 		{
-			get { return lastSelectedCulture; }
+			get { return GetValue<string>("LastSelectedCulture"); }
 			set
 			{
-				if (CheckUpdate(value, ref lastSelectedCulture, "LastSelectedCulture"))
+				if (SetValue(value, "LastSelectedCulture"))
 				{
 					UpdateSuggestionsLater();
 				}
 			}
 		}
 
-		private bool haveComment;
 		public bool HaveComment
 		{
-			get { return haveComment; }
-			set { CheckUpdate(value, ref haveComment, "HaveComment"); }
+			get { return GetValue<bool>("HaveComment"); }
+			set { SetValue(BooleanBoxes.Box(value), "HaveComment"); }
 		}
 
-		private double suggestionsPanelWidth;
 		public double SuggestionsPanelWidth
 		{
-			get { return suggestionsPanelWidth; }
+			get { return GetValue<double>("SuggestionsPanelWidth"); }
 			set
 			{
-				if (CheckUpdate(value, ref suggestionsPanelWidth, "SuggestionsPanelWidth"))
+				if (SetValue(value, "SuggestionsPanelWidth"))
 				{
 					if (App.Settings.View.ShowSuggestions && App.Settings.View.SuggestionsHorizontalLayout)
 					{
-						App.Settings.View.SuggestionsWidth = suggestionsPanelWidth;
+						App.Settings.View.SuggestionsWidth = SuggestionsPanelWidth;
 					}
 				}
 			}
 		}
 
-		private double suggestionsPanelHeight;
 		public double SuggestionsPanelHeight
 		{
-			get { return suggestionsPanelHeight; }
+			get { return GetValue<double>("SuggestionsPanelHeight"); }
 			set
 			{
-				if (CheckUpdate(value, ref suggestionsPanelHeight, "SuggestionsPanelHeight"))
+				if (SetValue(value, "SuggestionsPanelHeight"))
 				{
 					if (App.Settings.View.ShowSuggestions && !App.Settings.View.SuggestionsHorizontalLayout)
 					{
-						App.Settings.View.SuggestionsHeight = suggestionsPanelHeight;
+						App.Settings.View.SuggestionsHeight = SuggestionsPanelHeight;
 					}
 				}
 			}
 		}
 
-		private double suggestionsSplitterWidth;
 		public double SuggestionsSplitterWidth
 		{
-			get { return suggestionsSplitterWidth; }
-			set { CheckUpdate(value, ref suggestionsSplitterWidth, "SuggestionsSplitterWidth"); }
+			get { return GetValue<double>("SuggestionsSplitterWidth"); }
+			set { SetValue(value, "SuggestionsSplitterWidth"); }
 		}
 
-		private double suggestionsSplitterHeight;
 		public double SuggestionsSplitterHeight
 		{
-			get { return suggestionsSplitterHeight; }
-			set { CheckUpdate(value, ref suggestionsSplitterHeight, "SuggestionsSplitterHeight"); }
+			get { return GetValue<double>("SuggestionsSplitterHeight"); }
+			set { SetValue(value, "SuggestionsSplitterHeight"); }
 		}
 
 		private ObservableCollection<SuggestionViewModel> suggestions = new ObservableCollection<SuggestionViewModel>();
@@ -289,26 +281,25 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return suggestions; }
 		}
 
-		private bool haveSuggestions;
 		public bool HaveSuggestions
 		{
-			get { return haveSuggestions; }
-			set { CheckUpdate(value, ref haveSuggestions, "HaveSuggestions"); }
+			get { return GetValue<bool>("HaveSuggestions"); }
+			set { SetValue(BooleanBoxes.Box(value), "HaveSuggestions"); }
 		}
 
-		private string suggestionsCulture;
 		public string SuggestionsCulture
 		{
-			get { return suggestionsCulture; }
-			set { CheckUpdate(value, ref suggestionsCulture, "SuggestionsCulture", "SuggestionsCultureCaption"); }
+			get { return GetValue<string>("SuggestionsCulture"); }
+			set { SetValue(value, "SuggestionsCulture"); }
 		}
 
+		[NotifiesOn("SuggestionsCulture")]
 		public string SuggestionsCultureCaption
 		{
 			get
 			{
-				if (!string.IsNullOrEmpty(suggestionsCulture))
-					return Tx.TC("suggestions.caption for", "name", suggestionsCulture);
+				if (!string.IsNullOrEmpty(SuggestionsCulture))
+					return Tx.TC("suggestions.caption for", "name", SuggestionsCulture);
 				else
 					return Tx.TC("suggestions.caption");
 			}
@@ -420,7 +411,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		internal bool CheckModifiedSaved()
 		{
-			if (fileModified)
+			if (FileModified)
 			{
 				var result = TaskDialog.Show(
 					owner: MainWindow.Instance,
@@ -534,7 +525,7 @@ namespace Unclassified.TxEditor.ViewModels
 						if (!foundFiles)
 						{
 							foundFiles = true;
-							fileModified = false;   // Prevent another unsaved warning from OnNewFile
+							FileModified = false;   // Prevent another unsaved warning from OnNewFile
 							OnNewFile();
 						}
 						if (!LoadFromXmlFile(fileName))
@@ -557,7 +548,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			else
 			{
-				MessageBox.Show(Tx.T("msg.load folder.no files found"), "TxEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.load folder.no files found"));
 			}
 		}
 
@@ -594,11 +585,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			if (prefixes.Count > 1)
 			{
-				MessageBox.Show(
-					Tx.T("msg.load file.cannot load different prefixes"),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.load file.cannot load different prefixes"));
 				return;
 			}
 
@@ -615,7 +602,7 @@ namespace Unclassified.TxEditor.ViewModels
 				if (!foundFiles)
 				{
 					foundFiles = true;
-					fileModified = false;   // Prevent another unsaved warning from OnNewFile
+					FileModified = false;   // Prevent another unsaved warning from OnNewFile
 					OnNewFile();   // Clear any currently loaded content
 				}
 				if (!LoadFromXmlFile(fileName))
@@ -631,11 +618,7 @@ namespace Unclassified.TxEditor.ViewModels
 			if (primaryCultureFiles.Count > 1)
 			{
 				// Display a warning if multiple (and which) files claimed to be the primary culture, and which has won
-				MessageBox.Show(
-					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
-					Tx.T("msg.caption.warning"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture));
 			}
 
 			SortCulturesInTextKey(RootTextKey);
@@ -867,11 +850,7 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			CultureInfo ci = new CultureInfo(SelectedCulture);
 
-			if (MessageBox.Show(
-				Tx.T("msg.delete culture", "name", CultureInfoName(ci)),
-				Tx.T("msg.delete culture.title"),
-				MessageBoxButton.YesNo,
-				MessageBoxImage.Question) == MessageBoxResult.Yes)
+			if (App.YesNoQuestion(Tx.T("msg.delete culture", "name", CultureInfoName(ci))))
 			{
 				DeleteCulture(RootTextKey, SelectedCulture, true);
 				StatusText = Tx.T("statusbar.culture deleted", "name", CultureInfoName(ci));
@@ -972,20 +951,12 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				catch (NonNamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 				catch (NamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 
@@ -1313,20 +1284,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			catch (NonNamespaceExistsException)
 			{
-				MessageBox.Show(
-					Tx.T("msg.cannot create namespace key", "key", Tx.Q(keyName)),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.cannot create namespace key", "key", Tx.Q(keyName)));
 				return false;
 			}
 			catch (NamespaceExistsException)
 			{
-				MessageBox.Show(
-					Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(keyName)),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(keyName)));
 				return false;
 			}
 
@@ -1408,11 +1371,7 @@ namespace Unclassified.TxEditor.ViewModels
 				// Don't allow namespace nodes to be moved elsewhere
 				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot move namespace"),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot move namespace"));
 					return;
 				}
 
@@ -1426,20 +1385,12 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				catch (NonNamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 				catch (NamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
@@ -1618,11 +1569,7 @@ namespace Unclassified.TxEditor.ViewModels
 				// Don't allow namespace nodes to be copied elsewhere
 				if (selKey.IsNamespace && (newKey.Contains('.') || newKey.Contains(':')))
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot copy namespace"),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot copy namespace"));
 					return;
 				}
 
@@ -1634,20 +1581,12 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				catch (NonNamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 				catch (NamespaceExistsException)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.cannot create non-namespace key", "key", Tx.Q(newKey)));
 					return;
 				}
 				bool destExists = tryDestKey != null && (!tryDestKey.IsEmpty() || tryDestKey.Children.Count > 0);
@@ -1835,7 +1774,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, Tx.T("msg.caption.error"), MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessage(null, ex, "Opening documentation PDF file");
 			}
 		}
 
@@ -1851,7 +1790,7 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, Tx.T("msg.caption.error"), MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessage(null, ex, "Opening source code directory");
 			}
 		}
 
@@ -1872,20 +1811,12 @@ namespace Unclassified.TxEditor.ViewModels
 
 			if (selKey.IsFullKey)
 			{
-				MessageBox.Show(
-					Tx.T("msg.convert to namespace.is full key", "key", Tx.Q(selKey.TextKey)),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.convert to namespace.is full key", "key", Tx.Q(selKey.TextKey)));
 				return;
 			}
 			if (selKey.Parent != RootTextKey)
 			{
-				MessageBox.Show(
-					Tx.T("msg.convert to namespace.not a root child", "key", Tx.Q(selKey.TextKey)),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.convert to namespace.not a root child", "key", Tx.Q(selKey.TextKey)));
 				return;
 			}
 
@@ -1915,11 +1846,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 			if (selKey.DisplayName.IndexOf('.') != -1)
 			{
-				MessageBox.Show(
-					Tx.T("msg.convert to text key.contains point", "key", Tx.Q(selKey.TextKey)),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.convert to text key.contains point", "key", Tx.Q(selKey.TextKey)));
 				return;
 			}
 
@@ -2001,11 +1928,7 @@ namespace Unclassified.TxEditor.ViewModels
 				{
 					App.SplashScreen.Close(TimeSpan.Zero);
 				}
-				MessageBox.Show(
-					Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture),
-					Tx.T("msg.caption.warning"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.load file.multiple primary cultures", "list", string.Join(", ", primaryCultureFiles), "name", PrimaryCulture));
 			}
 			ValidateTextKeysDelayed();
 			StatusText = Tx.T("statusbar.n files loaded", count) + Tx.T("statusbar.n text keys defined", TextKeys.Count);
@@ -2444,11 +2367,7 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			if (readonlyFilesCount > 0)
 			{
-				MessageBox.Show(
-					Tx.T("msg.read-only files loaded", readonlyFilesCount),
-					Tx.T("msg.caption.warning"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.read-only files loaded", readonlyFilesCount));
 			}
 		}
 
@@ -2472,11 +2391,7 @@ namespace Unclassified.TxEditor.ViewModels
 					FileInfo fi = new FileInfo(cultureFileName);
 					if (fi.Exists && fi.IsReadOnly)
 					{
-						MessageBox.Show(
-							Tx.T("msg.cannot write to read-only file"),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("msg.cannot write to read-only file"));
 						return false;
 					}
 				}
@@ -2493,11 +2408,7 @@ namespace Unclassified.TxEditor.ViewModels
 						}
 						catch (Exception ex)
 						{
-							MessageBox.Show(
-								Tx.T("msg.cannot delete backup file", "name", cultureFileName + ".bak", "msg", ex.Message),
-								Tx.T("msg.caption.error"),
-								MessageBoxButton.OK,
-								MessageBoxImage.Error);
+							App.ErrorMessage(Tx.T("msg.cannot delete backup file", "name", cultureFileName + ".bak"), ex, "Saving file, deleting old backups");
 							return false;
 						}
 						try
@@ -2506,11 +2417,7 @@ namespace Unclassified.TxEditor.ViewModels
 						}
 						catch (Exception ex)
 						{
-							MessageBox.Show(
-								Tx.T("msg.cannot backup file.v1", "name", cultureFileName, "msg", ex.Message),
-								Tx.T("msg.caption.error"),
-								MessageBoxButton.OK,
-								MessageBoxImage.Error);
+							App.ErrorMessage(Tx.T("msg.cannot backup file.v1", "name", cultureFileName), ex, "Saving file, creating backups");
 							return false;
 						}
 					}
@@ -2545,11 +2452,7 @@ namespace Unclassified.TxEditor.ViewModels
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(
-							Tx.T("msg.cannot write file.v1", "name", fileNamePrefix + "." + cultureName + ".xml", "msg", ex.Message),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("msg.cannot write file.v1", "name", fileNamePrefix + "." + cultureName + ".xml"), ex, "Saving file");
 						return false;
 					}
 				}
@@ -2570,11 +2473,7 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				if (deleteErrorCount > 0)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot delete new backup file.v1"),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Error);
+					App.ErrorMessage(Tx.T("msg.cannot delete new backup file.v1"));
 				}
 				DeletedCultureNames.Clear();
 			}
@@ -2584,11 +2483,7 @@ namespace Unclassified.TxEditor.ViewModels
 				FileInfo fi = new FileInfo(fileNamePrefix + ".txd");
 				if (fi.Exists && fi.IsReadOnly)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot write to read-only file"),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Error);
+					App.ErrorMessage(Tx.T("msg.cannot write to read-only file"));
 					return false;
 				}
 
@@ -2602,11 +2497,7 @@ namespace Unclassified.TxEditor.ViewModels
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(
-							Tx.T("msg.cannot delete backup file", "name", fileNamePrefix + ".txd.bak", "msg", ex.Message),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("msg.cannot delete backup file", "name", fileNamePrefix + ".txd.bak"), ex, "Saving file, deleting old backup");
 						return false;
 					}
 					try
@@ -2616,11 +2507,7 @@ namespace Unclassified.TxEditor.ViewModels
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(
-							Tx.T("msg.cannot backup file.v2", "name", fileNamePrefix + ".txd", "msg", ex.Message),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("msg.cannot backup file.v2", "name", fileNamePrefix + ".txd"), ex, "Saving file, creating backup");
 						return false;
 					}
 				}
@@ -2668,28 +2555,16 @@ namespace Unclassified.TxEditor.ViewModels
 							File.Delete(fileNamePrefix + ".txd");
 							File.Move(fileNamePrefix + ".txd.bak", fileNamePrefix + ".txd");
 
-							MessageBox.Show(
-								Tx.T("msg.cannot write file.v2 restored", "name", fileNamePrefix + ".txd", "msg", ex.Message),
-								Tx.T("msg.caption.error"),
-								MessageBoxButton.OK,
-								MessageBoxImage.Error);
+							App.ErrorMessage(Tx.T("msg.cannot write file.v2 restored", "name", fileNamePrefix + ".txd"), ex, "Saving file");
 						}
 						catch (Exception ex2)
 						{
-							MessageBox.Show(
-								Tx.T("msg.cannot write file.v2", "name", fileNamePrefix + ".txd", "msg", ex2.Message, "firstmsg", ex.Message),
-								Tx.T("msg.caption.error"),
-								MessageBoxButton.OK,
-								MessageBoxImage.Error);
+							App.ErrorMessage(Tx.T("msg.cannot write file.v2", "name", fileNamePrefix + ".txd", "firstmsg", ex.Message), ex2, "Saving file, restoring backup");
 						}
 					}
 					else
 					{
-						MessageBox.Show(
-							Tx.T("msg.cannot write file.v2 no backup", "name", fileNamePrefix + ".txd", "msg", ex.Message),
-							Tx.T("msg.caption.error"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Error);
+						App.ErrorMessage(Tx.T("msg.cannot write file.v2 no backup", "name", fileNamePrefix + ".txd"), ex, "Saving file");
 					}
 					return false;
 				}
@@ -2701,20 +2576,12 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 				catch (Exception ex)
 				{
-					MessageBox.Show(
-						Tx.T("msg.cannot delete new backup file.v2", "name", fileNamePrefix + ".txd.bak", "msg", ex.Message),
-						Tx.T("msg.caption.error"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Error);
+					App.ErrorMessage(Tx.T("msg.cannot delete new backup file.v2", "name", fileNamePrefix + ".txd.bak"), ex, "Saving file, deleting new backup");
 				}
 			}
 			else
 			{
-				MessageBox.Show(
-					Tx.T("msg.cannot save unsupported file version", "ver", fileVersion.ToString()),
-					Tx.T("msg.caption.error"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Error);
+				App.ErrorMessage(Tx.T("msg.cannot save unsupported file version", "ver", fileVersion.ToString()));
 				return false;
 			}
 			FileModified = false;
@@ -3065,29 +2932,17 @@ namespace Unclassified.TxEditor.ViewModels
 
 					if (culture.Length == 5)
 					{
-						MessageBox.Show(
-							Tx.T("msg.insert system keys.base culture", "name", culture.Substring(0, 2)),
-							Tx.T("msg.insert system keys.base culture.title"),
-							MessageBoxButton.OK,
-							MessageBoxImage.Information);
+						App.InformationMessage(Tx.T("msg.insert system keys.base culture", "name", culture.Substring(0, 2)));
 					}
 				}
 				else
 				{
-					MessageBox.Show(
-						Tx.T("msg.insert system keys.not available", "name", culture),
-						Tx.T("msg.insert system keys.not available.title"),
-						MessageBoxButton.OK,
-						MessageBoxImage.Warning);
+					App.WarningMessage(Tx.T("msg.insert system keys.not available", "name", culture));
 				}
 			}
 			else
 			{
-				MessageBox.Show(
-					Tx.T("msg.insert system keys.no culture selected"),
-					Tx.T("msg.insert system keys.no culture selected.title"),
-					MessageBoxButton.OK,
-					MessageBoxImage.Warning);
+				App.WarningMessage(Tx.T("msg.insert system keys.no culture selected"));
 			}
 		}
 
@@ -3101,7 +2956,7 @@ namespace Unclassified.TxEditor.ViewModels
 			{
 				DisplayName =
 					loadedFilePrefix +
-					(fileModified ? "*" : "") +
+					(FileModified ? "*" : "") +
 					(fileVersion == 1 ? " (v1)" : "") +
 					" " + Tx.T("window.title.in path") + " " + loadedFilePath + " – TxEditor";
 			}
@@ -3320,7 +3175,7 @@ namespace Unclassified.TxEditor.ViewModels
 					!isSearch ||
 					child.TextKey.ToLower().Contains(searchText.ToLower()) ||
 					child.CultureTextVMs.Any(ct => ct.Text != null && ct.Text.ToLower().Contains(searchText.ToLower()));
-				if (problemFilterActive)
+				if (ProblemFilterActive)
 				{
 					isVisible &= child.HasOwnProblem || child.HasProblem;
 				}
@@ -3396,17 +3251,17 @@ namespace Unclassified.TxEditor.ViewModels
 			suggestions.Clear();
 			HaveSuggestions = false;
 
-			if (string.IsNullOrEmpty(lastSelectedCulture))
+			if (string.IsNullOrEmpty(LastSelectedCulture))
 			{
 				AddDummySuggestion();
 				return;
 			}
-			if (!LoadedCultureNames.Contains(lastSelectedCulture))
+			if (!LoadedCultureNames.Contains(LastSelectedCulture))
 			{
 				AddDummySuggestion();
 				return;
 			}
-			SuggestionsCulture = CultureInfoName(new CultureInfo(lastSelectedCulture), false);
+			SuggestionsCulture = CultureInfoName(new CultureInfo(LastSelectedCulture), false);
 			//if (lastSelectedCulture == primaryCulture) return;
 
 			TextKeyViewModel tk = selectedTextKeys != null && selectedTextKeys.Count > 0 ? selectedTextKeys[0] : null;
@@ -3515,7 +3370,7 @@ namespace Unclassified.TxEditor.ViewModels
 			//commonWords.Add("your");
 
 			HashSet<string> commonWords;
-			if (lastSelectedCulture.StartsWith("de"))
+			if (LastSelectedCulture.StartsWith("de"))
 			{
 				// GERMAN STOPWORDS
 				// Zusammmengetragen von Marco Götze, Steffen Geyer
@@ -3617,7 +3472,7 @@ namespace Unclassified.TxEditor.ViewModels
 					"zwischen", "zwölf"
 				});
 			}
-			else if (lastSelectedCulture.StartsWith("en"))
+			else if (LastSelectedCulture.StartsWith("en"))
 			{
 				// English stop words
 				// Source: http://norm.al/2009/04/14/list-of-english-stop-words/ (MySQL fulltext, from 2009-10-03)
@@ -3697,7 +3552,7 @@ namespace Unclassified.TxEditor.ViewModels
 				float score = 0;
 				bool isExactMatch = false;
 				string otherBaseText = kvp.Value.CultureTextVMs[0].Text;
-				string otherTranslatedText = kvp.Value.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
+				string otherTranslatedText = kvp.Value.CultureTextVMs.First(ct => ct.CultureName == LastSelectedCulture).Text;
 
 				if (string.IsNullOrEmpty(otherBaseText)) continue;
 				if (string.IsNullOrEmpty(otherTranslatedText)) continue;
@@ -3766,8 +3621,8 @@ namespace Unclassified.TxEditor.ViewModels
 					SuggestionViewModel suggestion = new SuggestionViewModel(this);
 					suggestion.TextKey = kvp.Key.TextKey;
 					suggestion.BaseText = kvp.Key.CultureTextVMs[0].Text;
-					if (lastSelectedCulture != primaryCulture)
-						suggestion.TranslatedText = kvp.Key.CultureTextVMs.First(ct => ct.CultureName == lastSelectedCulture).Text;
+					if (LastSelectedCulture != PrimaryCulture)
+						suggestion.TranslatedText = kvp.Key.CultureTextVMs.First(ct => ct.CultureName == LastSelectedCulture).Text;
 					suggestion.IsExactMatch = kvp.Value >= 100000;
 					suggestion.ScoreNum = kvp.Value;
 					if (suggestion.IsExactMatch)

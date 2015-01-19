@@ -49,6 +49,30 @@ namespace Unclassified.TxEditor
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", "1", EnvironmentVariableTarget.User);
 			//Environment.SetEnvironmentVariable("TX_LOG_UNUSED", null, EnvironmentVariableTarget.User);
 
+			InitializeLocalisation();
+
+			App app = new App();
+			app.InitializeComponent();
+			app.Run();
+		}
+
+		/// <summary>
+		/// Called when the current process exits.
+		/// </summary>
+		/// <remarks>
+		/// The processing time in this event is limited. All handlers of this event together must
+		/// not take more than ca. 3 seconds. The processing will then be terminated.
+		/// </remarks>
+		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
+		{
+			if (App.Settings != null)
+			{
+				App.Settings.SettingsStore.Dispose();
+			}
+		}
+
+		private static void InitializeLocalisation()
+		{
 			// Setup translation data
 			try
 			{
@@ -71,8 +95,7 @@ namespace Unclassified.TxEditor
 				}
 				catch (Exception ex)
 				{
-					FL.Error(ex, "Setting application culture from configuration");
-					MessageBox.Show("The configured application UI culture cannot be set.\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					App.ErrorMessage("The configured application UI culture cannot be set.", ex, "Setting application culture from configuration");
 				}
 			}
 
@@ -91,24 +114,9 @@ namespace Unclassified.TxEditor
 			FL.AppErrorDialogTerminate = Tx.T("fieldlog.AppErrorDialogTerminate");
 			FL.AppErrorDialogContinue = Tx.T("fieldlog.AppErrorDialogContinue");
 
-			App app = new App();
-			app.InitializeComponent();
-			app.Run();
-		}
-
-		/// <summary>
-		/// Called when the current process exits.
-		/// </summary>
-		/// <remarks>
-		/// The processing time in this event is limited. All handlers of this event together must
-		/// not take more than ca. 3 seconds. The processing will then be terminated.
-		/// </remarks>
-		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
-		{
-			if (App.Settings != null)
-			{
-				App.Settings.SettingsStore.Dispose();
-			}
+			// Common error message box localisation
+			App.UnexpectedError = Tx.T("msg.error.unexpected error");
+			App.DetailsLogged = Tx.T("msg.error.details logged");
 		}
 	}
 }

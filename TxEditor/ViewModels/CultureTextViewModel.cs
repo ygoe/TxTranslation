@@ -49,13 +49,12 @@ namespace Unclassified.TxEditor.ViewModels
 			get { return cultureNativeName; }
 		}
 
-		private string text;
 		public string Text
 		{
-			get { return text; }
+			get { return GetValue<string>("Text"); }
 			set
 			{
-				if (CheckUpdate(value, ref text, "Text"))
+				if (SetValue(value, "Text"))
 				{
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
@@ -63,34 +62,30 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool isMissing;
 		public bool IsMissing
 		{
-			get { return isMissing; }
-			set { CheckUpdate(value, ref isMissing, "IsMissing"); }
+			get { return GetValue<bool>("IsMissing"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsMissing"); }
 		}
 
-		private bool isPlaceholdersProblem;
 		public bool IsPlaceholdersProblem
 		{
-			get { return isPlaceholdersProblem; }
-			set { CheckUpdate(value, ref isPlaceholdersProblem, "IsPlaceholdersProblem"); }
+			get { return GetValue<bool>("IsPlaceholdersProblem"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsPlaceholdersProblem"); }
 		}
 
-		private bool isPunctuationProblem;
 		public bool IsPunctuationProblem
 		{
-			get { return isPunctuationProblem; }
-			set { CheckUpdate(value, ref isPunctuationProblem, "IsPunctuationProblem"); }
+			get { return GetValue<bool>("IsPunctuationProblem"); }
+			set { SetValue(BooleanBoxes.Box(value), "IsPunctuationProblem"); }
 		}
 
-		private bool acceptMissing;
 		public bool AcceptMissing
 		{
-			get { return acceptMissing; }
+			get { return GetValue<bool>("AcceptMissing"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptMissing, "AcceptMissing"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptMissing"))
 				{
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
@@ -98,13 +93,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool acceptPlaceholders;
 		public bool AcceptPlaceholders
 		{
-			get { return acceptPlaceholders; }
+			get { return GetValue<bool>("AcceptPlaceholders"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptPlaceholders, "AcceptPlaceholders"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptPlaceholders"))
 				{
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
@@ -112,13 +106,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private bool acceptPunctuation;
 		public bool AcceptPunctuation
 		{
-			get { return acceptPunctuation; }
+			get { return GetValue<bool>("AcceptPunctuation"); }
 			set
 			{
-				if (CheckUpdate(value, ref acceptPunctuation, "AcceptPunctuation"))
+				if (SetValue(BooleanBoxes.Box(value), "AcceptPunctuation"))
 				{
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 					TextKeyVM.MainWindowVM.FileModified = true;
@@ -135,26 +128,24 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private StringCollection textKeyReferences;
 		public StringCollection TextKeyReferences
 		{
-			get { return textKeyReferences; }
+			get { return GetValue<StringCollection>("TextKeyReferences"); }
 			set
 			{
-				if (CheckUpdate(value, ref textKeyReferences, "TextKeyReferences"))
+				if (SetValue(value, "TextKeyReferences"))
 				{
 					TextKeyVM.MainWindowVM.ValidateTextKeysDelayed();
 				}
 			}
 		}
 
-		private bool lastOfLanguage;
 		public bool LastOfLanguage
 		{
-			get { return lastOfLanguage; }
+			get { return GetValue<bool>("LastOfLanguage"); }
 			set
 			{
-				if (CheckUpdate(value, ref lastOfLanguage, "LastOfLanguage"))
+				if (SetValue(BooleanBoxes.Box(value), "LastOfLanguage"))
 				{
 					if (value)
 					{
@@ -168,18 +159,16 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private Brush separatorBrush;
 		public Brush SeparatorBrush
 		{
-			get { return separatorBrush; }
-			set { CheckUpdate(value, ref separatorBrush, "SeparatorBrush"); }
+			get { return GetValue<Brush>("SeparatorBrush"); }
+			set { SetValue(value, "SeparatorBrush"); }
 		}
 
-		private Brush backgroundBrush;
 		public Brush BackgroundBrush
 		{
-			get { return backgroundBrush; }
-			set { CheckUpdate(value, ref backgroundBrush, "BackgroundBrush"); }
+			get { return GetValue<Brush>("BackgroundBrush"); }
+			set { SetValue(value, "BackgroundBrush"); }
 		}
 
 		private ObservableCollection<QuantifiedTextViewModel> quantifiedTextVMs;

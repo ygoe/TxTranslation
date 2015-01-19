@@ -37,8 +37,7 @@ namespace Unclassified.TxEditor
 			}
 			catch (Exception ex)
 			{
-				FL.Error(ex, "Parsing command line");
-				MessageBox.Show("Command line error: " + ex.Message, "TxEditor", MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessage("Command line error.", ex, "Parsing command line");
 				Application.Current.Shutdown();
 			}
 
@@ -87,7 +86,7 @@ namespace Unclassified.TxEditor
 			}
 			if (error)
 			{
-				MessageBox.Show("At least one of the files or directories specified at the command line could not be found.", "TxEditor", MessageBoxButton.OK, MessageBoxImage.Error);
+				App.ErrorMessage("At least one of the files or directories specified at the command line could not be found.");
 			}
 
 			// Scan for other files near the selected files
@@ -104,11 +103,7 @@ namespace Unclassified.TxEditor
 			//            // otherFiles should contain fileName and may contain additional files
 			//            if (otherFiles.Length > 1)
 			//            {
-			//                if (MessageBox.Show(
-			//                    "Other Tx dictionary files are located in the same directory as the selected file. Should they also be loaded?",
-			//                    "Load other files",
-			//                    MessageBoxButton.YesNo,
-			//                    MessageBoxImage.Question) == MessageBoxResult.Yes)
+			//                if (App.YesNoQuestion("Other Tx dictionary files are located in the same directory as the selected file. Should they also be loaded?"))
 			//                {
 			//                    // Duplicates will be removed later
 			//                    filesToLoad.AddRange(otherFiles);
@@ -213,5 +208,105 @@ namespace Unclassified.TxEditor
 		}
 
 		#endregion Settings
+
+		#region Message dialog methods
+
+		internal static string MessageBoxTitle = "FieldLogViewer";
+		internal static string UnexpectedError = "An unexpected error occured.";
+		internal static string DetailsLogged = "Details are written to the error log file.";
+
+		public static void InformationMessage(string message)
+		{
+			FL.Info(message);
+			MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+		}
+
+		public static void WarningMessage(string message)
+		{
+			FL.Warning(message);
+			MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
+		}
+
+		public static void WarningMessage(string message, Exception ex, string context)
+		{
+			FL.Warning(ex, context);
+			string exMsg = ex.Message;
+			var aex = ex as AggregateException;
+			if (aex != null && aex.InnerExceptions.Count == 1)
+			{
+				exMsg = aex.InnerExceptions[0].Message;
+			}
+			if (message == null)
+			{
+				message = UnexpectedError;
+			}
+			MessageBox.Show(
+				message + " " + exMsg,
+				MessageBoxTitle,
+				MessageBoxButton.OK,
+				MessageBoxImage.Warning);
+		}
+
+		public static void ErrorMessage(string message)
+		{
+			FL.Error(message);
+			MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+		}
+
+		public static void ErrorMessage(string message, Exception ex, string context)
+		{
+			FL.Error(ex, context);
+			string exMsg = ex.Message;
+			var aex = ex as AggregateException;
+			if (aex != null && aex.InnerExceptions.Count == 1)
+			{
+				exMsg = aex.InnerExceptions[0].Message;
+			}
+			if (message == null)
+			{
+				message = UnexpectedError;
+			}
+			MessageBox.Show(
+				message + " " + exMsg + "\n\n" + DetailsLogged,
+				MessageBoxTitle,
+				MessageBoxButton.OK,
+				MessageBoxImage.Error);
+		}
+
+		public static bool YesNoQuestion(string message)
+		{
+			FL.Trace(message);
+			var result = MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+			FL.Trace("Answer: " + result);
+			return result == MessageBoxResult.Yes;
+		}
+
+		public static bool YesNoInformation(string message)
+		{
+			FL.Info(message);
+			var result = MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Information);
+			FL.Trace("Answer: " + result);
+			return result == MessageBoxResult.Yes;
+		}
+
+		public static bool YesNoWarning(string message)
+		{
+			FL.Warning(message);
+			var result = MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+			FL.Trace("Answer: " + result);
+			return result == MessageBoxResult.Yes;
+		}
+
+		public static bool? YesNoCancelQuestion(string message)
+		{
+			FL.Trace(message);
+			var result = MessageBox.Show(message, MessageBoxTitle, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+			FL.Trace("Answer: " + result);
+			if (result == MessageBoxResult.Yes) return true;
+			if (result == MessageBoxResult.No) return false;
+			return null;
+		}
+
+		#endregion Message dialog methods
 	}
 }
