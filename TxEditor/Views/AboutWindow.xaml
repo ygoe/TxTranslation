@@ -1,11 +1,12 @@
 ﻿<Window
 	x:Class="Unclassified.TxEditor.Views.AboutWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:Tx="http://unclassified.software/source/txtranslation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	TextOptions.TextFormattingMode="Display"
 	UseLayoutRounding="True"
 	ShowInTaskbar="False"
-	Title="About TxEditor"
+	Title="{Tx:T 'window.about.title', Default='About TxEditor'}"
 	Height="290" Width="370" ResizeMode="NoResize"
 	WindowStartupLocation="CenterOwner"
 	Background="White">
@@ -19,7 +20,7 @@
 				<Button
 					Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right"
 					MinWidth="75" IsDefault="True" IsCancel="True"
-					Content="OK"/>
+					Content="{Tx:T 'window.about.button.ok', Default='OK'}"/>
 			</StackPanel>
 		</Border>
 
@@ -49,10 +50,10 @@
 				Text="Tx Translation &amp; Localisation for .NET and WPF"/>
 			<TextBlock
 				Grid.Row="2" Grid.Column="1" Margin="16,8,0,0">
-				<Run>Version</Run> <Run Name="VersionText">xxxx</Run><LineBreak/>
+				<Run Text="{Tx:T 'window.about.version', Default='Version'}"/> <Run Name="VersionText">xxxx</Run><LineBreak/>
 				<Run>© by Yves Goergen</Run><LineBreak/>
-				<Run>Licence: GNU GPL v3</Run><LineBreak/>
-				<Run>Web:</Run> <Hyperlink Click="Hyperlink_Click">unclassified.software/txtranslation</Hyperlink>
+				<Run Text="{Tx:TC 'window.about.licence', Default='Licence:'}"/> <Run>GNU GPL v3</Run><LineBreak/>
+				<Run Text="{Tx:TC 'window.about.web', Default='Web:'}"/> <Hyperlink Click="Hyperlink_Click">unclassified.software/txtranslation</Hyperlink>
 			</TextBlock>
 			<Image
 				Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="16,8,0,4"

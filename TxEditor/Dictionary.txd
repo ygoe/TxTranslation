@@ -166,7 +166,7 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="task dialog.button.switch">&amp;Wechseln</text>
 		<text key="task dialog.button.upgrade">Akt&amp;ualisieren</text>
 		<text key="toolbar.app">Anwendung</text>
-		<text key="toolbar.app.about">Über</text>
+		<text key="toolbar.app.about">Über TxEditor</text>
 		<text key="toolbar.app.about.tooltip">Zeigt Versions- und Copyright-Informationen zur Anwendung an.</text>
 		<text key="toolbar.app.help">Hilfe</text>
 		<text key="toolbar.app.help.tooltip">Zeigt die TxTranslation-Dokumentation (PDF) an.</text>
@@ -448,6 +448,11 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="validation.key name.starts with colon">Schlüssel beginnt mit einem Doppelpunkt (:).</text>
 		<text key="validation.key name.starts with point">Schlüssel beginnt mit einem Punkt (.).</text>
 		<text key="validation.more">, weitere Fehler</text>
+		<text key="window.about.button.ok">OK</text>
+		<text key="window.about.licence">Lizenz</text>
+		<text key="window.about.title">Über TxEditor</text>
+		<text key="window.about.version">Version</text>
+		<text key="window.about.web">Web</text>
 		<text key="window.date and time formats.abbrev">Abgekürzt</text>
 		<text key="window.date and time formats.culture">Kultur</text>
 		<text key="window.date and time formats.d">Tag</text>
@@ -696,7 +701,7 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="task dialog.button.switch">&amp;Switch</text>
 		<text key="task dialog.button.upgrade">&amp;Upgrade</text>
 		<text key="toolbar.app">Application</text>
-		<text key="toolbar.app.about">About</text>
+		<text key="toolbar.app.about">About TxEditor</text>
 		<text key="toolbar.app.about.tooltip">Shows version and copyright information about the application.</text>
 		<text key="toolbar.app.help">Help</text>
 		<text key="toolbar.app.help.tooltip">Shows the TxTranslation documentation (PDF).</text>
@@ -994,6 +999,11 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="validation.key name.starts with colon">Key starts with a colon (:).</text>
 		<text key="validation.key name.starts with point">Key starts with a point (.).</text>
 		<text key="validation.more">, more errors</text>
+		<text key="window.about.button.ok">OK</text>
+		<text key="window.about.licence">Licence</text>
+		<text key="window.about.title">About TxEditor</text>
+		<text key="window.about.version">Version</text>
+		<text key="window.about.web">Web</text>
 		<text key="window.date and time formats.abbrev">Abbreviated</text>
 		<text key="window.date and time formats.culture">Culture</text>
 		<text key="window.date and time formats.d">Day</text>
