@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Xml;
 using Microsoft.Win32;
 using TaskDialogInterop;
@@ -1717,6 +1716,8 @@ namespace Unclassified.TxEditor.ViewModels
 
 		#region Filter section
 
+		// Placeholder
+
 		#endregion Filter section
 
 		#region Application section
@@ -1740,26 +1741,9 @@ namespace Unclassified.TxEditor.ViewModels
 
 		private void OnAbout()
 		{
-			var root = MainWindow.Instance.Content as UIElement;
-
-			var blur = new BlurEffect();
-			blur.Radius = 0;
-			root.Effect = blur;
-
-			root.AnimateEase(UIElement.OpacityProperty, 1, 0.6, TimeSpan.FromSeconds(1));
-			blur.AnimateEase(BlurEffect.RadiusProperty, 0, 4, TimeSpan.FromSeconds(0.5));
-
 			var win = new AboutWindow();
 			win.Owner = MainWindow.Instance;
 			win.ShowDialog();
-
-			root.AnimateEase(UIElement.OpacityProperty, 0.6, 1, TimeSpan.FromSeconds(0.2));
-			blur.AnimateEase(BlurEffect.RadiusProperty, 4, 0, TimeSpan.FromSeconds(0.2));
-
-			DelayedCall.Start(() =>
-			{
-				root.Effect = null;
-			}, 500);
 		}
 
 		private void OnHelp()

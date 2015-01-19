@@ -429,6 +429,7 @@
     <Resource Include="Images\comment_yellow.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\unclassified-software.png" />
     <Resource Include="Images\wizard.png" />
   </ItemGroup>
   <ItemGroup>
