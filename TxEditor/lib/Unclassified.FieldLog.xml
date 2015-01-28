@@ -9,10 +9,17 @@
             The application error dialog.
             </summary>
         </member>
-        <member name="M:Unclassified.FieldLog.AppErrorDialog.ShowError(System.Boolean,System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.AppErrorDialog.ShowError(System.Boolean,System.String,System.Object,System.Boolean)">
             <summary>
             Shows the application error dialog. This is the only method that is called to show or
             update an error dialog. If a dialog is already open, the error is added to it.
+            </summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.AppErrorDialog.CanShowDetails">
+            <summary>
+            Gets or sets a value indicating whether the exception details object can be shown to the
+            user. This should be set to false for obfuscated applications because there will be no
+            or no readable data to display. (Default: true)
             </summary>
         </member>
         <member name="T:Unclassified.FieldLog.CheckTimeThread">
@@ -1210,9 +1217,9 @@
             Locks access to custom time measurement data.
             </summary>
         </member>
-        <member name="F:Unclassified.FieldLog.FL.threadTransientItems">
+        <member name="F:Unclassified.FieldLog.FL.threadRetainedItems">
             <summary>
-            Contains all log items that are transiently buffered in the current thread.
+            Contains all retained log items in the current thread.
             </summary>
         </member>
         <member name="F:Unclassified.FieldLog.FL.configFileNameOverride">
@@ -1261,12 +1268,6 @@
         <member name="F:Unclassified.FieldLog.FL.EntryAssembly">
             <summary>
             A reference to the EntryAssembly. This is determined by other means for ASP.NET
-            applications.
-            </summary>
-        </member>
-        <member name="F:Unclassified.FieldLog.FL.EntryAssemblyLocation">
-            <summary>
-            The entry assembly's Location value. This is determined by other means for ASP.NET
             applications.
             </summary>
         </member>
@@ -1328,13 +1329,57 @@
             This method is not available in the NET20 build.
             </remarks>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.ExceptionUserMessageRecursive(Unclassified.FieldLog.FieldLogException)">
+        <member name="M:Unclassified.FieldLog.FL.ShowErrorDialog(System.Exception)">
+            <summary>
+            Shows the default error dialog for an exception, initiated by user code.
+            </summary>
+            <param name="ex">The exception to display.</param>
+            <remarks>
+            A FieldLogItem should be logged before calling this method. This dialog is not modal so
+            the application continues to run. Additional errors are collected in the error dialog.
+            The dialog is top-most so it will overlay the application window.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ShowErrorDialog(System.String,System.Object)">
+            <summary>
+            Shows the default error dialog, initiated by user code. An event should be logged before
+            calling this method.
+            </summary>
+            <param name="errorMsg">The error message to display.</param>
+            <param name="detailsObject">An object to display in the details grid view. Can be null.</param>
+            <remarks>
+            A FieldLogItem should be logged before calling this method. This dialog is not modal so
+            the application continues to run. Additional errors are collected in the error dialog.
+            The dialog is top-most so it will overlay the application window.
+            </remarks>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.ExceptionUserMessageRecursive(System.Exception,System.Boolean)">
             <summary>
             Formats the message text of an exception and all inner exceptions for display in a user
             dialog.
             </summary>
             <param name="ex">The exception to format.</param>
+            <param name="htmlFormat">Specifies whether the output is formatted as HTML.</param>
             <returns>The formatted text for <paramref name="ex"/>.</returns>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.SetAppErrorDialogTexts(System.Func{System.String,System.String})">
+            <summary>
+            Sets all application error dialog texts using a translator function.
+            </summary>
+            <param name="translator">A function that translates the property name to the localised text.</param>
+            <remarks>
+            This method is not available in the NET20 build. If the translator function returns
+            null, an empty string, or a string that contains the name of the requested property
+            (case-insensitive), that property is not changed. Default texts are in English.
+            </remarks>
+            <example>
+            The following example shows how to set texts from a TxTranslation dictionary, where all
+            texts are stored in the "fieldlog" key, under subkeys named like the property.
+            Properties for which no matching text key is defined will keep their default value.
+            <code lang="C#"><![CDATA[
+            FL.SetAppErrorDialogTexts(name => Tx.T("fieldlog." + name));
+            ]]></code>
+            </example>
         </member>
         <member name="M:Unclassified.FieldLog.FL.Trace(System.String)">
             <summary>
@@ -1427,93 +1472,93 @@
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.TraceTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.TraceRetained(System.String)">
             <summary>
-            Writes a text log item with Trace priority to the transient buffer.
+            Writes a retained text log item with Trace priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.CheckpointTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.CheckpointRetained(System.String)">
             <summary>
-            Writes a text log item with Checkpoint priority to the transient buffer.
+            Writes a retained text log item with Checkpoint priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.InfoTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.InfoRetained(System.String)">
             <summary>
-            Writes a text log item with Info priority to the transient buffer.
+            Writes a retained text log item with Info priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.NoticeTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.NoticeRetained(System.String)">
             <summary>
-            Writes a text log item with Notice priority to the transient buffer.
+            Writes a retained text log item with Notice priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.WarningTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.WarningRetained(System.String)">
             <summary>
-            Writes a text log item with Warning priority to the transient buffer.
+            Writes a retained text log item with Warning priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.ErrorTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.ErrorRetained(System.String)">
             <summary>
-            Writes a text log item with Error priority to the transient buffer.
+            Writes a retained text log item with Error priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.CriticalTransient(System.String)">
+        <member name="M:Unclassified.FieldLog.FL.CriticalRetained(System.String)">
             <summary>
-            Writes a text log item with Critical priority to the transient buffer.
+            Writes a retained text log item with Critical priority.
             </summary>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.TraceTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.TraceRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Trace priority to the transient buffer.
-            </summary>
-            <param name="text">The text message.</param>
-            <param name="details">The additional details of the log event.</param>
-        </member>
-        <member name="M:Unclassified.FieldLog.FL.CheckpointTransient(System.String,System.String)">
-            <summary>
-            Writes a text log item with Checkpoint priority to the transient buffer.
+            Writes a retained text log item with Trace priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.InfoTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.CheckpointRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Info priority to the transient buffer.
+            Writes a retained text log item with Checkpoint priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.NoticeTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.InfoRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Notice priority to the transient buffer.
+            Writes a retained text log item with Info priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.WarningTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.NoticeRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Warning priority to the transient buffer.
+            Writes a retained text log item with Notice priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.ErrorTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.WarningRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Error priority to the transient buffer.
+            Writes a retained text log item with Warning priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.CriticalTransient(System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.ErrorRetained(System.String,System.String)">
             <summary>
-            Writes a text log item with Critical priority to the transient buffer.
+            Writes a retained text log item with Error priority.
+            </summary>
+            <param name="text">The text message.</param>
+            <param name="details">The additional details of the log event.</param>
+        </member>
+        <member name="M:Unclassified.FieldLog.FL.CriticalRetained(System.String,System.String)">
+            <summary>
+            Writes a retained text log item with Critical priority.
             </summary>
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
@@ -1567,51 +1612,51 @@
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.TraceDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.TraceDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Trace priority to the transient buffer.
+            Writes a retained data log item with Trace priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.CheckpointDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.CheckpointDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Checkpoint priority to the transient buffer.
+            Writes a retained data log item with Checkpoint priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.InfoDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.InfoDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Info priority to the transient buffer.
+            Writes a retained data log item with Info priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.NoticeDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.NoticeDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Notice priority to the transient buffer.
+            Writes a retained data log item with Notice priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.WarningDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.WarningDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Warning priority to the transient buffer.
+            Writes a retained data log item with Warning priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.ErrorDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.ErrorDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Error priority to the transient buffer.
+            Writes a retained data log item with Error priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.CriticalDataTransient(System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.CriticalDataRetained(System.String,System.Object)">
             <summary>
-            Writes a data log item with Critical priority to the transient buffer.
+            Writes a retained data log item with Critical priority.
             </summary>
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
@@ -1778,16 +1823,16 @@
             <param name="text">The text message.</param>
             <param name="details">The additional details of the log event.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.TextTransient(Unclassified.FieldLog.FieldLogPriority,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.TextRetained(Unclassified.FieldLog.FieldLogPriority,System.String)">
             <summary>
-            Writes a text log item to the transient buffer.
+            Writes a retained text log item.
             </summary>
             <param name="priority">The priority of the log item.</param>
             <param name="text">The text message.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.TextTransient(Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
+        <member name="M:Unclassified.FieldLog.FL.TextRetained(Unclassified.FieldLog.FieldLogPriority,System.String,System.String)">
             <summary>
-            Writes a text log item to the transient buffer.
+            Writes a retained text log item.
             </summary>
             <param name="priority">The priority of the log item.</param>
             <param name="text">The text message.</param>
@@ -1801,9 +1846,9 @@
             <param name="name">The name of the data item.</param>
             <param name="value">The value of the data item.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.DataTransient(Unclassified.FieldLog.FieldLogPriority,System.String,System.Object)">
+        <member name="M:Unclassified.FieldLog.FL.DataRetained(Unclassified.FieldLog.FieldLogPriority,System.String,System.Object)">
             <summary>
-            Writes a data log item to the transient buffer.
+            Writes a retained data log item.
             </summary>
             <param name="priority">The priority of the log item.</param>
             <param name="name">The name of the data item.</param>
@@ -1901,30 +1946,17 @@
             </summary>
             <param name="item">The log item to write.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.LogTransient(Unclassified.FieldLog.FieldLogItem)">
+        <member name="M:Unclassified.FieldLog.FL.LogRetained(Unclassified.FieldLog.FieldLogItem)">
             <summary>
-            Writes a log item to the transient buffer for the current thread. All buffered log
-            items are only written to the log file if a non-transient (normal) log item is written
-            through another log method. The transient buffer can be cleared before it was written.
+            Writes a log item to the retained items buffer for the current thread. All retained log
+            items are only written to the log file if a non-retained (normal) log item is written
+            through another log method. The retained items can be cleared before they were written.
             </summary>
-            <param name="item">The log item to add to the transient buffer.</param>
+            <param name="item">The log item to add to the retained items buffer.</param>
         </member>
-        <member name="M:Unclassified.FieldLog.FL.LogBuffer(Unclassified.FieldLog.FieldLogItem)">
+        <member name="M:Unclassified.FieldLog.FL.ClearRetained">
             <summary>
-            Writes a log item to the transient buffer for the current thread. All buffered log
-            items are only written to the log file if a non-transient (normal) log item is written
-            through another log method. The transient buffer can be cleared before it was written.
-            </summary>
-            <param name="item">The log item to add to the transient buffer.</param>
-        </member>
-        <member name="M:Unclassified.FieldLog.FL.ClearTransient">
-            <summary>
-            Clears the transient log items buffer for the current thread.
-            </summary>
-        </member>
-        <member name="M:Unclassified.FieldLog.FL.ClearLogBuffer">
-            <summary>
-            Clears the transient log items buffer for the current thread.
+            Clears the retained log items buffer for the current thread.
             </summary>
         </member>
         <member name="M:Unclassified.FieldLog.FL.LogTimeout(Unclassified.FieldLog.FieldLogItem,System.Int32)">
@@ -2393,6 +2425,12 @@
             <param name="defaultValue">The value to return if the value cannot be parsed or used.</param>
             <returns>The parsed value, or <paramref name="defaultValue"/> on error.</returns>
         </member>
+        <member name="P:Unclassified.FieldLog.FL.EntryAssemblyLocation">
+            <summary>
+            The entry assembly's Location value. This is determined by other means for ASP.NET
+            applications.
+            </summary>
+        </member>
         <member name="P:Unclassified.FieldLog.FL.SessionId">
             <summary>
             Gets an ID that uniquely identifies the current execution of the application.
@@ -2475,6 +2513,9 @@
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTerminating">
             <summary>Gets or sets the application error user dialog intro if the application will be terminated.</summary>
         </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogWeb">
+            <summary>Gets or sets the application error user dialog intro for web applications.</summary>
+        </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContext">
             <summary>Gets or sets the application error user dialog context caption, including a colon at the end.</summary>
         </member>
@@ -2493,17 +2534,26 @@
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogDetails">
             <summary>Gets or sets the application error user dialog label for error details.</summary>
         </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogWebDescription">
+            <summary>Gets or sets the application error user dialog description for web applications.</summary>
+        </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogSendLogs">
             <summary>Gets or sets the application error user dialog label for sending logs.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogNext">
-            <summary>Gets or sets the application error user dialog label for the next error.</summary>
+            <summary>Gets or sets the application error user dialog button label for the next error.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogTerminate">
-            <summary>Gets or sets the application error user dialog label to terminate.</summary>
+            <summary>Gets or sets the application error user dialog button label to terminate.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppErrorDialogContinue">
-            <summary>Gets or sets the application error user dialog label to continue.</summary>
+            <summary>Gets or sets the application error user dialog button label to continue.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogGoBack">
+            <summary>Gets or sets the application error user dialog button label to go back.</summary>
+        </member>
+        <member name="P:Unclassified.FieldLog.FL.AppErrorDialogRetry">
+            <summary>Gets or sets the application error user dialog button label to retry.</summary>
         </member>
         <member name="P:Unclassified.FieldLog.FL.AppUptime">
             <summary>
