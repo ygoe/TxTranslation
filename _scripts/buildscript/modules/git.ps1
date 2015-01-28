@@ -1,3 +1,9 @@
+# PowerShell build framework
+# Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/psbuild
+#
+# Copying and distribution of this file, with or without modification, are permitted provided the
+# copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
 # The git module provides Git source control functions.
 
 # Commits the working directory modifications to the current branch.
@@ -114,13 +120,13 @@ function Do-Git-Export($action)
 	Pop-Location
 
 	# Delete previous archive if it exists
-	if (Test-Path (MakeRootedPath($archive)))
+	if (Test-Path (MakeRootedPath $archive))
 	{
-		Remove-Item (MakeRootedPath($archive)) -ErrorAction Stop
+		Remove-Item (MakeRootedPath $archive) -ErrorAction Stop
 	}
 
 	Push-Location "$sourcePath\.tmp.export"
-	& $sevenZipBin a (MakeRootedPath($archive)) -mx=9 * | where {
+	& $sevenZipBin a (MakeRootedPath $archive) -mx=9 * | where {
 		$_ -notmatch "^7-Zip " -and `
 		$_ -notmatch "^Scanning$" -and `
 		$_ -notmatch "^Creating archive " -and `
@@ -168,9 +174,9 @@ function Do-Git-Log($action)
 	# Read the output log file and determine the last added revision
 	$data = ""
 	$lastRev = ""
-	if (Test-Path (MakeRootedPath($logFile)))
+	if (Test-Path (MakeRootedPath $logFile))
 	{
-		$data = [System.IO.File]::ReadAllText((MakeRootedPath($logFile)))
+		$data = [System.IO.File]::ReadAllText((MakeRootedPath $logFile))
 		if ($data -Match " - .+ \((.+)\)")
 		{
 			$lastRev = ([regex]::Match($data, " - .+ \((.+)\)")).Groups[1].Value
@@ -261,8 +267,8 @@ function Do-Git-Log($action)
 
 	# Write back the complete file
 	$data = ($newMsgs + $data).Trim() + "`r`n"
-	[System.IO.File]::WriteAllText((MakeRootedPath($logFile)), $data)
+	[System.IO.File]::WriteAllText((MakeRootedPath $logFile), $data)
 
 	# Open file in editor for manual edits of the raw changes
-	Start-Process (MakeRootedPath($logFile))
+	Start-Process (MakeRootedPath $logFile)
 }

@@ -1,3 +1,9 @@
+# PowerShell build framework
+# Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/psbuild
+#
+# Copying and distribution of this file, with or without modification, are permitted provided the
+# copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
 # The innosetup module provides Inno Setup functions.
 
 # Creates a setup package with Inno Setup.
@@ -40,7 +46,7 @@ function Do-Create-Setup($action)
 		exit 1
 	}
 
-	& $innosetupBin /q (MakeRootedPath($configFile)) /dBuildConfig=$configuration /dRevId=$revId
+	& $innosetupBin /q (MakeRootedPath $configFile) /dBuildConfig=$configuration /dRevId=$revId
 	if (-not $?)
 	{
 		WaitError "Creating setup failed"

@@ -99,6 +99,9 @@ _NCrunch_*
 # Dotfuscator
 Dotfuscated/
 
+# PowerShell build framework tools
+!_scripts/bin/
+
 # Windows/other detritus
 Thumbs.db
 ehthumbs.db

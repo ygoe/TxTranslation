@@ -1,3 +1,9 @@
+# PowerShell build framework
+# Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/psbuild
+#
+# Copying and distribution of this file, with or without modification, are permitted provided the
+# copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
 # The sign module provides digital signing functions.
 
 # Digitally signs a file.
@@ -66,7 +72,7 @@ function Do-Sign-File($action)
 	{
 		foreach ($timestampServer in $timestampServers)
 		{
-			$output = & $signtoolBin sign /f (MakeRootedPath($keyFile)) /p "$password" /t $timestampServer (MakeRootedPath($file)) 2>&1
+			$output = & $signtoolBin sign /f (MakeRootedPath $keyFile) /p "$password" /t $timestampServer (MakeRootedPath $file) 2>&1
 			if ($?)
 			{
 				# Sucessful, leave this function

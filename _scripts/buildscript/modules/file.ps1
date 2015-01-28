@@ -1,3 +1,9 @@
+# PowerShell build framework
+# Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/psbuild
+#
+# Copying and distribution of this file, with or without modification, are permitted provided the
+# copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
 # The file module provides file management and execution functions.
 
 # Creates an archive from a list of files.
@@ -104,7 +110,7 @@ function Do-Create-Archive($action)
 		New-Item -ItemType Directory "$sourcePath\.tmp.archive" -ErrorAction Stop | Out-Null
 
 		# Prepare all files in a temporary directory
-		ForEach ($line in Get-Content (MakeRootedPath($listFile)) -ErrorAction Stop)
+		ForEach ($line in Get-Content (MakeRootedPath $listFile) -ErrorAction Stop)
 		{
 			if (-not $line.Trim()) { continue }
 			if ($line.StartsWith("#")) { continue }
@@ -123,13 +129,13 @@ function Do-Create-Archive($action)
 			{
 				New-Item -ItemType File -Path "$sourcePath\.tmp.archive\$dest" -Force -ErrorAction Stop | Out-Null
 			}
-			Copy-Item -Recurse -Force (MakeRootedPath($src)) "$sourcePath\.tmp.archive\$dest" -ErrorAction Stop
+			Copy-Item -Recurse -Force (MakeRootedPath $src) "$sourcePath\.tmp.archive\$dest" -ErrorAction Stop
 		}
 
 		# Delete previous archive if it exists
-		if (Test-Path (MakeRootedPath($archive)))
+		if (Test-Path (MakeRootedPath $archive))
 		{
-			Remove-Item (MakeRootedPath($archive)) -ErrorAction Stop
+			Remove-Item (MakeRootedPath $archive) -ErrorAction Stop
 		}
 	}
 	catch
@@ -139,7 +145,7 @@ function Do-Create-Archive($action)
 	}
 
 	Push-Location "$sourcePath\.tmp.archive"
-	& $sevenZipBin a (MakeRootedPath($archive)) -mx=9 * | where {
+	& $sevenZipBin a (MakeRootedPath $archive) -mx=9 * | where {
 		$_ -notmatch "^7-Zip " -and `
 		$_ -notmatch "^Scanning$" -and `
 		$_ -notmatch "^Creating archive " -and `
@@ -166,7 +172,7 @@ function Do-Copy-File($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Copying $src to $dest..."
 
-	Copy-Item (MakeRootedPath($src)) (MakeRootedPath($dest))
+	Copy-Item (MakeRootedPath $src) (MakeRootedPath $dest)
 	if (-not $?)
 	{
 		WaitError "Copy failed"
@@ -181,7 +187,7 @@ function Do-Delete-File($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Deleting $file..."
 
-	Remove-Item (MakeRootedPath($file))
+	Remove-Item (MakeRootedPath $file)
 	if (-not $?)
 	{
 		WaitError "Deletion failed"
@@ -198,7 +204,7 @@ function Do-Exec-File($action)
 	Write-Host -ForegroundColor DarkCyan "Executing $file $params..."
 
 	# Wait until the started process has finished
-	Invoke-Expression ((MakeRootedPath($file)) + " " + $params + " | Out-Host")
+	Invoke-Expression ((MakeRootedPath $file) + " " + $params + " | Out-Host")
 	if ($LASTEXITCODE -ne 0)
 	{
 		WaitError "Execution failed"
@@ -214,7 +220,7 @@ function Do-Exec-Console($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Executing $file $params..."
 
-	Invoke-Expression ((MakeRootedPath($file)) + " " + $params)
+	Invoke-Expression ((MakeRootedPath $file) + " " + $params)
 	if ($LASTEXITCODE -ne 0)
 	{
 		WaitError "Execution failed"
@@ -229,6 +235,6 @@ function Do-Explorer-Select($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Selecting $file in Explorer..."
 
-	$file = MakeRootedPath($file)
+	$file = MakeRootedPath $file
 	Start-Process "$env:SystemRoot\explorer.exe" "/select,`"$file`""
 }

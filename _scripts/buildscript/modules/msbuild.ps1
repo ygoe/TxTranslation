@@ -1,10 +1,16 @@
+# PowerShell build framework
+# Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/psbuild
+#
+# Copying and distribution of this file, with or without modification, are permitted provided the
+# copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
 # The msbuild module provides Microsoft MSBuild functions.
 
 # Builds a Visual Studio solution.
 #
 # $solution = The file name of the solution to build.
-# $configuration = The build configuration to select.
-# $buildPlatform = The platform to select.
+# $configuration = The build configuration to select (e.g.: Debug, Release).
+# $buildPlatform = The platform to select (e.g.: x86, x64, Any CPU).
 #
 # To disable parallel build, set the variable $noParallelBuild = $true.
 #
@@ -54,7 +60,7 @@ function Do-Build-Solution($action)
 	if ($global:gitUsed)
 	{
 		$env:FASTBUILD = "1"
-		& ($toolsPath + "GitRevisionTool") --multi-project --assembly-info (MakeRootedPath($solution))
+		& (Join-Path $absToolsPath "GitRevisionTool") --multi-project --assembly-info (MakeRootedPath $solution)
 		if (-not $?)
 		{
 			WaitError "GitRevisionTool multi-project patch failed"
@@ -64,7 +70,7 @@ function Do-Build-Solution($action)
 	if ($global:svnUsed)
 	{
 		$env:FASTBUILD = "1"
-		& ($toolsPath + "SvnRevisionTool") --multi-project --assembly-info (MakeRootedPath($solution))
+		& (Join-Path $absToolsPath "SvnRevisionTool") --multi-project --assembly-info (MakeRootedPath $solution)
 		if (-not $?)
 		{
 			WaitError "SvnRevisionTool multi-project patch failed"
@@ -90,7 +96,7 @@ function Do-Build-Solution($action)
 	#   1591: Missing XML documentation for public type or member
 
 	$buildError = $false
-	& $msbuildBin /nologo (MakeRootedPath($solution)) /t:Rebuild /p:Configuration="$configuration" /p:Platform="$buildPlatform" /v:minimal /p:WarningLevel=1 $mParam
+	& $msbuildBin /nologo (MakeRootedPath $solution) /t:Rebuild /p:Configuration="$configuration" /p:Platform="$buildPlatform" /v:minimal /p:WarningLevel=1 $mParam
 	if (-not $?)
 	{
 		$buildError = $true
@@ -100,7 +106,7 @@ function Do-Build-Solution($action)
 	if ($global:gitUsed)
 	{
 		$env:FASTBUILD = ""
-		& ($toolsPath + "GitRevisionTool") --multi-project --restore (MakeRootedPath($solution))
+		& (Join-Path $absToolsPath "GitRevisionTool") --multi-project --restore (MakeRootedPath $solution)
 		if (-not $?)
 		{
 			if ($buildError)
@@ -117,7 +123,7 @@ function Do-Build-Solution($action)
 	if ($global:svnUsed)
 	{
 		$env:FASTBUILD = ""
-		& ($toolsPath + "SvnRevisionTool") --multi-project --restore (MakeRootedPath($solution))
+		& (Join-Path $absToolsPath "SvnRevisionTool") --multi-project --restore (MakeRootedPath $solution)
 		if (-not $?)
 		{
 			if ($buildError)
