@@ -58,7 +58,7 @@ function Do-Git-Commit($action)
 	}
 	
 	# Wait until the started process has finished
-	& $tgitBin /command:commit /path:"$sourcePath" | Out-Host
+	& $tgitBin /command:commit /path:"$rootDir" | Out-Host
 	if (-not $?)
 	{
 		WaitError "Git commit failed"
@@ -73,10 +73,17 @@ function Do-Git-Export($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Git export to $archive..."
 
-	if ($revId.Contains("+"))
+	# Warn on modified working directory
+	# (Set a dummy format so that it won't go search an AssemblyInfo file somewhere. We don't provide a suitable path for that.)
+	$consoleEncoding = [System.Console]::OutputEncoding
+	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+	$revId = Invoke-Expression ((Join-Path $absToolsPath "NetRevisionTool") + " /format dummy /rejectmod `"$rootDir`"")
+	if ($LASTEXITCODE -ne 0)
 	{
+		[System.Console]::OutputEncoding = $consoleEncoding
 		Write-Host -ForegroundColor Yellow "Warning: The local working copy is modified! Uncommitted changes are NOT exported."
 	}
+	[System.Console]::OutputEncoding = $consoleEncoding
 
 	# Find the Git binary
 	$gitBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
@@ -102,15 +109,15 @@ function Do-Git-Export($action)
 	}
 
 	# Delete previous export if it exists
-	if (Test-Path "$sourcePath\.tmp.export")
+	if (Test-Path "$rootDir\.tmp.export")
 	{
-		Remove-Item "$sourcePath\.tmp.export" -Recurse -ErrorAction Stop
+		Remove-Item "$rootDir\.tmp.export" -Recurse -ErrorAction Stop
 	}
 
 	# Create temp directory
-	New-Item -ItemType Directory "$sourcePath\.tmp.export" -ErrorAction Stop | Out-Null
+	New-Item -ItemType Directory "$rootDir\.tmp.export" -ErrorAction Stop | Out-Null
 
-	Push-Location "$sourcePath"
+	Push-Location "$rootDir"
 	& $gitBin checkout-index -a --prefix ".tmp.export\"
 	if (-not $?)
 	{
@@ -125,7 +132,7 @@ function Do-Git-Export($action)
 		Remove-Item (MakeRootedPath $archive) -ErrorAction Stop
 	}
 
-	Push-Location "$sourcePath\.tmp.export"
+	Push-Location "$rootDir\.tmp.export"
 	& $sevenZipBin a (MakeRootedPath $archive) -mx=9 * | where {
 		$_ -notmatch "^7-Zip " -and `
 		$_ -notmatch "^Scanning$" -and `
@@ -142,7 +149,7 @@ function Do-Git-Export($action)
 	Pop-Location
 
 	# Clean up
-	Remove-Item "$sourcePath\.tmp.export" -Recurse
+	Remove-Item "$rootDir\.tmp.export" -Recurse
 }
 
 function Do-Git-Log($action)
@@ -152,10 +159,18 @@ function Do-Git-Log($action)
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Git log dump..."
 	
-	if ($revId.Contains("+"))
+	# Stop on modified working directory
+	# (Set a dummy format so that it won't go search an AssemblyInfo file somewhere. We don't provide a suitable path for that.)
+	$consoleEncoding = [System.Console]::OutputEncoding
+	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+	$revId = Invoke-Expression ((Join-Path $absToolsPath "NetRevisionTool") + " /format dummy /rejectmod `"$rootDir`"")
+	if ($LASTEXITCODE -ne 0)
 	{
-		Write-Host -ForegroundColor Yellow "Warning: The local working copy is modified!"
+		[System.Console]::OutputEncoding = $consoleEncoding
+		WaitError "The local working copy is modified"
+		exit 1
 	}
+	[System.Console]::OutputEncoding = $consoleEncoding
 
 	# Find the Git binary
 	$gitBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1" "InstallLocation"
@@ -183,12 +198,19 @@ function Do-Git-Log($action)
 		}
 	}
 	
-	Write-Host Adding log messages since commit $lastRev
+	if ($lastRev)
+	{
+		Write-Host "Adding log messages since commit $lastRev"
+	}
+	else
+	{
+		Write-Host "Adding all log messages since the first commit (new log file)"
+	}
 	
 	# Get last commit date
 	$consoleEncoding = [System.Console]::OutputEncoding
 	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-	Push-Location "$sourcePath"
+	Push-Location "$rootDir"
 	$commitDate = (& $gitBin log -1 --pretty=format:"%ai" 2>&1)
 	if (-not $?)
 	{
@@ -210,7 +232,7 @@ function Do-Git-Log($action)
 	# Get last commit hash
 	$consoleEncoding = [System.Console]::OutputEncoding
 	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-	Push-Location "$sourcePath"
+	Push-Location "$rootDir"
 	$commitHash = (& $gitBin log -1 --pretty=format:"%h" 2>&1)
 	if (-not $?)
 	{
@@ -230,7 +252,7 @@ function Do-Git-Log($action)
 	# Get log messages for the new revisions
 	$consoleEncoding = [System.Console]::OutputEncoding
 	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-	Push-Location "$sourcePath"
+	Push-Location "$rootDir"
 	if ($lastRev)
 	{
 		$logText = (& $gitBin log --pretty=format:"%B" --reverse "${lastRev}..HEAD" 2>&1)
@@ -260,14 +282,14 @@ function Do-Git-Log($action)
 	# DEBUG: Write-Host -ForegroundColor Yellow ([String]::Join("`n", $msgs))
 
 	# Format current date and revision and new messages
-	$caption = $commitDate + " - " + $revId + " (" + $commitHash + ")"
+	$caption = $commitDate + " - " + $shortRevId + " (" + $commitHash + ")"
 	$newMsgs = $caption + "`r`n" + `
 		("—" * $caption.Length) + "`r`n" + `
 		[string]::Join("`r`n", $msgs).Replace("`r`r", "`r") + "`r`n`r`n"
 
 	# Write back the complete file
 	$data = ($newMsgs + $data).Trim() + "`r`n"
-	[System.IO.File]::WriteAllText((MakeRootedPath $logFile), $data)
+	[System.IO.File]::WriteAllText((MakeRootedPath $logFile), $data, [System.Text.Encoding]::UTF8)
 
 	# Open file in editor for manual edits of the raw changes
 	Start-Process (MakeRootedPath $logFile)

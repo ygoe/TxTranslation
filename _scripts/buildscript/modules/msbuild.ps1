@@ -32,7 +32,11 @@ function Do-Build-Solution($action)
 	
 	Write-Host ""
 	Write-Host -ForegroundColor DarkCyan "Building $solution for $configuration|$buildPlatform..." -NoNewLine
-	Write-Host -ForegroundColor DarkGray " (Do not press Ctrl+C now)"
+	if ($global:revisionToolUsed)
+	{
+		Write-Host -ForegroundColor DarkGray " (Do not press Ctrl+C now)" -NoNewLine
+	}
+	Write-Host ""
 
 	# Find the MSBuild binary
 	if ((Get-Platform) -eq "x64")
@@ -56,26 +60,16 @@ function Do-Build-Solution($action)
 		exit 1
 	}
 
-	# Set fastbuild and perform GitRevisionTool/SvnRevisionTool call once for the entire solution
-	if ($global:gitUsed)
+	# Set %SuppressNetRevisionTool% and perform NetRevisionTool call once for the entire solution
+	if ($global:revisionToolUsed)
 	{
-		$env:FASTBUILD = "1"
-		& (Join-Path $absToolsPath "GitRevisionTool") --multi-project --assembly-info (MakeRootedPath $solution)
-		if (-not $?)
+		Invoke-Expression ((Join-Path $absToolsPath "NetRevisionTool") + " /multi /patch " + $global:revisionToolOptions + " `"" + (MakeRootedPath $solution) + "`"")
+		if ($LASTEXITCODE -ne 0)
 		{
-			WaitError "GitRevisionTool multi-project patch failed"
+			WaitError "NetRevisionTool multi-project patch failed"
 			exit 1
 		}
-	}
-	if ($global:svnUsed)
-	{
-		$env:FASTBUILD = "1"
-		& (Join-Path $absToolsPath "SvnRevisionTool") --multi-project --assembly-info (MakeRootedPath $solution)
-		if (-not $?)
-		{
-			WaitError "SvnRevisionTool multi-project patch failed"
-			exit 1
-		}
+		$env:SuppressNetRevisionTool = "1"
 	}
 	
 	$mParam = "/m"
@@ -102,37 +96,20 @@ function Do-Build-Solution($action)
 		$buildError = $true
 	}
 
-	# Reset fastbuild and restore all version files
-	if ($global:gitUsed)
+	# Reset %SuppressNetRevisionTool% and restore all version files
+	if ($global:revisionToolUsed)
 	{
-		$env:FASTBUILD = ""
-		& (Join-Path $absToolsPath "GitRevisionTool") --multi-project --restore (MakeRootedPath $solution)
-		if (-not $?)
+		$env:SuppressNetRevisionTool = ""
+		Invoke-Expression ((Join-Path $absToolsPath "NetRevisionTool") + " /multi /restore " + $global:revisionToolOptions + " `"" + (MakeRootedPath $solution) + "`"")
+		if ($LASTEXITCODE -ne 0)
 		{
 			if ($buildError)
 			{
-				WaitError "Build and GitRevisionTool multi-project restore failed"
+				WaitError "Build and NetRevisionTool multi-project restore failed"
 			}
 			else
 			{
-				WaitError "GitRevisionTool multi-project restore failed"
-			}
-			exit 1
-		}
-	}
-	if ($global:svnUsed)
-	{
-		$env:FASTBUILD = ""
-		& (Join-Path $absToolsPath "SvnRevisionTool") --multi-project --restore (MakeRootedPath $solution)
-		if (-not $?)
-		{
-			if ($buildError)
-			{
-				WaitError "Build and SvnRevisionTool multi-project restore failed"
-			}
-			else
-			{
-				WaitError "SvnRevisionTool multi-project restore failed"
+				WaitError "NetRevisionTool multi-project restore failed"
 			}
 			exit 1
 		}

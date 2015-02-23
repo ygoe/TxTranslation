@@ -20,3 +20,5 @@ begin
 			msi31_url,
 			false, false);
 end;
+
+[Setup]

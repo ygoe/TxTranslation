@@ -6,6 +6,9 @@ Setup/bin/
 *.user
 *.sln.docstates
 
+# Downloaded NuGet packages
+/packages/*/
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
@@ -100,6 +103,7 @@ _NCrunch_*
 Dotfuscated/
 
 # PowerShell build framework tools
+_scripts/buildscript/private.ps1
 !_scripts/bin/
 
 # Windows/other detritus

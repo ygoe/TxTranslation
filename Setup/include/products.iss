@@ -1,3 +1,6 @@
+; Source: http://www.codeproject.com/Articles/20868/NET-Framework-Installer-for-InnoSetup
+; Licence: CPOL
+
 #include "isxdl\isxdl.iss"
 
 [CustomMessages]
@@ -28,11 +31,10 @@ en.depinstall_error=An error occured while installing the dependencies. Please r
 de.depinstall_error=Ein Fehler ist während der Installation der Abghängigkeiten aufgetreten. Bitte starten Sie den Computer neu und führen Sie das Setup erneut aus oder installieren Sie die folgenden Abhängigkeiten per Hand:%n
 
 en.isxdl_langfile=
-de.isxdl_langfile=german2.ini
-
+de.isxdl_langfile=german_fixed.ini
 
 [Files]
-Source: "scripts\isxdl\german2.ini"; Flags: dontcopy
+Source: "include\isxdl\german_fixed.ini"; Flags: dontcopy
 
 [Code]
 type
@@ -265,3 +267,5 @@ begin
 		Result := '';
 	end;
 end;
+
+[Setup]

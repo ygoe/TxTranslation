@@ -59,10 +59,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if not defined FASTBUILD "$(SolutionDir)\_scripts\bin\GitRevisionTool.exe" -ai "$(ProjectDir)"</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)_scripts\bin\NetRevisionTool.exe" /patch "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>if not defined FASTBUILD "$(SolutionDir)\_scripts\bin\GitRevisionTool.exe" -si "$(ProjectDir)"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)_scripts\bin\NetRevisionTool.exe" /restore "$(ProjectDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

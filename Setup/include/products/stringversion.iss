@@ -1,3 +1,4 @@
+[Code]
 function stringtoversion(var temp: String): Integer;
 var
 	part: String;
@@ -50,3 +51,5 @@ begin
     temp2 := versionB;
     Result := compareinnerversion(temp1, temp2);
 end;
+
+[Setup]

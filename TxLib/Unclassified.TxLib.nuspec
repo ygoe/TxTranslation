@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+	<metadata>
+		<id>Unclassified.TxLib</id>
+		<title>TxTranslation</title>
+		<version>1.0.0</version>
+		<authors>Yves Goergen</authors>
+		<owners>Yves Goergen</owners>
+		<projectUrl>http://unclassified.software/source/txtranslation</projectUrl>
+		<iconUrl>https://unclassified.software/img/source/txtranslation/TxFlag_128.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<summary>Simple yet powerful translation and localisation library for .NET applications.</summary>
+		<description>Simple yet powerful translation and localisation library for .NET applications.
+
+TxTranslation is a complete solution for drop-in localisation in all types of .NET applications (WPF, WinForms, ASP.NET, Service, Console). It has an easy syntax through XAML extensions and Windows Forms binding and regards a fallback language on missing translations of a text. Translation texts may contain count-specific translations and placeholders, and the library provides number and time formatting. A comfortable editor application for dictionaries with consistency checks and similar translations suggestions is available from the project website.
+
+Please visit the project website for further information on TxTranslation, including a feature list, sample code, and a developer guide.</description>
+		<releaseNotes>See changes at: http://unclassified.software/files/source/txtranslation/TxChanges.txt</releaseNotes>
+		<copyright>Yves Goergen</copyright>
+		<tags>txtranslation txlib tx translation translator language locale format localisation localization globalisation globalization l10n i18n dictionary</tags>
+	</metadata>
+	<files>
+		<file src="bin\Release\Unclassified.TxLib.dll" target="lib\net40"/>
+		<file src="bin\Release\Unclassified.TxLib.pdb" target="lib\net40"/>
+		<file src="bin\Release\Unclassified.TxLib.xml" target="lib\net40"/>
+	</files>
+</package>

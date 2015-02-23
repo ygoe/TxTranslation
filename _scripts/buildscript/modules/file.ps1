@@ -14,7 +14,7 @@
 # The list file defines one archive item per line. Each line contains the source file name,
 # followed by a greater-than character ('>'), followed by the item name in the archive. If the
 # second name ends with a backslash, the file name of the source file is appended. All source
-# files are interpreted relative to the $sourcePath directory. Wildcards are allowed. Empty lines
+# files are interpreted relative to the $rootDir directory. Wildcards are allowed. Empty lines
 # or lines beginning with a number character ('#') are ignored.
 #
 # Requires 7-Zip to be installed.
@@ -27,7 +27,7 @@ function Create-Archive($archive, $listFile, $time)
 # Copies a file.
 #
 # $src = The name of the source file.
-# $dest = The name of the destination file.
+# $dest = The name of the destination file. Can be a directory.
 #
 function Copy-File($src, $dest, $time)
 {
@@ -101,13 +101,13 @@ function Do-Create-Archive($action)
 	try
 	{
 		# Delete previous export if it exists
-		if (Test-Path "$sourcePath\.tmp.archive")
+		if (Test-Path "$rootDir\.tmp.archive")
 		{
-			Remove-Item "$sourcePath\.tmp.archive" -Recurse -ErrorAction Stop
+			Remove-Item "$rootDir\.tmp.archive" -Recurse -ErrorAction Stop
 		}
 
 		# Create temp directory
-		New-Item -ItemType Directory "$sourcePath\.tmp.archive" -ErrorAction Stop | Out-Null
+		New-Item -ItemType Directory "$rootDir\.tmp.archive" -ErrorAction Stop | Out-Null
 
 		# Prepare all files in a temporary directory
 		ForEach ($line in Get-Content (MakeRootedPath $listFile) -ErrorAction Stop)
@@ -123,13 +123,13 @@ function Do-Create-Archive($action)
 			# Copy file to temp directory
 			if ($dest.EndsWith("\"))
 			{
-				New-Item -ItemType Directory -Path "$sourcePath\.tmp.archive\$dest" -Force -ErrorAction Stop | Out-Null
+				New-Item -ItemType Directory -Path "$rootDir\.tmp.archive\$dest" -Force -ErrorAction Stop | Out-Null
 			}
 			else
 			{
-				New-Item -ItemType File -Path "$sourcePath\.tmp.archive\$dest" -Force -ErrorAction Stop | Out-Null
+				New-Item -ItemType File -Path "$rootDir\.tmp.archive\$dest" -Force -ErrorAction Stop | Out-Null
 			}
-			Copy-Item -Recurse -Force (MakeRootedPath $src) "$sourcePath\.tmp.archive\$dest" -ErrorAction Stop
+			Copy-Item -Recurse -Force (MakeRootedPath $src) "$rootDir\.tmp.archive\$dest" -ErrorAction Stop
 		}
 
 		# Delete previous archive if it exists
@@ -144,7 +144,7 @@ function Do-Create-Archive($action)
 		exit 1
 	}
 
-	Push-Location "$sourcePath\.tmp.archive"
+	Push-Location "$rootDir\.tmp.archive"
 	& $sevenZipBin a (MakeRootedPath $archive) -mx=9 * | where {
 		$_ -notmatch "^7-Zip " -and `
 		$_ -notmatch "^Scanning$" -and `
@@ -161,7 +161,7 @@ function Do-Create-Archive($action)
 	Pop-Location
 
 	# Clean up
-	Remove-Item "$sourcePath\.tmp.archive" -Recurse
+	Remove-Item "$rootDir\.tmp.archive" -Recurse
 }
 
 function Do-Copy-File($action)

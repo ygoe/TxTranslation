@@ -12,16 +12,14 @@
 # $keyFile = the name of the file that contains the private key for signing.
 # $password = The password for the private key file.
 #
-# The key file and password should be passed from variables that are defined in a file that is
-# excluded from the source code repository. This file can be sourced into the definition script
-# to make the variables available. Example:
+# The key file and password should be passed from variables that are defined in the private
+# configuration file which is excluded from the source code repository. Example:
 #
-#    . "$sourcePath\.local\sign_config.ps1"
 #    Sign-File "My.exe" "$signKeyFile" "$signPassword" 2
 #
-# The file sign_config.ps1 could contain this script:
+# The file _scripts\buildscript\private.ps1 could contain this script:
 #
-#    $signKeyFile = ".local\signkey.pfx"
+#    $signKeyFile = (Join-Path $scriptDir "my_key.p12")
 #    $signPassword = "secret"
 #
 # This function tries to use multiple timestamping servers. If one fails, another server is
