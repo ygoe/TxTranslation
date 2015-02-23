@@ -68,8 +68,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\TaskDialog.dll</HintPath>
     </Reference>
-    <Reference Include="Unclassified.FieldLog">
-      <HintPath>lib\Unclassified.FieldLog.dll</HintPath>
+    <Reference Include="Unclassified.FieldLog, Version=1.38.77.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unclassified.FieldLog.1.38.77\lib\net40-client\Unclassified.FieldLog.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -305,6 +306,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <EmbeddedResource Include="Dictionary.txd" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -16,7 +16,7 @@ namespace Unclassified.TxEditor.Views
 			InitializeComponent();
 			this.HideIcon();
 
-			VersionText.Text = FL.AppVersion;
+			VersionText.Text = FL.AppLongVersion;
 		}
 
 		public new void ShowDialog()
@@ -51,7 +51,7 @@ namespace Unclassified.TxEditor.Views
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start("http://unclassified.software/txtranslation?ref=inapp-txeditor");
+			Process.Start("http://unclassified.software/source/txtranslation?ref=inapp-txeditor");
 		}
 	}
 }
