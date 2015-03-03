@@ -11,9 +11,11 @@
 # $configFile = The file name of the Inno Setup script file.
 # $configuration = This value is defined as "BuildConfig" in the setup script. It can be empty if unused.
 #
+# The current build revision ID is passed to the setup script as "RevId".
+#
 # Requires Inno Setup 5 to be installed.
 #
-function Create-Setup($configFile, $configuration, $time)
+function Create-Setup($configFile, $configuration, $time = 1)
 {
 	$action = @{ action = "Do-Create-Setup"; configFile = $configFile; configuration = $configuration; time = $time }
 	$global:actions += $action

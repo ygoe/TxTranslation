@@ -28,7 +28,7 @@
 #
 # Requires Signtool from Visual Studio 2010/2012/2013 to be installed.
 #
-function Sign-File($file, $keyFile, $password, $time)
+function Sign-File($file, $keyFile, $password, $time = 1)
 {
 	$action = @{ action = "Do-Sign-File"; file = $file; keyFile = $keyFile; password = $password; time = $time }
 	$global:actions += $action

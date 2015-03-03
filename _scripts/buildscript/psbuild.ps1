@@ -354,14 +354,52 @@ function Get-AssemblyInfoVersion($sourceFile, $attributeName)
 
 # Determines whether a build script part is selected.
 #
+# $part = The part name to check.
+#
 function IsSelected($part)
 {
-	#if ($global:configParts -eq "all" -or $global:configParts.Contains($part))
+	if ($args)
+	{
+		WaitError "More than one configuration part specified for IsSelected function: $part $args"
+		exit 1
+	}
 	if ($global:configParts.Contains($part))
 	{
 		return $true
 	}
 	return $false
+}
+
+# Determines whether any of the specified build script parts is selected.
+#
+# Pass all part names as individual parameters.
+#
+function IsAnySelected()
+{
+	foreach ($part in $args)
+	{
+		if ($global:configParts.Contains($part))
+		{
+			return $true
+		}
+	}
+	return $false
+}
+
+# Determines whether all of the specified build script parts are selected.
+#
+# Pass all part names as individual parameters.
+#
+function AreAllSelected()
+{
+	foreach ($part in $args)
+	{
+		if (!$global:configParts.Contains($part))
+		{
+			return $false
+		}
+	}
+	return $true
 }
 
 # ==============================  BUILD SCRIPT FUNCTIONS  ==============================

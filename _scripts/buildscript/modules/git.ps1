@@ -10,7 +10,7 @@
 #
 # Requires TortoiseGit to be installed (which requires Git for Windows).
 #
-function Git-Commit($time)
+function Git-Commit($time = 5)
 {
 	$action = @{ action = "Do-Git-Commit"; time = $time }
 	$global:actions += $action
@@ -22,7 +22,7 @@ function Git-Commit($time)
 #
 # Requires Git for Windows and 7-Zip to be installed.
 #
-function Git-Export($archive, $time)
+function Git-Export($archive, $time = 5)
 {
 	$action = @{ action = "Do-Git-Export"; archive = $archive; time = $time }
 	$global:actions += $action
@@ -36,7 +36,7 @@ function Git-Export($archive, $time)
 #
 # Requires Git for Windows to be installed.
 #
-function Git-Log($logFile, $time)
+function Git-Log($logFile, $time = 1)
 {
 	$action = @{ action = "Do-Git-Log"; logFile = $logFile; time = $time }
 	$global:actions += $action

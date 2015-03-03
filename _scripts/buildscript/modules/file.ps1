@@ -19,7 +19,7 @@
 #
 # Requires 7-Zip to be installed.
 #
-function Create-Archive($archive, $listFile, $time)
+function Create-Archive($archive, $listFile, $time = 2)
 {
 	$global:actions += @{ action = "Do-Create-Archive"; archive = $archive; listFile = $listFile; time = $time }
 }
@@ -29,7 +29,7 @@ function Create-Archive($archive, $listFile, $time)
 # $src = The name of the source file.
 # $dest = The name of the destination file. Can be a directory.
 #
-function Copy-File($src, $dest, $time)
+function Copy-File($src, $dest, $time = 0)
 {
 	$global:actions += @{ action = "Do-Copy-File"; src = $src; dest = $dest; time = $time }
 }
@@ -38,7 +38,7 @@ function Copy-File($src, $dest, $time)
 #
 # $file = The name of the file to delete.
 #
-function Delete-File($file, $time)
+function Delete-File($file, $time = 0)
 {
 	$global:actions += @{ action = "Do-Delete-File"; file = $file; time = $time }
 }
@@ -53,7 +53,7 @@ function Delete-File($file, $time)
 # This function also supports console applications, but the standard streams will be redirected
 # which is not the case with the Exec-Console function.
 #
-function Exec-File($file, $params, $time)
+function Exec-File($file, $params, $time = 1)
 {
 	$global:actions += @{ action = "Do-Exec-File"; file = $file; params = $params; time = $time }
 }
@@ -65,7 +65,7 @@ function Exec-File($file, $params, $time)
 #
 # This function halts the build process if the process returns an error return code.
 #
-function Exec-Console($file, $params, $time)
+function Exec-Console($file, $params, $time = 1)
 {
 	$global:actions += @{ action = "Do-Exec-Console"; file = $file; params = $params; time = $time }
 }
@@ -74,7 +74,7 @@ function Exec-Console($file, $params, $time)
 #
 # $file = The name of the file to select.
 #
-function Explorer-Select($file, $time)
+function Explorer-Select($file, $time = 1)
 {
 	$global:actions += @{ action = "Do-Explorer-Select"; file = $file; time = $time }
 }
@@ -201,7 +201,7 @@ function Do-Exec-File($action)
 	$params = $action.params
 	
 	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Executing $file $params..."
+	Write-Host -ForegroundColor DarkCyan "Executing $file..."
 
 	# Wait until the started process has finished
 	Invoke-Expression ((MakeRootedPath $file) + " " + $params + " | Out-Host")
@@ -218,7 +218,7 @@ function Do-Exec-Console($action)
 	$params = $action.params
 	
 	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Executing $file $params..."
+	Write-Host -ForegroundColor DarkCyan "Executing $file..."
 
 	Invoke-Expression ((MakeRootedPath $file) + " " + $params)
 	if ($LASTEXITCODE -ne 0)

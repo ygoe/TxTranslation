@@ -6,86 +6,89 @@ Begin-BuildScript "TxTranslation"
 # Find revision format from the source code, require Git checkout
 Set-VcsVersion "" "/require git"
 
+Restore-NuGetTool
+Restore-NuGetPackages "TxTranslation.sln"
+
 # Debug builds
-if (IsSelected "build-debug")
+if (IsSelected build-debug)
 {
 	Build-Solution "TxTranslation.sln" "Debug" "Mixed Platforms" 6
 
-	if (IsSelected "sign-lib")
+	if (IsSelected sign-lib)
 	{
-		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword" 1
+		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
 	}
-	if (IsSelected "sign-app")
+	if (IsSelected sign-app)
 	{
-		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "$signKeyFile" "$signPassword" 1
+		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "$signKeyFile" "$signPassword"
 	}
 }
 
 # Release builds
-if ((IsSelected "build-release") -or (IsSelected "commit") -or (IsSelected "publish"))
+if (IsAnySelected build-release commit publish)
 {
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
 	
 	# Archive debug symbols for later source lookup
 	EnsureDirExists ".local"
-	Exec-Console "_scripts\bin\PdbConvert.exe" "$rootDir\TxEditor\bin\Release\* /srcbase $rootDir /optimize /outfile $rootDir\.local\TxTranslation-$revId.pdbx" 1
+	Exec-Console "_scripts\bin\PdbConvert.exe" "$rootDir\TxEditor\bin\Release\* /srcbase $rootDir /optimize /outfile $rootDir\.local\TxTranslation-$revId.pdbx"
 
-	if ((IsSelected "sign-lib") -or (IsSelected "publish"))
+	if (IsAnySelected sign-lib publish)
 	{
-		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword" 1
+		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
 	}
-	if ((IsSelected "sign-app") -or (IsSelected "publish"))
+	if (IsAnySelected sign-app publish)
 	{
-		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword" 1
+		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword"
 	}
 
-	Create-NuGet "TxLib\Unclassified.TxLib.nuspec" "TxLib\bin" 2
+	Create-NuGetPackage "TxLib\Unclassified.TxLib.nuspec" "TxLib\bin"
 }
 
 # Release setups
-if ((IsSelected "setup-release") -or (IsSelected "commit") -or (IsSelected "publish"))
+if (IsAnySelected setup-release commit publish)
 {
-	Create-Setup "Setup\Tx.iss" Release 1
+	Create-Setup "Setup\Tx.iss" "Release"
 
-	if ((IsSelected "sign-setup") -or (IsSelected "publish"))
+	if (IsAnySelected sign-setup publish)
 	{
-		Sign-File "Setup\bin\TxSetup-$revId.exe" "$signKeyFile" "$signPassword" 1
+		Sign-File "Setup\bin\TxSetup-$revId.exe" "$signKeyFile" "$signPassword"
 	}
 }
 
 # Install release setup
-if (IsSelected "install")
+if (IsSelected install)
 {
-	Exec-File "Setup\bin\TxSetup-$revId.exe" "/norestart /verysilent" 1
+	Exec-File "Setup\bin\TxSetup-$revId.exe" "/norestart /verysilent"
 }
 
 # Commit to repository
-if (IsSelected "commit")
+if (IsSelected commit)
 {
 	# Clean up test build files
-	Delete-File "Setup\bin\TxSetup-$revId.exe" 0
-	Delete-File ".local\TxTranslation-$revId.pdbx" 0
+	Delete-File "Setup\bin\TxSetup-$revId.exe"
+	Delete-File ".local\TxTranslation-$revId.pdbx"
 
-	Git-Commit 5
+	Git-Commit
 }
 
 # Prepare publishing a release
-if (IsSelected "publish")
+if (IsSelected publish)
 {
-	Git-Log ".local\TxChanges.txt" 1
+	Git-Log ".local\TxChanges.txt"
 }
 
 # Copy to website (local)
-if (IsSelected "transfer-web")
+if (IsSelected transfer-web)
 {
-	Copy-File "Setup\bin\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\" 0
-	Copy-File ".local\TxChanges.txt" "$webDir\files\source\txtranslation\" 0
+	Copy-File "Setup\bin\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\"
+	Copy-File ".local\TxChanges.txt" "$webDir\files\source\txtranslation\"
 }
 
 # Upload to NuGet
-if (IsSelected "transfer-nuget")
+if (IsSelected transfer-nuget)
 {
-	Push-NuGet "TxLib\bin\Unclassified.TxLib" $nuGetApiKey 45
+	Push-NuGetPackage "TxLib\bin\Unclassified.TxLib" $nuGetApiKey 45
 }
 
 End-BuildScript
