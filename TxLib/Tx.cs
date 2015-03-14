@@ -1755,28 +1755,29 @@ namespace Unclassified.TxLib
 			string byteUnit = GetText(SystemKeys.ByteUnit, false, "B");
 
 			long absBytes = Math.Abs(bytes);
-			if (absBytes < 0.9 * 1024)
+			if (absBytes < 0.9 * 1024)   // < 0.9 KiB -> "0 B"
 				return NumberUnit(Number(bytes, 0), byteUnit);
-			if (absBytes < 50 * 1024)
+			if (absBytes < 50 * 1024)   // < 50 KiB -> "0.0 KiB"
 				return NumberUnit(Number((decimal) bytes / 1024, 1), "Ki" + byteUnit);
-			if (absBytes < 0.9 * 1024 * 1024)
+			if (absBytes < 0.9 * 1024 * 1024)   // < 0.9 MiB -> "0 KiB"
 				return NumberUnit(Number((decimal) bytes / 1024, 0), "Ki" + byteUnit);
-			if (absBytes < 50 * 1024 * 1024)
+			if (absBytes < 50 * 1024 * 1024)   // < 50 MiB -> "0.0 MiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 1), "Mi" + byteUnit);
-			if (absBytes < 0.9 * 1024 * 1024 * 1024)
+			if (absBytes < 0.9 * 1024 * 1024 * 1024)   // < 0.9 GiB -> "0 MiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 0), "Mi" + byteUnit);
-			if (absBytes < 50L * 1024 * 1024 * 1024)
+			if (absBytes < 50L * 1024 * 1024 * 1024)   // < 50 GiB -> "0.0 GiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 1), "Gi" + byteUnit);
-			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024)
+			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024)   // < 0.9 TiB -> "0 GiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 0), "Gi" + byteUnit);
-			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024)
+			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024)   // < 50 TiB -> "0.0 TiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 1), "Ti" + byteUnit);
-			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024)
+			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024)   // < 0.9 PiB -> "0 TiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 0), "Ti" + byteUnit);
-			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024 * 1024)
+			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024 * 1024)   // < 50 PiB -> "0.0 PiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Pi" + byteUnit);
-			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)   // < 0.9 EiB -> "0 PiB"
 				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 0), "Pi" + byteUnit);
+			// >= 0.9 EiB -> "0.0 EiB"
 			return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Ei" + byteUnit);
 			// A long (Int64) value cannot get greater than this
 		}
@@ -2042,7 +2043,7 @@ namespace Unclassified.TxLib
 			keys[3] = !interval.Negative ? SystemKeys.TimeRelativeHours : SystemKeys.TimeRelativeNegHours;
 			keys[4] = !interval.Negative ? SystemKeys.TimeRelativeMinutes : SystemKeys.TimeRelativeNegMinutes;
 			keys[5] = !interval.Negative ? SystemKeys.TimeRelativeSeconds : SystemKeys.TimeRelativeNegSeconds;
-			string intervalStr = FormatTimeInterval(interval, keys);
+			string intervalStr = FormatTimeInterval(interval, keys, true);
 
 			Dictionary<string, string> data = new Dictionary<string, string>();
 			data["interval"] = intervalStr;
@@ -2076,7 +2077,7 @@ namespace Unclassified.TxLib
 			keys[3] = !interval.Negative ? SystemKeys.TimeSpanRelativeHours : SystemKeys.TimeSpanRelativeNegHours;
 			keys[4] = !interval.Negative ? SystemKeys.TimeSpanRelativeMinutes : SystemKeys.TimeSpanRelativeNegMinutes;
 			keys[5] = !interval.Negative ? SystemKeys.TimeSpanRelativeSeconds : SystemKeys.TimeSpanRelativeNegSeconds;
-			string intervalStr = FormatTimeInterval(interval, keys);
+			string intervalStr = FormatTimeInterval(interval, keys, true);
 
 			Dictionary<string, string> data = new Dictionary<string, string>();
 			data["interval"] = intervalStr;
@@ -2092,7 +2093,7 @@ namespace Unclassified.TxLib
 		/// <returns></returns>
 		public static string TimeSpan(TimeSpan span)
 		{
-			string intervalStr = TimeSpanRaw(span);
+			string intervalStr = TimeSpanRaw(span, true);
 			Dictionary<string, string> data = new Dictionary<string, string>();
 			data["interval"] = intervalStr;
 			string key = span.Ticks >= 0 ? SystemKeys.TimeSpan : SystemKeys.TimeSpanNeg;
@@ -2104,8 +2105,9 @@ namespace Unclassified.TxLib
 		/// without introductory wording.
 		/// </summary>
 		/// <param name="span">Time span to describe. This can be positive or negative.</param>
+		/// <param name="singleSpecial">Specifies whether single-unit values are more verbose ("a day" instead of "1 day").</param>
 		/// <returns></returns>
-		public static string TimeSpanRaw(TimeSpan span)
+		public static string TimeSpanRaw(TimeSpan span, bool singleSpecial)
 		{
 			// Calculate time span between specified time and now
 			DateTime now = DateTime.UtcNow;
@@ -2118,7 +2120,7 @@ namespace Unclassified.TxLib
 			keys[3] = !interval.Negative ? SystemKeys.TimeSpanHours : SystemKeys.TimeSpanNegHours;
 			keys[4] = !interval.Negative ? SystemKeys.TimeSpanMinutes : SystemKeys.TimeSpanNegMinutes;
 			keys[5] = !interval.Negative ? SystemKeys.TimeSpanSeconds : SystemKeys.TimeSpanNegSeconds;
-			string intervalStr = FormatTimeInterval(interval, keys);
+			string intervalStr = FormatTimeInterval(interval, keys, singleSpecial);
 			return intervalStr;
 		}
 
@@ -2241,8 +2243,9 @@ namespace Unclassified.TxLib
 		/// </summary>
 		/// <param name="interval">Interval data.</param>
 		/// <param name="keys">Text keys for years, months, days, hours, minutes and seconds.</param>
+		/// <param name="singleSpecial">Specifies whether single-unit values are more verbose ("a day" instead of "1 day").</param>
 		/// <returns></returns>
-		private static string FormatTimeInterval(DateTimeInterval interval, string[] keys)
+		private static string FormatTimeInterval(DateTimeInterval interval, string[] keys, bool singleSpecial)
 		{
 			// First count the number of levels we will have
 			int levelCount = 0;
@@ -2256,41 +2259,42 @@ namespace Unclassified.TxLib
 			// If it's one, first try to use the wording for a single level
 			if (levelCount == 1)
 			{
+				string suffix = singleSpecial ? ".single" : "";
 				if (interval.Years > 0)
 				{
-					string text = GetText(keys[0] + ".single", interval.Years);
+					string text = GetText(keys[0] + suffix, interval.Years);
 					if (text != null)
-						return ResolveData(text, keys[0] + ".single", interval.Years, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[0] + suffix, interval.Years, (Dictionary<string, string>) null);
 				}
 				else if (interval.Months > 0)
 				{
-					string text = GetText(keys[1] + ".single", interval.Months);
+					string text = GetText(keys[1] + suffix, interval.Months);
 					if (text != null)
-						return ResolveData(text, keys[1] + ".single", interval.Months, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[1] + suffix, interval.Months, (Dictionary<string, string>) null);
 				}
 				else if (interval.Days > 0)
 				{
-					string text = GetText(keys[2] + ".single", interval.Days);
+					string text = GetText(keys[2] + suffix, interval.Days);
 					if (text != null)
-						return ResolveData(text, keys[2] + ".single", interval.Days, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[2] + suffix, interval.Days, (Dictionary<string, string>) null);
 				}
 				else if (interval.Hours > 0)
 				{
-					string text = GetText(keys[3] + ".single", interval.Hours);
+					string text = GetText(keys[3] + suffix, interval.Hours);
 					if (text != null)
-						return ResolveData(text, keys[3] + ".single", interval.Hours, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[3] + suffix, interval.Hours, (Dictionary<string, string>) null);
 				}
 				else if (interval.Minutes > 0)
 				{
-					string text = GetText(keys[4] + ".single", interval.Minutes);
+					string text = GetText(keys[4] + suffix, interval.Minutes);
 					if (text != null)
-						return ResolveData(text, keys[4] + ".single", interval.Minutes, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[4] + suffix, interval.Minutes, (Dictionary<string, string>) null);
 				}
 				else if (interval.Seconds > 0)
 				{
-					string text = GetText(keys[5] + ".single", interval.Seconds);
+					string text = GetText(keys[5] + suffix, interval.Seconds);
 					if (text != null)
-						return ResolveData(text, keys[5] + ".single", interval.Seconds, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[5] + suffix, interval.Seconds, (Dictionary<string, string>) null);
 				}
 			}
 
