@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" manifestVersion="1.0">
 	<assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
 
 	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
@@ -39,10 +39,10 @@
 	</dependency>
 
 	<!-- Indicate dpi and high-res scrolling awareness -->
-	<application xmlns="urn:schemas-microsoft-com:asm.v3">
-		<windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
+	<asmv3:application>
+		<asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
 			<dpiAware>true</dpiAware>
-			<highResolutionScrollingAware>true</highResolutionScrollingAware>
-		</windowsSettings>
-	</application>
+			<highResolutionScrollingAware xmlns="http://schemas.microsoft.com/SMI/2013/WindowsSettings">true</highResolutionScrollingAware>
+		</asmv3:windowsSettings>
+	</asmv3:application>
 </assembly>
