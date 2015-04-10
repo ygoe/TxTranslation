@@ -48,9 +48,9 @@
     <StartupObject>Unclassified.TxEditor.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiSelectTreeView, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MultiSelectTreeView, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MultiSelectTreeView.dll</HintPath>
+      <HintPath>..\packages\MultiSelectTreeView.1.0.6\lib\net40\MultiSelectTreeView.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
