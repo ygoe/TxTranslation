@@ -83,6 +83,9 @@ if (IsSelected transfer-web)
 {
 	Copy-File "Setup\bin\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\"
 	Copy-File ".local\TxChanges.txt" "$webDir\files\source\txtranslation\"
+	
+	$today = (Get-Date -Format "yyyy-MM-dd")
+	Exec-File "_scripts\bin\AutoReplace.exe" "$webDataFile txtranslation version=$revId date=$today"
 }
 
 # Upload to NuGet
