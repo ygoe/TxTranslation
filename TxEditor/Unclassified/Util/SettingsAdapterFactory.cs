@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -20,8 +22,8 @@ namespace Unclassified.Util
 	//     via http://stackoverflow.com/questions/3639479/implementing-inotifypropertychanged-with-reflection-emit
 
 	/// <summary>
-	/// Generates dynamic types that implement an interface with properties that bind to a settings
-	/// store and implement INotifyPropertyChanged.
+	/// Generates a dynamic implementation of an interface with properties that binds to a settings
+	/// store and implements INotifyPropertyChanged.
 	/// </summary>
 	public static class SettingsAdapterFactory
 	{
@@ -65,8 +67,9 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <typeparam name="TInterface">The interface type to implement.</typeparam>
 		/// <param name="settingsStore">The <see cref="ISettingsStore"/> instance to bind the generated properties to.</param>
+		/// <param name="prefix">The settings path prefix for the new object. Should be null for the initial instance.</param>
 		/// <returns>An object that implements the <typeparamref name="TInterface"/> interface.</returns>
-		public static TInterface New<TInterface>(ISettingsStore settingsStore)
+		public static TInterface New<TInterface>(ISettingsStore settingsStore, string prefix = null)
 			where TInterface : class
 		{
 			Type interfaceType = typeof(TInterface);
@@ -75,15 +78,22 @@ namespace Unclassified.Util
 				CreateType(interfaceType);
 			}
 
-			// Old:
-			// <param name="prefix">The settings path prefix for the new object. (For internal use, leave it unset.)</param>
-
+			// DEBUG: Enable the following code to verify the assembly with peverify.exe from the .NET command prompt.
 			//string fileName = assemblyBuilder.GetName().Name + ".dll";
 			//System.IO.File.Delete(fileName);
 			//assemblyBuilder.Save(fileName);
-			// Verify the assembly with "peverify.exe" from the .NET command prompt.
 
-			return (TInterface) Activator.CreateInstance(generatedTypes[interfaceType], settingsStore, null);
+			// Adjust prefix to include the trailing dot as used internally
+			if (prefix != null)
+			{
+				prefix = prefix.Trim().TrimEnd('.', ' ') + ".";
+			}
+			else if (prefix == "")
+			{
+				prefix = null;
+			}
+
+			return (TInterface) Activator.CreateInstance(generatedTypes[interfaceType], settingsStore, prefix);
 		}
 
 		#endregion Public methods
@@ -92,7 +102,7 @@ namespace Unclassified.Util
 
 		/// <summary>
 		/// Creates a class type that implements the specified interface and adds it to the
-		/// generatedTypes dictionary.
+		/// <see cref="generatedTypes"/> dictionary.
 		/// </summary>
 		/// <param name="interfaceType">The interface type to implement.</param>
 		private static void CreateType(Type interfaceType)
@@ -147,6 +157,11 @@ namespace Unclassified.Util
 					// Don't create a plain method for this property getter method
 					methods.Remove(getMethod);
 					newGetMethod = CreateFieldGetter(typeBuilder, getMethod, propertyInfo, settingsStoreField);
+
+					if (propertyInfo.GetSetMethod() != null)
+					{
+						throw new NotSupportedException("The ISettingsStore-type property " + propertyInfo.Name + " must not have a setter.");
+					}
 				}
 				else if (propertyInfo.PropertyType.IsInterface)
 				{
@@ -162,6 +177,11 @@ namespace Unclassified.Util
 					// Don't create a plain method for this property getter method
 					methods.Remove(getMethod);
 					newGetMethod = CreateFieldGetter(typeBuilder, getMethod, propertyInfo, backingField);
+
+					if (propertyInfo.GetSetMethod() != null)
+					{
+						throw new NotSupportedException("The interface-type property " + propertyInfo.Name + " must not have a setter.");
+					}
 				}
 				else
 				{
@@ -231,7 +251,7 @@ namespace Unclassified.Util
 			ilGen.Emit(OpCodes.Ldarg_0);
 			ilGen.Emit(OpCodes.Call, baseConstructorInfo);
 
-			// Debugging helper:
+			// DEBUG:
 			//if (interfaceType == typeof(IMainWindow))
 			//    ilGen.EmitCall(OpCodes.Call, typeof(Console).GetMethod("Beep", new Type[0]), null);
 
@@ -250,11 +270,68 @@ namespace Unclassified.Util
 			{
 				string propertyName = field.Name.Substring(1);   // Cut away leading "_"
 
-				if (field.FieldType.IsInterface)
+				if (IsListType(field.FieldType))
+				{
+					// This is a list type that should be implemented by an observable list that
+					// initially loads from the store and automatically passes changes back into the
+					// store. Write code that calls settingsStore.CreateList().
+
+					// To support renaming on obfuscation, an expression must be specified for the
+					// CreateDictionary method. This expression must already contain type arguments.
+					// After reading the method from the expression, the type arguments are stripped
+					// and then the actual runtime type arguments are added again. (Is this a hack?)
+
+#pragma warning disable 1720   // Expression will always cause a System.NullReferenceException because the default value of 'generic type' is null
+
+					MethodInfo method = MethodOf(() => default(ISettingsStore).CreateList<object>(default(string)));
+
+#pragma warning restore 1720
+
+					method = method.GetGenericMethodDefinition();
+					method = method.MakeGenericMethod(field.FieldType.GetGenericArguments());
+
+					ilGen.Emit(OpCodes.Ldarg_0);
+					ilGen.Emit(OpCodes.Ldarg_1);   // settingsStore
+					// -> prefix + [propertyName]
+					ilGen.Emit(OpCodes.Ldarg_2);   // prefix
+					ilGen.Emit(OpCodes.Ldstr, propertyName);
+					ilGen.GenerateCall<string, string, string>("Concat");
+					// -> settingsStore.CreateList<>(prefix + [propertyName]);
+					ilGen.EmitCall(OpCodes.Call, method, null);
+					// -> [field] = ...
+					ilGen.Emit(OpCodes.Stfld, field);
+				}
+				else if (IsDictionaryType(field.FieldType))
+				{
+					// This is a dictionary type that should be implemented by a dictionary that
+					// initially loads from the store and automatically passes changes back into the
+					// store. Write code that calls settingsStore.CreateDictionary<,>().
+
+#pragma warning disable 1720   // Expression will always cause a System.NullReferenceException because the default value of 'generic type' is null
+
+					MethodInfo method = MethodOf(() => default(ISettingsStore).CreateDictionary<object, object>(default(string)));
+
+#pragma warning restore 1720
+
+					// See comment about generic list handling above
+					method = method.GetGenericMethodDefinition();
+					method = method.MakeGenericMethod(field.FieldType.GetGenericArguments());
+
+					ilGen.Emit(OpCodes.Ldarg_0);
+					ilGen.Emit(OpCodes.Ldarg_1);   // settingsStore
+					// -> prefix + [propertyName]
+					ilGen.Emit(OpCodes.Ldarg_2);   // prefix
+					ilGen.Emit(OpCodes.Ldstr, propertyName);
+					ilGen.GenerateCall<string, string, string>("Concat");
+					// -> settingsStore.CreateDictionary<,>(prefix + [propertyName]);
+					ilGen.EmitCall(OpCodes.Call, method, null);
+					// -> [field] = ...
+					ilGen.Emit(OpCodes.Stfld, field);
+				}
+				else if (field.FieldType.IsInterface)
 				{
 					// This is another interface type. Create an implementation of it and write
 					// code that creates an instance of it.
-
 					if (!generatedTypes.ContainsKey(field.FieldType))
 					{
 						CreateType(field.FieldType);
@@ -534,7 +611,7 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
-		/// Creates the getter method for a property.
+		/// Creates the getter method for a property that returns a field.
 		/// </summary>
 		/// <param name="typeBuilder">The TypeBuilder instance.</param>
 		/// <param name="getMethod">The interface property method to create.</param>
@@ -569,7 +646,8 @@ namespace Unclassified.Util
 #pragma warning disable 1720   // Expression will always cause a System.NullReferenceException because the default value of 'generic type' is null
 
 		/// <summary>
-		/// Creates the getter method for a property.
+		/// Creates the getter method for a property that fetches a value from the
+		/// <see cref="ISettingsStore"/> instance.
 		/// </summary>
 		/// <param name="typeBuilder">The TypeBuilder instance.</param>
 		/// <param name="getMethod">The interface property method to create.</param>
@@ -591,7 +669,7 @@ namespace Unclassified.Util
 			ILGenerator ilGen = methodBuilder.GetILGenerator();
 
 			// Enums seamlessly cast to their underlying type, just consider that type
-			// NOTE: This doesn't handle arrays of enums
+			// TODO: This doesn't handle arrays of enums
 			Type propType = propertyInfo.PropertyType;
 			if (propType.IsEnum)
 			{
@@ -602,64 +680,68 @@ namespace Unclassified.Util
 			MethodInfo storeGetMethodWithDefault = null;
 			if (propType == typeof(bool))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetBool(default(string)));
-				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetBool(default(string), default(bool)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetBool(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetBool(default(string), default(bool)));
 			}
 			else if (propType == typeof(bool[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetBoolArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetBoolArray(default(string)));
 			}
 			else if (propType == typeof(int))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetInt(default(string)));
-				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetInt(default(string), default(int)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetInt(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetInt(default(string), default(int)));
 			}
 			else if (propType == typeof(int[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetIntArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetIntArray(default(string)));
 			}
 			else if (propType == typeof(long))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetLong(default(string)));
-				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetLong(default(string), default(long)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetLong(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetLong(default(string), default(long)));
 			}
 			else if (propType == typeof(long[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetLongArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetLongArray(default(string)));
 			}
 			else if (propType == typeof(double))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetDouble(default(string)));
-				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetDouble(default(string), default(double)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDouble(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetDouble(default(string), default(double)));
 			}
 			else if (propType == typeof(double[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetDoubleArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDoubleArray(default(string)));
 			}
 			else if (propType == typeof(string))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetString(default(string)));
-				storeGetMethodWithDefault = methodof(() => default(ISettingsStore).GetString(default(string), default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetString(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetString(default(string), default(string)));
 			}
 			else if (propType == typeof(string[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetStringArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetStringArray(default(string)));
 			}
 			else if (propType == typeof(DateTime))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetDateTime(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDateTime(default(string)));
 			}
 			else if (propType == typeof(DateTime[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetDateTimeArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDateTimeArray(default(string)));
 			}
 			else if (propType == typeof(TimeSpan))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetTimeSpan(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetTimeSpan(default(string)));
 			}
 			else if (propType == typeof(TimeSpan[]))
 			{
-				storeGetMethod = methodof(() => default(ISettingsStore).GetTimeSpanArray(default(string)));
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetTimeSpanArray(default(string)));
+			}
+			else if (propType == typeof(NameValueCollection))
+			{
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetNameValueCollection(default(string)));
 			}
 			else
 			{
@@ -733,7 +815,8 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
-		/// Creates the setter method for a property.
+		/// Creates the setter method for a property that passes the value to an
+		/// <see cref="ISettingsStore"/> instance.
 		/// </summary>
 		/// <param name="typeBuilder">The TypeBuilder instance.</param>
 		/// <param name="setMethod">The interface property method to create.</param>
@@ -768,7 +851,7 @@ namespace Unclassified.Util
 			{
 				ilGen.Emit(OpCodes.Box, propertyInfo.PropertyType);
 			}
-			ilGen.GenerateCallVirt(methodof(() => default(ISettingsStore).Set(default(string), default(object))));
+			ilGen.GenerateCallVirt(MethodOf(() => default(ISettingsStore).Set(default(string), default(object))));
 
 			// return;
 			ilGen.MarkLabel(exitLabel);
@@ -943,43 +1026,81 @@ namespace Unclassified.Util
 		}
 
 		// Source: http://stackoverflow.com/q/1213862/143684
-		private static MethodInfo methodof(Expression<Action> expression)
+		private static MethodInfo MethodOf(Expression<Action> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
-		private static MethodInfo methodof<T>(Expression<Action<T>> expression)
+		private static MethodInfo MethodOf<T>(Expression<Action<T>> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
-		private static MethodInfo methodof<T1, T2>(Expression<Action<T1, T2>> expression)
+		private static MethodInfo MethodOf<T1, T2>(Expression<Action<T1, T2>> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
-		private static MethodInfo methodof<TResult>(Expression<Func<TResult>> expression)
+		private static MethodInfo MethodOf<TResult>(Expression<Func<TResult>> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
-		private static MethodInfo methodof<T, TResult>(Expression<Func<T, TResult>> expression)
+		private static MethodInfo MethodOf<T, TResult>(Expression<Func<T, TResult>> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
-		private static MethodInfo methodof<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
+		private static MethodInfo MethodOf<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
 		{
 			MethodCallExpression body = (MethodCallExpression) expression.Body;
 			return body.Method;
 		}
 
 		#endregion ILGenerator extension methods
+
+		#region Collection property type helpers
+
+		/// <summary>
+		/// Determines whether a type is <see cref="IList&lt;T&gt;"/>.
+		/// </summary>
+		/// <param name="type">The type to check.</param>
+		/// <returns></returns>
+		private static bool IsListType(Type type)
+		{
+			if (type.IsGenericType)
+			{
+				if (typeof(IList<>) == type.GetGenericTypeDefinition()) return true;
+			}
+			// Alternative:
+			//if (type.IsGenericType &&
+			//    type.GetGenericArguments().Length == 1)
+			//{
+			//    if (type == typeof(IList<>).MakeGenericType(type.GetGenericArguments()[0])) return true;
+			//}
+			return false;
+		}
+
+		/// <summary>
+		/// Determines whether a type is <see cref="IDictionary&lt;TKey&gt;,&lt;TValue&gt;"/>.
+		/// </summary>
+		/// <param name="type">The type to check.</param>
+		/// <returns></returns>
+		private static bool IsDictionaryType(Type type)
+		{
+			if (type.IsGenericType)
+			{
+				if (typeof(IDictionary<,>) == type.GetGenericTypeDefinition()) return true;
+			}
+			return false;
+		}
+
+		#endregion Collection property type helpers
 	}
 
 	#endregion SettingsAdapterFactory class
@@ -1030,6 +1151,12 @@ namespace Unclassified.Util
 		#endregion Set methods
 
 		#region Get methods
+
+		/// <summary>
+		/// Gets all setting keys that are currently set in this settings store.
+		/// </summary>
+		/// <returns></returns>
+		string[] GetKeys();
 
 		/// <summary>
 		/// Gets the current bool value of a setting key, or false if the key is unset or has an
@@ -1204,8 +1331,393 @@ namespace Unclassified.Util
 		/// <returns></returns>
 		TimeSpan[] GetTimeSpanArray(string key);
 
+		/// <summary>
+		/// Gets the current NameValueCollection of a setting key, or an empty collection if the key
+		/// is unset or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		NameValueCollection GetNameValueCollection(string key);
+
+		/// <summary>
+		/// Creates a list wrapper for an array-typed key. Changes to the list are written back to
+		/// the settings store.
+		/// </summary>
+		/// <typeparam name="T">The type of list items.</typeparam>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		IList<T> CreateList<T>(string key);
+
+		/// <summary>
+		/// Creates a dictionary wrapper for a NameValueCollection-typed key. Changes to the
+		/// dictionary are written back to the settings store.
+		/// </summary>
+		/// <typeparam name="TKey">The type of dictionary keys.</typeparam>
+		/// <typeparam name="TValue">The type of dictionary values.</typeparam>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		IDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string key);
+
 		#endregion Get methods
 	}
 
 	#endregion Supporting interfaces
+
+	#region Bound collection classes
+
+	/// <summary>
+	/// Implements an <see cref="ObservableCollection&lt;T&gt;"/> that is bound to an
+	/// <see cref="ISettingsStore"/> instance. Changes to the list are written back to the settings
+	/// store.
+	/// </summary>
+	/// <typeparam name="T">The type of the elements of the list.</typeparam>
+	/// <remarks>
+	/// <para>
+	///   This class supports all basic types as type parameter that are supported in
+	///   <see cref="ISettingsStore"/> for scalar values as well.
+	/// </para>
+	/// <para>
+	///   Creating an instance of the class with an unsupported type parameter will throw a
+	///   <see cref="NotSupportedException"/> in the constructor. This happens when creating an
+	///   instance of an adapter class. As the list is statically typed, no further exceptions can
+	///   be thrown for using incompatible values.
+	/// </para>
+	/// </remarks>
+	public class SettingsStoreBoundList<T> : ObservableCollection<T>
+	{
+		private ISettingsStore store;
+		private string key;
+
+		/// <summary>
+		/// Initialises a new instance of the <see cref="SettingsStoreBoundList"/> class and loads
+		/// all array items from the entry <paramref name="key"/> in <paramref name="store"/>.
+		/// </summary>
+		/// <param name="store">The settings store to bind the data to.</param>
+		/// <param name="key">The setting key to bind the data to.</param>
+		public SettingsStoreBoundList(ISettingsStore store, string key)
+			: base(GetItems(store, key))
+		{
+			this.store = store;
+			this.key = key;
+		}
+
+		/// <summary>
+		/// Reads an array from the settings store and casts its items for the IEnumerable.
+		/// </summary>
+		private static IEnumerable<T> GetItems(ISettingsStore store, string key)
+		{
+			if (typeof(T) == typeof(string)) return store.GetStringArray(key).Cast<T>();
+			if (typeof(T) == typeof(int)) return store.GetIntArray(key).Cast<T>();
+			if (typeof(T) == typeof(long)) return store.GetLongArray(key).Cast<T>();
+			if (typeof(T) == typeof(double)) return store.GetDoubleArray(key).Cast<T>();
+			if (typeof(T) == typeof(bool)) return store.GetBoolArray(key).Cast<T>();
+			if (typeof(T) == typeof(DateTime)) return store.GetDateTimeArray(key).Cast<T>();
+			if (typeof(T) == typeof(TimeSpan)) return store.GetTimeSpanArray(key).Cast<T>();
+			throw new NotSupportedException("The list item type " + typeof(T).Name + " is not supported.");
+		}
+
+		#region Overridden ObservableCollection methods
+
+		protected override void ClearItems()
+		{
+			base.ClearItems();
+			store.Set(key, this.ToArray());
+		}
+
+		protected override void InsertItem(int index, T item)
+		{
+			base.InsertItem(index, item);
+			store.Set(key, this.ToArray());
+		}
+
+		protected override void MoveItem(int oldIndex, int newIndex)
+		{
+			base.MoveItem(oldIndex, newIndex);
+			store.Set(key, this.ToArray());
+		}
+
+		protected override void RemoveItem(int index)
+		{
+			base.RemoveItem(index);
+			store.Set(key, this.ToArray());
+		}
+
+		protected override void SetItem(int index, T item)
+		{
+			base.SetItem(index, item);
+			store.Set(key, this.ToArray());
+		}
+
+		#endregion Overridden ObservableCollection methods
+	}
+
+	/// <summary>
+	/// Implements a dictionary that is bound to an <see cref="ISettingsStore"/> instance. Changes
+	/// to the dictionary are written back to the settings store.
+	/// </summary>
+	/// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+	/// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+	/// <para>
+	///   This class supports all types as key and value type parameter that can be converted to and
+	///   from a string with the <see cref="Convert.ToString"/> and <see cref="Convert.ChangeType"/>
+	///   methods, using the invariant culture. This includes all types that are supported in
+	///   <see cref="ISettingsStore"/> for scalar values as well, with their respective string
+	///   representation and parsing method.
+	/// </para>
+	/// <para>
+	///   Incompatible data entries are skipped, similar to the behaviour of the Get methods of
+	///   <see cref="ISettingsStore"/>.
+	/// </para>
+	public class SettingsStoreBoundDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+	{
+		private ISettingsStore store;
+		private string key;
+		private Dictionary<TKey, TValue> dictionary;
+
+		/// <summary>
+		/// Initialises a new instance of the <see cref="SettingsStoreBoundDictionary"/> class and
+		/// loads all <see cref="NameValueCollection"/> items from the entry <paramref name="key"/>
+		/// in <paramref name="store"/>.
+		/// </summary>
+		/// <param name="store">The settings store to bind the data to.</param>
+		/// <param name="key">The setting key to bind the data to.</param>
+		public SettingsStoreBoundDictionary(ISettingsStore store, string key)
+		{
+			this.store = store;
+			this.key = key;
+			ReadFromStore();
+		}
+
+		/// <summary>
+		/// Reads a <see cref="NameValueCollection"/> instance from the settings store and converts
+		/// its items for the dictionary. Incompatible data entries are skipped, similar to the
+		/// behaviour of the Get methods of <see cref="ISettingsStore"/>.
+		/// </summary>
+		private void ReadFromStore()
+		{
+			NameValueCollection collection = store.GetNameValueCollection(key);
+			dictionary = new Dictionary<TKey, TValue>(collection.Count);
+			for (int i = 0; i < collection.Count; i++)
+			{
+				try
+				{
+					string keyStr = collection.GetKey(i);
+					string valueStr = collection[i];
+
+					TKey key2;
+					TValue value;
+
+					// Special type conversions
+					if (typeof(TKey) == typeof(bool))
+					{
+						if (keyStr.Trim() == "1" ||
+							keyStr.Trim().ToLower() == "true") key2 = (TKey) (object) true;
+						else if (keyStr.Trim() == "0" ||
+							keyStr.Trim().ToLower() == "false") key2 = (TKey) (object) false;
+						else throw new FormatException("Invalid bool value");
+					}
+					else if (typeof(TKey) == typeof(DateTime))
+					{
+						key2 = (TKey) (object) DateTime.Parse(keyStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+					}
+					else if (typeof(TKey) == typeof(TimeSpan))
+					{
+						key2 = (TKey) (object) new TimeSpan(long.Parse(keyStr, CultureInfo.InvariantCulture));
+					}
+					else
+					{
+						key2 = (TKey) Convert.ChangeType(keyStr, typeof(TKey), CultureInfo.InvariantCulture);
+					}
+
+					if (typeof(TValue) == typeof(bool))
+					{
+						if (valueStr.Trim() == "1" ||
+							valueStr.Trim().ToLower() == "true") value = (TValue) (object) true;
+						else if (valueStr.Trim() == "0" ||
+							valueStr.Trim().ToLower() == "false") value = (TValue) (object) false;
+						else throw new FormatException("Invalid bool value");
+					}
+					else if (typeof(TValue) == typeof(DateTime))
+					{
+						value = (TValue) (object) DateTime.Parse(valueStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+					}
+					else if (typeof(TValue) == typeof(TimeSpan))
+					{
+						value = (TValue) (object) new TimeSpan(long.Parse(valueStr, CultureInfo.InvariantCulture));
+					}
+					else
+					{
+						value = (TValue) Convert.ChangeType(valueStr, typeof(TValue), CultureInfo.InvariantCulture);
+					}
+
+					dictionary.Add(key2, value);
+				}
+#if WITH_FIELDLOG
+				catch (FormatException ex)
+				{
+					// Ignore entries that cannot be converted to the requested type (for key and value)
+					FL.Warning(ex, "Converting entry from NameValueCollection");
+				}
+#else
+				catch (FormatException)
+				{
+					// Ignore entries that cannot be converted to the requested type (for key and value)
+				}
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Converts the contents of the dictionary into strings and sets a new
+		/// <see cref="NameValueCollection"/> instance in the settings store.
+		/// </summary>
+		private void WriteToStore()
+		{
+			NameValueCollection collection = new NameValueCollection(dictionary.Count);
+			foreach (var kvp in dictionary)
+			{
+				string keyStr;
+				string valueStr;
+
+				// Special type conversions
+				if (typeof(TKey) == typeof(bool))
+				{
+					keyStr = (bool) (object) kvp.Key ? "true" : "false";
+				}
+				else if (typeof(TKey) == typeof(DateTime))
+				{
+					keyStr = ((DateTime) (object) kvp.Key).ToString("o", CultureInfo.InvariantCulture);
+				}
+				else if (typeof(TKey) == typeof(TimeSpan))
+				{
+					keyStr = ((TimeSpan) (object) kvp.Key).Ticks.ToString(CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					keyStr = Convert.ToString(kvp.Key, CultureInfo.InvariantCulture);
+				}
+
+				if (typeof(TValue) == typeof(bool))
+				{
+					valueStr = (bool) (object) kvp.Value ? "true" : "false";
+				}
+				else if (typeof(TValue) == typeof(DateTime))
+				{
+					valueStr = ((DateTime) (object) kvp.Value).ToString("o", CultureInfo.InvariantCulture);
+				}
+				else if (typeof(TValue) == typeof(TimeSpan))
+				{
+					valueStr = ((TimeSpan) (object) kvp.Value).Ticks.ToString(CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					valueStr = Convert.ToString(kvp.Value, CultureInfo.InvariantCulture);
+				}
+
+				collection.Add(keyStr, valueStr);
+			}
+			store.Set(key, collection);
+		}
+
+		#region IDictionary members
+
+		public void Add(TKey key, TValue value)
+		{
+			dictionary.Add(key, value);
+			WriteToStore();
+		}
+
+		public bool ContainsKey(TKey key)
+		{
+			return dictionary.ContainsKey(key);
+		}
+
+		public ICollection<TKey> Keys
+		{
+			get { return dictionary.Keys; }
+		}
+
+		public bool Remove(TKey key)
+		{
+			bool res = dictionary.Remove(key);
+			WriteToStore();
+			return res;
+		}
+
+		public bool TryGetValue(TKey key, out TValue value)
+		{
+			return dictionary.TryGetValue(key, out value);
+		}
+
+		public ICollection<TValue> Values
+		{
+			get { return dictionary.Values; }
+		}
+
+		public TValue this[TKey key]
+		{
+			get
+			{
+				return dictionary[key];
+			}
+			set
+			{
+				dictionary[key] = value;
+				WriteToStore();
+			}
+		}
+
+		void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
+		{
+			((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Add(item);
+			WriteToStore();
+		}
+
+		public void Clear()
+		{
+			dictionary.Clear();
+			WriteToStore();
+		}
+
+		bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+		{
+			return ((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Contains(item);
+		}
+
+		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+		{
+			((ICollection<KeyValuePair<TKey, TValue>>) dictionary).CopyTo(array, arrayIndex);
+		}
+
+		public int Count
+		{
+			get { return dictionary.Count; }
+		}
+
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
+
+		bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
+		{
+			bool res = ((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Remove(item);
+			WriteToStore();
+			return res;
+		}
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			return ((IEnumerable<KeyValuePair<TKey, TValue>>) dictionary).GetEnumerator();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return ((System.Collections.IEnumerable) dictionary).GetEnumerator();
+		}
+
+		#endregion IDictionary members
+	}
+
+	#endregion Bound collection classes
 }

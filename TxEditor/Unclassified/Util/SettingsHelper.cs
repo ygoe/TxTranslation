@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace Unclassified.Util
@@ -12,6 +14,8 @@ namespace Unclassified.Util
 	/// </summary>
 	public static class SettingsHelper
 	{
+		#region Settings file path methods
+
 		/// <summary>
 		/// Returns a settings file path in the user's AppData directory.
 		/// </summary>
@@ -27,6 +31,10 @@ namespace Unclassified.Util
 					.Replace('/', Path.DirectorySeparatorChar),
 				fileName);
 		}
+
+		#endregion Settings file path methods
+
+		#region Window state handling
 
 		// TODO: This is only for WPF windows. Add an option for Windows Forms.
 
@@ -72,7 +80,57 @@ namespace Unclassified.Util
 				settings.IsMaximized = window.WindowState == WindowState.Maximized;
 			};
 		}
+
+		#endregion Window state handling
+
+		#region ISettingsStore extension methods
+
+		/// <summary>
+		/// Gets the display name of the storage location for an <see cref="ISettingsStore"/>
+		/// instance. This includes optional flags.
+		/// </summary>
+		/// <param name="settingsStore">The settings store instance of which to return the location.</param>
+		/// <returns></returns>
+		public static string GetLocationDisplayName(this ISettingsStore settingsStore)
+		{
+			if (settingsStore == null) throw new ArgumentNullException("settingsStore");
+
+			FileSettingsStore fileStore = settingsStore as FileSettingsStore;
+			if (fileStore != null)
+			{
+				return fileStore.FileName +
+					(fileStore.IsReadOnly ? " [RO]" : "") +
+					(fileStore.IsEncrypted ? " [ENC]" : "");
+			}
+			return settingsStore.ToString();
+		}
+
+		/// <summary>
+		/// Removes multiple setting keys from the settings store, matching a regular expression
+		/// pattern.
+		/// </summary>
+		/// <param name="settingsStore">The settings store instance in which to remove keys.</param>
+		/// <param name="keyRegex">The Regex pattern of the setting keys to remove.</param>
+		/// <returns>true if any key was removed, false if none existed or matched.</returns>
+		public static bool RemovePattern(this ISettingsStore settingsStore, string keyRegex)
+		{
+			if (settingsStore == null) throw new ArgumentNullException("settingsStore");
+
+			bool anyRemoved = false;
+			foreach (string key in settingsStore.GetKeys())
+			{
+				if (Regex.IsMatch(key, keyRegex))
+				{
+					anyRemoved |= settingsStore.Remove(key);
+				}
+			}
+			return anyRemoved;
+		}
+
+		#endregion ISettingsStore extension methods
 	}
+
+	#region Window state settings interface
 
 	/// <summary>
 	/// Defines a settings structure that represents a window location, size and state.
@@ -104,4 +162,6 @@ namespace Unclassified.Util
 		[DefaultValue(false)]
 		bool IsMaximized { get; set; }
 	}
+
+	#endregion Window state settings interface
 }

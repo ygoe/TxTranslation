@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -19,8 +20,31 @@ namespace Unclassified.Util
 	/// file.
 	/// </summary>
 	/// <remarks>
-	/// While this class is thread-safe enough to avoid data corruption, it may be blocking a bit
-	/// too often and cause dead-locks. Use it with care and better avoid cross-thread access.
+	/// <para>
+	///   Every time the file is written, the existing file is renamed to the extension ".bak". This
+	///   backup file is permanently kept and shall handle write errors due to power or disk
+	///   failures in the moment of writing the settings file.
+	/// </para>
+	/// <para>
+	///   The file is read into a Dictionary&lt;string, object&gt; in memory in the constructor. If
+	///   an entry value cannot be parsed for the indicated value type, or a
+	///   <see cref="FormatException"/> or <see cref="XmlException"/> is thrown otherwise while
+	///   reading the file contents, the file is renamed to the extension ".broken". If a backup
+	///   file with the extension ".bak" exists, it will be copied to the regular file name once and
+	///   the file will be read. If this file also cannot be read, no settings data will be
+	///   available in the store initially. The static event <see cref="LoadError"/> can be used to
+	///   handle read errors in the application.
+	/// </para>
+	/// <para>
+	///   Trying to read a setting value with an incompatible type, e. g. reading the string value
+	///   "abc" with the <see cref="GetInt"/> method, will cause no value to be returned. If a
+	///   fallback value is provided, this will be returned instead. Accessing a value with the
+	///   wrong method has the same behaviour as if the key was not there at all.
+	/// </para>
+	/// <para>
+	///   While this class is thread-safe enough to avoid data corruption, it may be blocking a bit
+	///   too often and cause dead-locks. Use it with care and better avoid cross-thread access.
+	/// </para>
 	/// </remarks>
 	public class FileSettingsStore : ISettingsStore
 	{
@@ -77,6 +101,11 @@ namespace Unclassified.Util
 		private string password;
 
 		/// <summary>
+		/// Indicates whether there was a problem reading the file on loading.
+		/// </summary>
+		private bool hadProblem;
+
+		/// <summary>
 		/// Indicates whether the instance has already been disposed.
 		/// </summary>
 		private bool isDisposed;
@@ -130,7 +159,7 @@ namespace Unclassified.Util
 			this.password = password;
 			this.readOnly = readOnly;
 			Load(fileName);
-			
+
 			if (DelayedCall.SupportsSynchronization)
 			{
 				saveDc = DelayedCall.Create(Save, SaveDelay);
@@ -142,6 +171,50 @@ namespace Unclassified.Util
 		}
 
 		#endregion Constructors
+
+		#region Public properties
+
+		/// <summary>
+		/// Gets the file name of the currently used setting file.
+		/// </summary>
+		public string FileName
+		{
+			get { return fileName; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the instance is read-only.
+		/// </summary>
+		public bool IsReadOnly
+		{
+			get { return readOnly; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the current settings file is encrypted.
+		/// </summary>
+		public bool IsEncrypted
+		{
+			get { return !string.IsNullOrEmpty(password); }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether there was a problem reading the file on loading.
+		/// </summary>
+		public bool HadProblem
+		{
+			get { return hadProblem; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the instance is disposed.
+		/// </summary>
+		public bool IsDisposed
+		{
+			get { return isDisposed; }
+		}
+
+		#endregion Public properties
 
 		#region Write access
 
@@ -158,6 +231,7 @@ namespace Unclassified.Util
 			{
 				newValue = Convert.ChangeType(newValue, newValue.GetType().GetEnumUnderlyingType());
 			}
+
 			// Check for supported type
 			if (newValue is string ||
 				newValue is string[] ||
@@ -172,7 +246,8 @@ namespace Unclassified.Util
 				newValue is DateTime ||
 				newValue is DateTime[] ||
 				newValue is TimeSpan ||
-				newValue is TimeSpan[])
+				newValue is TimeSpan[] ||
+				newValue is NameValueCollection)
 			{
 				return;
 			}
@@ -204,11 +279,12 @@ namespace Unclassified.Util
 					if (newValue.Equals(oldValue)) return;
 
 					// Unpack enum value
+					// TODO: This doesn't handle arrays of enums
 					if (newValue.GetType().IsEnum)
 					{
 						newValue = Convert.ChangeType(newValue, newValue.GetType().GetEnumUnderlyingType());
 					}
-					
+
 					store[key] = newValue;
 					OnPropertyChanged(key);
 
@@ -221,7 +297,7 @@ namespace Unclassified.Util
 		/// Removes a setting key from the settings store.
 		/// </summary>
 		/// <param name="key">The setting key to remove.</param>
-		/// <returns>true if the value was deleted, false if it did not exist.</returns>
+		/// <returns>true if the key was removed, false if it did not exist.</returns>
 		public bool Remove(string key)
 		{
 			lock (syncLock)
@@ -257,7 +333,7 @@ namespace Unclassified.Util
 				if (store.ContainsKey(oldKey))
 				{
 					object data = store[oldKey];
-					
+
 					store.Remove(oldKey);
 					OnPropertyChanged(oldKey);
 
@@ -697,6 +773,61 @@ namespace Unclassified.Util
 			}
 		}
 
+		/// <summary>
+		/// Gets the current NameValueCollection of a setting key, or an empty collection if the key
+		/// is unset or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		public NameValueCollection GetNameValueCollection(string key)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+
+				object data = null;
+				if (store.ContainsKey(key)) data = store[key];
+
+				if (data is NameValueCollection) return data as NameValueCollection;
+				return new NameValueCollection();
+			}
+		}
+
+		/// <summary>
+		/// Creates a list wrapper for an array-typed key. Changes to the list are written back to
+		/// the settings store.
+		/// </summary>
+		/// <typeparam name="T">The type of list items.</typeparam>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		public IList<T> CreateList<T>(string key)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+
+				return new SettingsStoreBoundList<T>(this, key);
+			}
+		}
+
+		/// <summary>
+		/// Creates a dictionary wrapper for a NameValueCollection-typed key. Changes to the
+		/// dictionary are written back to the settings store.
+		/// </summary>
+		/// <typeparam name="TKey">The type of dictionary keys.</typeparam>
+		/// <typeparam name="TValue">The type of dictionary values.</typeparam>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		public IDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string key)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+
+				return new SettingsStoreBoundDictionary<TKey, TValue>(this, key);
+			}
+		}
+
 		#endregion Read access
 
 		#region Loading and saving
@@ -715,6 +846,8 @@ namespace Unclassified.Util
 				}
 				this.fileName = fileName;
 
+				// Run the following code at most two times.
+				// First with the regular file, second with a restored backup if it exists.
 				int tryCount = 2;
 				while (tryCount-- > 0)
 				{
@@ -726,7 +859,7 @@ namespace Unclassified.Util
 						if (!string.IsNullOrEmpty(this.password))
 						{
 #if WITH_FIELDLOG
-							FL.Trace("SettingsFile.Load", "fileName = " + fileName + "\nWith password");
+							FL.Trace("FileSettingsStore.Load", "fileName = " + fileName + "\nWith password");
 #endif
 							using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
 							{
@@ -743,6 +876,7 @@ namespace Unclassified.Util
 									using (StreamReader sr = new StreamReader(cs))
 									{
 										xdoc.Load(sr);
+										// DEBUG:
 										//string data = sr.ReadToEnd();
 										//xdoc.LoadXml(data);
 									}
@@ -752,7 +886,7 @@ namespace Unclassified.Util
 						else
 						{
 #if WITH_FIELDLOG
-							FL.Trace("SettingsFile.Load", "fileName = " + fileName + "\nNo password");
+							FL.Trace("FileSettingsStore.Load", "fileName = " + fileName + "\nNo password");
 #endif
 							using (StreamReader sr = new StreamReader(fileName))
 							{
@@ -766,74 +900,76 @@ namespace Unclassified.Util
 							if (xn.Name == "entry")
 							{
 								string key = xn.Attributes["key"].Value.Trim();
+								string type = xn.Attributes["type"].Value.Trim();
+
 								if (key == "") throw new XmlException("Empty entry key");
 
-								if (xn.Attributes["type"].Value == "string")
+								if (type == "string")
 								{
 									store.Add(key, xn.InnerText);
 								}
-								else if (xn.Attributes["type"].Value == "string[]" ||
-									xn.Attributes["type"].Value == "string-array")
+								else if (type == "string[]" ||
+									type == "string-array")
 								{
-									List<string> l = new List<string>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<string> list = new List<string>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										l.Add(n.InnerText);
+										list.Add(itemNode.InnerText);
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "int")
+								else if (type == "int")
 								{
-									store.Add(key, int.Parse(xn.InnerText));
+									store.Add(key, int.Parse(xn.InnerText, CultureInfo.InvariantCulture));
 								}
-								else if (xn.Attributes["type"].Value == "int[]" ||
-									xn.Attributes["type"].Value == "int-array")
+								else if (type == "int[]" ||
+									type == "int-array")
 								{
-									List<int> l = new List<int>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<int> list = new List<int>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										if (n.InnerText == "")
-											l.Add(0);
+										if (itemNode.InnerText == "")
+											list.Add(0);
 										else
-											l.Add(int.Parse(n.InnerText));
+											list.Add(int.Parse(itemNode.InnerText, CultureInfo.InvariantCulture));
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "long")
+								else if (type == "long")
 								{
-									store.Add(key, long.Parse(xn.InnerText));
+									store.Add(key, long.Parse(xn.InnerText, CultureInfo.InvariantCulture));
 								}
-								else if (xn.Attributes["type"].Value == "long[]" ||
-									xn.Attributes["type"].Value == "long-array")
+								else if (type == "long[]" ||
+									type == "long-array")
 								{
-									List<long> l = new List<long>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<long> list = new List<long>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										if (n.InnerText == "")
-											l.Add(0);
+										if (itemNode.InnerText == "")
+											list.Add(0);
 										else
-											l.Add(long.Parse(n.InnerText));
+											list.Add(long.Parse(itemNode.InnerText, CultureInfo.InvariantCulture));
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "double")
+								else if (type == "double")
 								{
 									store.Add(key, double.Parse(xn.InnerText, CultureInfo.InvariantCulture));
 								}
-								else if (xn.Attributes["type"].Value == "double[]" ||
-									xn.Attributes["type"].Value == "double-array")
+								else if (type == "double[]" ||
+									type == "double-array")
 								{
-									List<double> l = new List<double>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<double> list = new List<double>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										if (n.InnerText == "")
-											l.Add(0);
+										if (itemNode.InnerText == "")
+											list.Add(0);
 										else
-											l.Add(double.Parse(n.InnerText, CultureInfo.InvariantCulture));
+											list.Add(double.Parse(itemNode.InnerText, CultureInfo.InvariantCulture));
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "bool")
+								else if (type == "bool")
 								{
 									if (xn.InnerText.ToString().Trim() == "1" ||
 										xn.InnerText.ToString().Trim().ToLower() == "true") store.Add(key, true);
@@ -841,54 +977,65 @@ namespace Unclassified.Util
 										xn.InnerText.ToString().Trim().ToLower() == "false") store.Add(key, false);
 									else throw new FormatException("Invalid bool value");
 								}
-								else if (xn.Attributes["type"].Value == "bool[]" ||
-									xn.Attributes["type"].Value == "bool-array")
+								else if (type == "bool[]" ||
+									type == "bool-array")
 								{
-									List<bool> l = new List<bool>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<bool> list = new List<bool>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										if (n.InnerText.ToString().Trim() == "1" ||
-											n.InnerText.ToString().Trim().ToLower() == "true") l.Add(true);
-										else if (n.InnerText.ToString().Trim() == "0" ||
-											n.InnerText.ToString().Trim().ToLower() == "false") l.Add(false);
+										if (itemNode.InnerText.ToString().Trim() == "1" ||
+											itemNode.InnerText.ToString().Trim().ToLower() == "true") list.Add(true);
+										else if (itemNode.InnerText.ToString().Trim() == "0" ||
+											itemNode.InnerText.ToString().Trim().ToLower() == "false") list.Add(false);
 										else throw new FormatException("Invalid bool value");
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "DateTime")
+								else if (type == "DateTime")
 								{
-									store.Add(key, DateTime.Parse(xn.InnerText, null, DateTimeStyles.RoundtripKind));
+									store.Add(key, DateTime.Parse(xn.InnerText, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind));
 								}
-								else if (xn.Attributes["type"].Value == "DateTime[]")
+								else if (type == "DateTime[]")
 								{
-									List<DateTime> l = new List<DateTime>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<DateTime> list = new List<DateTime>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
 										long lng;
-										if (n.InnerText == "")
-											l.Add(DateTime.MinValue);
-										else if (long.TryParse(n.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out lng))   // Old format: Ticks as long integer
-											l.Add(new DateTime(lng));
+										if (itemNode.InnerText == "")
+											list.Add(DateTime.MinValue);
+										else if (long.TryParse(itemNode.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture, out lng))   // Old format: Ticks as long integer
+											list.Add(new DateTime(lng));
 										else
-											l.Add(DateTime.Parse(n.InnerText, null, DateTimeStyles.RoundtripKind));
+											list.Add(DateTime.Parse(itemNode.InnerText, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind));
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
 								}
-								else if (xn.Attributes["type"].Value == "TimeSpan")
+								else if (type == "TimeSpan")
 								{
-									store.Add(key, new TimeSpan(long.Parse(xn.InnerText)));
+									store.Add(key, new TimeSpan(long.Parse(xn.InnerText, CultureInfo.InvariantCulture)));
 								}
-								else if (xn.Attributes["type"].Value == "TimeSpan[]")
+								else if (type == "TimeSpan[]")
 								{
-									List<TimeSpan> l = new List<TimeSpan>();
-									foreach (XmlNode n in xn.SelectNodes("item"))
+									List<TimeSpan> list = new List<TimeSpan>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
-										if (n.InnerText == "")
-											l.Add(TimeSpan.Zero);
+										if (itemNode.InnerText == "")
+											list.Add(TimeSpan.Zero);
 										else
-											l.Add(new TimeSpan(long.Parse(n.InnerText)));
+											list.Add(new TimeSpan(long.Parse(itemNode.InnerText, CultureInfo.InvariantCulture)));
 									}
-									store.Add(key, l.ToArray());
+									store.Add(key, list.ToArray());
+								}
+								else if (type == "map")
+								{
+									NameValueCollection collection = new NameValueCollection();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
+									{
+										string itemName = itemNode.Attributes["name"].Value;
+										string itemValue = itemNode.InnerText;
+										collection[itemName] = itemValue;
+									}
+									store.Add(key, collection);
 								}
 								else
 								{
@@ -901,13 +1048,13 @@ namespace Unclassified.Util
 					catch (DirectoryNotFoundException)
 					{
 #if WITH_FIELDLOG
-						FL.Trace("SettingsFile.Load: DirectoryNotFoundException, no settings loaded");
+						FL.Trace("FileSettingsStore.Load: DirectoryNotFoundException, no settings loaded");
 #endif
 					}
 					catch (FileNotFoundException)
 					{
 #if WITH_FIELDLOG
-						FL.Trace("SettingsFile.Load: FileNotFoundException, no settings loaded");
+						FL.Trace("FileSettingsStore.Load: FileNotFoundException, no settings loaded");
 #endif
 					}
 					catch (FormatException ex)
@@ -918,6 +1065,7 @@ namespace Unclassified.Util
 					{
 						HandleBrokenFile(ex);
 					}
+					hadProblem = true;
 
 					// Try and use the backup file (once) if the file wasn't loaded
 					string backupFileName = fileName + ".bak";
@@ -926,6 +1074,8 @@ namespace Unclassified.Util
 					FL.Info("Restoring backup settings file and retrying", "backupFileName = " + backupFileName);
 #endif
 					File.Copy(backupFileName, fileName, true);
+
+					// Read the restored backup file in a second iteration.
 				}
 			}
 		}
@@ -934,7 +1084,7 @@ namespace Unclassified.Util
 		/// Handles a broken settings file. Renames the file, clears the settings store and raises
 		/// the LoadError event so that the application can log the error.
 		/// </summary>
-		/// <param name="ex"></param>
+		/// <param name="ex">The exception instance that was thrown.</param>
 		private void HandleBrokenFile(Exception ex)
 		{
 #if WITH_FIELDLOG
@@ -979,7 +1129,7 @@ namespace Unclassified.Util
 				if (isDisposed) throw new ObjectDisposedException("");
 				if (readOnly) throw new InvalidOperationException("This SettingsStore instance is created in read-only mode.");
 
-				if (saveDc.IsWaiting)
+				if (saveDc.IsDisposed || saveDc.IsWaiting)
 				{
 					saveDc.Cancel();
 					Save();
@@ -1028,9 +1178,9 @@ namespace Unclassified.Util
 						string[] sa = (string[]) store[key];
 						foreach (string s in sa)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = s;
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = s;
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is int)
@@ -1048,9 +1198,9 @@ namespace Unclassified.Util
 						int[] ia = (int[]) store[key];
 						foreach (int i in ia)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = i.ToString(CultureInfo.InvariantCulture);
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = i.ToString(CultureInfo.InvariantCulture);
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is long)
@@ -1068,9 +1218,9 @@ namespace Unclassified.Util
 						long[] la = (long[]) store[key];
 						foreach (long l in la)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = l.ToString(CultureInfo.InvariantCulture);
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = l.ToString(CultureInfo.InvariantCulture);
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is double)
@@ -1088,9 +1238,9 @@ namespace Unclassified.Util
 						double[] da = (double[]) store[key];
 						foreach (double d in da)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = d.ToString(CultureInfo.InvariantCulture);
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = d.ToString(CultureInfo.InvariantCulture);
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is bool)
@@ -1108,9 +1258,9 @@ namespace Unclassified.Util
 						bool[] ba = (bool[]) store[key];
 						foreach (bool b in ba)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = b ? "true" : "false";
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = b ? "true" : "false";
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is DateTime)
@@ -1118,7 +1268,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "DateTime";
 						xn.Attributes.Append(xa);
-						xn.InnerText = GetDateTime(key).ToString("o");
+						xn.InnerText = GetDateTime(key).ToString("o", CultureInfo.InvariantCulture);
 					}
 					else if (store[key] is DateTime[])
 					{
@@ -1128,9 +1278,9 @@ namespace Unclassified.Util
 						DateTime[] da = (DateTime[]) store[key];
 						foreach (DateTime d in da)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = d.ToString("o");
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = d.ToString("o");
+							xn.AppendChild(itemNode);
 						}
 					}
 					else if (store[key] is TimeSpan)
@@ -1148,9 +1298,25 @@ namespace Unclassified.Util
 						TimeSpan[] ta = (TimeSpan[]) store[key];
 						foreach (TimeSpan t in ta)
 						{
-							XmlNode n = xdoc.CreateElement("item");
-							n.InnerText = t.Ticks.ToString(CultureInfo.InvariantCulture);
-							xn.AppendChild(n);
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = t.Ticks.ToString(CultureInfo.InvariantCulture);
+							xn.AppendChild(itemNode);
+						}
+					}
+					else if (store[key] is NameValueCollection)
+					{
+						xa = xdoc.CreateAttribute("type");
+						xa.Value = "map";
+						xn.Attributes.Append(xa);
+						NameValueCollection collection = (NameValueCollection) store[key];
+						for (int i = 0; i < collection.Count; i++)
+						{
+							XmlNode itemNode = xdoc.CreateElement("item");
+							xa = xdoc.CreateAttribute("name");
+							xa.Value = collection.GetKey(i);
+							itemNode.Attributes.Append(xa);
+							itemNode.InnerText = collection[i];
+							xn.AppendChild(itemNode);
 						}
 					}
 					else
@@ -1163,12 +1329,12 @@ namespace Unclassified.Util
 				}
 
 #if WITH_FIELDLOG
-				FL.Trace("SettingsFile.Save", "fileName = " + fileName);
+				FL.Trace("FileSettingsStore.Save", "fileName = " + fileName);
 #endif
 				if (!Directory.Exists(Path.GetDirectoryName(fileName)))
 				{
 #if WITH_FIELDLOG
-					FL.Trace("SettingsFile.Save: Creating directory");
+					FL.Trace("FileSettingsStore.Save: Creating directory");
 #endif
 					Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 				}
@@ -1221,7 +1387,21 @@ namespace Unclassified.Util
 
 		#endregion Loading and saving
 
-		#region IDisposable members
+		#region Finalizer and IDisposable members
+
+		/// <summary>
+		/// Finalizer.
+		/// </summary>
+		~FileSettingsStore()
+		{
+			Dispose();
+#if WITH_FIELDLOG
+			if (!FL.IsShutdown)
+			{
+				FL.Warning("FileSettingsStore.Dispose has not been called, saving in the Finalizer", "fileName = " + fileName);
+			}
+#endif
+		}
 
 		/// <summary>
 		/// Saves all settings to the file and frees all resources.
@@ -1239,10 +1419,11 @@ namespace Unclassified.Util
 					saveDc.Dispose();
 					saveDc = null;
 				}
+				GC.SuppressFinalize(this);
 			}
 		}
 
-		#endregion IDisposable members
+		#endregion Finalizer and IDisposable members
 
 		#region INotifyPropertyChanged members
 

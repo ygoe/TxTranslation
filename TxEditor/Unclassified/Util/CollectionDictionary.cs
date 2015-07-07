@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright (c) 2014, Yves Goergen, http://unclassified.software/source/collectiondictionary
+//
+// Copying and distribution of this file, with or without modification, are permitted provided the
+// copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 

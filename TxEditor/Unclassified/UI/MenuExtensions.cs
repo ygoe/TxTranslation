@@ -27,7 +27,7 @@ namespace Unclassified.UI
 					Visibility.Visible : Visibility.Collapsed;
 			}
 		}
-		
+
 		/// <summary>
 		/// Hides all separators at the beginning and end of the menu and reduces multiple
 		/// subsequent separators to a single one.

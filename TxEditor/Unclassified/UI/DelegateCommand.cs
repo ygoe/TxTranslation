@@ -84,7 +84,8 @@ namespace Unclassified.UI
 		/// <exception cref="ArgumentNullException">The execute argument must not be null.</exception>
 		public DelegateCommand(Action<object> execute, Func<object, bool> canExecute)
 		{
-			if (execute == null) { throw new ArgumentNullException("execute"); }
+			if (execute == null)
+				throw new ArgumentNullException("execute");
 
 			this.execute = execute;
 			this.canExecute = canExecute;
@@ -112,7 +113,7 @@ namespace Unclassified.UI
 			}
 			remove
 			{
-				if (weakHandlers == null) { return; }
+				if (weakHandlers == null) return;
 
 				for (int i = weakHandlers.Count - 1; i >= 0; i--)
 				{
@@ -168,24 +169,9 @@ namespace Unclassified.UI
 		[DebuggerStepThrough]
 		protected virtual void OnCanExecuteChanged(EventArgs e)
 		{
-			//var field = execute.Target.GetType().GetField("execute");
-			//Action a = null;
-			//if (field != null)
-			//{
-			//    a = field.GetValue(execute.Target) as Action;
-			//}
-			//if (a != null)
-			//    PerfLog.Enter("DelegateCommand.OnCanExecuteChanged()", a.Method.Name + "() on " + a.Target.ToString());
-			//else
-			//    PerfLog.Enter("DelegateCommand.OnCanExecuteChanged()", "(unknown)");
-
 			raiseCanExecuteChangedPending = false;
 			PurgeWeakHandlers();
-			if (weakHandlers == null)
-			{
-				//PerfLog.Leave("DelegateCommand.OnCanExecuteChanged()", "no active handlers");
-				return;
-			}
+			if (weakHandlers == null) return;
 
 			WeakReference[] handlers = weakHandlers.ToArray();
 			foreach (WeakReference reference in handlers)
@@ -201,7 +187,7 @@ namespace Unclassified.UI
 		[DebuggerStepThrough]
 		private void PurgeWeakHandlers()
 		{
-			if (weakHandlers == null) { return; }
+			if (weakHandlers == null) return;
 
 			for (int i = weakHandlers.Count - 1; i >= 0; i--)
 			{
@@ -211,7 +197,8 @@ namespace Unclassified.UI
 				}
 			}
 
-			if (weakHandlers.Count == 0) { weakHandlers = null; }
+			if (weakHandlers.Count == 0)
+				weakHandlers = null;
 		}
 
 		#endregion CanExecuteChanged event
@@ -282,6 +269,7 @@ namespace Unclassified.UI
 		/// Convenience method that invokes the command without parameters if the
 		/// <see cref="CanExecute(object)"/> method returns true.
 		/// </summary>
+		/// <returns>true if this command was executed; otherwise, false.</returns>
 		public bool TryExecute()
 		{
 			return TryExecute(null);
@@ -297,7 +285,10 @@ namespace Unclassified.UI
 		/// </summary>
 		public bool IsEnabled
 		{
-			get { return isEnabled; }
+			get
+			{
+				return isEnabled;
+			}
 			set
 			{
 				if (value != isEnabled)

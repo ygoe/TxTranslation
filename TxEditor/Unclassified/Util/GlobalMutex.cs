@@ -35,7 +35,7 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
 		{
 			instance.Dispose();
 		}

@@ -175,7 +175,6 @@ namespace Unclassified.UI
 				[PreserveSig()]
 				uint Show([In, Optional] IntPtr hwndOwner); //IModalWindow
 
-
 				[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 				uint SetFileTypes([In] uint cFileTypes, [In, MarshalAs(UnmanagedType.LPArray)] string[] rgFilterSpec);
 

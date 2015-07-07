@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace Unclassified.Util
 {
@@ -140,6 +141,11 @@ namespace Unclassified.Util
 				}
 				while (repeatCondition != null && repeatCondition());
 			});
+		}
+
+		public static void AppDispatch(Action action)
+		{
+			Application.Current.Dispatcher.Invoke(action);
 		}
 	}
 }

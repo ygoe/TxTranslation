@@ -1,13 +1,23 @@
-﻿//#define CSHARP50
+﻿// Copyright (c) 2015, Yves Goergen, http://unclassified.software/source/viewmodelbase
+//
+// Copying and distribution of this file, with or without modification, are permitted provided the
+// copyright notice and this notice are preserved. This file is offered as-is, without any warranty.
+
+// Define the following symbol if this class is used in a C# 5.0 or newer project.
+//#define CSHARP50
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Threading;
 using Unclassified.Util;
+#if CSHARP50
+using System.Runtime.CompilerServices;
+#endif
 
 namespace Unclassified.UI
 {
@@ -19,10 +29,12 @@ namespace Unclassified.UI
 #if !CSHARP50
 		/// <summary>
 		/// Compatibility dummy attribute for C# before 5. This attribute does not backport the
-		/// functionality from later C# versions!
+		/// functionality from later C# versions.
 		/// </summary>
 		[AttributeUsage(AttributeTargets.Parameter)]
-		public class CallerMemberNameAttribute : Attribute { }
+		public class CallerMemberNameAttribute : Attribute
+		{
+		}
 #endif
 
 		#region Constructor
@@ -85,7 +97,7 @@ namespace Unclassified.UI
 		#endregion Commands support
 
 		#region Property access methods
-		
+
 		// Ideas based on concept of Steve Cadwallader:
 		// http://www.codecadwallader.com/2013/04/05/inotifypropertychanged-1-of-3-without-the-strings/
 		// http://www.codecadwallader.com/2013/04/06/inotifypropertychanged-2-of-3-without-the-backing-fields/
@@ -102,7 +114,7 @@ namespace Unclassified.UI
 		/// <typeparam name="T">The property type.</typeparam>
 		/// <param name="propertyName">The property name.</param>
 		/// <returns>The current value.</returns>
-		protected T GetValue<T>(string propertyName)
+		protected T GetValue<T>([CallerMemberName] string propertyName = null)
 		{
 			if (propertyName == null) throw new ArgumentNullException("propertyName");
 
@@ -231,6 +243,36 @@ namespace Unclassified.UI
 
 		#endregion Property access methods
 
+		#region View state
+
+		private ExpandoObject viewState = new ExpandoObject();
+
+		/// <summary>
+		/// Gets a dynamic object that can be used by the view to save its view state.
+		/// </summary>
+		public dynamic ViewState
+		{
+			get { return viewState; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the view state is not empty.
+		/// </summary>
+		protected bool HasViewState
+		{
+			get { return ((IDictionary<string, object>) ViewState).Count > 0; }
+		}
+
+		/// <summary>
+		/// Clears all data from the view state.
+		/// </summary>
+		protected void ClearViewState()
+		{
+			((IDictionary<string, object>) ViewState).Clear();
+		}
+
+		#endregion
+
 		#region Data input cleanup
 
 		/// <summary>
@@ -335,17 +377,30 @@ namespace Unclassified.UI
 		/// <summary>
 		/// The message text that indicates how many more error messages were not returned.
 		/// </summary>
-		public static string MoreErrorsMessage = "({0} weitere Meldungen werden nicht angezeigt)";
+		public static string MoreErrorsMessage = "({0} more messages are not displayed)";
+		//public static string MoreErrorsMessage = "({0} weitere Meldungen werden nicht angezeigt)";
 
 		/// <summary>
 		/// Gets a value indicating whether the view model instance has validation errors.
 		/// </summary>
-		public bool HasErrors { get { return GetErrors(1).Count > 0; } }
+		public bool HasErrors
+		{
+			get
+			{
+				return GetErrors(1).Count > 0;
+			}
+		}
 
 		/// <summary>
 		/// Gets the validation errors in this view model instance.
 		/// </summary>
-		public Dictionary<string, string> Errors { get { return GetErrors(); } }
+		public Dictionary<string, string> Errors
+		{
+			get
+			{
+				return GetErrors();
+			}
+		}
 
 		private bool validationPending;
 
@@ -364,13 +419,15 @@ namespace Unclassified.UI
 				if (Dispatcher.CurrentDispatcher == Application.Current.Dispatcher)
 				{
 					validationPending = true;
-					Dispatcher.CurrentDispatcher.BeginInvoke((Action) delegate
-					{
-						// Reset flag first (there's no locking)
-						validationPending = false;
-						OnPropertyChanged("Errors");
-						OnPropertyChanged("HasErrors");
-					}, DispatcherPriority.Loaded);
+					Dispatcher.CurrentDispatcher.BeginInvoke(
+						(Action) delegate
+						{
+							// Reset flag first (there's no locking)
+							validationPending = false;
+							OnPropertyChanged("Errors");
+							OnPropertyChanged("HasErrors");
+						},
+						DispatcherPriority.Loaded);
 				}
 			}
 		}
@@ -551,7 +608,7 @@ namespace Unclassified.UI
 		/// <summary>
 		/// Raises this object's PropertyChanged event.
 		/// </summary>
-		/// <typeparam name="T">Value type of the property.</typeparam>
+		/// <typeparam name="TProperty">Value type of the property.</typeparam>
 		/// <param name="selectorExpression">A lambda expression that describes the property that has a new value.</param>
 		protected void OnPropertyChanged<TProperty>(Expression<Func<TProperty>> selectorExpression)
 		{

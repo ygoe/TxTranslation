@@ -283,7 +283,6 @@ namespace Unclassified.Util
 				if (cmp == 0)
 				{
 					// Direct hit, insert after this existing (undefined behaviour for multiple equal items...)
-					//index++;
 					break;
 				}
 				else if (cmp < 0)

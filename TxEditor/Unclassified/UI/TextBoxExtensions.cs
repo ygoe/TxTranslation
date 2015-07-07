@@ -180,6 +180,20 @@ namespace Unclassified.UI
 		#region On-demand focused binding update
 
 		/// <summary>
+		/// Updates the data binding source of the TextBox to update the model instance with the
+		/// current user input.
+		/// </summary>
+		/// <param name="textBox"></param>
+		public static void UpdateBindingSource(this TextBox textBox)
+		{
+			var be = textBox.GetBindingExpression(TextBox.TextProperty);
+			if (be != null)
+			{
+				be.UpdateSource();
+			}
+		}
+
+		/// <summary>
 		/// Updates the data binding source of the currently focused TextBox to update the model
 		/// instance with the current user input.
 		/// </summary>
@@ -189,11 +203,7 @@ namespace Unclassified.UI
 			TextBox focusedTextBox = Keyboard.FocusedElement as TextBox;
 			if (focusedTextBox != null)
 			{
-				var be = focusedTextBox.GetBindingExpression(TextBox.TextProperty);
-				if (be != null)
-				{
-					be.UpdateSource();
-				}
+				UpdateBindingSource(focusedTextBox);
 			}
 		}
 
