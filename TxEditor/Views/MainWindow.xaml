@@ -567,6 +567,7 @@
 						<MenuItem Header="{Tx:T 'toolbar.text key.delete'}" Command="{Binding DeleteTextKeyCommand}" Icon="{ui:MenuIcon /Images/key_delete.png}"/>
 						<MenuItem Header="{Tx:T 'toolbar.text key.rename'}" Command="{Binding RenameTextKeyCommand}" Icon="{ui:MenuIcon /Images/rename.png}"/>
 						<MenuItem Header="{Tx:T 'toolbar.text key.duplicate'}" Command="{Binding DuplicateTextKeyCommand}" Icon="{ui:MenuIcon /Images/key_duplicate.png}"/>
+						<MenuItem Header="{Tx:T 'menu.text key.copy'}" Command="{Binding CopyTextKeyCommand}"/>
 						<Separator/>
 						<MenuItem Header="{Tx:T 'contextmenu.text key.convert to namespace'}" Command="{Binding ConvertToNamespaceCommand}" Icon="{ui:MenuIcon /Images/textkey_namespace.png}"/>
 						<MenuItem Header="{Tx:T 'contextmenu.text key.convert to text key'}" Command="{Binding ConvertToTextKeyCommand}" Icon="{ui:MenuIcon /Images/key.png}"/>

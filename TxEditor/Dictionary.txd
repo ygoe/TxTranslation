@@ -24,6 +24,7 @@ Sie könnten auch Ihr Glück versuchen und die Seite neu laden. Es können aber 
 		<text key="file filter.all files">Alle Dateien</text>
 		<text key="file filter.tx dictionary files">Tx-Wörterbücher</text>
 		<text key="file filter.xml files">XML-Dateien</text>
+		<text key="menu.text key.copy">Textschlüssel kopieren</text>
 		<text key="msg.cannot backup file.v1">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert, aber manche Dateien wurden vielleicht schon als Sicherungskopie umbenannt und Sie müssen sie wiederherstellen.</text>
 		<text key="msg.cannot backup file.v2">Die Datei „{name}“ kann nicht als Sicherungskopie umbenannt werden. Es wurden keine neuen Daten gespeichert.</text>
 		<text key="msg.cannot copy namespace">Ein Namensraum kann nicht verschachtelt oder an eine andere Stelle im Baum kopiert werden. Bitte geben Sie einen normalen Namen für den Namensraum ein.</text>
@@ -564,6 +565,7 @@ You might want to chance it and retry loading the page. Be warned that additiona
 		<text key="file filter.all files">All files</text>
 		<text key="file filter.tx dictionary files">Tx dictionary files</text>
 		<text key="file filter.xml files">XML files</text>
+		<text key="menu.text key.copy">Copy text key</text>
 		<text key="msg.cannot backup file.v1" comment="Move to backup exception for file format v1 (multiple files)">Cannot rename the file “{name}” for backup. No new data was saved but some files may have been renamed to their backup and you need to restore them.</text>
 		<text key="msg.cannot backup file.v2" comment="Move to backup exception for file format v2 (single file)">Cannot rename the file “{name}” for backup. No new data was saved.</text>
 		<text key="msg.cannot copy namespace">A namespace cannot be nested or copied to another tree position. Please enter a normal name for the namespace.</text>
