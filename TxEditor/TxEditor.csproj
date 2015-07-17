@@ -112,6 +112,7 @@
     <Compile Include="Unclassified\Util\PropertyExtensions.cs" />
     <Compile Include="Unclassified\Util\SettingsAdapterFactory.cs" />
     <Compile Include="Unclassified\Util\SettingsHelper.cs" />
+    <Compile Include="Unclassified\Util\SettingsHelper.Wpf.cs" />
     <Compile Include="Unclassified\Util\StringExtensions.cs" />
     <Compile Include="Unclassified\Util\TaskHelper.cs" />
     <Compile Include="Unclassified\UI\AnimationHelper.cs" />

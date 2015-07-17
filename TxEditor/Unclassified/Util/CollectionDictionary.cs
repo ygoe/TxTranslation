@@ -28,57 +28,61 @@ namespace Unclassified.Util
 		#region Constructors
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that is
-		/// empty, has the default initial capacity, and uses the default equality comparer for the
-		/// key type.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that is empty, has the default initial capacity, and uses the default equality comparer
+		/// for the key type.
 		/// </summary>
 		public CollectionDictionary()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that contains
-		/// elements copied from the specified <see cref="IDictionary"/> and uses the default
-		/// equality comparer for the key type.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that contains elements copied from the specified <see cref="IDictionary{TKey, TValue}"/>
+		/// and uses the default equality comparer for the key type.
 		/// </summary>
-		/// <param name="dictionary">The <see cref="IDictionary"/> whose elements are copied to the new <see cref="CollectionDictionary"/>.</param>
+		/// <param name="dictionary">The dictionary whose elements are copied to the new
+		///   <see cref="CollectionDictionary{TKey, TValue}"/>.</param>
 		public CollectionDictionary(IDictionary<TKey, TValue> dictionary)
 		{
 			LoadFromDictionary(dictionary);
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that is
-		/// empty, has the default initial capacity, and uses the specified
-		/// <see cref="IEqualityComparer"/>.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that is empty, has the default initial capacity, and uses the specified
+		/// <see cref="IEqualityComparer{T}"/>.
 		/// </summary>
-		/// <param name="comparer">The <see cref="IEqualityComparer"/> implementation to use when comparing keys,
-		/// or null to use the default <see cref="EqualityComparer"/> for the type of the key.</param>
+		/// <param name="comparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+		///   comparing keys, or null to use the default <see cref="EqualityComparer{T}"/> for the
+		///   type of the key.</param>
 		public CollectionDictionary(IEqualityComparer<TKey> comparer)
 			: base(comparer)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that is
-		/// empty, has the specified initial capacity, and uses the default equality comparer for
-		/// the key type.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that is empty, has the specified initial capacity, and uses the default equality
+		/// comparer for the key type.
 		/// </summary>
 		/// <param name="capacity">The initial number of elements that the
-		/// <see cref="CollectionDictionary"/> can contain.</param>
+		///   <see cref="CollectionDictionary{TKey, TValue}"/> can contain.</param>
 		public CollectionDictionary(int capacity)
 			: base(capacity)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that contains
-		/// elements copied from the specified <see cref="IDictionary"/> and uses the specified
-		/// <see cref="IEqualityComparer"/>.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that contains elements copied from the specified <see cref="IDictionary{TKey, TValue}"/>
+		/// and uses the specified <see cref="IEqualityComparer{T}"/>.
 		/// </summary>
-		/// <param name="dictionary">The <see cref="IDictionary"/> whose elements are copied to the new <see cref="CollectionDictionary"/>.</param>
-		/// <param name="comparer">The <see cref="IEqualityComparer"/> implementation to use when comparing keys,
-		/// or null to use the default <see cref="EqualityComparer"/> for the type of the key.</param>
+		/// <param name="dictionary">The dictionary whose elements are copied to the new
+		///   <see cref="CollectionDictionary{TKey, TValue}"/>.</param>
+		/// <param name="comparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+		///   comparing keys, or null to use the default <see cref="EqualityComparer{T}"/> for the
+		///   type of the key.</param>
 		public CollectionDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
 			: base(comparer)
 		{
@@ -86,23 +90,25 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CollectionDictionary"/> class that is
-		/// empty, has the specified initial capacity, and uses the specified
-		/// <see cref="IEqualityComparer"/>.
+		/// Initializes a new instance of the <see cref="CollectionDictionary{TKey, TValue}"/> class
+		/// that is empty, has the specified initial capacity, and uses the specified
+		/// <see cref="IEqualityComparer{T}"/>.
 		/// </summary>
-		/// <param name="capacity">The initial number of elements that the <see cref="CollectionDictionary"/> can contain.</param>
-		/// <param name="comparer">The <see cref="IEqualityComparer"/> implementation to use when comparing keys,
-		/// or null to use the default <see cref="EqualityComparer"/> for the type of the key.</param>
+		/// <param name="capacity">The initial number of elements that the
+		///   <see cref="CollectionDictionary{TKey, TValue}"/> can contain.</param>
+		/// <param name="comparer">The <see cref="IEqualityComparer{T}"/> implementation to use when
+		///   comparing keys, or null to use the default <see cref="EqualityComparer{T}"/> for the
+		///   type of the key.</param>
 		public CollectionDictionary(int capacity, IEqualityComparer<TKey> comparer)
 			: base(capacity, comparer)
 		{
 		}
 
 		/// <summary>
-		/// Initializes the <see cref="CollectionDictionary"/> contents from a
-		/// <see cref="Dictionary"/> instance.
+		/// Initializes the <see cref="CollectionDictionary{TKey, TValue}"/> contents from a
+		/// <see cref="Dictionary{TKey, TValue}"/> instance.
 		/// </summary>
-		/// <param name="dictionary">The <see cref="Dictionary"/> to copy elements from.</param>
+		/// <param name="dictionary">The dictionary to copy elements from.</param>
 		private void LoadFromDictionary(IDictionary<TKey, TValue> dictionary)
 		{
 			foreach (var kvp in dictionary)

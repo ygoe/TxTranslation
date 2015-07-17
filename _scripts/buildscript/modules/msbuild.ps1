@@ -96,7 +96,7 @@ function Do-Build-Solution($action)
 	}
 	
 	# Other MSBuild options:
-	#   /v:quiet
+	#   /v:quiet | /v:minimal | /v:normal | /v:detailed
 	#   /clp:ErrorsOnly
 	#   /p:NoWarn=1591;0618;0659;0108
 	# CS warning numbers:
@@ -106,7 +106,7 @@ function Do-Build-Solution($action)
 	#   1591: Missing XML documentation for public type or member
 
 	$buildError = $false
-	& $msbuildBin /nologo (MakeRootedPath $solutionFile) /t:Rebuild /p:Configuration="$configuration" /p:Platform="$buildPlatform" /v:minimal /p:WarningLevel=1 $mParam
+	& $msbuildBin /nologo (MakeRootedPath $solutionFile) /t:Rebuild /p:Configuration="$configuration" /p:Platform="$buildPlatform" /v:minimal $mParam
 	if (-not $?)
 	{
 		$buildError = $true

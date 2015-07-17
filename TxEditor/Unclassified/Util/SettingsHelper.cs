@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace Unclassified.Util
 {
 	/// <summary>
 	/// Provides methods for specialized settings situations.
 	/// </summary>
-	public static class SettingsHelper
+	public static partial class SettingsHelper
 	{
 		#region Settings file path methods
 
@@ -22,66 +20,101 @@ namespace Unclassified.Util
 		/// <param name="directory">The directory in the AppData directory. May include backslashes or slashes for subdirectories.</param>
 		/// <param name="fileName">The settings file name.</param>
 		/// <returns></returns>
+		/// <remarks>
+		/// This method generates platform-default paths for Windows (%AppData%) and Unix/Linux
+		/// systems ($HOME). On Unix/Linux, a period (.) is prepended to the directory name to keep
+		/// it hidden in the user's home directory.
+		/// </remarks>
 		public static string GetAppDataPath(string directory, string fileName)
 		{
-			return Path.Combine(
-				Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-				directory
-					.Replace('\\', Path.DirectorySeparatorChar)
-					.Replace('/', Path.DirectorySeparatorChar),
-				fileName);
+			directory = directory
+				.Replace('\\', Path.DirectorySeparatorChar)
+				.Replace('/', Path.DirectorySeparatorChar);
+			string baseDir;
+
+			switch (Environment.OSVersion.Platform)
+			{
+				case PlatformID.Win32NT:
+				case PlatformID.Win32S:
+				case PlatformID.Win32Windows:
+				case PlatformID.WinCE:
+					baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+					if (baseDir.StartsWith(Environment.SystemDirectory, StringComparison.OrdinalIgnoreCase))
+					{
+						throw new InvalidOperationException("Trying to access per-user settings from the SYSTEM or NETWORK SERVICE account.");
+					}
+					break;
+				default:   // Unix/Linux
+					baseDir = Environment.GetEnvironmentVariable("HOME");
+					if (string.IsNullOrEmpty(baseDir))
+						throw new InvalidOperationException("The HOME environment variable is not set.");
+					directory = "." + directory;
+					break;
+			}
+			return Path.Combine(baseDir, directory, fileName);
+		}
+
+		/// <summary>
+		/// Returns a settings file path in the system's ProgramData directory.
+		/// </summary>
+		/// <param name="directory">The directory in the ProgramData directory. May include backslashes or slashes for subdirectories.</param>
+		/// <param name="fileName">The settings file name.</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method generates platform-default paths for Windows (%ProgramData%) and Unix/Linux
+		/// systems (/etc).
+		/// </remarks>
+		public static string GetProgramDataPath(string directory, string fileName)
+		{
+			directory = directory
+				.Replace('\\', Path.DirectorySeparatorChar)
+				.Replace('/', Path.DirectorySeparatorChar);
+			string baseDir;
+
+			switch (Environment.OSVersion.Platform)
+			{
+				case PlatformID.Win32NT:
+				case PlatformID.Win32S:
+				case PlatformID.Win32Windows:
+				case PlatformID.WinCE:
+					baseDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					break;
+				default:   // Unix/Linux
+					baseDir = "/etc";
+					break;
+			}
+			return Path.Combine(baseDir, directory, fileName);
+		}
+
+		/// <summary>
+		/// Returns an object for the specified interface type with a backing file store.
+		/// </summary>
+		/// <typeparam name="TSettings">The settings interface type to implement.</typeparam>
+		/// <param name="directory">The directory in the application data base directory. May include backslashes or slashes for subdirectories.</param>
+		/// <param name="fileName">The settings file name.</param>
+		/// <param name="userLevel">Specifies whether a user-level path is returned instead of a system-level path.</param>
+		/// <returns></returns>
+		/// <remarks>
+		/// This method generates platform-default paths for Windows (%AppData% and %ProgramData%)
+		/// and Unix/Linux systems ($HOME/.* and /etc).
+		/// </remarks>
+		public static TSettings NewFile<TSettings>(string directory, string fileName, bool userLevel)
+			where TSettings : class
+		{
+			string path;
+			if (userLevel)
+			{
+				path = GetAppDataPath(directory, fileName);
+			}
+			else
+			{
+				path = GetProgramDataPath(directory, fileName);
+			}
+			FileSettingsStore store = new FileSettingsStore(path);
+			return SettingsAdapterFactory.New<TSettings>(store);
 		}
 
 		#endregion Settings file path methods
-
-		#region Window state handling
-
-		// TODO: This is only for WPF windows. Add an option for Windows Forms.
-
-		/// <summary>
-		/// Binds the window location, size and state to the settings. This method should be called
-		/// in the Window constructor after InitializeComponent.
-		/// </summary>
-		/// <param name="window">The window to update and monitor.</param>
-		/// <param name="settings">The settings to use for the window.</param>
-		public static void BindWindowState(Window window, IWindowStateSettings settings)
-		{
-			// Apply the current settings to the window, if available
-			if (settings.Left != int.MinValue &&
-				settings.Top != int.MinValue &&
-				settings.Width != int.MinValue &&
-				settings.Height != int.MinValue)
-			{
-				window.WindowStartupLocation = WindowStartupLocation.Manual;
-				window.Left = settings.Left;
-				window.Top = settings.Top;
-				window.Width = settings.Width;
-				window.Height = settings.Height;
-				window.WindowState = settings.IsMaximized ? WindowState.Maximized : WindowState.Normal;
-			}
-
-			// Write back any changes to the settings.
-			// The event signatures are different, so it's easier to just copy the handler code
-			// and let the compiler figure out the inferred types.
-			window.LocationChanged += (sender, args) =>
-			{
-				settings.Left = (int) window.RestoreBounds.Left;
-				settings.Top = (int) window.RestoreBounds.Top;
-				settings.Width = (int) window.RestoreBounds.Width;
-				settings.Height = (int) window.RestoreBounds.Height;
-				settings.IsMaximized = window.WindowState == WindowState.Maximized;
-			};
-			window.SizeChanged += (sender, args) =>
-			{
-				settings.Left = (int) window.RestoreBounds.Left;
-				settings.Top = (int) window.RestoreBounds.Top;
-				settings.Width = (int) window.RestoreBounds.Width;
-				settings.Height = (int) window.RestoreBounds.Height;
-				settings.IsMaximized = window.WindowState == WindowState.Maximized;
-			};
-		}
-
-		#endregion Window state handling
 
 		#region ISettingsStore extension methods
 

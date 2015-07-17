@@ -200,9 +200,9 @@ namespace Unclassified.Util
 		/// <returns>A sequence of <paramref name="source"/> appended by <paramref name="element"/>.</returns>
 		public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T element)
 		{
-			foreach (T se in source)
+			foreach (T item in source)
 			{
-				yield return se;
+				yield return item;
 			}
 			yield return element;
 		}
@@ -266,7 +266,7 @@ namespace Unclassified.Util
 			if (list.Count == 0)
 			{
 				// Easy...
-				list.Add((T) newItem);
+				list.Add(newItem);
 				return list.Count - 1;
 			}
 
@@ -310,7 +310,7 @@ namespace Unclassified.Util
 				index++;
 			}
 
-			list.Insert(index, (T) newItem);
+			list.Insert(index, newItem);
 			return index;
 		}
 
@@ -502,11 +502,11 @@ namespace Unclassified.Util
 		#region List conversion
 
 		/// <summary>
-		/// Creates an <see cref="ObservableCollection&lt;T&gt;"/> from an <see cref="IEnumerable&lt;T&gt;"/>.
+		/// Creates an <see cref="ObservableCollection{T}"/> from an <see cref="IEnumerable{T}"/>.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-		/// <param name="source">The <see cref="IEnumerable&lt;T&gt;"/> to create an <see cref="ObservableCollection&lt;T&gt;"/> from.</param>
-		/// <returns>An <see cref="ObservableCollection&lt;T&gt;"/> that contains elements from the input sequence.</returns>
+		/// <param name="source">The <see cref="IEnumerable{T}"/> to create an <see cref="ObservableCollection{T}"/> from.</param>
+		/// <returns>An <see cref="ObservableCollection{T}"/> that contains elements from the input sequence.</returns>
 		public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
 		{
 			return new ObservableCollection<T>(source);

@@ -543,3 +543,5 @@ if (Test-Path $privateConfigFile)
 
 # Include the control file that specifies what to do
 . (Join-Path $scriptDir "control.ps1")
+# Return codes from exit commands from the included file need to be passed though
+exit $lastExitCode

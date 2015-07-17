@@ -51,11 +51,12 @@ namespace Unclassified.Util
 				AssemblyBuilderAccess.RunAndSave);
 			moduleBuilder = assemblyBuilder.DefineDynamicModule(
 				MyClass + "Module",
-				MyClass + "Asm.dll",
-				true);
+				MyClass + "Asm.dll");
 			// If the module defines a different file name than where the assembly will be written,
 			// there a two files written: one with the assembly manifest and another one with the
 			// module. So the module should have the same file name as the assembly name.
+			// NOTE: For better analysing the generated code in the written DLL file, call the
+			// DefineDynamicModule method with a third parameter 'true' to emit symbols.
 		}
 
 		#endregion Static constructor
@@ -1067,7 +1068,7 @@ namespace Unclassified.Util
 		#region Collection property type helpers
 
 		/// <summary>
-		/// Determines whether a type is <see cref="IList&lt;T&gt;"/>.
+		/// Determines whether a type is <see cref="IList{T}"/>.
 		/// </summary>
 		/// <param name="type">The type to check.</param>
 		/// <returns></returns>
@@ -1087,7 +1088,7 @@ namespace Unclassified.Util
 		}
 
 		/// <summary>
-		/// Determines whether a type is <see cref="IDictionary&lt;TKey&gt;,&lt;TValue&gt;"/>.
+		/// Determines whether a type is <see cref="IDictionary{TKey, TValue}"/>.
 		/// </summary>
 		/// <param name="type">The type to check.</param>
 		/// <returns></returns>
@@ -1366,7 +1367,7 @@ namespace Unclassified.Util
 	#region Bound collection classes
 
 	/// <summary>
-	/// Implements an <see cref="ObservableCollection&lt;T&gt;"/> that is bound to an
+	/// Implements an <see cref="ObservableCollection{T}"/> that is bound to an
 	/// <see cref="ISettingsStore"/> instance. Changes to the list are written back to the settings
 	/// store.
 	/// </summary>
@@ -1389,8 +1390,8 @@ namespace Unclassified.Util
 		private string key;
 
 		/// <summary>
-		/// Initialises a new instance of the <see cref="SettingsStoreBoundList"/> class and loads
-		/// all array items from the entry <paramref name="key"/> in <paramref name="store"/>.
+		/// Initialises a new instance of the <see cref="SettingsStoreBoundList{T}"/> class and
+		/// loads all array items from the entry <paramref name="key"/> in <paramref name="store"/>.
 		/// </summary>
 		/// <param name="store">The settings store to bind the data to.</param>
 		/// <param name="key">The setting key to bind the data to.</param>
@@ -1418,30 +1419,35 @@ namespace Unclassified.Util
 
 		#region Overridden ObservableCollection methods
 
+		/// <inheritdoc/>
 		protected override void ClearItems()
 		{
 			base.ClearItems();
 			store.Set(key, this.ToArray());
 		}
 
+		/// <inheritdoc/>
 		protected override void InsertItem(int index, T item)
 		{
 			base.InsertItem(index, item);
 			store.Set(key, this.ToArray());
 		}
 
+		/// <inheritdoc/>
 		protected override void MoveItem(int oldIndex, int newIndex)
 		{
 			base.MoveItem(oldIndex, newIndex);
 			store.Set(key, this.ToArray());
 		}
 
+		/// <inheritdoc/>
 		protected override void RemoveItem(int index)
 		{
 			base.RemoveItem(index);
 			store.Set(key, this.ToArray());
 		}
 
+		/// <inheritdoc/>
 		protected override void SetItem(int index, T item)
 		{
 			base.SetItem(index, item);
@@ -1459,10 +1465,10 @@ namespace Unclassified.Util
 	/// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
 	/// <para>
 	///   This class supports all types as key and value type parameter that can be converted to and
-	///   from a string with the <see cref="Convert.ToString"/> and <see cref="Convert.ChangeType"/>
-	///   methods, using the invariant culture. This includes all types that are supported in
-	///   <see cref="ISettingsStore"/> for scalar values as well, with their respective string
-	///   representation and parsing method.
+	///   from a string with the <see cref="Convert.ToString(object)"/> and
+	///   <see cref="Convert.ChangeType(object, Type)"/> methods, using the invariant culture. This
+	///   includes all types that are supported in <see cref="ISettingsStore"/> for scalar values as
+	///   well, with their respective string representation and parsing method.
 	/// </para>
 	/// <para>
 	///   Incompatible data entries are skipped, similar to the behaviour of the Get methods of
@@ -1475,9 +1481,9 @@ namespace Unclassified.Util
 		private Dictionary<TKey, TValue> dictionary;
 
 		/// <summary>
-		/// Initialises a new instance of the <see cref="SettingsStoreBoundDictionary"/> class and
-		/// loads all <see cref="NameValueCollection"/> items from the entry <paramref name="key"/>
-		/// in <paramref name="store"/>.
+		/// Initialises a new instance of the <see cref="SettingsStoreBoundDictionary{TKey, TValue}"/>
+		/// class and loads all <see cref="NameValueCollection"/> items from the entry
+		/// <paramref name="key"/> in <paramref name="store"/>.
 		/// </summary>
 		/// <param name="store">The settings store to bind the data to.</param>
 		/// <param name="key">The setting key to bind the data to.</param>
@@ -1511,9 +1517,11 @@ namespace Unclassified.Util
 					if (typeof(TKey) == typeof(bool))
 					{
 						if (keyStr.Trim() == "1" ||
-							keyStr.Trim().ToLower() == "true") key2 = (TKey) (object) true;
+							keyStr.Trim().ToLower() == "true")
+							key2 = (TKey) (object) true;
 						else if (keyStr.Trim() == "0" ||
-							keyStr.Trim().ToLower() == "false") key2 = (TKey) (object) false;
+							keyStr.Trim().ToLower() == "false")
+							key2 = (TKey) (object) false;
 						else throw new FormatException("Invalid bool value");
 					}
 					else if (typeof(TKey) == typeof(DateTime))
@@ -1532,9 +1540,11 @@ namespace Unclassified.Util
 					if (typeof(TValue) == typeof(bool))
 					{
 						if (valueStr.Trim() == "1" ||
-							valueStr.Trim().ToLower() == "true") value = (TValue) (object) true;
+							valueStr.Trim().ToLower() == "true")
+							value = (TValue) (object) true;
 						else if (valueStr.Trim() == "0" ||
-							valueStr.Trim().ToLower() == "false") value = (TValue) (object) false;
+							valueStr.Trim().ToLower() == "false")
+							value = (TValue) (object) false;
 						else throw new FormatException("Invalid bool value");
 					}
 					else if (typeof(TValue) == typeof(DateTime))

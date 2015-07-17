@@ -394,7 +394,7 @@ namespace Unclassified.Util
 		/// The event will not be fired when the timeout has finished before, so when calling
 		/// <see cref="Fire"/> near the time when the timer would elapse, you won't risk of calling
 		/// it twice. If you need to invoke the callback function now and the timer has already
-		/// elapsed, use <see cref="Reset"/>(0).
+		/// elapsed, use <see cref="Reset(int)"/> with 0 milliseconds.
 		/// </remarks>
 		public void Fire()
 		{
