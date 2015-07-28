@@ -46,17 +46,22 @@ function Do-Sign-File($action)
 	Write-Host -ForegroundColor DarkCyan "Digitally signing file $file..."
 
 	# Find the signtool binary
-	$signtoolBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" "InstallationFolder"
-	$signtoolBin = Check-Filename "$signtoolBin\Bin\signtool.exe"
+	$signtoolBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" "KitsRoot81"
+	$signtoolBin = Check-Filename "$signtoolBin\bin\x86\signtool.exe"
+	if ($signtoolBin -eq $null)
+	{
+		$signtoolBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1A" "InstallationFolder"
+		$signtoolBin = Check-Filename "$signtoolBin\Bin\signtool.exe"
+	}
 	if ($signtoolBin -eq $null)
 	{
 		$signtoolBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A" "InstallationFolder"
 		$signtoolBin = Check-Filename "$signtoolBin\Bin\signtool.exe"
-		if ($signtoolBin -eq $null)
-		{
-			WaitError "signtool binary not found"
-			exit 1
-		}
+	}
+	if ($signtoolBin -eq $null)
+	{
+		WaitError "signtool binary not found"
+		exit 1
 	}
 	
 	$timestampServers = @(

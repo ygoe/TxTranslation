@@ -3,6 +3,7 @@ Setup/bin/
 _scripts/bin/NuGet.exe
 
 # User-specific files
+.vs/
 *.suo
 *.user
 *.sln.docstates
