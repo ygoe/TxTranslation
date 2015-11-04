@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +37,7 @@ namespace Unclassified.TxEditor.Views
 			get { return culture; }
 			set
 			{
-				this.culture = value;
+				culture = value;
 				CulturesList.SelectedItem = CulturesList.Items.OfType<ValueViewModel<string>>().FirstOrDefault(v => v.Value == culture);
 			}
 		}
@@ -60,6 +61,7 @@ namespace Unclassified.TxEditor.Views
 			UpdateView();
 		}
 
+		[Obfuscation(Exclude = true, Feature = "renaming")]
 		private void DateTimeTextBox_SelectedTimeChanged(object sender, EventArgs args)
 		{
 			UpdateView();

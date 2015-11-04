@@ -6,9 +6,12 @@ using System.Text.RegularExpressions;
 using Unclassified.TxLib;
 using Unclassified.Util;
 using Unclassified.UI;
+using System.Reflection;
 
 namespace Unclassified.TxEditor.ViewModels
 {
+	// Type name used in XAML
+	[Obfuscation(Exclude = true, ApplyToMembers = false, Feature = "renaming")]
 	internal class TextKeyViewModel : TreeViewItemViewModel
 	{
 		#region Constructor

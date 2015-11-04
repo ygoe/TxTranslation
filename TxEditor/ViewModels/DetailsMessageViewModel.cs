@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Unclassified.UI;
 
 namespace Unclassified.TxEditor.ViewModels
 {
+	// Type name used in XAML
+	[Obfuscation(Exclude = true, ApplyToMembers = false, Feature = "renaming")]
 	internal class DetailsMessageViewModel : ViewModelBase
 	{
 		public string Title { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Controls;
 using Unclassified.TxEditor.Controls;
 using Unclassified.TxEditor.ViewModels;
@@ -31,6 +32,7 @@ namespace Unclassified.TxEditor.Views
 			MyTextBox.Focus();
 		}
 
+		[Obfuscation(Exclude = true, Feature = "renaming")]
 		private void MyTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
 		{
 			QuantifiedTextViewModel vm = DataContext as QuantifiedTextViewModel;

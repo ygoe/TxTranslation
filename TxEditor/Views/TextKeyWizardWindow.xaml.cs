@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -201,6 +202,7 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
+		[Obfuscation(Exclude = true, Feature = "renaming")]
 		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs args)
 		{
 			args.IsValid = MainViewModel.Instance.TextKeys.ContainsKey(args.TextKey);

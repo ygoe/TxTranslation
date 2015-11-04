@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ namespace Unclassified.UI
 	/// <summary>
 	/// Provides extension methods for WPF TextBox controls.
 	/// </summary>
+	// Type name used in XAML
+	[Obfuscation(Exclude = true, ApplyToMembers = false, Feature = "renaming")]
 	public static class TextBoxExtensions
 	{
 		#region TextBox no-overwrite attached property

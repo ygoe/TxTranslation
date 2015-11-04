@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Unclassified.TxEditor.Controls;
@@ -30,6 +31,7 @@ namespace Unclassified.TxEditor.Views
 
 		#region Control event handlers
 
+		[Obfuscation(Exclude = true, Feature = "renaming")]
 		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
 		{
 			CultureTextViewModel vm = DataContext as CultureTextViewModel;
