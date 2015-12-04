@@ -34,6 +34,16 @@ function Copy-File($src, $dest, $time = 0)
 	$global:actions += @{ action = "Do-Copy-File"; src = $src; dest = $dest; time = $time }
 }
 
+# Moves a file.
+#
+# $src = The name of the source file.
+# $dest = The name of the destination file. Can be a directory.
+#
+function Move-File($src, $dest, $time = 0)
+{
+	$global:actions += @{ action = "Do-Move-File"; src = $src; dest = $dest; time = $time }
+}
+
 # Deletes a file.
 #
 # $file = The name of the file to delete.
@@ -176,6 +186,22 @@ function Do-Copy-File($action)
 	if (-not $?)
 	{
 		WaitError "Copy failed"
+		exit 1
+	}
+}
+
+function Do-Move-File($action)
+{
+	$src = $action.src
+	$dest = $action.dest
+	
+	Write-Host ""
+	Write-Host -ForegroundColor DarkCyan "Moving $src to $dest..."
+
+	Move-Item (MakeRootedPath $src) (MakeRootedPath $dest)
+	if (-not $?)
+	{
+		WaitError "Move failed"
 		exit 1
 	}
 }
