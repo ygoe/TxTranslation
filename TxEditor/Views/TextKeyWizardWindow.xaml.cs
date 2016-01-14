@@ -390,7 +390,7 @@ namespace Unclassified.TxEditor.Views
 				if (SourceCSharpButton.IsChecked == true)
 				{
 					isPartialString = true;
-					if ((initialClipboardText.StartsWith("\"") || initialClipboardText.StartsWith("@\"")) &&
+					if ((initialClipboardText.StartsWith("\"") || initialClipboardText.StartsWith("@\"") || initialClipboardText.StartsWith("$\"")) &&
 						initialClipboardText.EndsWith("\""))
 					{
 						isPartialString = false;
@@ -398,6 +398,7 @@ namespace Unclassified.TxEditor.Views
 
 					bool inStringLiteral = isPartialString;
 					bool isVerbatimString = false;
+					bool isInterpolatedString = false;
 					bool inCharLiteral = false;
 					int parensLevel = 0;
 					int bracketsLevel = 0;
@@ -425,12 +426,13 @@ namespace Unclassified.TxEditor.Views
 							// End char literal
 							inCharLiteral = false;
 						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '@' && nextChar == '"')
+						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '@' && nextChar == '"')
 						{
 							// Start verbatim string literal
 							inStringLiteral = true;
 							isVerbatimString = true;
 
+							// Copy all non-string code before that into a new placeholder
 							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
 							{
 								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
@@ -445,11 +447,33 @@ namespace Unclassified.TxEditor.Views
 							// Handled 2 characters
 							pos++;
 						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '"')
+						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '$' && nextChar == '"')
+						{
+							// Start interpolated string literal
+							inStringLiteral = true;
+							isInterpolatedString = true;
+
+							// Copy all non-string code before that into a new placeholder
+							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
+							{
+								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
+								var pd = new PlaceholderData(placeholders.Count + 1, code);
+								if (pd.Code != "")
+								{
+									placeholders.Add(pd);
+									parsedText += "{" + pd.Name + "}";
+								}
+							}
+
+							// Handled 2 characters
+							pos++;
+						}
+						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '"')
 						{
 							// Start string literal
 							inStringLiteral = true;
 
+							// Copy all non-string code before that into a new placeholder
 							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
 							{
 								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
@@ -471,6 +495,7 @@ namespace Unclassified.TxEditor.Views
 								case '\'':
 								case '"':
 								case '\\':
+								case '{':
 									stringContent.Append(nextChar);
 									break;
 								case '0': stringContent.Append('\0'); break;
@@ -487,7 +512,7 @@ namespace Unclassified.TxEditor.Views
 									break;
 								case 'u':
 									int codepoint = int.Parse(initialClipboardText.Substring(pos + 1, 4), System.Globalization.NumberStyles.HexNumber);
-									stringContent.Append((char) codepoint);
+									stringContent.Append((char)codepoint);
 									pos += 4;
 									break;
 								case 'v': stringContent.Append('\v'); break;
@@ -502,11 +527,27 @@ namespace Unclassified.TxEditor.Views
 							pos++;
 							stringContent.Append(nextChar);
 						}
+						else if (inStringLiteral && isInterpolatedString && ch == '{')
+						{
+							// Code inside a string, treat as (temporary) end of string literal
+							inStringLiteral = false;
+							// Keep isInterpolatedString for when we return to the string content
+							lastStringEnd = pos + 1;
+
+							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0)
+							{
+								parsedText += stringContent.ToString();
+							}
+							stringContent.Clear();
+
+							bracesLevel++;
+						}
 						else if (inStringLiteral && ch == '"')
 						{
 							// End string literal
 							inStringLiteral = false;
 							isVerbatimString = false;
+							isInterpolatedString = false;
 							lastStringEnd = pos + 1;
 
 							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0)
@@ -541,6 +582,24 @@ namespace Unclassified.TxEditor.Views
 						else if (!inStringLiteral && !inCharLiteral && ch == '{')
 						{
 							bracesLevel++;
+						}
+						else if (!inStringLiteral && !inCharLiteral && isInterpolatedString && ch == '}' &&
+							parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 1)
+						{
+							// Resume interpolated string literal after inserted code
+							inStringLiteral = true;
+							// isInterpolatedString is still true
+
+							bracesLevel--;
+
+							// Copy all non-string code before that into a new placeholder
+							string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
+							var pd = new PlaceholderData(placeholders.Count + 1, code);
+							if (pd.Code != "")
+							{
+								placeholders.Add(pd);
+								parsedText += "{" + pd.Name + "}";
+							}
 						}
 						else if (!inStringLiteral && !inCharLiteral && ch == '}')
 						{
