@@ -571,9 +571,10 @@ namespace Unclassified.TxEditor.Controls
 
 		#region Overridden methods
 
-		public new bool Focus()
+		protected override void OnGotFocus(RoutedEventArgs args)
 		{
-			return textBox1.Focus();
+			// Pass on the focus to the inner TextBox
+			textBox1.Focus();
 		}
 
 		#endregion Overridden methods

@@ -55,16 +55,17 @@
 			<StackPanel
 				Grid.Row="0" Grid.Column="1"
 				Margin="8,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
-				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="C#" Checked="SourceCSharpButton_Checked"/>
-				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="XAML" Checked="SourceXamlButton_Checked"/>
-				<ToggleButton Name="SourceAspxButton" Padding="6,1" Margin="4,0,0,0" Content="aspx" Checked="SourceAspxButton_Checked"/>
+				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="_C#" Checked="SourceCSharpButton_Checked"/>
+				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="_XAML" Checked="SourceXamlButton_Checked"/>
+				<ToggleButton Name="SourceAspxButton" Padding="6,1" Margin="4,0,0,0" Content="_aspx" Checked="SourceAspxButton_Checked"/>
 			</StackPanel>
 
-			<TextBlock
+			<Label
 				Name="OtherKeysLabel"
 				Grid.Row="1" Grid.Column="0"
-				Margin="0,6,0,0" VerticalAlignment="Top"
-				Text="{Tx:TC 'window.wizard.similar texts', Default='Similar texts:'}"/>
+				Margin="0,6,0,0" Padding="0" VerticalAlignment="Top"
+				Content="{Tx:TC 'window.wizard.similar texts', Default='Similar texts:'}"
+				Target="{Binding ElementName=OtherKeysList}"/>
 			<ListBox
 				Name="OtherKeysList"
 				Grid.Row="1" Grid.Column="1"
@@ -108,20 +109,22 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 
-			<TextBlock
+			<Label
 				Grid.Row="2" Grid.Column="0"
-				Margin="0,4,0,0" VerticalAlignment="Center"
-				Text="{Tx:TC 'window.wizard.text key', Default='Text key:'}"/>
+				Margin="0,4,0,0" Padding="0" VerticalAlignment="Center"
+				Content="{Tx:TC 'window.wizard.text key', Default='Text key:'}"
+				Target="{Binding ElementName=TextKeyText}"/>
 			<TextBox
 				Name="TextKeyText"
 				Grid.Row="2" Grid.Column="1"
 				Margin="8,4,0,0"
 				ui:TextBoxExtensions.DisableInsertKey="True"/>
 
-			<TextBlock
+			<Label
 				Grid.Row="3" Grid.Column="0"
-				Margin="0,7,0,0" VerticalAlignment="Top"
-				Text="{Tx:TC 'window.wizard.translated text', Default='Translated text:'}"/>
+				Margin="0,7,0,0" Padding="0" VerticalAlignment="Top"
+				Content="{Tx:TC 'window.wizard.translated text', Default='Translated text:'}"
+				Target="{Binding ElementName=TranslationText}"/>
 			<ctl:DecoratedTextBox
 				x:Name="TranslationText"
 				Grid.Row="3" Grid.Column="1"

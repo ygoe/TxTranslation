@@ -8,7 +8,8 @@
 	xmlns:ui="clr-namespace:Unclassified.UI"
 	mc:Ignorable="d"
 	Name="root"
-	d:DesignHeight="150" d:DesignWidth="358">
+	d:DesignHeight="150" d:DesignWidth="358"
+	Focusable="True" IsTabStop="False">
 
 	<UserControl.Resources>
 		<DrawingBrush x:Key="SquiggleBrush" Viewport="0,-0.6,6,4.3" ViewportUnits="Absolute" TileMode="Tile" Stretch="None">

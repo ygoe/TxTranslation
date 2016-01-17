@@ -507,18 +507,18 @@ Als Vorschläge werden andere Texte angezeigt, die ähnliche Wörter enthalten w
 		<text key="window.text key.rename.title">Textschlüssel umbenennen</text>
 		<text key="window.title.in path">in</text>
 		<text key="window.wizard.button.cancel">Abbrechen</text>
-		<text key="window.wizard.button.reset">Zurücksetzen</text>
-		<text key="window.wizard.button.save">Text speichern</text>
+		<text key="window.wizard.button.reset">Zu_rücksetzen</text>
+		<text key="window.wizard.button.save">Text _speichern</text>
 		<text key="window.wizard.error reading clipboard">Fehler beim Lesen der Zwischenablage.</text>
 		<text key="window.wizard.include default text">_Default-Text für Entwurfsansicht hinzufügen</text>
 		<text key="window.wizard.no culture added">Es wurde keine Kultur zum Wörterbuch hinzugefügt.</text>
 		<text key="window.wizard.parameters">Parameter</text>
-		<text key="window.wizard.similar texts">Ähnliche Texte</text>
+		<text key="window.wizard.similar texts">Ähnl_iche Texte</text>
 		<text key="window.wizard.source code">Quelltext</text>
-		<text key="window.wizard.text key">Textschlüssel</text>
+		<text key="window.wizard.text key">_Textschlüssel</text>
 		<text key="window.wizard.text key exists">Der Textschlüssel {key} existiert bereits.</text>
 		<text key="window.wizard.text key exists.content">Wenn Sie fortfahren, wird der vorhandene Text (in der Hauptkultur) mit dem in diesem Dialog eingegebenen Text überschrieben.</text>
-		<text key="window.wizard.translated text">Übersetzung</text>
+		<text key="window.wizard.translated text">Ü_bersetzung</text>
 	</culture>
 	<culture name="de-AT">
 		<text key="Tx:number.group separator threshold">1</text>
@@ -1064,18 +1064,18 @@ Suggestions are other texts that contain similar words as the selected text key.
 		<text key="window.text key.rename.title">Rename text key</text>
 		<text key="window.title.in path">in</text>
 		<text key="window.wizard.button.cancel">Cancel</text>
-		<text key="window.wizard.button.reset">Reset</text>
-		<text key="window.wizard.button.save">Save text</text>
+		<text key="window.wizard.button.reset">_Reset</text>
+		<text key="window.wizard.button.save">_Save text</text>
 		<text key="window.wizard.error reading clipboard">Error reading the clipboard.</text>
 		<text key="window.wizard.include default text">Include _default text for design time</text>
 		<text key="window.wizard.no culture added">No culture added to the dictionary.</text>
 		<text key="window.wizard.parameters">Parameters</text>
-		<text key="window.wizard.similar texts">Similar texts</text>
+		<text key="window.wizard.similar texts">S_imilar texts</text>
 		<text key="window.wizard.source code">Source code</text>
-		<text key="window.wizard.text key">Text key</text>
+		<text key="window.wizard.text key">_Text key</text>
 		<text key="window.wizard.text key exists">The text key {key} already exists.</text>
 		<text key="window.wizard.text key exists.content">If you continue, the existing text (in the primary culture) will be overwritten with the text entered in this dialog.</text>
-		<text key="window.wizard.translated text">Translation</text>
+		<text key="window.wizard.translated text">Tra_nslation</text>
 	</culture>
 	<culture name="en-AU" />
 	<culture name="en-US">

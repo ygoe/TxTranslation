@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TaskDialogInterop;
-using Unclassified.FieldLog;
 using Unclassified.TxEditor.Controls;
 using Unclassified.TxEditor.Converters;
 using Unclassified.TxEditor.ViewModels;
@@ -379,6 +378,29 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
+		private enum LangState
+		{
+			None,
+			String,
+			VerbatimString,
+			InterpolString,
+			Char,
+			Parenthesis,
+			Bracket,
+			Brace
+		}
+
+		private void AddParsedPlaceholder(StringBuilder textContent, StringBuilder placeholderContent)
+		{
+			var pd = new PlaceholderData(placeholders.Count + 1, placeholderContent.ToString());
+			if (pd.Code != "")
+			{
+				placeholders.Add(pd);
+				textContent.Append("{").Append(pd.Name).Append("}");
+			}
+			placeholderContent.Clear();
+		}
+
 		private void Reset(bool setTextKey)
 		{
 			// Detect parameters in the code
@@ -396,233 +418,280 @@ namespace Unclassified.TxEditor.Views
 						isPartialString = false;
 					}
 
-					bool inStringLiteral = isPartialString;
-					bool isVerbatimString = false;
-					bool isInterpolatedString = false;
-					bool inCharLiteral = false;
-					int parensLevel = 0;
-					int bracketsLevel = 0;
-					int bracesLevel = 0;
-					int lastStringEnd = 0;
-					StringBuilder stringContent = new StringBuilder();
+					StringBuilder textContent = new StringBuilder();
+					StringBuilder placeholderContent = new StringBuilder();
+					Stack<LangState> stateStack = new Stack<LangState>();
+					if (isPartialString)
+					{
+						// Assume a simple string
+						stateStack.Push(LangState.String);
+					}
 
 					for (int pos = 0; pos < initialClipboardText.Length; pos++)
 					{
 						char ch = initialClipboardText[pos];
 						char nextChar = pos + 1 < initialClipboardText.Length ? initialClipboardText[pos + 1] : '\0';
+						var allStates = stateStack.ToArray();   // Stack top = Array beginning
+						var state = allStates.Length >= 1 ? allStates[0] : LangState.None;
+						var prevState = allStates.Length >= 2 ? allStates[1] : LangState.None;
 
-						if (!inStringLiteral && !inCharLiteral && ch == '\'')
-						{
-							// Start char literal
-							inCharLiteral = true;
-						}
-						else if (inCharLiteral && ch == '\\')
-						{
-							// Escape sequence, skip next character
-							pos++;
-						}
-						else if (inCharLiteral && ch == '\'')
-						{
-							// End char literal
-							inCharLiteral = false;
-						}
-						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '@' && nextChar == '"')
+						if (ch == '@' && nextChar == '"' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
 						{
 							// Start verbatim string literal
-							inStringLiteral = true;
-							isVerbatimString = true;
-
-							// Copy all non-string code before that into a new placeholder
-							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
+							stateStack.Push(LangState.VerbatimString);
+							if (stateStack.Count == 1)
 							{
-								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
-								var pd = new PlaceholderData(placeholders.Count + 1, code);
-								if (pd.Code != "")
-								{
-									placeholders.Add(pd);
-									parsedText += "{" + pd.Name + "}";
-								}
+								AddParsedPlaceholder(textContent, placeholderContent);
 							}
-
+							else
+							{
+								placeholderContent.Append(ch).Append(nextChar);
+							}
 							// Handled 2 characters
 							pos++;
 						}
-						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '$' && nextChar == '"')
+						else if (ch == '$' && nextChar == '"' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
 						{
 							// Start interpolated string literal
-							inStringLiteral = true;
-							isInterpolatedString = true;
-
-							// Copy all non-string code before that into a new placeholder
-							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
+							stateStack.Push(LangState.InterpolString);
+							if (stateStack.Count == 1)
 							{
-								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
-								var pd = new PlaceholderData(placeholders.Count + 1, code);
-								if (pd.Code != "")
-								{
-									placeholders.Add(pd);
-									parsedText += "{" + pd.Name + "}";
-								}
+								AddParsedPlaceholder(textContent, placeholderContent);
 							}
-
+							else
+							{
+								placeholderContent.Append(ch).Append(nextChar);
+							}
 							// Handled 2 characters
 							pos++;
 						}
-						else if (!inStringLiteral && !inCharLiteral && !isInterpolatedString && ch == '"')
+						else if (ch == '"' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
 						{
-							// Start string literal
-							inStringLiteral = true;
-
-							// Copy all non-string code before that into a new placeholder
-							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0 && pos > 0)
+							// Start simple string literal
+							stateStack.Push(LangState.String);
+							if (stateStack.Count == 1)
 							{
-								string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
-								var pd = new PlaceholderData(placeholders.Count + 1, code);
-								if (pd.Code != "")
+								AddParsedPlaceholder(textContent, placeholderContent);
+							}
+							else
+							{
+								placeholderContent.Append(ch);
+							}
+						}
+						else if (ch == '\\' &&
+							(state == LangState.InterpolString || state == LangState.String))
+						{
+							// String escape sequence, evaluate further characters
+							if (stateStack.Count == 1)
+							{
+								switch (nextChar)
 								{
-									placeholders.Add(pd);
-									parsedText += "{" + pd.Name + "}";
+									case '\'':
+									case '"':
+									case '\\':
+										textContent.Append(nextChar);
+										break;
+									case '0': textContent.Append('\0'); break;
+									case 'a': textContent.Append('\a'); break;
+									case 'b': textContent.Append('\b'); break;
+									case 'f': textContent.Append('\f'); break;
+									case 'n': textContent.Append('\n'); break;
+									case 'r': textContent.Append('\r'); break;
+									case 't': textContent.Append('\t'); break;
+									case 'U':
+										long value = long.Parse(initialClipboardText.Substring(pos + 2, 8), System.Globalization.NumberStyles.HexNumber);
+										//textContent.Append();   // TODO: What does that value mean?
+										pos += 8;
+										break;
+									case 'u':
+										int codepoint = int.Parse(initialClipboardText.Substring(pos + 2, 4), System.Globalization.NumberStyles.HexNumber);
+										textContent.Append((char)codepoint);
+										pos += 4;
+										break;
+									case 'v': textContent.Append('\v'); break;
+									case 'x':
+										// TODO: variable length hex value!
+										break;
+									default:
+										// Ignore invalid escape sequences altogether
+										break;
 								}
 							}
-						}
-						else if (inStringLiteral && !isVerbatimString && ch == '\\')
-						{
-							// Escape sequence, skip next character
-							pos++;
-
-							switch (nextChar)
+							else
 							{
-								case '\'':
-								case '"':
-								case '\\':
-								case '{':
-									stringContent.Append(nextChar);
-									break;
-								case '0': stringContent.Append('\0'); break;
-								case 'a': stringContent.Append('\a'); break;
-								case 'b': stringContent.Append('\b'); break;
-								case 'f': stringContent.Append('\f'); break;
-								case 'n': stringContent.Append('\n'); break;
-								case 'r': stringContent.Append('\r'); break;
-								case 't': stringContent.Append('\t'); break;
-								case 'U':
-									long value = long.Parse(initialClipboardText.Substring(pos + 1, 8), System.Globalization.NumberStyles.HexNumber);
-									//stringContent.Append();   // TODO: What does that value mean?
-									pos += 8;
-									break;
-								case 'u':
-									int codepoint = int.Parse(initialClipboardText.Substring(pos + 1, 4), System.Globalization.NumberStyles.HexNumber);
-									stringContent.Append((char)codepoint);
-									pos += 4;
-									break;
-								case 'v': stringContent.Append('\v'); break;
-								case 'x':
-									// TODO: variable length hex value!
-									break;
+								placeholderContent.Append(ch).Append(nextChar);
+							}
+							// Handled 2 characters (or more)
+							pos++;
+						}
+						else if (ch == '"' && nextChar == '"' &&
+							state == LangState.VerbatimString)
+						{
+							// Verbatim string escape sequence, skip next character
+							if (stateStack.Count == 1)
+							{
+								textContent.Append(nextChar);
+							}
+							else
+							{
+								placeholderContent.Append(ch).Append(nextChar);
+							}
+							pos++;
+						}
+						else if (ch == '{' && nextChar == '{' &&
+							state == LangState.InterpolString)
+						{
+							// Interpolated string escape sequence, skip next character
+							if (stateStack.Count == 1)
+							{
+								textContent.Append(nextChar);
+							}
+							else
+							{
+								placeholderContent.Append(ch).Append(nextChar);
+							}
+							pos++;
+						}
+						else if (ch == '}' && nextChar == '}' &&
+							state == LangState.InterpolString)
+						{
+							// Interpolated string escape sequence, skip next character
+							if (stateStack.Count == 1)
+							{
+								textContent.Append(nextChar);
+							}
+							else
+							{
+								placeholderContent.Append(ch).Append(nextChar);
+							}
+							pos++;
+						}
+						else if (ch == '{' &&
+							state == LangState.InterpolString)
+						{
+							// Start interpolated string code
+							stateStack.Push(LangState.None);
+							if (stateStack.Count > 2)
+							{
+								placeholderContent.Append(ch);
 							}
 						}
-						else if (inStringLiteral && isVerbatimString && ch == '"' && nextChar == '"')
+						else if (ch == '}' &&
+							state == LangState.None &&
+							prevState == LangState.InterpolString)
 						{
-							// Escape sequence, skip next character
-							pos++;
-							stringContent.Append(nextChar);
-						}
-						else if (inStringLiteral && isInterpolatedString && ch == '{')
-						{
-							// Code inside a string, treat as (temporary) end of string literal
-							inStringLiteral = false;
-							// Keep isInterpolatedString for when we return to the string content
-							lastStringEnd = pos + 1;
-
-							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0)
+							// End interpolated string code
+							stateStack.Pop();
+							if (stateStack.Count == 1)
 							{
-								parsedText += stringContent.ToString();
+								AddParsedPlaceholder(textContent, placeholderContent);
 							}
-							stringContent.Clear();
-
-							bracesLevel++;
+							else
+							{
+								placeholderContent.Append(ch);
+							}
 						}
-						else if (inStringLiteral && ch == '"')
+						else if (ch == '"' &&
+							(state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
 						{
 							// End string literal
-							inStringLiteral = false;
-							isVerbatimString = false;
-							isInterpolatedString = false;
-							lastStringEnd = pos + 1;
-
-							if (parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 0)
+							stateStack.Pop();
+							if (stateStack.Count > 1)
 							{
-								parsedText += stringContent.ToString();
-							}
-							stringContent.Clear();
-						}
-						else if (inStringLiteral)
-						{
-							// Append character to text
-							stringContent.Append(ch);
-						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '(')
-						{
-							parensLevel++;
-						}
-						else if (!inStringLiteral && !inCharLiteral && ch == ')')
-						{
-							if (parensLevel > 0)
-								parensLevel--;
-						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '[')
-						{
-							bracketsLevel++;
-						}
-						else if (!inStringLiteral && !inCharLiteral && ch == ']')
-						{
-							if (bracketsLevel > 0)
-								bracketsLevel--;
-						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '{')
-						{
-							bracesLevel++;
-						}
-						else if (!inStringLiteral && !inCharLiteral && isInterpolatedString && ch == '}' &&
-							parensLevel == 0 && bracketsLevel == 0 && bracesLevel == 1)
-						{
-							// Resume interpolated string literal after inserted code
-							inStringLiteral = true;
-							// isInterpolatedString is still true
-
-							bracesLevel--;
-
-							// Copy all non-string code before that into a new placeholder
-							string code = initialClipboardText.Substring(lastStringEnd, pos - lastStringEnd);
-							var pd = new PlaceholderData(placeholders.Count + 1, code);
-							if (pd.Code != "")
-							{
-								placeholders.Add(pd);
-								parsedText += "{" + pd.Name + "}";
+								placeholderContent.Append(ch);
 							}
 						}
-						else if (!inStringLiteral && !inCharLiteral && ch == '}')
+						else if (stateStack.Count == 1 &&
+							(state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
 						{
-							if (bracesLevel > 0)
-								bracesLevel--;
+							// String content (only on first level)
+							textContent.Append(ch);
+						}
+
+						else if (ch == '\'' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
+						{
+							// Start char literal
+							stateStack.Push(LangState.Char);
+							placeholderContent.Append(ch);
+						}
+						else if (ch == '\\' &&
+							state == LangState.Char)
+						{
+							// Char escape sequence, skip next character
+							// (Don't parse char literals, they're always in placeholders. If it's
+							// a longer escape sequence like '\u0000' we just take the first two
+							// characters now and happily append more characters. We don't care
+							// about invalid char literals like 'abc' and just pass them through.)
+							placeholderContent.Append(ch).Append(nextChar);
+							// Handled 2 characters
+							pos++;
+						}
+						else if (ch == '\'' &&
+							state == LangState.Char)
+						{
+							// End char literal
+							placeholderContent.Append(ch);
+							stateStack.Pop();
+						}
+
+						else if (ch == '(' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
+						{
+							// Open parenthesis
+							stateStack.Push(LangState.Parenthesis);
+							placeholderContent.Append(ch);
+						}
+						else if (ch == ')' &&
+							state == LangState.Parenthesis)
+						{
+							// Close parenthesis
+							stateStack.Pop();
+							placeholderContent.Append(ch);
+						}
+						else if (ch == '[' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
+						{
+							// Open bracket
+							stateStack.Push(LangState.Bracket);
+							placeholderContent.Append(ch);
+						}
+						else if (ch == ']' &&
+							state == LangState.Bracket)
+						{
+							// Close bracket
+							stateStack.Pop();
+							placeholderContent.Append(ch);
+						}
+						else if (ch == '{' &&
+							!(state == LangState.Char || state == LangState.InterpolString || state == LangState.String || state == LangState.VerbatimString))
+						{
+							// Open brace
+							stateStack.Push(LangState.Brace);
+							placeholderContent.Append(ch);
+						}
+						else if (ch == '}' &&
+							state == LangState.Brace)
+						{
+							// Close brace
+							stateStack.Pop();
+							placeholderContent.Append(ch);
+						}
+						else
+						{
+							// Other code
+							placeholderContent.Append(ch);
 						}
 					}
-					if (!isPartialString && lastStringEnd < initialClipboardText.Length)
+					if (placeholderContent.Length > 0)
 					{
-						// Some non-string content is still left (parameter at the end)
-						string code = initialClipboardText.Substring(lastStringEnd);
-						var pd = new PlaceholderData(placeholders.Count + 1, code);
-						if (pd.Code != "")
-						{
-							placeholders.Add(pd);
-							parsedText += "{" + pd.Name + "}";
-						}
+						// Add last placeholder
+						AddParsedPlaceholder(textContent, placeholderContent);
 					}
-					if (isPartialString && inStringLiteral && stringContent.Length > 0)
-					{
-						// Save the last string part
-						parsedText += stringContent.ToString();
-					}
+					parsedText = textContent.ToString();
 				}
 				if (SourceXamlButton.IsChecked == true)
 				{

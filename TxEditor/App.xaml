@@ -8,6 +8,7 @@
 				<ResourceDictionary Source="/Resources/MenuStyles.xaml"/>
 				<ResourceDictionary Source="/Resources/StatusGrid.xaml"/>
 				<ResourceDictionary Source="/Resources/ToolGrid.xaml"/>
+				<ResourceDictionary Source="/Resources/AppResources.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

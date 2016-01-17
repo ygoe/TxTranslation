@@ -93,6 +93,7 @@
     <Compile Include="FileNameHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Unclassified\UI\BooleanBoxes.cs" />
+    <Compile Include="Unclassified\UI\ListBoxExtensions.cs" />
     <Compile Include="Unclassified\UI\MenuExtensions.cs" />
     <Compile Include="Unclassified\UI\MenuIconExtension.cs" />
     <Compile Include="Unclassified\UI\MenuIconImage.cs" />
@@ -192,6 +193,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DecoratedTextBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\AppResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
