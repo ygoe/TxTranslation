@@ -100,7 +100,7 @@ public class Utils
 function Check-FileName($fn)
 {
 	$fn = [System.Environment]::ExpandEnvironmentVariables($fn)
-	if (Test-Path $fn)
+	if ($fn -and (Test-Path $fn))
 	{
 		return $fn
 	}

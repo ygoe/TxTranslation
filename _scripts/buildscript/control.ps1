@@ -9,54 +9,26 @@ Set-VcsVersion "" "/require git"
 Restore-NuGetTool
 Restore-NuGetPackages "TxTranslation.sln"
 
-# Debug builds
-if (IsSelected build-debug)
-{
-	Build-Solution "TxTranslation.sln" "Debug" "Mixed Platforms" 6
-
-	if (IsSelected sign-lib)
-	{
-		Sign-File "TxLib\bin\Debug\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
-	}
-	if (IsSelected sign-app)
-	{
-		Sign-File "TxEditor\bin\Debug\TxEditor.exe" "$signKeyFile" "$signPassword"
-	}
-}
-
 # Release builds
-if (IsAnySelected build-release commit publish)
+if (IsAnySelected build commit publish)
 {
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
 	
-	# Archive debug symbols for later source lookup
-	EnsureDirExists ".local"
-	Exec-Console "_scripts\bin\PdbConvert.exe" "$rootDir\TxEditor\bin\Release\* /srcbase $rootDir /optimize /outfile $rootDir\.local\TxTranslation-$revId.pdbx"
-
-	if (IsAnySelected sign-lib publish)
-	{
-		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
-	}
-	if (IsAnySelected sign-app publish)
-	{
-		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword"
-	}
+	# Convert debug symbols to XML
+	Exec-Console "_scripts\bin\PdbConvert.exe" "$rootDir\TxEditor\bin\Release\* /srcbase $rootDir /optimize /outfile $rootDir\TxEditor\bin\Release\TxTranslation.pdbx"
 
 	Create-NuGetPackage "TxLib\Unclassified.TxLib.nuspec" "TxLib\bin"
-}
+	Create-Setup "Setup\Tx.iss" Release
 
-# Release setups
-if (IsAnySelected setup-release commit publish)
-{
-	Create-Setup "Setup\Tx.iss" "Release"
-
-	if (IsAnySelected sign-setup publish)
+	if (IsSelected sign)
 	{
+		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
+		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword"
 		Sign-File "Setup\bin\TxSetup-$revId.exe" "$signKeyFile" "$signPassword"
 	}
 }
 
-# Install release setup
+# Install setup
 if (IsSelected install)
 {
 	Exec-File "Setup\bin\TxSetup-$revId.exe" "/norestart /verysilent"
@@ -67,7 +39,6 @@ if (IsSelected commit)
 {
 	# Clean up test build files
 	Delete-File "Setup\bin\TxSetup-$revId.exe"
-	Delete-File ".local\TxTranslation-$revId.pdbx"
 
 	Git-Commit
 }
@@ -75,14 +46,18 @@ if (IsSelected commit)
 # Prepare publishing a release
 if (IsSelected publish)
 {
-	Git-Log ".local\TxChanges.txt"
+	# Copy all necessary files into their own release directory
+	EnsureDirExists ".local\Release"
+	Copy-File "TxEditor\bin\Release\TxTranslation.pdbx" ".local\Release\TxTranslation-$revId.pdbx"
+
+	Git-Log ".local\Release\TxChanges.txt"
 }
 
 # Copy to website (local)
 if (IsSelected transfer-web)
 {
 	Copy-File "Setup\bin\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\"
-	Copy-File ".local\TxChanges.txt" "$webDir\files\source\txtranslation\"
+	Copy-File ".local\Release\TxChanges.txt" "$webDir\files\source\txtranslation\"
 	
 	$today = (Get-Date -Format "yyyy-MM-dd")
 	Exec-File "_scripts\bin\AutoReplace.exe" "$webDataFile txtranslation version=$revId date=$today"

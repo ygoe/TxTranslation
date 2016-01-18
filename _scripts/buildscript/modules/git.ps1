@@ -221,8 +221,8 @@ function Do-Git-Log($action)
 	$consoleEncoding = [System.Console]::OutputEncoding
 	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 	Push-Location "$rootDir"
-	$commitDate = (& $gitBin log -1 --pretty=format:"%ai" 2>&1)
-	if (-not $?)
+	$commitDate = (& $gitBin log -1 --pretty=format:"%ai")
+	if ($LASTEXITCODE -ne 0)
 	{
 		Pop-Location
 		[System.Console]::OutputEncoding = $consoleEncoding
@@ -243,8 +243,8 @@ function Do-Git-Log($action)
 	$consoleEncoding = [System.Console]::OutputEncoding
 	[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 	Push-Location "$rootDir"
-	$commitHash = (& $gitBin log -1 --pretty=format:"%h" 2>&1)
-	if (-not $?)
+	$commitHash = (& $gitBin log -1 --pretty=format:"%h")
+	if ($LASTEXITCODE -ne 0)
 	{
 		Pop-Location
 		[System.Console]::OutputEncoding = $consoleEncoding
@@ -265,13 +265,13 @@ function Do-Git-Log($action)
 	Push-Location "$rootDir"
 	if ($lastRev)
 	{
-		$logText = (& $gitBin log --pretty=format:"%B" --reverse "${lastRev}..HEAD" 2>&1)
+		$logText = (& $gitBin log --pretty=format:"%B" --reverse "${lastRev}..HEAD")
 	}
 	else
 	{
-		$logText = (& $gitBin log --pretty=format:"%B" --reverse 2>&1)
+		$logText = (& $gitBin log --pretty=format:"%B" --reverse)
 	}
-	if (-not $?)
+	if ($LASTEXITCODE -ne 0)
 	{
 		Pop-Location
 		[System.Console]::OutputEncoding = $consoleEncoding
