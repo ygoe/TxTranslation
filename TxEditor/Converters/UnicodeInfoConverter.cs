@@ -12,15 +12,15 @@ namespace Unclassified.TxEditor.Converters
 			int codePoint;
 			if (value is int)
 			{
-				codePoint = (int) value;
+				codePoint = (int)value;
 			}
 			else if (value is char)
 			{
-				codePoint = (char) value;
+				codePoint = (char)value;
 			}
 			else if (value is string)
 			{
-				codePoint = ((string) value)[0];
+				codePoint = ((string)value)[0];
 			}
 			else
 			{

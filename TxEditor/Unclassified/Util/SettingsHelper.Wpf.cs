@@ -44,18 +44,18 @@ namespace Unclassified.Util
 			// and let the compiler figure out the inferred types.
 			window.LocationChanged += (sender, args) =>
 			{
-				settings.Left = (int) window.RestoreBounds.Left;
-				settings.Top = (int) window.RestoreBounds.Top;
-				settings.Width = (int) window.RestoreBounds.Width;
-				settings.Height = (int) window.RestoreBounds.Height;
+				settings.Left = (int)window.RestoreBounds.Left;
+				settings.Top = (int)window.RestoreBounds.Top;
+				settings.Width = (int)window.RestoreBounds.Width;
+				settings.Height = (int)window.RestoreBounds.Height;
 				settings.IsMaximized = window.WindowState == WindowState.Maximized;
 			};
 			window.SizeChanged += (sender, args) =>
 			{
-				settings.Left = (int) window.RestoreBounds.Left;
-				settings.Top = (int) window.RestoreBounds.Top;
-				settings.Width = (int) window.RestoreBounds.Width;
-				settings.Height = (int) window.RestoreBounds.Height;
+				settings.Left = (int)window.RestoreBounds.Left;
+				settings.Top = (int)window.RestoreBounds.Top;
+				settings.Width = (int)window.RestoreBounds.Width;
+				settings.Height = (int)window.RestoreBounds.Height;
 				settings.IsMaximized = window.WindowState == WindowState.Maximized;
 			};
 		}
@@ -92,10 +92,10 @@ namespace Unclassified.Util
 			if (str.Length == 6)
 				value |= 0xff000000;
 			return Color.FromArgb(
-				(byte) ((value >> 24) & 0xff),
-				(byte) ((value >> 16) & 0xff),
-				(byte) ((value >> 8) & 0xff),
-				(byte) (value & 0xff));
+				(byte)((value >> 24) & 0xff),
+				(byte)((value >> 16) & 0xff),
+				(byte)((value >> 8) & 0xff),
+				(byte)(value & 0xff));
 		}
 
 		#endregion Color string conversion

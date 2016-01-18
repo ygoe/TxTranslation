@@ -149,79 +149,79 @@ namespace Unclassified.Util
 			switch (key)
 			{
 				case Keys.A:
-					return (VK) VkKeyScan('a');
+					return (VK)VkKeyScan('a');
 				case Keys.B:
-					return (VK) VkKeyScan('b');
+					return (VK)VkKeyScan('b');
 				case Keys.C:
-					return (VK) VkKeyScan('c');
+					return (VK)VkKeyScan('c');
 				case Keys.D:
-					return (VK) VkKeyScan('d');
+					return (VK)VkKeyScan('d');
 				case Keys.E:
-					return (VK) VkKeyScan('e');
+					return (VK)VkKeyScan('e');
 				case Keys.F:
-					return (VK) VkKeyScan('f');
+					return (VK)VkKeyScan('f');
 				case Keys.G:
-					return (VK) VkKeyScan('g');
+					return (VK)VkKeyScan('g');
 				case Keys.H:
-					return (VK) VkKeyScan('h');
+					return (VK)VkKeyScan('h');
 				case Keys.I:
-					return (VK) VkKeyScan('i');
+					return (VK)VkKeyScan('i');
 				case Keys.J:
-					return (VK) VkKeyScan('j');
+					return (VK)VkKeyScan('j');
 				case Keys.K:
-					return (VK) VkKeyScan('k');
+					return (VK)VkKeyScan('k');
 				case Keys.L:
-					return (VK) VkKeyScan('l');
+					return (VK)VkKeyScan('l');
 				case Keys.M:
-					return (VK) VkKeyScan('m');
+					return (VK)VkKeyScan('m');
 				case Keys.N:
-					return (VK) VkKeyScan('n');
+					return (VK)VkKeyScan('n');
 				case Keys.O:
-					return (VK) VkKeyScan('o');
+					return (VK)VkKeyScan('o');
 				case Keys.P:
-					return (VK) VkKeyScan('p');
+					return (VK)VkKeyScan('p');
 				case Keys.Q:
-					return (VK) VkKeyScan('q');
+					return (VK)VkKeyScan('q');
 				case Keys.R:
-					return (VK) VkKeyScan('r');
+					return (VK)VkKeyScan('r');
 				case Keys.S:
-					return (VK) VkKeyScan('s');
+					return (VK)VkKeyScan('s');
 				case Keys.T:
-					return (VK) VkKeyScan('t');
+					return (VK)VkKeyScan('t');
 				case Keys.U:
-					return (VK) VkKeyScan('u');
+					return (VK)VkKeyScan('u');
 				case Keys.V:
-					return (VK) VkKeyScan('v');
+					return (VK)VkKeyScan('v');
 				case Keys.W:
-					return (VK) VkKeyScan('w');
+					return (VK)VkKeyScan('w');
 				case Keys.X:
-					return (VK) VkKeyScan('x');
+					return (VK)VkKeyScan('x');
 				case Keys.Y:
-					return (VK) VkKeyScan('y');
+					return (VK)VkKeyScan('y');
 				case Keys.Z:
-					return (VK) VkKeyScan('z');
+					return (VK)VkKeyScan('z');
 				case Keys.D0:
-					return (VK) VkKeyScan('0');
+					return (VK)VkKeyScan('0');
 				case Keys.D1:
-					return (VK) VkKeyScan('1');
+					return (VK)VkKeyScan('1');
 				case Keys.D2:
-					return (VK) VkKeyScan('2');
+					return (VK)VkKeyScan('2');
 				case Keys.D3:
-					return (VK) VkKeyScan('3');
+					return (VK)VkKeyScan('3');
 				case Keys.D4:
-					return (VK) VkKeyScan('4');
+					return (VK)VkKeyScan('4');
 				case Keys.D5:
-					return (VK) VkKeyScan('5');
+					return (VK)VkKeyScan('5');
 				case Keys.D6:
-					return (VK) VkKeyScan('6');
+					return (VK)VkKeyScan('6');
 				case Keys.D7:
-					return (VK) VkKeyScan('7');
+					return (VK)VkKeyScan('7');
 				case Keys.D8:
-					return (VK) VkKeyScan('8');
+					return (VK)VkKeyScan('8');
 				case Keys.D9:
-					return (VK) VkKeyScan('9');
+					return (VK)VkKeyScan('9');
 				case Keys.Space:
-					return (VK) VkKeyScan(' ');
+					return (VK)VkKeyScan(' ');
 
 				case Keys.ShiftKey:
 					return VK.SHIFT;
@@ -405,13 +405,13 @@ namespace Unclassified.Util
 
 		private static int GET_APPCOMMAND_LPARAM(int lParam)
 		{
-			return ((short) (((lParam >> 16) & 0xFFFF) & ~FAPPCOMMAND_MASK));
+			return ((short)(((lParam >> 16) & 0xFFFF) & ~FAPPCOMMAND_MASK));
 		}
 
 		public static AppCommands GetAppCommand(Message m)
 		{
 			int cmd = GET_APPCOMMAND_LPARAM(m.LParam.ToInt32());
-			return (AppCommands) cmd;
+			return (AppCommands)cmd;
 		}
 	}
 }

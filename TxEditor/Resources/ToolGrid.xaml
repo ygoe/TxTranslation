@@ -8,7 +8,7 @@
 	</Style>
 
 	<!-- region ToolGrid -->
-	
+
 	<Style x:Key="ToolGridStyle" TargetType="Grid">
 		<Setter Property="Background">
 			<Setter.Value>

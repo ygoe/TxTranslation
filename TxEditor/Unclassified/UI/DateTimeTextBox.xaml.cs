@@ -43,7 +43,10 @@ namespace Unclassified.UI
 		private DateTime selectedTime;
 		public DateTime SelectedTime
 		{
-			get { return selectedTime; }
+			get
+			{
+				return selectedTime;
+			}
 			set
 			{
 				if (value != selectedTime)
@@ -75,14 +78,14 @@ namespace Unclassified.UI
 
 		private void Text_GotFocus(object sender, RoutedEventArgs args)
 		{
-			TextBox source = (TextBox) args.Source;
+			TextBox source = (TextBox)args.Source;
 			source.SelectAll();
 			lastFocusedTextBox = source;
 		}
 
 		private void Text_LostFocus(object sender, RoutedEventArgs args)
 		{
-			TextBox source = (TextBox) args.Source;
+			TextBox source = (TextBox)args.Source;
 			if (!Regex.IsMatch(source.Text.Trim(), @"^[0-9]+$"))
 			{
 				// Invalid state
@@ -99,7 +102,7 @@ namespace Unclassified.UI
 
 		private void Text_PreviewKeyDown(object sender, KeyEventArgs args)
 		{
-			TextBox source = (TextBox) args.Source;
+			TextBox source = (TextBox)args.Source;
 			int value, min, max;
 			GetFieldInfo(source, out value, out min, out max);
 
@@ -162,7 +165,7 @@ namespace Unclassified.UI
 		{
 			if (args.DataObject.GetDataPresent(typeof(string)))
 			{
-				string text = (string) args.DataObject.GetData(typeof(string));
+				string text = (string)args.DataObject.GetData(typeof(string));
 				if (!IsTextAllowed(text))
 				{
 					args.CancelCommand();
@@ -276,10 +279,10 @@ namespace Unclassified.UI
 			}
 		}
 
-		private void UpButton_Click(object sender, RoutedEventArgs e)
+		private void UpButton_Click(object sender, RoutedEventArgs args)
 		{
 			if (lastFocusedTextBox == null) return;
-			
+
 			int value, min, max;
 			GetFieldInfo(lastFocusedTextBox, out value, out min, out max);
 
@@ -289,7 +292,7 @@ namespace Unclassified.UI
 			UpdateTexts();
 		}
 
-		private void DownButton_Click(object sender, RoutedEventArgs e)
+		private void DownButton_Click(object sender, RoutedEventArgs args)
 		{
 			if (lastFocusedTextBox == null) return;
 

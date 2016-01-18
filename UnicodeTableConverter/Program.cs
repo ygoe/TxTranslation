@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Globalization;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace UnicodeTableConverter
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			int categoryIndex = -1;
 			int codePoint = -1;
@@ -18,7 +17,7 @@ namespace UnicodeTableConverter
 
 			List<string> categoryNames = new List<string>();
 			Dictionary<int, CharacterData> characters = new Dictionary<int, CharacterData>();
-			
+
 			using (StreamReader sr = new StreamReader(args[0]))
 			{
 				while (!sr.EndOfStream)
@@ -132,7 +131,7 @@ namespace UnicodeTableConverter
 		}
 	}
 
-	struct CharacterData
+	internal struct CharacterData
 	{
 		public string Name;
 		public int Category;

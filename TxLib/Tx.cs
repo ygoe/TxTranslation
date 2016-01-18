@@ -76,7 +76,7 @@ namespace Unclassified.TxLib
 			public const string QuoteNestedEnd = "Tx:quote nested end";
 			/// <summary>The system text key for the unit name of a byte.</summary>
 			public const string ByteUnit = "Tx:byte unit";
-			
+
 			/// <summary>The system text key for a negative number indicator.</summary>
 			public const string NumberNegative = "Tx:number.negative";
 			/// <summary>The system text key for a number decimal separator.</summary>
@@ -91,7 +91,7 @@ namespace Unclassified.TxLib
 			public const string NumberOrdinal = "Tx:number.ordinal";
 			/// <summary>The system text key for a female ordinal number suffix.</summary>
 			public const string NumberOrdinalFeminin = "Tx:number.ordinal f";
-			
+
 			/// <summary>The system text key for the date format containing a year only.</summary>
 			public const string DateYear = "Tx:date.year";
 			/// <summary>The system text key for the date format containing a year and month.</summary>
@@ -164,7 +164,7 @@ namespace Unclassified.TxLib
 			public const string TimeNow = "Tx:time.now";
 			/// <summary>The system text key for the unset time.</summary>
 			public const string TimeNever = "Tx:time.never";
-			
+
 			/// <summary>The system text key for a relative point in time in the future. Uses the {interval} placeholder.</summary>
 			public const string TimeRelative = "Tx:time.relative";
 			/// <summary>The system text key for years of a relative point in time in the future. Uses the {#} count placeholder.</summary>
@@ -179,7 +179,7 @@ namespace Unclassified.TxLib
 			public const string TimeRelativeMinutes = "Tx:time.relative.minutes";
 			/// <summary>The system text key for seconds of a relative point in time in the future. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeSeconds = "Tx:time.relative.seconds";
-			
+
 			/// <summary>The system text key for a relative point in time in the past. Uses the {interval} placeholder.</summary>
 			public const string TimeRelativeNeg = "Tx:time.relative neg";
 			/// <summary>The system text key for years of a relative point in time in the past. Uses the {#} count placeholder.</summary>
@@ -194,7 +194,7 @@ namespace Unclassified.TxLib
 			public const string TimeRelativeNegMinutes = "Tx:time.relative neg.minutes";
 			/// <summary>The system text key for seconds of a relative point in time in the past. Uses the {#} count placeholder.</summary>
 			public const string TimeRelativeNegSeconds = "Tx:time.relative neg.seconds";
-			
+
 			/// <summary>The system text key for a relative time span into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpanRelative = "Tx:time.relative span";
 			/// <summary>The system text key for years of a relative time span into the future. Uses the {#} count placeholder.</summary>
@@ -224,7 +224,7 @@ namespace Unclassified.TxLib
 			public const string TimeSpanRelativeNegMinutes = "Tx:time.relative span neg.minutes";
 			/// <summary>The system text key for seconds of a relative time span into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanRelativeNegSeconds = "Tx:time.relative span neg.seconds";
-			
+
 			/// <summary>The system text key for a relative time span going into the future. Uses the {interval} placeholder.</summary>
 			public const string TimeSpan = "Tx:time.span";
 			/// <summary>The system text key for years of a relative time span going into the future. Uses the {#} count placeholder.</summary>
@@ -254,7 +254,7 @@ namespace Unclassified.TxLib
 			public const string TimeSpanNegMinutes = "Tx:time.span neg.minutes";
 			/// <summary>The system text key for seconds of a relative time span going into the past. Uses the {#} count placeholder.</summary>
 			public const string TimeSpanNegSeconds = "Tx:time.span neg.seconds";
-			
+
 			/// <summary>The system text key for combining items in a conjunctive (AND) enumeration.</summary>
 			public const string EnumAndCombiner = "Tx:enum.and.combiner";
 			/// <summary>The system text key for combining the last item in a conjunctive (AND) enumeration.</summary>
@@ -629,7 +629,7 @@ namespace Unclassified.TxLib
 			}
 		}
 
-		private static void fsw_Changed(object sender, FileSystemEventArgs e)
+		private static void fsw_Changed(object sender, FileSystemEventArgs args)
 		{
 			// A Renamed event is called twice when saving the file with TxEditor. The first
 			// renaming is from .txd to .txd.bak when creating the original backup file. This does
@@ -1416,7 +1416,7 @@ namespace Unclassified.TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, -1), key, -1, (Dictionary<string, string>) null) ?? NotFound(key);
+				return ResolveData(GetText(key, -1), key, -1, (Dictionary<string, string>)null) ?? NotFound(key);
 			}
 		}
 
@@ -1430,7 +1430,7 @@ namespace Unclassified.TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, count), key, count, (Dictionary<string, string>) null) ?? NotFound(key);
+				return ResolveData(GetText(key, count), key, count, (Dictionary<string, string>)null) ?? NotFound(key);
 			}
 		}
 
@@ -1442,10 +1442,10 @@ namespace Unclassified.TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		public static string Text(string key, decimal count)
 		{
-			int icount = count == (int) count ? (int) count : -1;
+			int icount = count == (int)count ? (int)count : -1;
 			using (new ReadLock(rwlock))
 			{
-				return ResolveData(GetText(key, icount), key, icount, (Dictionary<string, string>) null) ?? NotFound(key);
+				return ResolveData(GetText(key, icount), key, icount, (Dictionary<string, string>)null) ?? NotFound(key);
 			}
 		}
 
@@ -1516,7 +1516,7 @@ namespace Unclassified.TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		public static string Text(string key, decimal count, params string[] data)
 		{
-			int icount = count == (int) count ? (int) count : -1;
+			int icount = count == (int)count ? (int)count : -1;
 			using (new ReadLock(rwlock))
 			{
 				return ResolveData(GetText(key, icount), key, icount, data) ?? NotFound(key);
@@ -1532,7 +1532,7 @@ namespace Unclassified.TxLib
 		/// <returns>Text value if found, null otherwise.</returns>
 		public static string Text(string key, decimal count, Dictionary<string, string> data)
 		{
-			int icount = count == (int) count ? (int) count : -1;
+			int icount = count == (int)count ? (int)count : -1;
 			using (new ReadLock(rwlock))
 			{
 				return ResolveData(GetText(key, icount), key, icount, data) ?? NotFound(key);
@@ -1673,7 +1673,7 @@ namespace Unclassified.TxLib
 		{
 			using (new ReadLock(rwlock))
 			{
-				NumberFormatInfo nfi = (NumberFormatInfo) CultureInfo.CurrentCulture.NumberFormat.Clone();
+				NumberFormatInfo nfi = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
 				nfi.NegativeSign = GetText(SystemKeys.NumberNegative, false, nfi.NegativeSign);
 				string sepThreshold = GetText(SystemKeys.NumberGroupSeparatorThreshold, -1, false, false);
 				if (sepThreshold == null || Math.Abs(number) >= int.Parse(sepThreshold))
@@ -1717,7 +1717,7 @@ namespace Unclassified.TxLib
 
 			using (new ReadLock(rwlock))
 			{
-				NumberFormatInfo nfi = (NumberFormatInfo) CultureInfo.CurrentCulture.NumberFormat.Clone();
+				NumberFormatInfo nfi = (NumberFormatInfo)CultureInfo.CurrentCulture.NumberFormat.Clone();
 				nfi.NegativeSign = GetText(SystemKeys.NumberNegative, false, nfi.NegativeSign);
 				nfi.NumberDecimalSeparator = GetText(SystemKeys.NumberDecimalSeparator, false, nfi.NumberDecimalSeparator);
 				string sepThreshold = GetText(SystemKeys.NumberGroupSeparatorThreshold, -1, false, false);
@@ -1768,27 +1768,27 @@ namespace Unclassified.TxLib
 			if (absBytes < 0.9 * 1024)   // < 0.9 KiB -> "0 B"
 				return NumberUnit(Number(bytes, 0), byteUnit);
 			if (absBytes < 50 * 1024)   // < 50 KiB -> "0.0 KiB"
-				return NumberUnit(Number((decimal) bytes / 1024, 1), "Ki" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024, 1), "Ki" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024)   // < 0.9 MiB -> "0 KiB"
-				return NumberUnit(Number((decimal) bytes / 1024, 0), "Ki" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024, 0), "Ki" + byteUnit);
 			if (absBytes < 50 * 1024 * 1024)   // < 50 MiB -> "0.0 MiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 1), "Mi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024, 1), "Mi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024)   // < 0.9 GiB -> "0 MiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024, 0), "Mi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024, 0), "Mi" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024)   // < 50 GiB -> "0.0 GiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 1), "Gi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024, 1), "Gi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024)   // < 0.9 TiB -> "0 GiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024, 0), "Gi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024, 0), "Gi" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024)   // < 50 TiB -> "0.0 TiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 1), "Ti" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024 / 1024, 1), "Ti" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024)   // < 0.9 PiB -> "0 TiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024, 0), "Ti" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024 / 1024, 0), "Ti" + byteUnit);
 			if (absBytes < 50L * 1024 * 1024 * 1024 * 1024 * 1024)   // < 50 PiB -> "0.0 PiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Pi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Pi" + byteUnit);
 			if (absBytes < 0.9 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)   // < 0.9 EiB -> "0 PiB"
-				return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024, 0), "Pi" + byteUnit);
+				return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024 / 1024 / 1024, 0), "Pi" + byteUnit);
 			// >= 0.9 EiB -> "0.0 EiB"
-			return NumberUnit(Number((decimal) bytes / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Ei" + byteUnit);
+			return NumberUnit(Number((decimal)bytes / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 1), "Ei" + byteUnit);
 			// A long (Int64) value cannot get greater than this
 		}
 
@@ -1813,11 +1813,11 @@ namespace Unclassified.TxLib
 			string text = null;
 			if (femininGender)
 			{
-				text = ResolveData(GetText(SystemKeys.NumberOrdinalFeminin, number, false, false), SystemKeys.NumberOrdinalFeminin, number, (Dictionary<string, string>) null);
+				text = ResolveData(GetText(SystemKeys.NumberOrdinalFeminin, number, false, false), SystemKeys.NumberOrdinalFeminin, number, (Dictionary<string, string>)null);
 			}
 			if (text == null)
 			{
-				text = ResolveData(GetText(SystemKeys.NumberOrdinal, number, false, true), SystemKeys.NumberOrdinal, number, (Dictionary<string, string>) null);
+				text = ResolveData(GetText(SystemKeys.NumberOrdinal, number, false, true), SystemKeys.NumberOrdinal, number, (Dictionary<string, string>)null);
 			}
 			if (text == null)
 			{
@@ -1961,7 +1961,7 @@ namespace Unclassified.TxLib
 
 			if ((details & TxTime.AnyTime) != 0)
 			{
-				DateTimeFormatInfo fi = (DateTimeFormatInfo) CultureInfo.CurrentCulture.DateTimeFormat.Clone();
+				DateTimeFormatInfo fi = (DateTimeFormatInfo)CultureInfo.CurrentCulture.DateTimeFormat.Clone();
 				fi.AMDesignator = GetText(SystemKeys.TimeAM, false, fi.AMDesignator);
 				fi.PMDesignator = GetText(SystemKeys.TimePM, false, fi.PMDesignator);
 
@@ -2145,7 +2145,7 @@ namespace Unclassified.TxLib
 		{
 			// Round difference to seconds, update end time
 			const long ticksPerSecond = 10000000;
-			long newEnd = (long) Math.Round((double) (end.Ticks - start.Ticks) / ticksPerSecond) * ticksPerSecond;
+			long newEnd = (long)Math.Round((double)(end.Ticks - start.Ticks) / ticksPerSecond) * ticksPerSecond;
 			end = new DateTime(start.Ticks + newEnd);
 
 			DateTimeInterval interval = new DateTimeInterval(start, end);
@@ -2274,54 +2274,54 @@ namespace Unclassified.TxLib
 				{
 					string text = GetText(keys[0] + suffix, interval.Years);
 					if (text != null)
-						return ResolveData(text, keys[0] + suffix, interval.Years, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[0] + suffix, interval.Years, (Dictionary<string, string>)null);
 				}
 				else if (interval.Months > 0)
 				{
 					string text = GetText(keys[1] + suffix, interval.Months);
 					if (text != null)
-						return ResolveData(text, keys[1] + suffix, interval.Months, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[1] + suffix, interval.Months, (Dictionary<string, string>)null);
 				}
 				else if (interval.Days > 0)
 				{
 					string text = GetText(keys[2] + suffix, interval.Days);
 					if (text != null)
-						return ResolveData(text, keys[2] + suffix, interval.Days, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[2] + suffix, interval.Days, (Dictionary<string, string>)null);
 				}
 				else if (interval.Hours > 0)
 				{
 					string text = GetText(keys[3] + suffix, interval.Hours);
 					if (text != null)
-						return ResolveData(text, keys[3] + suffix, interval.Hours, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[3] + suffix, interval.Hours, (Dictionary<string, string>)null);
 				}
 				else if (interval.Minutes > 0)
 				{
 					string text = GetText(keys[4] + suffix, interval.Minutes);
 					if (text != null)
-						return ResolveData(text, keys[4] + suffix, interval.Minutes, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[4] + suffix, interval.Minutes, (Dictionary<string, string>)null);
 				}
 				else if (interval.Seconds > 0)
 				{
 					string text = GetText(keys[5] + suffix, interval.Seconds);
 					if (text != null)
-						return ResolveData(text, keys[5] + suffix, interval.Seconds, (Dictionary<string, string>) null);
+						return ResolveData(text, keys[5] + suffix, interval.Seconds, (Dictionary<string, string>)null);
 				}
 			}
 
 			// Now use the regular texts for every other case
 			List<string> levels = new List<string>();
 			if (interval.Years > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[0], interval.Years), keys[0], interval.Years, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[0], interval.Years), keys[0], interval.Years, (Dictionary<string, string>)null));
 			if (interval.Months > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[1], interval.Months), keys[1], interval.Months, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[1], interval.Months), keys[1], interval.Months, (Dictionary<string, string>)null));
 			if (interval.Days > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[2], interval.Days), keys[2], interval.Days, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[2], interval.Days), keys[2], interval.Days, (Dictionary<string, string>)null));
 			if (interval.Hours > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[3], interval.Hours), keys[3], interval.Hours, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[3], interval.Hours), keys[3], interval.Hours, (Dictionary<string, string>)null));
 			if (interval.Minutes > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[4], interval.Minutes), keys[4], interval.Minutes, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[4], interval.Minutes), keys[4], interval.Minutes, (Dictionary<string, string>)null));
 			if (interval.Seconds > 0 && levels.Count < 2)
-				levels.Add(ResolveData(GetText(keys[5], interval.Seconds), keys[5], interval.Seconds, (Dictionary<string, string>) null));
+				levels.Add(ResolveData(GetText(keys[5], interval.Seconds), keys[5], interval.Seconds, (Dictionary<string, string>)null));
 			return string.Join(GetText(SystemKeys.TimeRelativeSeparator, " "), levels.ToArray());
 		}
 
@@ -4421,7 +4421,7 @@ namespace Unclassified.TxLib
 		/// The processing time in this event is limited. All handlers of this event together must
 		/// not take more than ca. 3 seconds. The processing will then be terminated.
 		/// </remarks>
-		private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
 		{
 			lock (logLock)
 			{

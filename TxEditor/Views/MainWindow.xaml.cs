@@ -153,7 +153,7 @@ namespace Unclassified.TxEditor.Views
 
 			// Prevent further calls before the layouting is completely finished
 			collapsingItems = true;
-			Dispatcher.BeginInvoke((Action) (() => { collapsingItems = false; }), System.Windows.Threading.DispatcherPriority.Loaded);
+			Dispatcher.BeginInvoke((Action)(() => { collapsingItems = false; }), System.Windows.Threading.DispatcherPriority.Loaded);
 
 			// Collapse toolbar items in their specified priority to save space until all items
 			// fit in the toolbar. When collapsing, the item's display style is reduced from
@@ -246,7 +246,10 @@ namespace Unclassified.TxEditor.Views
 
 			target.RaiseEvent(new TextCompositionEventArgs(
 				InputManager.Current.PrimaryKeyboardDevice,
-				new TextComposition(InputManager.Current, target, text)) { RoutedEvent = routedEvent }
+				new TextComposition(InputManager.Current, target, text))
+				{
+					RoutedEvent = routedEvent
+				}
 			);
 		}
 

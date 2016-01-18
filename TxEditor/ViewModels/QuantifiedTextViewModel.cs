@@ -22,7 +22,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public int Count
 		{
-			get { return GetValue<int>("Count"); }
+			get
+			{
+				return GetValue<int>("Count");
+			}
 			set
 			{
 				if (SetValue(value, "Count"))
@@ -35,7 +38,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public int Modulo
 		{
-			get { return GetValue<int>("Modulo"); }
+			get
+			{
+				return GetValue<int>("Modulo");
+			}
 			set
 			{
 				if (SetValue(value, "Modulo"))
@@ -48,7 +54,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public string Text
 		{
-			get { return GetValue<string>("Text"); }
+			get
+			{
+				return GetValue<string>("Text");
+			}
 			set
 			{
 				if (SetValue(value, "Text"))
@@ -79,7 +88,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptMissing
 		{
-			get { return GetValue<bool>("AcceptMissing"); }
+			get
+			{
+				return GetValue<bool>("AcceptMissing");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptMissing"))
@@ -92,7 +104,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptPlaceholders
 		{
-			get { return GetValue<bool>("AcceptPlaceholders"); }
+			get
+			{
+				return GetValue<bool>("AcceptPlaceholders");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptPlaceholders"))
@@ -105,7 +120,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptPunctuation
 		{
-			get { return GetValue<bool>("AcceptPunctuation"); }
+			get
+			{
+				return GetValue<bool>("AcceptPunctuation");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptPunctuation"))
@@ -119,15 +137,15 @@ namespace Unclassified.TxEditor.ViewModels
 		public string CursorChar
 		{
 			get { return null; }
-			set
-			{
-				CultureTextVM.TextKeyVM.MainWindowVM.CursorChar = value;
-			}
+			set { CultureTextVM.TextKeyVM.MainWindowVM.CursorChar = value; }
 		}
 
 		public StringCollection TextKeyReferences
 		{
-			get { return GetValue<StringCollection>("TextKeyReferences"); }
+			get
+			{
+				return GetValue<StringCollection>("TextKeyReferences");
+			}
 			set
 			{
 				if (SetValue(value, "TextKeyReferences"))

@@ -13,9 +13,9 @@ namespace Unclassified.TxEditor.Converters
 
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			IList selectedItems = (IList) values[0];
-			int selectedCount = (int) values[1];
-			int itemsCount = (int) values[2];
+			IList selectedItems = (IList)values[0];
+			int selectedCount = (int)values[1];
+			int itemsCount = (int)values[2];
 
 			if (itemsCount == 0)
 			{

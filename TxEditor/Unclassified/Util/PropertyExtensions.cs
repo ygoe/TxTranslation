@@ -105,13 +105,13 @@ namespace Unclassified.Util
 					{
 						if (e.PropertyName == property.Name)
 						{
-							handler((TProperty) property.GetValue(source, null));
+							handler((TProperty)property.GetValue(source, null));
 						}
 					};
 
 					if (notifyNow)
 					{
-						handler((TProperty) property.GetValue(source, null));
+						handler((TProperty)property.GetValue(source, null));
 					}
 					return;
 				}

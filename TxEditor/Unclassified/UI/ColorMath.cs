@@ -29,7 +29,7 @@ namespace Unclassified.UI
 				object res = Application.Current.FindResource(Key);
 				if (res is Color)
 				{
-					c = (Color) res;
+					c = (Color)res;
 				}
 				else if (res is SolidColorBrush)
 				{
@@ -60,16 +60,16 @@ namespace Unclassified.UI
 
 			if (Darken != 0)
 			{
-				byte r = (byte) Math.Round(c.R * (1 - Darken));
-				byte g = (byte) Math.Round(c.G * (1 - Darken));
-				byte b = (byte) Math.Round(c.B * (1 - Darken));
+				byte r = (byte)Math.Round(c.R * (1 - Darken));
+				byte g = (byte)Math.Round(c.G * (1 - Darken));
+				byte b = (byte)Math.Round(c.B * (1 - Darken));
 				c = Color.FromArgb(c.A, r, g, b);
 			}
 			if (Lighten != 0)
 			{
-				byte r = (byte) Math.Round(c.R * (1 - Lighten) + 255 * Lighten);
-				byte g = (byte) Math.Round(c.G * (1 - Lighten) + 255 * Lighten);
-				byte b = (byte) Math.Round(c.B * (1 - Lighten) + 255 * Lighten);
+				byte r = (byte)Math.Round(c.R * (1 - Lighten) + 255 * Lighten);
+				byte g = (byte)Math.Round(c.G * (1 - Lighten) + 255 * Lighten);
+				byte b = (byte)Math.Round(c.B * (1 - Lighten) + 255 * Lighten);
 				c = Color.FromArgb(c.A, r, g, b);
 			}
 

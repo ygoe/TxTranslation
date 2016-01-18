@@ -42,8 +42,8 @@ namespace Unclassified.Util
 		public bool Register()
 		{
 			int virtualKeyCode = KeyInterop.VirtualKeyFromKey(Key);
-			Id = virtualKeyCode + ((int) Modifiers * 0x10000);
-			bool result = RegisterHotKey(IntPtr.Zero, Id, (uint) Modifiers, (uint) virtualKeyCode);
+			Id = virtualKeyCode + ((int)Modifiers * 0x10000);
+			bool result = RegisterHotKey(IntPtr.Zero, Id, (uint)Modifiers, (uint)virtualKeyCode);
 
 			if (hotKeyCallbacks == null)
 			{
@@ -74,7 +74,7 @@ namespace Unclassified.Util
 				{
 					HotKey hotKey;
 
-					if (hotKeyCallbacks.TryGetValue((int) msg.wParam, out hotKey))
+					if (hotKeyCallbacks.TryGetValue((int)msg.wParam, out hotKey))
 					{
 						if (hotKey.Action != null)
 						{

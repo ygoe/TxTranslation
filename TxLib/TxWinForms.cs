@@ -119,8 +119,8 @@ namespace Unclassified.TxLib
 		/// Handles the Disposed event of a bound control. Cleans up internal data structures.
 		/// </summary>
 		/// <param name="sender">The control that has been disposed.</param>
-		/// <param name="e">Unused.</param>
-		private static void Control_Disposed(object sender, EventArgs e)
+		/// <param name="args">Unused.</param>
+		private static void Control_Disposed(object sender, EventArgs args)
 		{
 			Control control = sender as Control;
 			if (control != null)
@@ -259,7 +259,7 @@ namespace Unclassified.TxLib
 
 		#region Dictionary changed handler
 
-		private void Tx_DictionaryChanged(object sender, EventArgs e)
+		private void Tx_DictionaryChanged(object sender, EventArgs args)
 		{
 			OnPropertyChanged("Text");
 		}

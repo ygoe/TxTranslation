@@ -45,7 +45,7 @@ namespace Unclassified.Util
 		public const int SW_HIDE = 0;
 		public const int SW_SHOW = 5;
 		public const int SW_MAXIMIZE = 3;
-		public const int SW_MINIMIZE = 6;	// SW_FORCEMINIMIZE = 11;
+		public const int SW_MINIMIZE = 6;   // SW_FORCEMINIMIZE = 11;
 		public const int SW_RESTORE = 9;
 
 		// Button messages

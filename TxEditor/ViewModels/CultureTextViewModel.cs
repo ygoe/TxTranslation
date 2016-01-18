@@ -51,7 +51,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public string Text
 		{
-			get { return GetValue<string>("Text"); }
+			get
+			{
+				return GetValue<string>("Text");
+			}
 			set
 			{
 				if (SetValue(value, "Text"))
@@ -82,7 +85,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptMissing
 		{
-			get { return GetValue<bool>("AcceptMissing"); }
+			get
+			{
+				return GetValue<bool>("AcceptMissing");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptMissing"))
@@ -95,7 +101,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptPlaceholders
 		{
-			get { return GetValue<bool>("AcceptPlaceholders"); }
+			get
+			{
+				return GetValue<bool>("AcceptPlaceholders");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptPlaceholders"))
@@ -108,7 +117,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool AcceptPunctuation
 		{
-			get { return GetValue<bool>("AcceptPunctuation"); }
+			get
+			{
+				return GetValue<bool>("AcceptPunctuation");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "AcceptPunctuation"))
@@ -122,15 +134,15 @@ namespace Unclassified.TxEditor.ViewModels
 		public string CursorChar
 		{
 			get { return null; }
-			set
-			{
-				TextKeyVM.MainWindowVM.CursorChar = value;
-			}
+			set { TextKeyVM.MainWindowVM.CursorChar = value; }
 		}
 
 		public StringCollection TextKeyReferences
 		{
-			get { return GetValue<StringCollection>("TextKeyReferences"); }
+			get
+			{
+				return GetValue<StringCollection>("TextKeyReferences");
+			}
 			set
 			{
 				if (SetValue(value, "TextKeyReferences"))
@@ -142,7 +154,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public bool LastOfLanguage
 		{
-			get { return GetValue<bool>("LastOfLanguage"); }
+			get
+			{
+				return GetValue<bool>("LastOfLanguage");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "LastOfLanguage"))
@@ -189,7 +204,7 @@ namespace Unclassified.TxEditor.ViewModels
 
 		#region Event handlers
 
-		private void quantifiedTextVMs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private void quantifiedTextVMs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
 		{
 			TextKeyVM.UpdateIcon();
 		}

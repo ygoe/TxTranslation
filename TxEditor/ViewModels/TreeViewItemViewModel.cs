@@ -52,7 +52,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public ObservableCollection<TreeViewItemViewModel> Children
 		{
-			get { return GetValue<ObservableCollection<TreeViewItemViewModel>>("Children"); }
+			get
+			{
+				return GetValue<ObservableCollection<TreeViewItemViewModel>>("Children");
+			}
 			set
 			{
 				if (SetValue(value, "Children"))
@@ -83,7 +86,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsExpanded
 		{
-			get { return GetValue<bool>("IsExpanded"); }
+			get
+			{
+				return GetValue<bool>("IsExpanded");
+			}
 			set
 			{
 				SetValue(BooleanBoxes.Box(value), "IsExpanded");
@@ -108,7 +114,7 @@ namespace Unclassified.TxEditor.ViewModels
 		{
 			if (!Application.Current.Dispatcher.CheckAccess())
 			{
-				Application.Current.Dispatcher.Invoke((Action<bool>) EnsureChildren, allowAsync);
+				Application.Current.Dispatcher.Invoke((Action<bool>)EnsureChildren, allowAsync);
 			}
 			else
 			{
@@ -127,7 +133,7 @@ namespace Unclassified.TxEditor.ViewModels
 			{
 				if (!Application.Current.Dispatcher.CheckAccess())
 				{
-					Application.Current.Dispatcher.Invoke((Action<bool>) ExpandNoParent, allowAsync);
+					Application.Current.Dispatcher.Invoke((Action<bool>)ExpandNoParent, allowAsync);
 				}
 				else
 				{
@@ -165,7 +171,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsVisible
 		{
-			get { return GetValue<bool>("IsVisible"); }
+			get
+			{
+				return GetValue<bool>("IsVisible");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "IsVisible"))

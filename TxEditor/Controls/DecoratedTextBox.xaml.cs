@@ -34,7 +34,7 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(new Thickness(1)));
 		public Thickness InnerBorderThickness
 		{
-			get { return (Thickness) GetValue(InnerBorderThicknessProperty); }
+			get { return (Thickness)GetValue(InnerBorderThicknessProperty); }
 			set { SetValue(InnerBorderThicknessProperty, value); }
 		}
 
@@ -45,7 +45,7 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(new Thickness(1)));
 		public Thickness InnerPadding
 		{
-			get { return (Thickness) GetValue(InnerPaddingProperty); }
+			get { return (Thickness)GetValue(InnerPaddingProperty); }
 			set { SetValue(InnerPaddingProperty, value); }
 		}
 
@@ -56,16 +56,16 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(TextChanged));
 		public string Text
 		{
-			get { return (string) GetValue(TextProperty); }
+			get { return (string)GetValue(TextProperty); }
 			set { SetValue(TextProperty, value); }
 		}
 
-		private static void TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void TextChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			DecoratedTextBox dt = d as DecoratedTextBox;
+			DecoratedTextBox dt = depObj as DecoratedTextBox;
 			if (dt != null)
 			{
-				dt.PlaceholderVisibility = string.IsNullOrEmpty(e.NewValue as string) ? Visibility.Visible : Visibility.Collapsed;
+				dt.PlaceholderVisibility = string.IsNullOrEmpty(args.NewValue as string) ? Visibility.Visible : Visibility.Collapsed;
 				dt.IsEditing = true;
 			}
 		}
@@ -76,7 +76,7 @@ namespace Unclassified.TxEditor.Controls
 			typeof(DecoratedTextBox));
 		public string CursorChar
 		{
-			get { return (string) GetValue(CursorCharProperty); }
+			get { return (string)GetValue(CursorCharProperty); }
 			set { SetValue(CursorCharProperty, value); }   // Should be private, but somehow cannot be. Giving up.
 		}
 
@@ -86,7 +86,7 @@ namespace Unclassified.TxEditor.Controls
 			typeof(DecoratedTextBox));
 		public StringCollection TextKeyReferences
 		{
-			get { return (StringCollection) GetValue(TextKeyReferencesProperty); }
+			get { return (StringCollection)GetValue(TextKeyReferencesProperty); }
 			set { SetValue(TextKeyReferencesProperty, value); }   // Should be private, but somehow cannot be. Giving up.
 		}
 
@@ -96,7 +96,7 @@ namespace Unclassified.TxEditor.Controls
 			typeof(DecoratedTextBox));
 		public string PlaceholderText
 		{
-			get { return (string) GetValue(PlaceholderTextProperty); }
+			get { return (string)GetValue(PlaceholderTextProperty); }
 			set { SetValue(PlaceholderTextProperty, value); }
 		}
 
@@ -107,7 +107,7 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(Visibility.Collapsed));
 		public Visibility PlaceholderVisibility
 		{
-			get { return (Visibility) GetValue(PlaceholderVisibilityProperty); }
+			get { return (Visibility)GetValue(PlaceholderVisibilityProperty); }
 			set { SetValue(PlaceholderVisibilityProperty, value); }
 		}
 
@@ -118,13 +118,13 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(false, HiddenCharsChanged));
 		public bool HiddenChars
 		{
-			get { return (bool) GetValue(HiddenCharsProperty); }
+			get { return (bool)GetValue(HiddenCharsProperty); }
 			set { SetValue(HiddenCharsProperty, value); }
 		}
 
-		private static void HiddenCharsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void HiddenCharsChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			DecoratedTextBox dt = d as DecoratedTextBox;
+			DecoratedTextBox dt = depObj as DecoratedTextBox;
 			if (dt != null)
 			{
 				dt.UpdateDecorations();
@@ -138,13 +138,13 @@ namespace Unclassified.TxEditor.Controls
 			new FrameworkPropertyMetadata(SearchTextChanged));
 		public string SearchText
 		{
-			get { return (string) GetValue(SearchTextProperty); }
+			get { return (string)GetValue(SearchTextProperty); }
 			set { SetValue(SearchTextProperty, value); }
 		}
 
-		private static void SearchTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void SearchTextChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			DecoratedTextBox dt = d as DecoratedTextBox;
+			DecoratedTextBox dt = depObj as DecoratedTextBox;
 			if (dt != null)
 			{
 				dt.UpdateDecorations();
@@ -162,7 +162,10 @@ namespace Unclassified.TxEditor.Controls
 
 		public bool IsEditing
 		{
-			get { return isEditing; }
+			get
+			{
+				return isEditing;
+			}
 			set
 			{
 				isEditing = value;
@@ -208,13 +211,13 @@ namespace Unclassified.TxEditor.Controls
 			UpdateDecorations();
 		}
 
-		private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+		private void textBox1_TextChanged(object sender, TextChangedEventArgs args)
 		{
 			UpdateDecorations();
 			UpdateCursorChar();
 		}
 
-		private void textBox1_SelectionChanged(object sender, RoutedEventArgs e)
+		private void textBox1_SelectionChanged(object sender, RoutedEventArgs args)
 		{
 			// Remove the popup if the caret goes out of the { } range
 			// Remember this range when opening the popup
@@ -223,25 +226,25 @@ namespace Unclassified.TxEditor.Controls
 			UpdateCursorChar();
 		}
 
-		private void textBox1_KeyDown(object sender, KeyEventArgs e)
+		private void textBox1_KeyDown(object sender, KeyEventArgs args)
 		{
-			if (e.Key == Key.Space &&
-				(e.KeyboardDevice.IsKeyDown(Key.LeftShift) || e.KeyboardDevice.IsKeyDown(Key.RightShift)))
+			if (args.Key == Key.Space &&
+				(args.KeyboardDevice.IsKeyDown(Key.LeftShift) || args.KeyboardDevice.IsKeyDown(Key.RightShift)))
 			{
 				int sel = textBox1.SelectionStart;
 				textBox1.Text = textBox1.Text.Insert(textBox1.CaretIndex, "\xa0");
 				textBox1.SelectionStart = sel + 1;
-				e.Handled = true;
+				args.Handled = true;
 			}
 		}
 
-		private void textBox1_GotFocus(object sender, RoutedEventArgs e)
+		private void textBox1_GotFocus(object sender, RoutedEventArgs args)
 		{
 			hasFocus = true;
 			UpdateCursorChar();
 		}
 
-		private void textBox1_LostFocus(object sender, RoutedEventArgs e)
+		private void textBox1_LostFocus(object sender, RoutedEventArgs args)
 		{
 			hasFocus = false;
 			UpdateCursorChar();
@@ -255,7 +258,7 @@ namespace Unclassified.TxEditor.Controls
 				CursorChar = null;
 		}
 
-		private void EditTimeout(object sender, EventArgs e)
+		private void EditTimeout(object sender, EventArgs args)
 		{
 			editTimer.Stop();
 			isEditing = false;
@@ -296,7 +299,7 @@ namespace Unclassified.TxEditor.Controls
 
 				if (!startRect.IsEmpty && !endRect.IsEmpty)
 				{
-					if ((int) startRect.Top == (int) endRect.Top)
+					if ((int)startRect.Top == (int)endRect.Top)
 					{
 						// Single line
 						Rectangle rect = new Rectangle();
@@ -339,7 +342,7 @@ namespace Unclassified.TxEditor.Controls
 
 				if (!startRect.IsEmpty && !endRect.IsEmpty)
 				{
-					if ((int) startRect.Top == (int) endRect.Top)
+					if ((int)startRect.Top == (int)endRect.Top)
 					{
 						// Single line
 						Rectangle rect = new Rectangle();
@@ -391,7 +394,7 @@ namespace Unclassified.TxEditor.Controls
 
 					if (!startRect.IsEmpty && !endRect.IsEmpty)
 					{
-						if ((int) startRect.Top == (int) endRect.Top)
+						if ((int)startRect.Top == (int)endRect.Top)
 						{
 							// Single line
 							Rectangle rect = new Rectangle();
@@ -429,7 +432,7 @@ namespace Unclassified.TxEditor.Controls
 					{
 						TextBlock tb;
 						double width = double.NaN;
-						if ((int) startRect.Top == (int) endRect.Top)
+						if ((int)startRect.Top == (int)endRect.Top)
 						{
 							// Single line
 							width = endRect.X - startRect.X;

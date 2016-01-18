@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Unclassified.TxLib;
-using Unclassified.Util;
 using Unclassified.UI;
-using System.Reflection;
+using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModels
 {
@@ -70,7 +70,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool HasProblem
 		{
-			get { return GetValue<bool>("HasProblem"); }
+			get
+			{
+				return GetValue<bool>("HasProblem");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "HasProblem"))
@@ -86,7 +89,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsAccepted
 		{
-			get { return GetValue<bool>("IsAccepted"); }
+			get
+			{
+				return GetValue<bool>("IsAccepted");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "IsAccepted"))
@@ -101,7 +107,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsNamespace
 		{
-			get { return GetValue<bool>("IsNamespace"); }
+			get
+			{
+				return GetValue<bool>("IsNamespace");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "IsNamespace"))
@@ -117,7 +126,10 @@ namespace Unclassified.TxEditor.ViewModels
 		/// </summary>
 		public bool IsFullKey
 		{
-			get { return GetValue<bool>("IsFullKey"); }
+			get
+			{
+				return GetValue<bool>("IsFullKey");
+			}
 			set
 			{
 				if (SetValue(BooleanBoxes.Box(value), "IsFullKey"))
@@ -153,7 +165,10 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public string Comment
 		{
-			get { return GetValue<string>("Comment"); }
+			get
+			{
+				return GetValue<string>("Comment");
+			}
 			set
 			{
 				if (SetValue(value, "Comment"))

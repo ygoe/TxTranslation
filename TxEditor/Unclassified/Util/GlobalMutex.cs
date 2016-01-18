@@ -100,7 +100,7 @@ namespace Unclassified.Util
 		/// <returns>true if the mutex is owned; otherwise, false.</returns>
 		public bool TryWait(TimeSpan timeout)
 		{
-			return TryWait((int) timeout.TotalMilliseconds);
+			return TryWait((int)timeout.TotalMilliseconds);
 		}
 
 		/// <summary>

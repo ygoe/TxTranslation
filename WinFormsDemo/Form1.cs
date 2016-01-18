@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Unclassified.TxLib;
 
@@ -67,24 +63,24 @@ namespace WinFormsDemo
 			isLoading = false;
 		}
 
-		protected override void OnSystemColorsChanged(EventArgs e)
+		protected override void OnSystemColorsChanged(EventArgs args)
 		{
-			base.OnSystemColorsChanged(e);
+			base.OnSystemColorsChanged(args);
 			Font = SystemFonts.MessageBoxFont;
 		}
 
-		private void LoginButton_Click(object sender, EventArgs e)
+		private void LoginButton_Click(object sender, EventArgs args)
 		{
 			MessageBox.Show(Tx.T("message"), Tx.T("message.caption"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}
 
-		private void LanguageCombo_SelectedIndexChanged(object sender, EventArgs e)
+		private void LanguageCombo_SelectedIndexChanged(object sender, EventArgs args)
 		{
 			if (!isLoading)
 			{
 				if (LanguageCombo.SelectedItem is CultureLabel)
 				{
-					Tx.SetCulture(((CultureLabel) LanguageCombo.SelectedItem).Name);
+					Tx.SetCulture(((CultureLabel)LanguageCombo.SelectedItem).Name);
 				}
 			}
 		}

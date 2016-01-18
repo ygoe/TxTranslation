@@ -13,4 +13,5 @@ using System.Runtime.InteropServices;
 // Repeat for Win32 file version resource because the assembly version is expanded to 4 parts.
 [assembly: AssemblyFileVersion("1.0")]
 
+// Other attributes
 [assembly: ComVisible(false)]

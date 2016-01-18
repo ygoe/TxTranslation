@@ -12,20 +12,20 @@ namespace Unclassified.UI
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value is bool)
-				return !((bool) value);
+				return !((bool)value);
 
 			if (value is short)
-				return -((short) value);
+				return -((short)value);
 			if (value is int)
-				return -((int) value);
+				return -((int)value);
 			if (value is long)
-				return -((long) value);
+				return -((long)value);
 			if (value is float)
-				return -((float) value);
+				return -((float)value);
 			if (value is double)
-				return -((double) value);
+				return -((double)value);
 			if (value is decimal)
-				return -((decimal) value);
+				return -((decimal)value);
 
 			throw new NotSupportedException("Value type is not supported.");
 		}

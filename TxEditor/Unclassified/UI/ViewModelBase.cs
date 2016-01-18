@@ -27,6 +27,7 @@ namespace Unclassified.UI
 	internal abstract class ViewModelBase : INotifyPropertyChanged
 	{
 #if !CSHARP50
+
 		/// <summary>
 		/// Compatibility dummy attribute for C# before 5. This attribute does not backport the
 		/// functionality from later C# versions.
@@ -35,6 +36,7 @@ namespace Unclassified.UI
 		public class CallerMemberNameAttribute : Attribute
 		{
 		}
+
 #endif
 
 		#region Constructor
@@ -121,7 +123,7 @@ namespace Unclassified.UI
 			object value;
 			if (backingFields.TryGetValue(propertyName, out value))
 			{
-				return (T) value;
+				return (T)value;
 			}
 			return default(T);
 		}
@@ -260,7 +262,7 @@ namespace Unclassified.UI
 		/// </summary>
 		protected bool HasViewState
 		{
-			get { return ((IDictionary<string, object>) ViewState).Count > 0; }
+			get { return ((IDictionary<string, object>)ViewState).Count > 0; }
 		}
 
 		/// <summary>
@@ -268,10 +270,10 @@ namespace Unclassified.UI
 		/// </summary>
 		protected void ClearViewState()
 		{
-			((IDictionary<string, object>) ViewState).Clear();
+			((IDictionary<string, object>)ViewState).Clear();
 		}
 
-		#endregion
+		#endregion View state
 
 		#region Data input cleanup
 
@@ -420,7 +422,7 @@ namespace Unclassified.UI
 				{
 					validationPending = true;
 					Dispatcher.CurrentDispatcher.BeginInvoke(
-						(Action) delegate
+						(Action)delegate
 						{
 							// Reset flag first (there's no locking)
 							validationPending = false;
@@ -733,7 +735,7 @@ namespace Unclassified.UI
 												" to handle changes of non-existing property " + a.Name);
 										}
 #endif
-										Action action = (Action) Delegate.CreateDelegate(typeof(Action), this, m);
+										Action action = (Action)Delegate.CreateDelegate(typeof(Action), this, m);
 										propertyChangedHandlers.Add(a.Name, action);
 									}
 

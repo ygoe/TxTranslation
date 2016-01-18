@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Xml;
 using Unclassified.TxLib;
@@ -36,12 +35,12 @@ namespace Unclassified.TxEditor.Views
 			LoadCultures();
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs args)
 		{
 			CodeText.Focus();
 		}
 
-		private void CodeText_TextChanged(object sender, TextChangedEventArgs e)
+		private void CodeText_TextChanged(object sender, TextChangedEventArgs args)
 		{
 			if (updating) return;
 
@@ -63,7 +62,7 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
-		private void CulturesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CulturesList_SelectionChanged(object sender, SelectionChangedEventArgs args)
 		{
 			if (updating) return;
 
@@ -71,7 +70,7 @@ namespace Unclassified.TxEditor.Views
 			if (CulturesList.SelectedItem is CultureItem)
 			{
 				int selStart = CodeText.SelectionStart;   // Keep cursor position when typing
-				CodeText.Text = ((CultureItem) CulturesList.SelectedItem).CultureInfo.IetfLanguageTag;
+				CodeText.Text = ((CultureItem)CulturesList.SelectedItem).CultureInfo.IetfLanguageTag;
 				CodeText.SelectionStart = selStart;   // Out of range value is okay
 				AddButton.IsEnabled = true;
 				UpdateSystemKeysCheckBox(CodeText.Text);
@@ -83,7 +82,7 @@ namespace Unclassified.TxEditor.Views
 			updating = false;
 		}
 
-		private void CulturesList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		private void CulturesList_MouseDoubleClick(object sender, MouseButtonEventArgs args)
 		{
 			if (CulturesList.SelectedIndex != -1)
 			{
@@ -92,7 +91,7 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
-		private void AddButton_Click(object sender, RoutedEventArgs e)
+		private void AddButton_Click(object sender, RoutedEventArgs args)
 		{
 			DialogResult = true;
 			Close();
@@ -116,7 +115,7 @@ namespace Unclassified.TxEditor.Views
 
 			string selectedCode = null;
 			if (CulturesList.SelectedItem is CultureItem)
-				selectedCode = ((CultureItem) CulturesList.SelectedItem).CultureInfo.IetfLanguageTag;
+				selectedCode = ((CultureItem)CulturesList.SelectedItem).CultureInfo.IetfLanguageTag;
 
 			updating = true;
 			CulturesList.Items.Clear();
@@ -171,7 +170,7 @@ namespace Unclassified.TxEditor.Views
 
 			public int CompareTo(object obj)
 			{
-				CultureItem other = (CultureItem) obj;
+				CultureItem other = (CultureItem)obj;
 				if (App.Settings.View.NativeCultureNames)
 					return CultureInfo.NativeName.CompareTo(other.CultureInfo.NativeName);
 				else

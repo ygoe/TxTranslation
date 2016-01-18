@@ -32,18 +32,18 @@ namespace Unclassified.TxEditor.Views
 		#region Control event handlers
 
 		[Obfuscation(Exclude = true, Feature = "renaming")]
-		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
+		private void DecoratedTextBox_ValidateKey(object sender, ValidateKeyEventArgs args)
 		{
 			CultureTextViewModel vm = DataContext as CultureTextViewModel;
 			if (vm != null)
-				e.IsValid =
-					e.TextKey != vm.TextKeyVM.TextKey &&
-					vm.TextKeyVM.MainWindowVM.TextKeys.ContainsKey(e.TextKey);
+				args.IsValid =
+					args.TextKey != vm.TextKeyVM.TextKey &&
+					vm.TextKeyVM.MainWindowVM.TextKeys.ContainsKey(args.TextKey);
 		}
 
-		private void UserControl_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void UserControl_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs args)
 		{
-			bool focused = (bool) e.NewValue;
+			bool focused = (bool)args.NewValue;
 			CultureTextViewModel vm = DataContext as CultureTextViewModel;
 			if (vm != null)
 				vm.TextKeyVM.MainWindowVM.SelectedCulture = focused ? vm.CultureName : null;

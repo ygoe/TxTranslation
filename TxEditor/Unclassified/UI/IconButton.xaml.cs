@@ -39,31 +39,31 @@ namespace Unclassified.UI
 
 		public ImageSource IconSource
 		{
-			get { return (ImageSource) GetValue(IconSourceProperty); }
+			get { return (ImageSource)GetValue(IconSourceProperty); }
 			set { SetValue(IconSourceProperty, value); }
 		}
 
 		public Visibility ContentVisibility
 		{
-			get { return (Visibility) GetValue(ContentVisibilityProperty); }
+			get { return (Visibility)GetValue(ContentVisibilityProperty); }
 			set { SetValue(ContentVisibilityProperty, value); }
 		}
 
 		public Orientation Orientation
 		{
-			get { return (Orientation) GetValue(OrientationProperty); }
+			get { return (Orientation)GetValue(OrientationProperty); }
 			set { SetValue(OrientationProperty, value); }
 		}
 
 		public string HotkeyText
 		{
-			get { return (string) GetValue(HotkeyTextProperty); }
+			get { return (string)GetValue(HotkeyTextProperty); }
 			set { SetValue(HotkeyTextProperty, value); }
 		}
 
 		public string ExtendedToolTipText
 		{
-			get { return (string) GetValue(ExtendedToolTipTextProperty); }
+			get { return (string)GetValue(ExtendedToolTipTextProperty); }
 			set { SetValue(ExtendedToolTipTextProperty, value); }
 		}
 
@@ -77,19 +77,19 @@ namespace Unclassified.UI
 		protected override void OnContentChanged(object oldContent, object newContent)
 		{
 			base.OnContentChanged(oldContent, newContent);
-			ContentVisibility = (newContent is string ? !string.IsNullOrEmpty((string) newContent) : newContent != null) ? Visibility.Visible : Visibility.Collapsed;
+			ContentVisibility = (newContent is string ? !string.IsNullOrEmpty((string)newContent) : newContent != null) ? Visibility.Visible : Visibility.Collapsed;
 			UpdateToolTip();
 		}
 
-		private static void ContentVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void ContentVisibilityChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			IconButton button = d as IconButton;
+			IconButton button = depObj as IconButton;
 			button.UpdateToolTip();
 		}
 
-		private static void HotkeyTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void HotkeyTextChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			IconButton button = d as IconButton;
+			IconButton button = depObj as IconButton;
 			button.UpdateToolTip();
 		}
 
@@ -144,7 +144,7 @@ namespace Unclassified.UI
 			}
 		}
 
-		protected override void OnToolTipOpening(ToolTipEventArgs e)
+		protected override void OnToolTipOpening(ToolTipEventArgs args)
 		{
 			Grid toolGrid = null;
 
@@ -171,7 +171,7 @@ namespace Unclassified.UI
 			}
 
 			ToolTipService.SetShowDuration(this, 20000);
-			base.OnToolTipOpening(e);
+			base.OnToolTipOpening(args);
 		}
 	}
 }

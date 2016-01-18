@@ -16,9 +16,9 @@ namespace Unclassified.TxEditor
 
 		#region Startup
 
-		protected override void OnStartup(StartupEventArgs e)
+		protected override void OnStartup(StartupEventArgs args)
 		{
-			base.OnStartup(e);
+			base.OnStartup(args);
 
 			// Fix WPF's built-in themes
 			if (OSInfo.IsWindows8OrNewer)

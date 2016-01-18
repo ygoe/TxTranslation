@@ -705,7 +705,7 @@ namespace Unclassified.Util
 				if (store.ContainsKey(key)) data = store[key];
 
 				if (data == null) return fallbackValue;
-				if (data is DateTime) return (DateTime) data;
+				if (data is DateTime) return (DateTime)data;
 				return fallbackValue;
 			}
 		}
@@ -758,7 +758,7 @@ namespace Unclassified.Util
 				if (store.ContainsKey(key)) data = store[key];
 
 				if (data == null) return fallbackValue;
-				if (data is TimeSpan) return (TimeSpan) data;
+				if (data is TimeSpan) return (TimeSpan)data;
 				return fallbackValue;
 			}
 		}
@@ -1186,7 +1186,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "string[]";
 						xn.Attributes.Append(xa);
-						string[] sa = (string[]) store[key];
+						string[] sa = (string[])store[key];
 						foreach (string s in sa)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1206,7 +1206,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "int[]";
 						xn.Attributes.Append(xa);
-						int[] ia = (int[]) store[key];
+						int[] ia = (int[])store[key];
 						foreach (int i in ia)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1226,7 +1226,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "long[]";
 						xn.Attributes.Append(xa);
-						long[] la = (long[]) store[key];
+						long[] la = (long[])store[key];
 						foreach (long l in la)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1246,7 +1246,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "double[]";
 						xn.Attributes.Append(xa);
-						double[] da = (double[]) store[key];
+						double[] da = (double[])store[key];
 						foreach (double d in da)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1266,7 +1266,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "bool[]";
 						xn.Attributes.Append(xa);
-						bool[] ba = (bool[]) store[key];
+						bool[] ba = (bool[])store[key];
 						foreach (bool b in ba)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1286,7 +1286,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "DateTime[]";
 						xn.Attributes.Append(xa);
-						DateTime[] da = (DateTime[]) store[key];
+						DateTime[] da = (DateTime[])store[key];
 						foreach (DateTime d in da)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1306,7 +1306,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "TimeSpan[]";
 						xn.Attributes.Append(xa);
-						TimeSpan[] ta = (TimeSpan[]) store[key];
+						TimeSpan[] ta = (TimeSpan[])store[key];
 						foreach (TimeSpan t in ta)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
@@ -1319,7 +1319,7 @@ namespace Unclassified.Util
 						xa = xdoc.CreateAttribute("type");
 						xa.Value = "map";
 						xn.Attributes.Append(xa);
-						NameValueCollection collection = (NameValueCollection) store[key];
+						NameValueCollection collection = (NameValueCollection)store[key];
 						for (int i = 0; i < collection.Count; i++)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");

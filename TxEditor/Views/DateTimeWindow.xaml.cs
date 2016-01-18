@@ -34,7 +34,10 @@ namespace Unclassified.TxEditor.Views
 
 		public string Culture
 		{
-			get { return culture; }
+			get
+			{
+				return culture;
+			}
 			set
 			{
 				culture = value;
@@ -55,9 +58,9 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
-		private void CulturesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CulturesList_SelectionChanged(object sender, SelectionChangedEventArgs args)
 		{
-			culture = ((ValueViewModel<string>) CulturesList.SelectedItem).Value;
+			culture = ((ValueViewModel<string>)CulturesList.SelectedItem).Value;
 			UpdateView();
 		}
 
@@ -67,7 +70,7 @@ namespace Unclassified.TxEditor.Views
 			UpdateView();
 		}
 
-		private void TxDowAbbrCheckBox_Checked(object sender, RoutedEventArgs e)
+		private void TxDowAbbrCheckBox_Checked(object sender, RoutedEventArgs args)
 		{
 			if (TxDowAbbrCheckBox.IsChecked == true)
 			{
@@ -76,7 +79,7 @@ namespace Unclassified.TxEditor.Views
 			UpdateView();
 		}
 
-		private void TxDowLongCheckBox_Checked(object sender, RoutedEventArgs e)
+		private void TxDowLongCheckBox_Checked(object sender, RoutedEventArgs args)
 		{
 			if (TxDowLongCheckBox.IsChecked == true)
 			{

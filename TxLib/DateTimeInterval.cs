@@ -186,7 +186,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public DateTime Start
 		{
-			get { return start; }
+			get
+			{
+				return start;
+			}
 			set
 			{
 				if (value != start)
@@ -202,7 +205,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public DateTime End
 		{
-			get { return end; }
+			get
+			{
+				return end;
+			}
 			set
 			{
 				if (value != end)
@@ -219,7 +225,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public bool Negative
 		{
-			get { return negative; }
+			get
+			{
+				return negative;
+			}
 			set
 			{
 				if (value != negative)
@@ -236,7 +245,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Years
 		{
-			get { return years; }
+			get
+			{
+				return years;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Years", "Interval components cannot be negative.");
@@ -254,7 +266,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Months
 		{
-			get { return months; }
+			get
+			{
+				return months;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Months", "Interval components cannot be negative.");
@@ -272,7 +287,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Days
 		{
-			get { return days; }
+			get
+			{
+				return days;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Days", "Interval components cannot be negative.");
@@ -290,7 +308,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Hours
 		{
-			get { return hours; }
+			get
+			{
+				return hours;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Hours", "Interval components cannot be negative.");
@@ -308,7 +329,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Minutes
 		{
-			get { return minutes; }
+			get
+			{
+				return minutes;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Minutes", "Interval components cannot be negative.");
@@ -326,7 +350,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Seconds
 		{
-			get { return seconds; }
+			get
+			{
+				return seconds;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Seconds", "Interval components cannot be negative.");
@@ -344,7 +371,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public int Milliseconds
 		{
-			get { return milliseconds; }
+			get
+			{
+				return milliseconds;
+			}
 			set
 			{
 				if (value < 0) throw new ArgumentOutOfRangeException("Milliseconds", "Interval components cannot be negative.");
@@ -398,8 +428,8 @@ namespace Unclassified.TxLib
 					hours = m.Groups[5].Success ? int.Parse(m.Groups[5].Value) : 0;
 					minutes = m.Groups[6].Success ? int.Parse(m.Groups[6].Value) : 0;
 					double seconds = m.Groups[7].Success ? double.Parse(m.Groups[7].Value.Replace(',', '.'), CultureInfo.InvariantCulture) : 0;
-					this.seconds = (int) seconds;
-					milliseconds = (int) Math.Round((seconds - this.seconds) * 1000);
+					this.seconds = (int)seconds;
+					milliseconds = (int)Math.Round((seconds - this.seconds) * 1000);
 				}
 				else
 				{
@@ -414,7 +444,10 @@ namespace Unclassified.TxLib
 		/// </summary>
 		public TimeSpan TimeSpan
 		{
-			get { return end - start; }
+			get
+			{
+				return end - start;
+			}
 			set
 			{
 				end = start + value;
@@ -481,7 +514,7 @@ namespace Unclassified.TxLib
 				seconds++;
 			}
 			d0 = d0.AddSeconds(seconds);
-			milliseconds = (int) (d1 - d0).TotalMilliseconds;
+			milliseconds = (int)(d1 - d0).TotalMilliseconds;
 		}
 
 		/// <summary>

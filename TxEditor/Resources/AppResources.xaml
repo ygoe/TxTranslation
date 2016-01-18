@@ -6,5 +6,4 @@
 	<Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
 		<Setter Property="ui:ListBoxExtensions.FixFocus" Value="True"/>
 	</Style>
-	
 </ResourceDictionary>

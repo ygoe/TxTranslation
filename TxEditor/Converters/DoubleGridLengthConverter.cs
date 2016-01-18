@@ -10,12 +10,12 @@ namespace Unclassified.TxEditor.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return new GridLength((double) value);
+			return new GridLength((double)value);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			GridLength gridLength = (GridLength) value;
+			GridLength gridLength = (GridLength)value;
 			return gridLength.Value;
 		}
 	}

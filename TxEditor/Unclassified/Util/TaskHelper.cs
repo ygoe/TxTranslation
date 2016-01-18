@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Unclassified.Util
 {
@@ -119,7 +119,7 @@ namespace Unclassified.Util
 
 		private static object ExitFrame(object f)
 		{
-			((DispatcherFrame) f).Continue = false;
+			((DispatcherFrame)f).Continue = false;
 			return null;
 		}
 

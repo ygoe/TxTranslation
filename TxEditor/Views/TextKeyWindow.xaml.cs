@@ -23,7 +23,7 @@ namespace Unclassified.TxEditor.Views
 
 		public bool RenameSelectMode { get; set; }
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private void Window_Loaded(object sender, RoutedEventArgs args)
 		{
 			//TextKeyText.SelectAll();
 			if (!RenameSelectMode)
@@ -47,7 +47,7 @@ namespace Unclassified.TxEditor.Views
 			TextKeyText.Focus();
 		}
 
-		private void OKButton_Click(object sender, RoutedEventArgs e)
+		private void OKButton_Click(object sender, RoutedEventArgs args)
 		{
 			string errorMessage;
 			if (!TextKeyViewModel.ValidateName(TextKey, out errorMessage))
@@ -60,7 +60,7 @@ namespace Unclassified.TxEditor.Views
 			Close();
 		}
 
-		private void CancelButton_Click(object sender, RoutedEventArgs e)
+		private void CancelButton_Click(object sender, RoutedEventArgs args)
 		{
 			DialogResult = false;
 			Close();

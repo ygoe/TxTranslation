@@ -33,13 +33,13 @@ namespace Unclassified.TxEditor.Views
 		}
 
 		[Obfuscation(Exclude = true, Feature = "renaming")]
-		private void MyTextBox_ValidateKey(object sender, ValidateKeyEventArgs e)
+		private void MyTextBox_ValidateKey(object sender, ValidateKeyEventArgs args)
 		{
 			QuantifiedTextViewModel vm = DataContext as QuantifiedTextViewModel;
 			if (vm != null)
-				e.IsValid =
-					e.TextKey != vm.CultureTextVM.TextKeyVM.TextKey &&
-					vm.CultureTextVM.TextKeyVM.MainWindowVM.TextKeys.ContainsKey(e.TextKey);
+				args.IsValid =
+					args.TextKey != vm.CultureTextVM.TextKeyVM.TextKey &&
+					vm.CultureTextVM.TextKeyVM.MainWindowVM.TextKeys.ContainsKey(args.TextKey);
 		}
 	}
 }

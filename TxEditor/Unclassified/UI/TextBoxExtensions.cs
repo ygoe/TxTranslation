@@ -26,7 +26,7 @@ namespace Unclassified.UI
 		/// <returns></returns>
 		public static bool GetDisableInsertKey(DependencyObject obj)
 		{
-			return (bool) obj.GetValue(DisableInsertKeyProperty);
+			return (bool)obj.GetValue(DisableInsertKeyProperty);
 		}
 
 		/// <summary>
@@ -49,26 +49,26 @@ namespace Unclassified.UI
 			ownerType: typeof(TextBoxExtensions),
 			defaultMetadata: new PropertyMetadata(false, OnDisableInsertKeyChanged));
 
-		private static void OnDisableInsertKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnDisableInsertKeyChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			if (d is TextBox && e != null)
+			if (depObj is TextBox && args != null)
 			{
-				if ((bool) e.NewValue)
+				if ((bool)args.NewValue)
 				{
-					(d as TextBox).PreviewKeyDown += TextBox_PreviewKeyDown;
+					(depObj as TextBox).PreviewKeyDown += TextBox_PreviewKeyDown;
 				}
 				else
 				{
-					(d as TextBox).PreviewKeyDown -= TextBox_PreviewKeyDown;
+					(depObj as TextBox).PreviewKeyDown -= TextBox_PreviewKeyDown;
 				}
 			}
 		}
 
-		private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+		private static void TextBox_PreviewKeyDown(object sender, KeyEventArgs args)
 		{
-			if (e.Key == Key.Insert && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+			if (args.Key == Key.Insert && args.KeyboardDevice.Modifiers == ModifierKeys.None)
 			{
-				e.Handled = true;
+				args.Handled = true;
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace Unclassified.UI
 		/// <returns></returns>
 		public static int GetUpdateDelay(DependencyObject obj)
 		{
-			return (int) obj.GetValue(UpdateDelayProperty);
+			return (int)obj.GetValue(UpdateDelayProperty);
 		}
 
 		/// <summary>
@@ -112,26 +112,26 @@ namespace Unclassified.UI
 			propertyType: typeof(DelayedCall),
 			ownerType: typeof(TextBoxExtensions));
 
-		private static void OnUpdateDelayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnUpdateDelayChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			if (d is TextBox && e != null)
+			if (depObj is TextBox && args != null)
 			{
-				if ((int) e.NewValue > 0)
+				if ((int)args.NewValue > 0)
 				{
-					(d as TextBox).GotFocus += TextBox_GotFocus;
-					(d as TextBox).TextChanged += TextBox_TextChanged;
-					(d as TextBox).LostFocus += TextBox_LostFocus;
+					(depObj as TextBox).GotFocus += TextBox_GotFocus;
+					(depObj as TextBox).TextChanged += TextBox_TextChanged;
+					(depObj as TextBox).LostFocus += TextBox_LostFocus;
 				}
 				else
 				{
-					(d as TextBox).GotFocus -= TextBox_GotFocus;
-					(d as TextBox).TextChanged -= TextBox_TextChanged;
-					(d as TextBox).LostFocus -= TextBox_LostFocus;
+					(depObj as TextBox).GotFocus -= TextBox_GotFocus;
+					(depObj as TextBox).TextChanged -= TextBox_TextChanged;
+					(depObj as TextBox).LostFocus -= TextBox_LostFocus;
 				}
 			}
 		}
 
-		private static void TextBox_GotFocus(object sender, EventArgs e)
+		private static void TextBox_GotFocus(object sender, EventArgs args)
 		{
 			TextBox textBox = sender as TextBox;
 			if (textBox != null)
@@ -151,7 +151,7 @@ namespace Unclassified.UI
 			}
 		}
 
-		private static void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		private static void TextBox_TextChanged(object sender, TextChangedEventArgs args)
 		{
 			TextBox textBox = sender as TextBox;
 			if (textBox != null)
@@ -164,7 +164,7 @@ namespace Unclassified.UI
 			}
 		}
 
-		private static void TextBox_LostFocus(object sender, EventArgs e)
+		private static void TextBox_LostFocus(object sender, EventArgs args)
 		{
 			TextBox textBox = sender as TextBox;
 			if (textBox != null)

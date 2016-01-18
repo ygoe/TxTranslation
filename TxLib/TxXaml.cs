@@ -941,7 +941,7 @@ namespace Unclassified.TxLib
 
 		private DictionaryWatcher()
 		{
-			Tx.DictionaryChanged += delegate(object sender, EventArgs e)
+			Tx.DictionaryChanged += delegate (object sender, EventArgs args)
 			{
 				var handler = PropertyChanged;
 				if (handler != null)
@@ -1288,7 +1288,7 @@ namespace Unclassified.TxLib
 					case RelativeTimeKind.TimeSpan:
 						if (values[2] is TimeSpan)
 						{
-							ts = (TimeSpan) values[2];
+							ts = (TimeSpan)values[2];
 							text = Tx.TimeSpan(ts);
 						}
 						else
@@ -1356,7 +1356,7 @@ namespace Unclassified.TxLib
 			dispatcherTimer = new DispatcherTimer();
 			dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
 			dispatcherTimer.Start();
-			dispatcherTimer.Tick += delegate(object sender, EventArgs e)
+			dispatcherTimer.Tick += delegate (object sender, EventArgs args)
 			{
 				var handler = PropertyChanged;
 				if (handler != null)

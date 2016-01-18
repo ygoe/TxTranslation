@@ -22,7 +22,7 @@ namespace Unclassified.UI
 		{
 			if (!(value is int))
 				throw new ArgumentException("Invalid argument type.", "value");
-			int val = (int) value;
+			int val = (int)value;
 
 			int emptyValue = 0;
 			string paramStr = parameter as string;

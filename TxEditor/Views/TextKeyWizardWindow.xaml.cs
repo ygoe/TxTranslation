@@ -132,8 +132,8 @@ namespace Unclassified.TxEditor.Views
 		{
 			if (App.Settings != null && App.Settings.Wizard.RememberLocation)
 			{
-				App.Settings.Wizard.WindowLeft = (int) RestoreBounds.Left;
-				App.Settings.Wizard.WindowTop = (int) RestoreBounds.Top;
+				App.Settings.Wizard.WindowLeft = (int)RestoreBounds.Left;
+				App.Settings.Wizard.WindowTop = (int)RestoreBounds.Top;
 			}
 		}
 
@@ -829,7 +829,7 @@ namespace Unclassified.TxEditor.Views
 
 		private void ScanAllTexts(TextKeyViewModel tk)
 		{
-			int maxDistance = (int) Math.Round((float) TranslationText.Text.Length / 2, MidpointRounding.AwayFromZero);
+			int maxDistance = (int)Math.Round((float)TranslationText.Text.Length / 2, MidpointRounding.AwayFromZero);
 			if (tk.IsFullKey && tk.CultureTextVMs[0].Text == TranslationText.Text)
 			{
 				suggestions.Add(new SuggestionViewModel(null) { TextKey = tk.TextKey, BaseText = tk.CultureTextVMs[0].Text, ScoreNum = 1000, IsExactMatch = true });
@@ -932,7 +932,7 @@ namespace Unclassified.TxEditor.Views
 					}
 				}
 			}
-			return (int) Math.Round(matrix[len_orig, len_diff], MidpointRounding.AwayFromZero);
+			return (int)Math.Round(matrix[len_orig, len_diff], MidpointRounding.AwayFromZero);
 		}
 
 		#endregion Support functions

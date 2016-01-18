@@ -29,16 +29,16 @@ namespace Unclassified.UI
 		/// <summary>
 		/// DataContext property changed handler to use in overridden property metadata.
 		/// </summary>
-		/// <param name="d"></param>
-		/// <param name="e"></param>
-		private static void ViewChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		/// <param name="depObj"></param>
+		/// <param name="args"></param>
+		private static void ViewChangedHandler(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			var oldValue = e.OldValue as IViewCommandSource;
+			var oldValue = args.OldValue as IViewCommandSource;
 			if (oldValue != null)
-				oldValue.ViewCommandManager.DeregisterView(d);
-			var newValue = e.NewValue as IViewCommandSource;
+				oldValue.ViewCommandManager.DeregisterView(depObj);
+			var newValue = args.NewValue as IViewCommandSource;
 			if (newValue != null)
-				newValue.ViewCommandManager.RegisterView(d);
+				newValue.ViewCommandManager.RegisterView(depObj);
 		}
 
 		#endregion Static property metadata setup
@@ -154,7 +154,7 @@ namespace Unclassified.UI
 		public void BeginInvoke(string commandName, DispatcherPriority priority, params object[] args)
 		{
 			Dispatcher.CurrentDispatcher.BeginInvoke(
-				(Action) delegate { Invoke(commandName, args); },
+				(Action)delegate { Invoke(commandName, args); },
 				priority);
 		}
 

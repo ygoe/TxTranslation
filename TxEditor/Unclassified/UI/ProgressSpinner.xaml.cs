@@ -27,13 +27,13 @@ namespace Unclassified.UI
 		/// </summary>
 		public Color Color
 		{
-			get { return (Color) GetValue(ColorProperty); }
+			get { return (Color)GetValue(ColorProperty); }
 			set { SetValue(ColorProperty, value); }
 		}
 
-		private static void ColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void ColorChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			ProgressSpinner ctl = d as ProgressSpinner;
+			ProgressSpinner ctl = depObj as ProgressSpinner;
 			ctl.Recreate();
 		}
 
@@ -51,13 +51,13 @@ namespace Unclassified.UI
 		/// </summary>
 		public Color BackColor
 		{
-			get { return (Color) GetValue(BackColorProperty); }
+			get { return (Color)GetValue(BackColorProperty); }
 			set { SetValue(BackColorProperty, value); }
 		}
 
-		private static void BackColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void BackColorChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			ProgressSpinner ctl = d as ProgressSpinner;
+			ProgressSpinner ctl = depObj as ProgressSpinner;
 			ctl.Recreate();
 		}
 
@@ -101,7 +101,7 @@ namespace Unclassified.UI
 			// Radius for circle calculations
 			double radius = length / 2;
 			// Number of segments to draw
-			int count = (int) circumference / 2;
+			int count = (int)circumference / 2;
 			// Compute the angle step of one segment
 			double step = 360 / count;
 			// Compute overlap of arc segments to avoid rendering gaps
@@ -121,7 +121,7 @@ namespace Unclassified.UI
 				double y1 = margin + radius + Math.Sin(endAngle) * radius;
 
 				// Determine the path's colour
-				Color c = BlendColors(Color, Colors.White, (float) index / (count - 1));
+				Color c = BlendColors(Color, Colors.White, (float)index / (count - 1));
 				//byte opacity = (byte) Math.Round(255 - (double) index / (count - 1) * 255);
 
 				// Create the path object

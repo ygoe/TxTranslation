@@ -49,9 +49,9 @@ namespace Unclassified.TxEditor.Views
 			}
 		}
 
-		private void Hyperlink_Click(object sender, RoutedEventArgs e)
+		private void Hyperlink_Click(object sender, RoutedEventArgs args)
 		{
-			Process.Start("http://unclassified.software/source/txtranslation?ref=inapp-txeditor");
+			Process.Start("http://unclassified.software/txtranslation?ref=inapp-txeditor");
 		}
 	}
 }

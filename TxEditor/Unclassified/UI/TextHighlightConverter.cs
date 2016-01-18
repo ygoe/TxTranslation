@@ -80,7 +80,7 @@ namespace Unclassified.UI
 
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			if (values.Length > 2 && values[2] is bool && (bool) values[2] == false)
+			if (values.Length > 2 && values[2] is bool && (bool)values[2] == false)
 			{
 				// Highlighting disabled for this item
 				return values[0];

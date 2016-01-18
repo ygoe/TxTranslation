@@ -144,7 +144,7 @@ namespace Unclassified.TxEditor.ViewModels
 		[NotifiesOn("CursorChar")]
 		public string CursorCharCodePoint
 		{
-			get { return CursorChar != null ? "U+" + ((int) CursorChar[0]).ToString("X4") : ""; }
+			get { return CursorChar != null ? "U+" + ((int)CursorChar[0]).ToString("X4") : ""; }
 		}
 
 		[NotifiesOn("CursorChar")]
@@ -1243,7 +1243,7 @@ namespace Unclassified.TxEditor.ViewModels
 				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.C), dwFlags = WinApi.KEYEVENTF_KEYUP } },
 				new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL, dwFlags = WinApi.KEYEVENTF_KEYUP } },
 			};
-			uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
+			uint ret = WinApi.SendInput((uint)inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			//System.Diagnostics.Debug.WriteLine(ret + " inputs sent");
 
 			DelayedCall.Start(TextKeyWizardFromHotKey2, 50);
@@ -1280,7 +1280,7 @@ namespace Unclassified.TxEditor.ViewModels
 					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.KeyToVk(System.Windows.Forms.Keys.V), dwFlags = WinApi.KEYEVENTF_KEYUP } },
 					new WinApi.INPUT() { type = WinApi.INPUT_KEYBOARD, ki = new WinApi.KEYBDINPUT() { wVk = (short) WinApi.VK.CONTROL, dwFlags = WinApi.KEYEVENTF_KEYUP } },
 				};
-				uint ret = WinApi.SendInput((uint) inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
+				uint ret = WinApi.SendInput((uint)inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			}
 
 			clipboardBackup = win.ClipboardBackup;
@@ -3602,7 +3602,7 @@ namespace Unclassified.TxEditor.ViewModels
 				// root to reduce the effect for very long texts.)
 				if (otherWords.Count > 0)
 				{
-					score /= (float) Math.Sqrt(otherWords.Count);
+					score /= (float)Math.Sqrt(otherWords.Count);
 				}
 				else
 				{

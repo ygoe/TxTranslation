@@ -6,7 +6,7 @@
 	<!-- Via: http://stackoverflow.com/questions/14202562/why-doesnt-wpf-show-windows-8-style-buttons-in-windows-8 -->
 
 	<!-- region Button -->
-	
+
 	<Style TargetType="{x:Type Button}">
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
@@ -319,7 +319,7 @@
 	</Style>
 
 	<!-- endregion TextBox -->
-	
+
 	<!-- region CheckBox -->
 
 	<Style TargetType="{x:Type CheckBox}">

@@ -72,7 +72,7 @@ namespace Unclassified.UI
 		/// <param name="canExecute">Delegate to execute when CanExecute is called on the command.</param>
 		/// <exception cref="ArgumentNullException">The execute argument must not be null.</exception>
 		public DelegateCommand(Action execute, Func<bool> canExecute)
-			: this(execute != null ? p => execute() : (Action<object>) null, canExecute != null ? p => canExecute() : (Func<object, bool>) null)
+			: this(execute != null ? p => execute() : (Action<object>)null, canExecute != null ? p => canExecute() : (Func<object, bool>)null)
 		{
 		}
 
@@ -154,7 +154,7 @@ namespace Unclassified.UI
 				if (Dispatcher.CurrentDispatcher == Application.Current.Dispatcher)
 				{
 					Dispatcher.CurrentDispatcher.BeginInvoke(
-						(Action<EventArgs>) OnCanExecuteChanged,
+						(Action<EventArgs>)OnCanExecuteChanged,
 						DispatcherPriority.Loaded,
 						EventArgs.Empty);
 					raiseCanExecuteChangedPending = true;
@@ -165,9 +165,9 @@ namespace Unclassified.UI
 		/// <summary>
 		/// Raises the <see cref="E:CanExecuteChanged"/> event.
 		/// </summary>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		/// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[DebuggerStepThrough]
-		protected virtual void OnCanExecuteChanged(EventArgs e)
+		protected virtual void OnCanExecuteChanged(EventArgs args)
 		{
 			raiseCanExecuteChangedPending = false;
 			PurgeWeakHandlers();
@@ -179,7 +179,7 @@ namespace Unclassified.UI
 				EventHandler handler = reference.Target as EventHandler;
 				if (handler != null)
 				{
-					handler(this, e);
+					handler(this, args);
 				}
 			}
 		}

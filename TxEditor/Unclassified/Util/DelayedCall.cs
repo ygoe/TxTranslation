@@ -500,7 +500,7 @@ namespace Unclassified.Util
 			{
 				lock (timerLock)
 				{
-					return (int) timer.Interval;
+					return (int)timer.Interval;
 				}
 			}
 			set

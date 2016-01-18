@@ -10,7 +10,7 @@ namespace Unclassified.TxEditor.Converters
 	{
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			bool monospaceFont = (bool) value;
+			bool monospaceFont = (bool)value;
 
 			if (monospaceFont)
 			{

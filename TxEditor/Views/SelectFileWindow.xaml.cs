@@ -20,12 +20,12 @@ namespace Unclassified.TxEditor.Views
 
 		#region Control event handlers
 
-		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
 		{
 			OKButton.IsEnabled = FileList.SelectedItems.Count > 0;
 		}
 
-		private void OKButton_Click(object sender, RoutedEventArgs e)
+		private void OKButton_Click(object sender, RoutedEventArgs args)
 		{
 			SelectFileViewModel vm = DataContext as SelectFileViewModel;
 			string[] files = new string[FileList.SelectedItems.Count];
@@ -39,7 +39,7 @@ namespace Unclassified.TxEditor.Views
 			Close();
 		}
 
-		private void AllButton_Click(object sender, RoutedEventArgs e)
+		private void AllButton_Click(object sender, RoutedEventArgs args)
 		{
 			SelectFileViewModel vm = DataContext as SelectFileViewModel;
 			string[] files = new string[FileList.Items.Count];
@@ -53,7 +53,7 @@ namespace Unclassified.TxEditor.Views
 			Close();
 		}
 
-		private void CancelButton_Click(object sender, RoutedEventArgs e)
+		private void CancelButton_Click(object sender, RoutedEventArgs args)
 		{
 			DialogResult = false;
 			Close();

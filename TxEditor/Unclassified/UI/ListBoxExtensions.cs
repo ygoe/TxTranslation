@@ -44,17 +44,17 @@ namespace Unclassified.UI
 			obj.SetValue(FixFocusProperty, value);
 		}
 
-		private static void OnFixFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		private static void OnFixFocusChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
 		{
-			if (d is ListBox && e != null)
+			if (depObj is ListBox && args != null)
 			{
-				if ((bool)e.NewValue)
+				if ((bool)args.NewValue)
 				{
-					(d as ListBox).GotKeyboardFocus += ListBox_GotKeyboardFocus;
+					(depObj as ListBox).GotKeyboardFocus += ListBox_GotKeyboardFocus;
 				}
 				else
 				{
-					(d as ListBox).GotKeyboardFocus -= ListBox_GotKeyboardFocus;
+					(depObj as ListBox).GotKeyboardFocus -= ListBox_GotKeyboardFocus;
 				}
 			}
 		}

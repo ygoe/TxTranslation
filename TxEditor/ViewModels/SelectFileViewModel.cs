@@ -79,12 +79,12 @@ namespace Unclassified.TxEditor.ViewModels
 
 		#region BackgroundWorker
 
-		private void scanBw_DoWork(object sender, DoWorkEventArgs e)
+		private void scanBw_DoWork(object sender, DoWorkEventArgs args)
 		{
 			ScanDirectory(baseDir);
 		}
 
-		private void scanBw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		private void scanBw_ProgressChanged(object sender, ProgressChangedEventArgs args)
 		{
 			string str;
 			while (foundFilesQueue.TryDequeue(out str))
@@ -98,12 +98,12 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 		}
 
-		private void scanBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private void scanBw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
 		{
 			OnPropertyChanged(() => SpinnerVisibility);
-			if (e.Error != null)
+			if (args.Error != null)
 			{
-				FL.Error(e.Error);
+				FL.Error(args.Error);
 				// TODO: Show the error in a user message box
 			}
 		}

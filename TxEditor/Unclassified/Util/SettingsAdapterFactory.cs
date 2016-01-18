@@ -94,7 +94,7 @@ namespace Unclassified.Util
 				prefix = null;
 			}
 
-			return (TInterface) Activator.CreateInstance(generatedTypes[interfaceType], settingsStore, prefix);
+			return (TInterface)Activator.CreateInstance(generatedTypes[interfaceType], settingsStore, prefix);
 		}
 
 		#endregion Public methods
@@ -531,7 +531,7 @@ namespace Unclassified.Util
 			ilGen.GenerateCall<object>("GetType");
 			// -> GetMethod(...)
 			ilGen.Emit(OpCodes.Ldstr, "OnPropertyChanged");
-			ilGen.Emit(OpCodes.Ldc_I4, (int) (BindingFlags.Instance | BindingFlags.NonPublic));
+			ilGen.Emit(OpCodes.Ldc_I4, (int)(BindingFlags.Instance | BindingFlags.NonPublic));
 			ilGen.GenerateCallVirt<Type, string, BindingFlags>("GetMethod");
 			// -> subHandler = ...
 			ilGen.Emit(OpCodes.Stloc, subHandlerLoc);
@@ -765,7 +765,7 @@ namespace Unclassified.Util
 			object[] attrs = propertyInfo.GetCustomAttributes(typeof(DefaultValueAttribute), false);
 			if (attrs.Length == 1)
 			{
-				DefaultValueAttribute defAttr = (DefaultValueAttribute) attrs[0];
+				DefaultValueAttribute defAttr = (DefaultValueAttribute)attrs[0];
 				if (propertyInfo.PropertyType.IsArray)
 				{
 					throw new NotSupportedException(
@@ -774,7 +774,7 @@ namespace Unclassified.Util
 				}
 				if (propType == typeof(bool))
 				{
-					if ((bool) defAttr.Value)
+					if ((bool)defAttr.Value)
 						ilGen.Emit(OpCodes.Ldc_I4_1);
 					else
 						ilGen.Emit(OpCodes.Ldc_I4_0);
@@ -1029,37 +1029,37 @@ namespace Unclassified.Util
 		// Source: http://stackoverflow.com/q/1213862/143684
 		private static MethodInfo MethodOf(Expression<Action> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
 		private static MethodInfo MethodOf<T>(Expression<Action<T>> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
 		private static MethodInfo MethodOf<T1, T2>(Expression<Action<T1, T2>> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
 		private static MethodInfo MethodOf<TResult>(Expression<Func<TResult>> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
 		private static MethodInfo MethodOf<T, TResult>(Expression<Func<T, TResult>> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
 		private static MethodInfo MethodOf<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
 		{
-			MethodCallExpression body = (MethodCallExpression) expression.Body;
+			MethodCallExpression body = (MethodCallExpression)expression.Body;
 			return body.Method;
 		}
 
@@ -1518,46 +1518,46 @@ namespace Unclassified.Util
 					{
 						if (keyStr.Trim() == "1" ||
 							keyStr.Trim().ToLower() == "true")
-							key2 = (TKey) (object) true;
+							key2 = (TKey)(object)true;
 						else if (keyStr.Trim() == "0" ||
 							keyStr.Trim().ToLower() == "false")
-							key2 = (TKey) (object) false;
+							key2 = (TKey)(object)false;
 						else throw new FormatException("Invalid bool value");
 					}
 					else if (typeof(TKey) == typeof(DateTime))
 					{
-						key2 = (TKey) (object) DateTime.Parse(keyStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+						key2 = (TKey)(object)DateTime.Parse(keyStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 					}
 					else if (typeof(TKey) == typeof(TimeSpan))
 					{
-						key2 = (TKey) (object) new TimeSpan(long.Parse(keyStr, CultureInfo.InvariantCulture));
+						key2 = (TKey)(object)new TimeSpan(long.Parse(keyStr, CultureInfo.InvariantCulture));
 					}
 					else
 					{
-						key2 = (TKey) Convert.ChangeType(keyStr, typeof(TKey), CultureInfo.InvariantCulture);
+						key2 = (TKey)Convert.ChangeType(keyStr, typeof(TKey), CultureInfo.InvariantCulture);
 					}
 
 					if (typeof(TValue) == typeof(bool))
 					{
 						if (valueStr.Trim() == "1" ||
 							valueStr.Trim().ToLower() == "true")
-							value = (TValue) (object) true;
+							value = (TValue)(object)true;
 						else if (valueStr.Trim() == "0" ||
 							valueStr.Trim().ToLower() == "false")
-							value = (TValue) (object) false;
+							value = (TValue)(object)false;
 						else throw new FormatException("Invalid bool value");
 					}
 					else if (typeof(TValue) == typeof(DateTime))
 					{
-						value = (TValue) (object) DateTime.Parse(valueStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+						value = (TValue)(object)DateTime.Parse(valueStr, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 					}
 					else if (typeof(TValue) == typeof(TimeSpan))
 					{
-						value = (TValue) (object) new TimeSpan(long.Parse(valueStr, CultureInfo.InvariantCulture));
+						value = (TValue)(object)new TimeSpan(long.Parse(valueStr, CultureInfo.InvariantCulture));
 					}
 					else
 					{
-						value = (TValue) Convert.ChangeType(valueStr, typeof(TValue), CultureInfo.InvariantCulture);
+						value = (TValue)Convert.ChangeType(valueStr, typeof(TValue), CultureInfo.InvariantCulture);
 					}
 
 					dictionary.Add(key2, value);
@@ -1592,15 +1592,15 @@ namespace Unclassified.Util
 				// Special type conversions
 				if (typeof(TKey) == typeof(bool))
 				{
-					keyStr = (bool) (object) kvp.Key ? "true" : "false";
+					keyStr = (bool)(object)kvp.Key ? "true" : "false";
 				}
 				else if (typeof(TKey) == typeof(DateTime))
 				{
-					keyStr = ((DateTime) (object) kvp.Key).ToString("o", CultureInfo.InvariantCulture);
+					keyStr = ((DateTime)(object)kvp.Key).ToString("o", CultureInfo.InvariantCulture);
 				}
 				else if (typeof(TKey) == typeof(TimeSpan))
 				{
-					keyStr = ((TimeSpan) (object) kvp.Key).Ticks.ToString(CultureInfo.InvariantCulture);
+					keyStr = ((TimeSpan)(object)kvp.Key).Ticks.ToString(CultureInfo.InvariantCulture);
 				}
 				else
 				{
@@ -1609,15 +1609,15 @@ namespace Unclassified.Util
 
 				if (typeof(TValue) == typeof(bool))
 				{
-					valueStr = (bool) (object) kvp.Value ? "true" : "false";
+					valueStr = (bool)(object)kvp.Value ? "true" : "false";
 				}
 				else if (typeof(TValue) == typeof(DateTime))
 				{
-					valueStr = ((DateTime) (object) kvp.Value).ToString("o", CultureInfo.InvariantCulture);
+					valueStr = ((DateTime)(object)kvp.Value).ToString("o", CultureInfo.InvariantCulture);
 				}
 				else if (typeof(TValue) == typeof(TimeSpan))
 				{
-					valueStr = ((TimeSpan) (object) kvp.Value).Ticks.ToString(CultureInfo.InvariantCulture);
+					valueStr = ((TimeSpan)(object)kvp.Value).Ticks.ToString(CultureInfo.InvariantCulture);
 				}
 				else
 				{
@@ -1679,7 +1679,7 @@ namespace Unclassified.Util
 
 		void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
 		{
-			((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Add(item);
+			((ICollection<KeyValuePair<TKey, TValue>>)dictionary).Add(item);
 			WriteToStore();
 		}
 
@@ -1691,12 +1691,12 @@ namespace Unclassified.Util
 
 		bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
 		{
-			return ((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Contains(item);
+			return ((ICollection<KeyValuePair<TKey, TValue>>)dictionary).Contains(item);
 		}
 
 		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
 		{
-			((ICollection<KeyValuePair<TKey, TValue>>) dictionary).CopyTo(array, arrayIndex);
+			((ICollection<KeyValuePair<TKey, TValue>>)dictionary).CopyTo(array, arrayIndex);
 		}
 
 		public int Count
@@ -1711,19 +1711,19 @@ namespace Unclassified.Util
 
 		bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
 		{
-			bool res = ((ICollection<KeyValuePair<TKey, TValue>>) dictionary).Remove(item);
+			bool res = ((ICollection<KeyValuePair<TKey, TValue>>)dictionary).Remove(item);
 			WriteToStore();
 			return res;
 		}
 
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
 		{
-			return ((IEnumerable<KeyValuePair<TKey, TValue>>) dictionary).GetEnumerator();
+			return ((IEnumerable<KeyValuePair<TKey, TValue>>)dictionary).GetEnumerator();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return ((System.Collections.IEnumerable) dictionary).GetEnumerator();
+			return ((System.Collections.IEnumerable)dictionary).GetEnumerator();
 		}
 
 		#endregion IDictionary members

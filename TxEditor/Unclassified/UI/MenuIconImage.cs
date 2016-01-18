@@ -38,7 +38,7 @@ namespace Unclassified.UI
 				else
 				{
 					// Set the Source property to the original value
-					menuIconImage.Source = ((FormatConvertedBitmap) menuIconImage.Source).Source;
+					menuIconImage.Source = ((FormatConvertedBitmap)menuIconImage.Source).Source;
 					// Reset the opacity mask
 					menuIconImage.OpacityMask = null;
 				}

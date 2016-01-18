@@ -15,7 +15,7 @@ namespace Unclassified.TxEditor.Controls
 			typeof(AcceptProblemButton));
 		public bool IsAccepted
 		{
-			get { return (bool) GetValue(IsAcceptedProperty); }
+			get { return (bool)GetValue(IsAcceptedProperty); }
 			set { SetValue(IsAcceptedProperty, value); }
 		}
 

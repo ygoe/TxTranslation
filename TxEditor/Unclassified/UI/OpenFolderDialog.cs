@@ -67,7 +67,7 @@ namespace Unclassified.UI
 
 		private bool? ShowVistaDialog(IWin32Window owner)
 		{
-			var frm = (NativeMethods.IFileDialog) (new NativeMethods.FileOpenDialogRCW());
+			var frm = (NativeMethods.IFileDialog)(new NativeMethods.FileOpenDialogRCW());
 			uint options;
 			frm.GetOptions(out options);
 			options |= NativeMethods.FOS_PICKFOLDERS | NativeMethods.FOS_FORCEFILESYSTEM | NativeMethods.FOS_NOVALIDATE |
