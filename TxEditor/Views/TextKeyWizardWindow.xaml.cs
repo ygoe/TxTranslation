@@ -287,6 +287,7 @@ namespace Unclassified.TxEditor.Views
 				foreach (var pd in placeholders)
 				{
 					if (pd == countPlaceholder) continue;   // Already processed
+					if (string.IsNullOrWhiteSpace(pd.Name)) continue;   // Not used anymore
 					codeSb.Append(", \"" + pd.Name.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"");
 					codeSb.Append(", ");
 					if (pd.IsQuoted)
