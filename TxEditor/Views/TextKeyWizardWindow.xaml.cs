@@ -633,7 +633,7 @@ namespace Unclassified.TxEditor.Views
 						{
 							// End string literal
 							stateStack.Pop();
-							if (stateStack.Count > 1)
+							if (stateStack.Count > 0)
 							{
 								placeholderContent.Append(ch);
 							}
