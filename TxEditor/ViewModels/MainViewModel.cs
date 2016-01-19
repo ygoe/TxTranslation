@@ -1286,7 +1286,7 @@ namespace Unclassified.TxEditor.ViewModels
 			clipboardBackup = win.ClipboardBackup;
 			if (clipboardBackup != null)
 			{
-				DelayedCall.Start(TextKeyWizardFromHotKey3, 200);
+				DelayedCall.Start(TextKeyWizardFromHotKey3, 500);
 			}
 		}
 
