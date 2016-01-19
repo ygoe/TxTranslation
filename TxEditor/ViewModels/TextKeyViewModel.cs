@@ -995,7 +995,7 @@ namespace Unclassified.TxEditor.ViewModels
 				return false;
 			}
 
-			pattern = "([ \t\r\n!%,.:;?]*)$";
+			pattern = "([ \t\r\n!%,.:;?…]*)$";
 			m1 = Regex.Match(a, pattern);
 			m2 = Regex.Match(b, pattern);
 			if (!m1.Success || !m2.Success || m1.Groups[1].Value != m2.Groups[1].Value)
