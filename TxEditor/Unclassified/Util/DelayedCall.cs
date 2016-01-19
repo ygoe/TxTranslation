@@ -465,7 +465,7 @@ namespace Unclassified.Util
 			{
 				Cancel();
 				Start();
-				// ODOT: This sets and unsets the cancelled flag, so immediate execution of the
+				// TODO: This sets and unsets the cancelled flag, so immediate execution of the
 				//       previous timer right after this method call cannot be eliminated.
 			}
 		}
@@ -481,7 +481,7 @@ namespace Unclassified.Util
 				Cancel();
 				Milliseconds = milliseconds;
 				Start();
-				// ODOT: This sets and unsets the cancelled flag, so immediate execution of the
+				// TODO: This sets and unsets the cancelled flag, so immediate execution of the
 				//       previous timer right after this method call cannot be eliminated.
 				//       (Derived classes are also affected.)
 			}
@@ -520,7 +520,7 @@ namespace Unclassified.Util
 					else
 					{
 						timer.Interval = value;
-						// ODOT: Is this untested?
+						// TODO: Is this untested?
 					}
 				}
 			}

@@ -1,3 +1,4 @@
+// Define the following symbol if the FieldLog assembly is referenced.
 #define WITH_FIELDLOG
 
 using System;
@@ -135,7 +136,7 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <param name="fileName">Name of the settings file to load.</param>
 		/// <param name="password">Encryption password of the settings file.
-		/// Set null to not use encryption.</param>
+		///   Set null to not use encryption.</param>
 		public FileSettingsStore(string fileName, string password)
 			: this(fileName, password, false)
 		{
@@ -146,7 +147,7 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <param name="fileName">Name of the settings file to load.</param>
 		/// <param name="readOnly">true to open the settings file in read-only mode. This prevents
-		/// any write access to the settings and will never save the file back.</param>
+		///   any write access to the settings and will never save the file back.</param>
 		public FileSettingsStore(string fileName, bool readOnly)
 			: this(fileName, null, readOnly)
 		{
@@ -157,9 +158,9 @@ namespace Unclassified.Util
 		/// </summary>
 		/// <param name="fileName">Name of the settings file to load.</param>
 		/// <param name="password">Encryption password of the settings file.
-		/// Set null to not use encryption.</param>
+		///   Set null to not use encryption.</param>
 		/// <param name="readOnly">true to open the settings file in read-only mode. This prevents
-		/// any write access to the settings and will never save the file back.</param>
+		///   any write access to the settings and will never save the file back.</param>
 		public FileSettingsStore(string fileName, string password, bool readOnly)
 		{
 			store = new Dictionary<string, object>();
@@ -232,8 +233,22 @@ namespace Unclassified.Util
 		/// <param name="newValue">The value to check.</param>
 		private void CheckType(object newValue)
 		{
+			// TODO: Enum and Array handling should not be done here but only in the code generation of SettingsAdapterFactory (see also Set method below)
+			// Unpack array value (for enums)
+			if (newValue.GetType().IsArray)
+			{
+				Type elementType = newValue.GetType().GetElementType();
+				if (elementType == typeof(int))
+				{
+					newValue = 0;
+				}
+				else if (elementType == typeof(long))
+				{
+					newValue = 0L;
+				}
+			}
+
 			// Unpack enum value
-			// NOTE: This doesn't handle arrays of enums
 			if (newValue.GetType().IsEnum)
 			{
 				newValue = Convert.ChangeType(newValue, newValue.GetType().GetEnumUnderlyingType());
@@ -248,6 +263,8 @@ namespace Unclassified.Util
 				newValue is long[] ||
 				newValue is double ||
 				newValue is double[] ||
+				newValue is decimal ||
+				newValue is decimal[] ||
 				newValue is bool ||
 				newValue is bool[] ||
 				newValue is DateTime ||
@@ -423,9 +440,11 @@ namespace Unclassified.Util
 
 				if (data == null) return fallbackValue;
 				if (data.ToString().Trim() == "1" ||
-					data.ToString().Trim().ToLower() == "true") return true;
+					data.ToString().Trim().ToLower() == "true")
+					return true;
 				if (data.ToString().Trim() == "0" ||
-					data.ToString().Trim().ToLower() == "false") return false;
+					data.ToString().Trim().ToLower() == "false")
+					return false;
 				return fallbackValue;
 			}
 		}
@@ -445,8 +464,7 @@ namespace Unclassified.Util
 				object data = null;
 				if (store.ContainsKey(key)) data = store[key];
 
-				if (data is bool[]) return data as bool[];
-				return new bool[0];
+				return data as bool[] ?? new bool[0];
 			}
 		}
 
@@ -504,8 +522,7 @@ namespace Unclassified.Util
 				object data = null;
 				if (store.ContainsKey(key)) data = store[key];
 
-				if (data is int[]) return data as int[];
-				return new int[0];
+				return data as int[] ?? new int[0];
 			}
 		}
 
@@ -563,8 +580,7 @@ namespace Unclassified.Util
 				object data = null;
 				if (store.ContainsKey(key)) data = store[key];
 
-				if (data is long[]) return data as long[];
-				return new long[0];
+				return data as long[] ?? new long[0];
 			}
 		}
 
@@ -622,8 +638,65 @@ namespace Unclassified.Util
 				object data = null;
 				if (store.ContainsKey(key)) data = store[key];
 
-				if (data is double[]) return data as double[];
-				return new double[0];
+				return data as double[] ?? new double[0];
+			}
+		}
+
+		/// <summary>
+		/// Gets the current decimal value of a setting key, or 0 if the key is unset or has an
+		/// incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		public decimal GetDecimal(string key)
+		{
+			return GetDecimal(key, 0m);
+		}
+
+		/// <summary>
+		/// Gets the current decimal value of a setting key, or a fallback value if the key is unset
+		/// or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <param name="fallbackValue">The fallback value to return if the key is unset.</param>
+		/// <returns></returns>
+		public decimal GetDecimal(string key, decimal fallbackValue)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+
+				object data = null;
+				if (store.ContainsKey(key)) data = store[key];
+
+				if (data == null) return fallbackValue;
+				try
+				{
+					return Convert.ToDecimal(data, CultureInfo.InvariantCulture);
+				}
+				catch (FormatException)
+				{
+					return fallbackValue;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the current decimal[] value of a setting key, or an empty array if the key is unset
+		/// or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		public decimal[] GetDecimalArray(string key)
+		{
+			lock (syncLock)
+			{
+				if (isDisposed) throw new ObjectDisposedException("");
+
+				object data = null;
+				if (store.ContainsKey(key)) data = store[key];
+
+				return data as decimal[] ?? new decimal[0];
 			}
 		}
 
@@ -979,12 +1052,31 @@ namespace Unclassified.Util
 									}
 									store.Add(key, list.ToArray());
 								}
+								else if (type == "decimal")
+								{
+									store.Add(key, decimal.Parse(xn.InnerText, CultureInfo.InvariantCulture));
+								}
+								else if (type == "decimal[]" ||
+									type == "decimal-array")
+								{
+									List<decimal> list = new List<decimal>();
+									foreach (XmlNode itemNode in xn.SelectNodes("item"))
+									{
+										if (itemNode.InnerText == "")
+											list.Add(0m);
+										else
+											list.Add(decimal.Parse(itemNode.InnerText, CultureInfo.InvariantCulture));
+									}
+									store.Add(key, list.ToArray());
+								}
 								else if (type == "bool")
 								{
 									if (xn.InnerText.ToString().Trim() == "1" ||
-										xn.InnerText.ToString().Trim().ToLower() == "true") store.Add(key, true);
+										xn.InnerText.ToString().Trim().ToLower() == "true")
+										store.Add(key, true);
 									else if (xn.InnerText.ToString().Trim() == "0" ||
-										xn.InnerText.ToString().Trim().ToLower() == "false") store.Add(key, false);
+										xn.InnerText.ToString().Trim().ToLower() == "false")
+										store.Add(key, false);
 									else throw new FormatException("Invalid bool value");
 								}
 								else if (type == "bool[]" ||
@@ -994,9 +1086,11 @@ namespace Unclassified.Util
 									foreach (XmlNode itemNode in xn.SelectNodes("item"))
 									{
 										if (itemNode.InnerText.ToString().Trim() == "1" ||
-											itemNode.InnerText.ToString().Trim().ToLower() == "true") list.Add(true);
+											itemNode.InnerText.ToString().Trim().ToLower() == "true")
+											list.Add(true);
 										else if (itemNode.InnerText.ToString().Trim() == "0" ||
-											itemNode.InnerText.ToString().Trim().ToLower() == "false") list.Add(false);
+											itemNode.InnerText.ToString().Trim().ToLower() == "false")
+											list.Add(false);
 										else throw new FormatException("Invalid bool value");
 									}
 									store.Add(key, list.ToArray());
@@ -1248,6 +1342,26 @@ namespace Unclassified.Util
 						xn.Attributes.Append(xa);
 						double[] da = (double[])store[key];
 						foreach (double d in da)
+						{
+							XmlNode itemNode = xdoc.CreateElement("item");
+							itemNode.InnerText = d.ToString(CultureInfo.InvariantCulture);
+							xn.AppendChild(itemNode);
+						}
+					}
+					else if (store[key] is decimal)
+					{
+						xa = xdoc.CreateAttribute("type");
+						xa.Value = "decimal";
+						xn.Attributes.Append(xa);
+						xn.InnerText = GetDecimal(key).ToString(CultureInfo.InvariantCulture);
+					}
+					else if (store[key] is decimal[])
+					{
+						xa = xdoc.CreateAttribute("type");
+						xa.Value = "decimal[]";
+						xn.Attributes.Append(xa);
+						decimal[] da = (decimal[])store[key];
+						foreach (decimal d in da)
 						{
 							XmlNode itemNode = xdoc.CreateElement("item");
 							itemNode.InnerText = d.ToString(CultureInfo.InvariantCulture);

@@ -499,6 +499,21 @@ namespace Unclassified.Util
 
 		#endregion Searching
 
+		#region Uniqueness
+
+		/// <summary>
+		/// Determines whether all items in the collection are unique.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+		/// <param name="source"></param>
+		/// <returns>true if all items are unique; false if there are duplicate items.</returns>
+		public static bool AreUnique<T>(this IEnumerable<T> source)
+		{
+			return source.Distinct().Count() == source.Count();
+		}
+
+		#endregion Uniqueness
+
 		#region List conversion
 
 		/// <summary>

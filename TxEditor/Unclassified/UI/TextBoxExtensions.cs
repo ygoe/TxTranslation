@@ -211,5 +211,40 @@ namespace Unclassified.UI
 		}
 
 		#endregion On-demand focused binding update
+
+		#region Text manipulation
+
+		public static void InsertText(this TextBox textBox, string text, bool adjustSpaces = false)
+		{
+			int pos = textBox.SelectionStart;
+			string newText = textBox.Text;
+			if (textBox.SelectionLength > 0)
+			{
+				// Remove selected text
+				newText = newText.Remove(pos, textBox.SelectionLength);
+			}
+			// Insert new text
+			newText = newText.Insert(pos, text);
+			int addPos = 0;
+			if (adjustSpaces)
+			{
+				if (pos + text.Length < newText.Length && newText[pos + text.Length] != ' ')
+				{
+					// Not inserted at the end
+					newText = newText.Insert(pos + text.Length, " ");
+					addPos++;
+				}
+				if (pos > 0 && newText[pos - 1] != ' ')
+				{
+					// Not inserted at the beginning
+					newText = newText.Insert(pos, " ");
+					addPos++;
+				}
+			}
+			textBox.Text = newText;
+			textBox.SelectionStart = pos + text.Length + addPos;
+		}
+
+		#endregion Text manipulation
 	}
 }

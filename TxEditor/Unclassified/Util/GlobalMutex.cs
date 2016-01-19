@@ -34,7 +34,7 @@ namespace Unclassified.Util
 		/// Process exit handler. Closes the mutex.
 		/// </summary>
 		/// <param name="sender"></param>
-		/// <param name="e"></param>
+		/// <param name="args"></param>
 		private static void CurrentDomain_ProcessExit(object sender, EventArgs args)
 		{
 			instance.Dispose();

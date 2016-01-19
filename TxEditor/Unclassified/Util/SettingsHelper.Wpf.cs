@@ -58,6 +58,17 @@ namespace Unclassified.Util
 				settings.Height = (int)window.RestoreBounds.Height;
 				settings.IsMaximized = window.WindowState == WindowState.Maximized;
 			};
+			window.Closed += (sender, args) =>
+			{
+				if (window.WindowState == WindowState.Normal)
+				{
+					settings.Left = (int)window.Left;
+					settings.Top = (int)window.Top;
+					settings.Width = (int)window.Width;
+					settings.Height = (int)window.Height;
+				}
+				settings.IsMaximized = window.WindowState == WindowState.Maximized;
+			};
 		}
 
 		#endregion Window state handling

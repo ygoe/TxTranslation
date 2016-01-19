@@ -147,5 +147,10 @@ namespace Unclassified.Util
 		{
 			Application.Current.Dispatcher.Invoke(action);
 		}
+
+		public static TResult AppDispatch<TResult>(Func<TResult> func)
+		{
+			return (TResult)Application.Current.Dispatcher.Invoke(func);
+		}
 	}
 }

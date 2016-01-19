@@ -715,6 +715,15 @@ namespace Unclassified.Util
 			{
 				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDoubleArray(default(string)));
 			}
+			else if (propType == typeof(decimal))
+			{
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDecimal(default(string)));
+				storeGetMethodWithDefault = MethodOf(() => default(ISettingsStore).GetDecimal(default(string), default(decimal)));
+			}
+			else if (propType == typeof(decimal[]))
+			{
+				storeGetMethod = MethodOf(() => default(ISettingsStore).GetDecimalArray(default(string)));
+			}
 			else if (propType == typeof(string))
 			{
 				storeGetMethod = MethodOf(() => default(ISettingsStore).GetString(default(string)));
@@ -790,6 +799,21 @@ namespace Unclassified.Util
 				else if (propType == typeof(double))
 				{
 					ilGen.Emit(OpCodes.Ldc_R8, Convert.ToDouble(defAttr.Value, CultureInfo.InvariantCulture));
+				}
+				else if (propType == typeof(decimal))
+				{
+					decimal d = Convert.ToDecimal(defAttr.Value, CultureInfo.InvariantCulture);
+					// Source: https://msdn.microsoft.com/en-us/library/bb1c1a6x.aspx
+					var bits = decimal.GetBits(d);
+					bool sign = (bits[3] & 0x80000000) != 0;
+					byte scale = (byte) ((bits[3] >> 16) & 0x7f);
+					ilGen.Emit(OpCodes.Ldc_I4, bits[0]);
+					ilGen.Emit(OpCodes.Ldc_I4, bits[1]);
+					ilGen.Emit(OpCodes.Ldc_I4, bits[2]);
+					ilGen.Emit(sign ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+					ilGen.Emit(OpCodes.Ldc_I4, (int) scale);
+					var ctor = typeof(decimal).GetConstructor(new[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(byte) });
+					ilGen.Emit(OpCodes.Newobj, ctor);
 				}
 				else if (propType == typeof(string))
 				{
@@ -1125,6 +1149,20 @@ namespace Unclassified.Util
 	/// </summary>
 	public interface ISettingsStore : INotifyPropertyChanged, IDisposable
 	{
+		#region Properties
+
+		/// <summary>
+		/// Gets a value indicating whether the instance is read-only.
+		/// </summary>
+		bool IsReadOnly { get; }
+
+		/// <summary>
+		/// Gets a value indicating whether the instance is disposed.
+		/// </summary>
+		bool IsDisposed { get; }
+
+		#endregion Properties
+
 		#region Set methods
 
 		/// <summary>
@@ -1258,6 +1296,31 @@ namespace Unclassified.Util
 		/// <param name="key">The setting key.</param>
 		/// <returns></returns>
 		double[] GetDoubleArray(string key);
+
+		/// <summary>
+		/// Gets the current decimal value of a setting key, or 0 if the key is unset or has an
+		/// incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		decimal GetDecimal(string key);
+
+		/// <summary>
+		/// Gets the current decimal value of a setting key, or a fallback value if the key is unset
+		/// or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <param name="fallbackValue">The fallback value to return if the key is unset.</param>
+		/// <returns></returns>
+		decimal GetDecimal(string key, decimal fallbackValue);
+
+		/// <summary>
+		/// Gets the current decimal[] value of a setting key, or an empty array if the key is unset
+		/// or has an incompatible data type.
+		/// </summary>
+		/// <param name="key">The setting key.</param>
+		/// <returns></returns>
+		decimal[] GetDecimalArray(string key);
 
 		/// <summary>
 		/// Gets the current string value of a setting key, or "" if the key is unset.
@@ -1411,6 +1474,7 @@ namespace Unclassified.Util
 			if (typeof(T) == typeof(int)) return store.GetIntArray(key).Cast<T>();
 			if (typeof(T) == typeof(long)) return store.GetLongArray(key).Cast<T>();
 			if (typeof(T) == typeof(double)) return store.GetDoubleArray(key).Cast<T>();
+			if (typeof(T) == typeof(decimal)) return store.GetDecimalArray(key).Cast<T>();
 			if (typeof(T) == typeof(bool)) return store.GetBoolArray(key).Cast<T>();
 			if (typeof(T) == typeof(DateTime)) return store.GetDateTimeArray(key).Cast<T>();
 			if (typeof(T) == typeof(TimeSpan)) return store.GetTimeSpanArray(key).Cast<T>();
@@ -1566,7 +1630,7 @@ namespace Unclassified.Util
 				catch (FormatException ex)
 				{
 					// Ignore entries that cannot be converted to the requested type (for key and value)
-					FL.Warning(ex, "Converting entry from NameValueCollection");
+					Unclassified.FieldLog.FL.Warning(ex, "Converting entry from NameValueCollection");
 				}
 #else
 				catch (FormatException)
@@ -1631,22 +1695,40 @@ namespace Unclassified.Util
 
 		#region IDictionary members
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
 		public void Add(TKey key, TValue value)
 		{
 			dictionary.Add(key, value);
 			WriteToStore();
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public bool ContainsKey(TKey key)
 		{
 			return dictionary.ContainsKey(key);
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
 		public ICollection<TKey> Keys
 		{
 			get { return dictionary.Keys; }
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public bool Remove(TKey key)
 		{
 			bool res = dictionary.Remove(key);
@@ -1654,16 +1736,30 @@ namespace Unclassified.Util
 			return res;
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
 		public bool TryGetValue(TKey key, out TValue value)
 		{
 			return dictionary.TryGetValue(key, out value);
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
 		public ICollection<TValue> Values
 		{
 			get { return dictionary.Values; }
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public TValue this[TKey key]
 		{
 			get
@@ -1683,6 +1779,9 @@ namespace Unclassified.Util
 			WriteToStore();
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
 		public void Clear()
 		{
 			dictionary.Clear();
@@ -1699,11 +1798,17 @@ namespace Unclassified.Util
 			((ICollection<KeyValuePair<TKey, TValue>>)dictionary).CopyTo(array, arrayIndex);
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
 		public int Count
 		{
 			get { return dictionary.Count; }
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
 		public bool IsReadOnly
 		{
 			get { return false; }
@@ -1716,6 +1821,10 @@ namespace Unclassified.Util
 			return res;
 		}
 
+		/// <summary>
+		/// TODO
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
 		{
 			return ((IEnumerable<KeyValuePair<TKey, TValue>>)dictionary).GetEnumerator();

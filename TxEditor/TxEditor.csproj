@@ -48,9 +48,9 @@
     <StartupObject>Unclassified.TxEditor.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiSelectTreeView, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MultiSelectTreeView.1.0.6\lib\net40\MultiSelectTreeView.dll</HintPath>
+    <Reference Include="MultiSelectTreeView, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiSelectTreeView.1.0.7\lib\net40\MultiSelectTreeView.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,8 +68,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\TaskDialog.dll</HintPath>
     </Reference>
-    <Reference Include="Unclassified.FieldLog, Version=1.113.77.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unclassified.FieldLog.1.113.77\lib\net40-client\Unclassified.FieldLog.dll</HintPath>
+    <Reference Include="Unclassified.FieldLog, Version=1.383.75.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unclassified.FieldLog.1.383.75\lib\net40-client\Unclassified.FieldLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
