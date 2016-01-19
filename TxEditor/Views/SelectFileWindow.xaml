@@ -33,6 +33,7 @@
 				Text="{Tx:T 'window.load select file.intro', Default='Select a file to load:'}"/>
 
 			<ui:ProgressSpinner
+				x:Name="progressSpinner"
 				Grid.Row="0" Grid.RowSpan="2"
 				HorizontalAlignment="Right"
 				VerticalAlignment="Top"
@@ -46,7 +47,8 @@
 				Margin="0,8,0,0"
 				ItemsSource="{Binding FoundFiles}"
 				SelectionMode="Extended"
-				SelectionChanged="ListBox_SelectionChanged"/>
+				SelectionChanged="FileList_SelectionChanged"
+				MouseDoubleClick="FileList_MouseDoubleClick"/>
 		</Grid>
 
 		<Rectangle

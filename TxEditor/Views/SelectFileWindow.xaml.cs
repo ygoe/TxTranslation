@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Unclassified.TxEditor.ViewModels;
 using Unclassified.UI;
 
@@ -20,9 +21,17 @@ namespace Unclassified.TxEditor.Views
 
 		#region Control event handlers
 
-		private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs args)
+		private void FileList_SelectionChanged(object sender, SelectionChangedEventArgs args)
 		{
 			OKButton.IsEnabled = FileList.SelectedItems.Count > 0;
+		}
+
+		private void FileList_MouseDoubleClick(object sender, MouseButtonEventArgs args)
+		{
+			if (!progressSpinner.IsVisible)
+			{
+				OKButton_Click(null, null);
+			}
 		}
 
 		private void OKButton_Click(object sender, RoutedEventArgs args)
