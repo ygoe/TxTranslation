@@ -42,6 +42,7 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
@@ -140,14 +141,21 @@
 				IsChecked="True"
 				Content="{Tx:T 'window.wizard.include default text', Default='Include _default text for design time'}"/>
 
+			<CheckBox
+				Name="AddColonCheckbox"
+				Grid.Row="5" Grid.Column="1"
+				Margin="8,4,0,0" HorizontalAlignment="Left"
+				IsChecked="True"
+				Content="{Tx:T 'window.wizard.add colon', Default='Add colon (TC)'}"/>
+
 			<TextBlock
 				x:Name="ParametersLabel"
-				Grid.Row="5" Grid.Column="0"
+				Grid.Row="6" Grid.Column="0"
 				Margin="0,7,0,0" VerticalAlignment="Top"
 				Text="{Tx:TC 'window.wizard.parameters', Default='Parameters:'}"/>
 			<Grid
 				x:Name="ParametersGrid"
-				Grid.Row="5" Grid.Column="1"
+				Grid.Row="6" Grid.Column="1"
 				Margin="8,4,0,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>

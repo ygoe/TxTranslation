@@ -66,7 +66,7 @@ if (IsSelected transfer-web)
 # Upload to NuGet
 if (IsSelected transfer-nuget)
 {
-	Push-NuGetPackage "TxLib\bin\Unclassified.TxLib" $nuGetApiKey 45
+	Push-NuGetPackage "TxLib\bin\Unclassified.TxLib" $nuGetApiKey 11
 }
 
 End-BuildScript

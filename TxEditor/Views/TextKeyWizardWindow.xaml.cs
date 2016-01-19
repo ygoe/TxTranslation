@@ -219,14 +219,27 @@ namespace Unclassified.TxEditor.Views
 			if (!TextKeyViewModel.ValidateName(textKey, out errorMessage))
 			{
 				App.WarningMessage(Tx.T("msg.invalid text key entered", "msg", errorMessage));
+				TextKeyText.Focus();
 				return;
+			}
+
+			string colonSuffix = null;
+			string translationString = TranslationText.Text;
+			if (SourceCSharpButton.IsChecked == true && AddColonCheckbox.IsChecked == true)
+			{
+				var match = Regex.Match(parsedText, @"^(.+?)\s*:(\s*)$");
+				if (match.Success)
+				{
+					translationString = match.Groups[1].Value;
+					colonSuffix = match.Groups[2].Value;
+				}
 			}
 
 			// Check if the text key already exists but the translated text is different
 			TextKeyViewModel existingTextKeyVM;
 			if (MainViewModel.Instance.TextKeys.TryGetValue(textKey, out existingTextKeyVM))
 			{
-				if (TranslationText.Text != existingTextKeyVM.CultureTextVMs[0].Text)
+				if (translationString != existingTextKeyVM.CultureTextVMs[0].Text)
 				{
 					TaskDialogResult result = TaskDialog.Show(
 						owner: this,
@@ -237,6 +250,7 @@ namespace Unclassified.TxEditor.Views
 						customButtons: new string[] { Tx.T("task dialog.button.overwrite"), Tx.T("task dialog.button.cancel") });
 					if (result.CustomButtonResult != 0)
 					{
+						TextKeyText.Focus();
 						return;
 					}
 				}
@@ -258,7 +272,12 @@ namespace Unclassified.TxEditor.Views
 				{
 					codeSb.Append("\" + ");
 				}
-				codeSb.Append("Tx.T(\"" + keyString + "\"");
+				codeSb.Append("Tx.T");
+				if (AddColonCheckbox.IsChecked == true)
+				{
+					codeSb.Append("C");
+				}
+				codeSb.Append("(\"" + keyString + "\"");
 				var countPlaceholder = placeholders.FirstOrDefault(p => p.Name == "#");
 				if (countPlaceholder != null)
 				{
@@ -284,6 +303,16 @@ namespace Unclassified.TxEditor.Views
 				if (isPartialString)
 				{
 					codeSb.Append(" + \"");
+					if (!string.IsNullOrEmpty(colonSuffix))
+					{
+						codeSb.Append(colonSuffix);
+					}
+				}
+				else if (!string.IsNullOrEmpty(colonSuffix))
+				{
+					codeSb.Append(" + \"");
+					codeSb.Append(colonSuffix);
+					codeSb.Append("\"");
 				}
 				Clipboard.SetText(codeSb.ToString());
 			}
@@ -292,7 +321,7 @@ namespace Unclassified.TxEditor.Views
 				App.Settings.Wizard.SourceCode = "XAML";
 
 				string keyString = textKey.Replace("\\", "\\\\").Replace("'", "\\'");
-				string defaultString = TranslationText.Text.Replace("\\", "\\\\").Replace("'", "\\'");
+				string defaultString = translationString.Replace("\\", "\\\\").Replace("'", "\\'");
 
 				string code = "{Tx:T '" + keyString + "'";
 				if (SetDefaultCheckbox.IsChecked == true)
@@ -315,6 +344,7 @@ namespace Unclassified.TxEditor.Views
 
 			// Remember the text key for next time and close the wizard dialog window
 			prevTextKey = textKey;
+			TranslationText.Text = translationString;
 			DialogResult = true;
 			Close();
 		}
@@ -403,6 +433,9 @@ namespace Unclassified.TxEditor.Views
 
 		private void Reset(bool setTextKey)
 		{
+			AddColonCheckbox.IsChecked = false;
+			AddColonCheckbox.Visibility = Visibility.Collapsed;
+
 			// Detect parameters in the code
 			placeholders.Clear();
 			parsedText = "";
@@ -692,6 +725,14 @@ namespace Unclassified.TxEditor.Views
 						AddParsedPlaceholder(textContent, placeholderContent);
 					}
 					parsedText = textContent.ToString();
+
+					// Detect trailing colon to offer the option to cut off and generate it
+					var match = Regex.Match(parsedText, @"^(.+)\s?:(\s*)$");
+					if (match.Success)
+					{
+						AddColonCheckbox.IsChecked = true;
+						AddColonCheckbox.Visibility = Visibility.Visible;
+					}
 				}
 				if (SourceXamlButton.IsChecked == true)
 				{
