@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation -->
 <translation xml:space="preserve" template="true">
 	<culture name="de">
 		<text key="Tx:date.day">d.</text>

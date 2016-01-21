@@ -2522,6 +2522,7 @@ namespace Unclassified.TxEditor.ViewModels
 				}
 
 				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.AppendChild(xmlDoc.CreateComment(" TxTranslation dictionary file. Use TxEditor to edit this file. http://unclassified.software/txtranslation "));
 				xmlDoc.AppendChild(xmlDoc.CreateElement("translation"));
 				var spaceAttr = xmlDoc.CreateAttribute("xml:space");
 				spaceAttr.Value = "preserve";
