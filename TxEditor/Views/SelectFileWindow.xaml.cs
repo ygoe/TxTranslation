@@ -9,6 +9,15 @@ namespace Unclassified.TxEditor.Views
 {
 	public partial class SelectFileWindow : Window
 	{
+		#region Static constructor
+
+		static SelectFileWindow()
+		{
+			ViewCommandManager.SetupMetadata<SelectFileWindow>();
+		}
+
+		#endregion Static constructor
+
 		#region Constructor
 
 		public SelectFileWindow()
@@ -69,5 +78,25 @@ namespace Unclassified.TxEditor.Views
 		}
 
 		#endregion Control event handlers
+
+		#region View commands
+
+		[ViewCommand]
+		public void LoadSingleFile()
+		{
+			// Second check for only file
+			if (FileList.Items.Count == 1)
+			{
+				SelectFileViewModel vm = DataContext as SelectFileViewModel;
+				string[] files = new string[1];
+				files[0] = System.IO.Path.Combine(vm.BaseDir, FileList.Items[0] as string);
+				vm.SelectedFileNames = files;
+
+				DialogResult = true;
+				Close();
+			}
+		}
+
+		#endregion View commands
 	}
 }

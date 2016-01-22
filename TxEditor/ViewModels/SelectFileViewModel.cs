@@ -13,7 +13,7 @@ using Unclassified.Util;
 
 namespace Unclassified.TxEditor.ViewModels
 {
-	internal class SelectFileViewModel : ViewModelBase
+	internal class SelectFileViewModel : ViewModelBase, IViewCommandSource
 	{
 		#region Private data
 
@@ -106,6 +106,14 @@ namespace Unclassified.TxEditor.ViewModels
 				FL.Error(args.Error);
 				// TODO: Show the error in a user message box
 			}
+			else
+			{
+				if (FoundFiles.Count == 1)
+				{
+					// Automatically load the only found file
+					ViewCommandManager.Invoke("LoadSingleFile");
+				}
+			}
 		}
 
 		#endregion BackgroundWorker
@@ -153,5 +161,12 @@ namespace Unclassified.TxEditor.ViewModels
 		}
 
 		#endregion Directory scanning
+
+		#region IViewCommandSource members
+
+		private ViewCommandManager viewCommandManager = new ViewCommandManager();
+		public ViewCommandManager ViewCommandManager { get { return viewCommandManager; } }
+
+		#endregion IViewCommandSource members
 	}
 }
