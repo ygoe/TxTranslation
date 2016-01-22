@@ -1308,7 +1308,12 @@ namespace Unclassified.TxEditor.ViewModels
 				ok = HandleWizardInput(win.TextKeyText.Text, win.TranslationText.Text);
 			}
 
+			// Delay showing TxEditor window to avoid flickering over Visual Studio window.
+			// Since the window is focused when shown, it must be shown immediately anyway.
+			// The trick here is to move it way off-screen first and fetch it back a bit later.
+			MainWindow.Instance.Top -= 10000;
 			MainWindow.Instance.Show();
+			DelayedCall.Start(() => MainWindow.Instance.Top += 10000, 100);
 			// Activate the window we're initially coming from
 			WinApi.SetForegroundWindow(fgWin);
 
