@@ -1,6 +1,4 @@
 # Project-specific files
-Setup/bin/
-_scripts/bin/NuGet.exe
 
 # User-specific files
 .vs/

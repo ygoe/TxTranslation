@@ -30,13 +30,14 @@ function Do-Build-Solution($action)
 	$configuration = $action.configuration
 	$buildPlatform = $action.buildPlatform
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Building $solutionFile for $configuration|$buildPlatform..." -NoNewLine
 	if ($global:revisionToolUsed)
 	{
-		Write-Host -ForegroundColor DarkGray " (Do not press Ctrl+C now)" -NoNewLine
+		Show-ActionHeader "Building $solutionFile for $configuration|$buildPlatform (Do not press Ctrl+C now)"
 	}
-	Write-Host ""
+	else
+	{
+		Show-ActionHeader "Building $solutionFile for $configuration|$buildPlatform"
+	}
 
 	# Normalise the ProgramFilesx86 directory for all system platforms (how stupid...)
 	$pfx86 = "%ProgramFiles(x86)%"

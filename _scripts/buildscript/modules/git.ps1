@@ -46,8 +46,7 @@ function Git-Log($logFile, $time = 1)
 
 function Do-Git-Commit($action)
 {
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Git commit..."
+	Show-ActionHeader "Git commit"
 
 	# Find the TortoiseGitProc binary
 	$tgitBin = Check-RegFilename "hklm:\SOFTWARE\TortoiseGit" "ProcPath"
@@ -70,8 +69,7 @@ function Do-Git-Export($action)
 {
 	$archive = $action.archive
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Git export to $archive..."
+	Show-ActionHeader "Git export to $archive"
 
 	# Warn on modified working directory
 	# (Set a dummy format so that it won't go search an AssemblyInfo file somewhere. We don't provide a suitable path for that.)
@@ -161,8 +159,7 @@ function Do-Git-Log($action)
 {
 	$logFile = $action.logFile
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Git log dump..."
+	Show-ActionHeader "Git log dump"
 	
 	# Stop on modified working directory
 	# (Set a dummy format so that it won't go search an AssemblyInfo file somewhere. We don't provide a suitable path for that.)

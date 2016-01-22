@@ -96,8 +96,7 @@ function Do-Create-Archive($action)
 	$archive = $action.archive
 	$listFile = $action.listFile
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Creating archive $archive..."
+	Show-ActionHeader "Creating archive $archive"
 
 	# Find the 7-Zip binary
 	$sevenZipBin = Check-RegFilename "hklm:\SOFTWARE\7-Zip" "Path"
@@ -179,8 +178,7 @@ function Do-Copy-File($action)
 	$src = $action.src
 	$dest = $action.dest
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Copying $src to $dest..."
+	Show-ActionHeader "Copying $src to $dest"
 
 	Copy-Item (MakeRootedPath $src) (MakeRootedPath $dest)
 	if (-not $?)
@@ -195,8 +193,7 @@ function Do-Move-File($action)
 	$src = $action.src
 	$dest = $action.dest
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Moving $src to $dest..."
+	Show-ActionHeader "Moving $src to $dest"
 
 	Move-Item (MakeRootedPath $src) (MakeRootedPath $dest)
 	if (-not $?)
@@ -210,8 +207,7 @@ function Do-Delete-File($action)
 {
 	$file = $action.file
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Deleting $file..."
+	Show-ActionHeader "Deleting $file"
 
 	Remove-Item (MakeRootedPath $file)
 	if (-not $?)
@@ -226,8 +222,7 @@ function Do-Exec-File($action)
 	$file = $action.file
 	$params = $action.params
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Executing $file..."
+	Show-ActionHeader "Executing $file"
 
 	# Wait until the started process has finished
 	Invoke-Expression ((MakeRootedPath $file) + " " + $params + " | Out-Host")
@@ -243,8 +238,7 @@ function Do-Exec-Console($action)
 	$file = $action.file
 	$params = $action.params
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Executing $file..."
+	Show-ActionHeader "Executing $file"
 
 	Invoke-Expression ((MakeRootedPath $file) + " " + $params)
 	if ($LASTEXITCODE -ne 0)
@@ -258,8 +252,7 @@ function Do-Explorer-Select($action)
 {
 	$file = $action.file
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Selecting $file in Explorer..."
+	Show-ActionHeader "Selecting $file in Explorer"
 
 	$file = MakeRootedPath $file
 	Start-Process "$env:SystemRoot\explorer.exe" "/select,`"$file`""

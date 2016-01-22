@@ -51,6 +51,7 @@ $revId = "0"
 $shortRevId = "0"
 $noParallelBuild = $false
 $revisionToolOptions = ""
+$actionHeaderRow = -1
 
 # Contains the selected actions to be executed
 $actions = @()
@@ -154,6 +155,18 @@ function Move-Cursor($count)
 		$x = $Host.UI.RawUI.BufferSize.Width - 1
 	}
 	$Host.UI.RawUI.CursorPosition = New-Object System.Management.Automation.Host.Coordinates $x, $y
+}
+
+# Shows a header line for a module action.
+#
+function Show-ActionHeader($text)
+{
+	if ($Host.UI.RawUI.CursorPosition.Y -gt $global:actionHeaderRow)
+	{
+		Write-Host ""
+	}
+	Write-Host -ForegroundColor DarkCyan "$text..."
+	$global:actionHeaderRow = $Host.UI.RawUI.CursorPosition.Y;
 }
 
 # Clears the input buffer.

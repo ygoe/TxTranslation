@@ -28,8 +28,7 @@ function Do-Create-Setup($action)
 	$configFile = $action.configFile
 	$configuration = $action.configuration
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Creating setup $configFile..."
+	Show-ActionHeader "Creating setup $configFile"
 
 	# Find the InnoSetup binary
 	if ((Get-Platform) -eq "x64")

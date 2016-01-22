@@ -6,17 +6,12 @@ Begin-BuildScript "TxTranslation"
 # Find revision format from the source code, require Git checkout
 Set-VcsVersion "" "/require git"
 
-Restore-NuGetTool
-Restore-NuGetPackages "TxTranslation.sln"
-
 # Release builds
 if (IsAnySelected build commit publish)
 {
+	Restore-NuGetPackages "TxTranslation.sln"
 	Build-Solution "TxTranslation.sln" "Release" "Mixed Platforms" 6
-	
-	# Convert debug symbols to XML
-	Exec-Console "_scripts\bin\PdbConvert.exe" "$rootDir\TxEditor\bin\Release\* /srcbase $rootDir /optimize /outfile $rootDir\TxEditor\bin\Release\TxTranslation.pdbx"
-
+	Pdb-Convert "TxEditor\bin\Release\*" "TxEditor\bin\Release\TxTranslation.pdbx" "/optimize"
 	Create-NuGetPackage "TxLib\Unclassified.TxLib.nuspec" "TxLib\bin"
 	Create-Setup "Setup\Tx.iss" Release
 

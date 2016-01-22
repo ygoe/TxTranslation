@@ -6,23 +6,11 @@
 
 # The nuget module provides NuGet packaging functions.
 
-# Restores the NuGet tool program file in $toolsPath.
-#
-# You should only call this function if NuGet.exe is not included in the repository and is also
-# ignored from it so that the new file won't mark the working directory as modified. The file might
-# stay there for the next build, but if it's gone it will just be downloaded again.
-#
-function Restore-NuGetTool($time = 0)
-{
-	$action = @{ action = "Do-Restore-NuGetTool"; time = $time }
-	$global:actions += $action
-}
-
 # Restores all NuGet packages in a solution.
 #
 # $solutionFile = The file name of the .sln file.
 #
-# Requires nuget.exe in $toolsPath or the search path.
+# Requires nuget.exe in $toolsPath, %LocalAppData%\NuGet, or the search path.
 #
 function Restore-NuGetPackages($solutionFile, $time = 0)
 {
@@ -35,7 +23,7 @@ function Restore-NuGetPackages($solutionFile, $time = 0)
 # $specFile = The file name of the .nuspec file.
 # $outDir = The output directory of the created package.
 #
-# Requires nuget.exe in $toolsPath or the search path.
+# Requires nuget.exe in $toolsPath, %LocalAppData%\NuGet, or the search path.
 #
 function Create-NuGetPackage($specFile, $outDir, $time = 2)
 {
@@ -57,7 +45,7 @@ function Create-NuGetPackage($specFile, $outDir, $time = 2)
 #
 #    $nuGetApiKey = "01234567-89ab-cdef-0123-456789abcdef"
 #
-# Requires nuget.exe in $toolsPath or the search path.
+# Requires nuget.exe in $toolsPath, %LocalAppData%\NuGet, or the search path.
 #
 function Push-NuGetPackage($packageFile, $apiKey, $time = 30)
 {
@@ -67,40 +55,13 @@ function Push-NuGetPackage($packageFile, $apiKey, $time = 30)
 
 # ==============================  FUNCTION IMPLEMENTATIONS  ==============================
 
-function Do-Restore-NuGetTool($action)
-{
-	$nugetBin = (Join-Path $absToolsPath "NuGet.exe")
-	if (!(Check-FileName $nugetBin))
-	{
-		Write-Host ""
-		Write-Host -ForegroundColor DarkCyan "Downloading NuGet tool..."
-
-		try
-		{
-			$webclient = New-Object System.Net.WebClient
-			$webclient.DownloadFile("https://nuget.org/nuget.exe", $nugetBin)
-		}
-		catch
-		{
-			Write-Host $_
-			WaitError "Downloading NuGet tool failed"
-			exit 1
-		}
-	}
-}
-
 function Do-Restore-NuGetPackages($action)
 {
 	$solutionFile = $action.solutionFile
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Restoring NuGet packages for $solutionFile..."
+	Show-ActionHeader "Restoring NuGet packages for $solutionFile"
 
-	$nugetBin = Check-FileName (Join-Path $absToolsPath "NuGet.exe")
-	if (!$nugetBin)
-	{
-		$nugetBin = "NuGet.exe"
-	}
+	$nugetBin = Find-NuGet
 
 	& $nugetBin restore (MakeRootedPath $solutionFile) -NonInteractive > $null
 	if (-not $?)
@@ -115,14 +76,9 @@ function Do-Create-NuGetPackage($action)
 	$specFile = $action.specFile
 	$outDir = $action.outDir
 
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Creating NuGet package $specFile..."
+	Show-ActionHeader "Creating NuGet package $specFile"
 
-	$nugetBin = Check-FileName (Join-Path $absToolsPath "NuGet.exe")
-	if (!$nugetBin)
-	{
-		$nugetBin = "NuGet.exe"
-	}
+	$nugetBin = Find-NuGet
 
 	& $nugetBin pack (MakeRootedPath $specFile) -OutputDirectory (MakeRootedPath $outDir) -Version $shortRevId -NonInteractive > $null
 	if (-not $?)
@@ -139,14 +95,9 @@ function Do-Push-NuGetPackage($action)
 
 	$packageFile = $packageFile + "." + $shortRevId + ".nupkg"
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Uploading NuGet package $packageFile..."
+	Show-ActionHeader "Uploading NuGet package $packageFile"
 
-	$nugetBin = Check-FileName (Join-Path $absToolsPath "NuGet.exe")
-	if (!$nugetBin)
-	{
-		$nugetBin = "NuGet.exe"
-	}
+	$nugetBin = Find-NuGet
 
 	if ($apiKey)
 	{
@@ -161,4 +112,43 @@ function Do-Push-NuGetPackage($action)
 		WaitError "Uploading NuGet package failed"
 		exit 1
 	}
+}
+
+function Find-NuGet()
+{
+	$nugetBin = Check-FileName (Join-Path $absToolsPath "NuGet.exe")
+	if (!$nugetBin)
+	{
+		$nugetBin = Check-FileName "$env:LOCALAPPDATA\NuGet\NuGet.exe"
+	}
+	if (!$nugetBin)
+	{
+		# NuGet path: https://github.com/aspnet/Logging/blob/dev/build.cmd
+		$nugetBin = Check-FileName "$env:LOCALAPPDATA\NuGet\NuGet.latest.exe"
+	}
+	if (!$nugetBin)
+	{
+		# Search in %path%
+		if (Get-Command "NuGet.exe" -ErrorAction SilentlyContinue)
+		{
+			$nugetBin = "NuGet.exe"
+		}
+	}
+	if (!$nugetBin)
+	{
+		Write-Host "Downloading NuGet tool to local cache..."
+		try
+		{
+			$nugetBin = "$env:LOCALAPPDATA\NuGet\NuGet.exe"
+			$webclient = New-Object System.Net.WebClient
+			$webclient.DownloadFile("https://dist.nuget.org/win-x86-commandline/latest/nuget.exe", $nugetBin)
+		}
+		catch
+		{
+			Write-Host $_
+			WaitError "Downloading NuGet tool failed"
+			exit 1
+		}
+	}
+	return $nugetBin
 }

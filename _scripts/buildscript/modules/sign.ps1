@@ -42,8 +42,7 @@ function Do-Sign-File($action)
 	$keyFile = $action.keyFile
 	$password = $action.password
 	
-	Write-Host ""
-	Write-Host -ForegroundColor DarkCyan "Digitally signing file $file..."
+	Show-ActionHeader "Digitally signing file $file"
 
 	# Find the signtool binary
 	$signtoolBin = Check-RegFilename "hklm:\SOFTWARE\Microsoft\Windows Kits\Installed Roots" "KitsRoot81"
