@@ -68,6 +68,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\TaskDialog.dll</HintPath>
     </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="Unclassified.FieldLog, Version=1.383.75.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Unclassified.FieldLog.1.383.75\lib\net40-client\Unclassified.FieldLog.dll</HintPath>
       <Private>True</Private>

@@ -1218,6 +1218,8 @@ namespace Unclassified.TxEditor.ViewModels
 
 		public void TextKeyWizardFromHotKey()
 		{
+			string fileExtension = null;
+
 			// Determine the currently active window
 			fgWin = WinApi.GetForegroundWindow();
 
@@ -1227,6 +1229,33 @@ namespace Unclassified.TxEditor.ViewModels
 				StringBuilder sb = new StringBuilder(1000);
 				WinApi.GetWindowText(fgWin, sb, 1000);
 				if (!sb.ToString().EndsWith(" - Microsoft Visual Studio")) return;
+
+				// Find active document file name
+				try
+				{
+					var focusedElement = System.Windows.Automation.AutomationElement.FocusedElement;
+					if (focusedElement != null)
+					{
+						var treeWalker = System.Windows.Automation.TreeWalker.ControlViewWalker;
+						var parent = treeWalker.GetParent(focusedElement);
+						while (parent != null &&
+							(parent.Current.ControlType != System.Windows.Automation.ControlType.Pane ||
+							parent.Current.ClassName != "ViewPresenter" ||
+							string.IsNullOrEmpty(parent.Current.Name)))
+						{
+							parent = treeWalker.GetParent(parent);
+						}
+						if (parent != null)
+						{
+							string fileName = parent.Current.Name;
+							fileExtension = Path.GetExtension(fileName).ToLowerInvariant();
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					FL.Warning(ex, "Getting UI Automation info");
+				}
 			}
 
 			// Backup current clipboard content
@@ -1246,16 +1275,30 @@ namespace Unclassified.TxEditor.ViewModels
 			uint ret = WinApi.SendInput((uint)inputs.Length, inputs, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinApi.INPUT)));
 			//System.Diagnostics.Debug.WriteLine(ret + " inputs sent");
 
-			DelayedCall.Start(TextKeyWizardFromHotKey2, 50);
+			DelayedCall.Start(() => TextKeyWizardFromHotKey2(fileExtension), 50);
 		}
 
-		private void TextKeyWizardFromHotKey2()
+		private void TextKeyWizardFromHotKey2(string fileExtension)
 		{
 			// Create the wizard window
 			TextKeyWizardWindow win = new TextKeyWizardWindow();
 			//win.Owner = MainWindow.Instance;
 			win.ShowInTaskbar = true;
 			win.ClipboardBackup = clipboardBackup;
+
+			// Set the correct source cod language if we know the editor file name
+			switch (fileExtension)
+			{
+				case ".aspx":
+					win.SourceAspxButton.IsChecked = true;
+					break;
+				case ".cs":
+					win.SourceCSharpButton.IsChecked = true;
+					break;
+				case ".xaml":
+					win.SourceXamlButton.IsChecked = true;
+					break;
+			}
 
 			MainWindow.Instance.Hide();
 
