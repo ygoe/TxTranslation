@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -33,6 +34,7 @@ namespace Unclassified.TxEditor.Views
 		private bool isPartialString;
 		private List<PlaceholderData> placeholders = new List<PlaceholderData>();
 		private List<SuggestionViewModel> suggestions = new List<SuggestionViewModel>();
+		private bool isInReset;
 
 		#endregion Private data
 
@@ -54,6 +56,10 @@ namespace Unclassified.TxEditor.Views
 					break;
 				case "aspx":
 					SourceAspxButton.IsChecked = true;
+					break;
+				case "cshtml":
+					SourceCSharpButton.IsChecked = true;
+					SourceHtmlButton.IsChecked = true;
 					break;
 			}
 		}
@@ -156,6 +162,7 @@ namespace Unclassified.TxEditor.Views
 			SourceXamlButton.IsChecked = false;
 			SourceAspxButton.IsChecked = false;
 
+			SourceHtmlButton.IsEnabled = true;
 			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
 
 			// Re-evaluate the format and parameters
@@ -167,7 +174,9 @@ namespace Unclassified.TxEditor.Views
 			// Uncheck all other source code buttons
 			SourceCSharpButton.IsChecked = false;
 			SourceAspxButton.IsChecked = false;
+			SourceHtmlButton.IsChecked = false;
 
+			SourceHtmlButton.IsEnabled = false;
 			SetDefaultCheckbox.Visibility = Visibility.Visible;
 
 			// Re-evaluate the format and parameters
@@ -179,9 +188,62 @@ namespace Unclassified.TxEditor.Views
 			// Uncheck all other source code buttons
 			SourceCSharpButton.IsChecked = false;
 			SourceXamlButton.IsChecked = false;
+			SourceHtmlButton.IsChecked = false;
+
+			SourceHtmlButton.IsEnabled = false;
+			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
+
+			// Re-evaluate the format and parameters
+			Reset(false);
+		}
+
+		private void SourceHtmlButton_Checked(object sender, RoutedEventArgs args)
+		{
+			// Uncheck all other source code buttons
+			SourceXamlButton.IsChecked = false;
+			SourceAspxButton.IsChecked = false;
 
 			SetDefaultCheckbox.Visibility = Visibility.Collapsed;
 
+			// Re-evaluate the format and parameters
+			Reset(false);
+		}
+
+		private void SourceCSharpButton_Unchecked(object sender, RoutedEventArgs args)
+		{
+			if (SourceCSharpButton.IsChecked != true &&
+				SourceXamlButton.IsChecked != true &&
+				SourceAspxButton.IsChecked != true)
+			{
+				// Keep checked because one button must be checked
+				SourceCSharpButton.IsChecked = true;
+			}
+		}
+
+		private void SourceXamlButton_Unchecked(object sender, RoutedEventArgs args)
+		{
+			if (SourceCSharpButton.IsChecked != true &&
+				SourceXamlButton.IsChecked != true &&
+				SourceAspxButton.IsChecked != true)
+			{
+				// Keep checked because one button must be checked
+				SourceXamlButton.IsChecked = true;
+			}
+		}
+
+		private void SourceAspxButton_Unchecked(object sender, RoutedEventArgs args)
+		{
+			if (SourceCSharpButton.IsChecked != true &&
+				SourceXamlButton.IsChecked != true &&
+				SourceAspxButton.IsChecked != true)
+			{
+				// Keep checked because one button must be checked
+				SourceAspxButton.IsChecked = true;
+			}
+		}
+
+		private void SourceHtmlButton_Unchecked(object sender, RoutedEventArgs args)
+		{
 			// Re-evaluate the format and parameters
 			Reset(false);
 		}
@@ -190,6 +252,7 @@ namespace Unclassified.TxEditor.Views
 		{
 			if (args.ChangedButton == MouseButton.Left)
 			{
+				// See OtherKeysList_KeyDown!
 				SuggestionViewModel suggestion = OtherKeysList.SelectedItem as SuggestionViewModel;
 				if (suggestion != null)
 				{
@@ -198,6 +261,22 @@ namespace Unclassified.TxEditor.Views
 					TextKeyText.Focus();
 					// TODO: Also update the translated text from suggestion.BaseText? Consider different parameter names!
 				}
+			}
+		}
+
+		private void OtherKeysList_KeyDown(object sender, KeyEventArgs args)
+		{
+			if (args.Key == Key.Enter && args.KeyboardDevice.Modifiers == 0)
+			{
+				// See OtherKeysList_MouseDoubleClick!
+				SuggestionViewModel suggestion = OtherKeysList.SelectedItem as SuggestionViewModel;
+				if (suggestion != null)
+				{
+					TextKeyText.Text = suggestion.TextKey;
+					AutoSelectKeyText();
+					TextKeyText.Focus();
+				}
+				args.Handled = true;
 			}
 		}
 
@@ -261,7 +340,7 @@ namespace Unclassified.TxEditor.Views
 
 			// Build the text to paste back into the source document, depending on the selected code
 			// language
-			if (SourceCSharpButton.IsChecked == true)
+			if (SourceCSharpButton.IsChecked == true && SourceHtmlButton.IsChecked != true)
 			{
 				App.Settings.Wizard.SourceCode = "C#";
 
@@ -314,6 +393,25 @@ namespace Unclassified.TxEditor.Views
 					codeSb.Append(" + \"");
 					codeSb.Append(colonSuffix);
 					codeSb.Append("\"");
+				}
+				Clipboard.SetText(codeSb.ToString());
+			}
+			if (SourceHtmlButton.IsChecked == true && SourceCSharpButton.IsChecked == true)
+			{
+				App.Settings.Wizard.SourceCode = "cshtml";
+
+				string keyString = textKey.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+				StringBuilder codeSb = new StringBuilder();
+				codeSb.Append("@Tx.T");
+				if (AddColonCheckbox.IsChecked == true)
+				{
+					codeSb.Append("C");
+				}
+				codeSb.Append("(\"" + keyString + "\")");
+				if (!string.IsNullOrEmpty(colonSuffix))
+				{
+					codeSb.Append(colonSuffix);
 				}
 				Clipboard.SetText(codeSb.ToString());
 			}
@@ -434,6 +532,9 @@ namespace Unclassified.TxEditor.Views
 
 		private void Reset(bool setTextKey)
 		{
+			if (isInReset) return;
+			isInReset = true;
+
 			AddColonCheckbox.IsChecked = false;
 			AddColonCheckbox.Visibility = Visibility.Collapsed;
 
@@ -443,7 +544,25 @@ namespace Unclassified.TxEditor.Views
 			isPartialString = false;
 			if (initialClipboardText != null)
 			{
-				if (SourceCSharpButton.IsChecked == true)
+				if (setTextKey && SourceCSharpButton.IsChecked == true && SourceHtmlButton.IsChecked == true)
+				{
+					// Initial CSHTML type detection (only on first call):
+					// In a .cshtml file there can be C# code as well as Razor code. C# code must be
+					// inserted in existing code blocks. It is processed like in a regular .cs file.
+					// When selecting plain HTML content, a new Razor code section must be inserted
+					// where the text was. This is prefixed with "@" and does not handle
+					// placeholders because there are no variables in plain content. (Existing @
+					// code blocks within the copied text are not supported because Razor parsing is
+					// too complex.)
+					if ((initialClipboardText.StartsWith("\"") || initialClipboardText.StartsWith("@\"") || initialClipboardText.StartsWith("$\"")) &&
+						initialClipboardText.EndsWith("\""))
+					{
+						// This looks like an existing C# code string, don't handle it as HTML content
+						SourceHtmlButton.IsChecked = false;
+					}
+				}
+
+				if (SourceCSharpButton.IsChecked == true && SourceHtmlButton.IsChecked != true)
 				{
 					isPartialString = true;
 					if ((initialClipboardText.StartsWith("\"") || initialClipboardText.StartsWith("@\"") || initialClipboardText.StartsWith("$\"")) &&
@@ -726,7 +845,20 @@ namespace Unclassified.TxEditor.Views
 						AddParsedPlaceholder(textContent, placeholderContent);
 					}
 					parsedText = textContent.ToString();
+				}
+				if (SourceXamlButton.IsChecked == true)
+				{
+					parsedText = initialClipboardText;
+					// TODO: Any further processing required?
+				}
+				if (SourceAspxButton.IsChecked == true || SourceHtmlButton.IsChecked == true)
+				{
+					// Decode HTML entities
+					parsedText = System.Net.WebUtility.HtmlDecode(initialClipboardText);
+				}
 
+				if (SourceCSharpButton.IsChecked == true)
+				{
 					// Detect trailing colon to offer the option to cut off and generate it
 					var match = Regex.Match(parsedText, @"^(.+)\s?:(\s*)$");
 					if (match.Success)
@@ -735,20 +867,6 @@ namespace Unclassified.TxEditor.Views
 						AddColonCheckbox.Visibility = Visibility.Visible;
 					}
 				}
-				if (SourceXamlButton.IsChecked == true)
-				{
-					parsedText = initialClipboardText;
-					// TODO: Any further processing required?
-				}
-				if (SourceAspxButton.IsChecked == true)
-				{
-					// Decode HTML entities
-					parsedText = initialClipboardText
-						.Replace("&lt;", "<")
-						.Replace("&gt;", ">")
-						.Replace("&quot;", "\"")
-						.Replace("&amp;", "&");
-				}
 			}
 
 			TranslationText.Text = parsedText;
@@ -756,6 +874,7 @@ namespace Unclassified.TxEditor.Views
 			ParametersLabel.Visibility = Visibility.Collapsed;
 			ParametersGrid.Visibility = Visibility.Collapsed;
 			ParametersGrid.Children.Clear();
+			ParametersGrid.RowDefinitions.Clear();
 			if (placeholders.Count > 0)
 			{
 				ParametersLabel.Visibility = Visibility.Visible;
@@ -867,6 +986,7 @@ namespace Unclassified.TxEditor.Views
 				}
 				// else: We have no exact match to suggest at the moment, leave the text key empty
 			}
+			isInReset = false;
 		}
 
 		private void ScanAllTexts(TextKeyViewModel tk)

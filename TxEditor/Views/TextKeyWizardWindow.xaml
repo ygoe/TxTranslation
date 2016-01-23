@@ -56,9 +56,10 @@
 			<StackPanel
 				Grid.Row="0" Grid.Column="1"
 				Margin="8,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
-				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="_C#" Checked="SourceCSharpButton_Checked"/>
-				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="_XAML" Checked="SourceXamlButton_Checked"/>
-				<ToggleButton Name="SourceAspxButton" Padding="6,1" Margin="4,0,0,0" Content="_aspx" Checked="SourceAspxButton_Checked"/>
+				<ToggleButton Name="SourceCSharpButton" Padding="6,1" Content="_C#" Checked="SourceCSharpButton_Checked" Unchecked="SourceCSharpButton_Unchecked"/>
+				<ToggleButton Name="SourceXamlButton" Padding="6,1" Margin="4,0,0,0" Content="_XAML" Checked="SourceXamlButton_Checked" Unchecked="SourceXamlButton_Unchecked"/>
+				<ToggleButton Name="SourceAspxButton" Padding="6,1" Margin="4,0,0,0" Content="_ASPX" Checked="SourceAspxButton_Checked" Unchecked="SourceAspxButton_Unchecked"/>
+				<ToggleButton Name="SourceHtmlButton" Padding="6,1" Margin="4,0,0,0" Content="_HTML" Checked="SourceHtmlButton_Checked" Unchecked="SourceHtmlButton_Unchecked"/>
 			</StackPanel>
 
 			<Label
@@ -71,7 +72,8 @@
 				Name="OtherKeysList"
 				Grid.Row="1" Grid.Column="1"
 				Margin="8,4,0,0" MinHeight="20" MaxHeight="400"
-				MouseDoubleClick="OtherKeysList_MouseDoubleClick">
+				MouseDoubleClick="OtherKeysList_MouseDoubleClick"
+				KeyDown="OtherKeysList_KeyDown">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<Grid>

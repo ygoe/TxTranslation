@@ -1247,7 +1247,7 @@ namespace Unclassified.TxEditor.ViewModels
 						}
 						if (parent != null)
 						{
-							string fileName = parent.Current.Name;
+							string fileName = parent.Current.Name.TrimEnd('*');
 							fileExtension = Path.GetExtension(fileName).ToLowerInvariant();
 						}
 					}
@@ -1294,6 +1294,10 @@ namespace Unclassified.TxEditor.ViewModels
 					break;
 				case ".cs":
 					win.SourceCSharpButton.IsChecked = true;
+					break;
+				case ".cshtml":
+					win.SourceCSharpButton.IsChecked = true;
+					win.SourceHtmlButton.IsChecked = true;
 					break;
 				case ".xaml":
 					win.SourceXamlButton.IsChecked = true;
