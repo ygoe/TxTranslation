@@ -47,7 +47,8 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Count, Converter={StaticResource EmptyIntConv}, ConverterParameter=-1}"
-				ui:TextBoxExtensions.DisableInsertKey="True"/>
+				ui:TextBoxExtensions.DisableInsertKey="True"
+				PreviewTextInput="CountTextBox_PreviewTextInput" DataObject.Pasting="CountTextBox_Pasting"/>
 		</Grid>
 
 		<TextBlock
@@ -61,7 +62,8 @@
 				Background="Transparent"
 				TextAlignment="Right"
 				Text="{Binding Modulo, Converter={StaticResource EmptyIntConv}}"
-				ui:TextBoxExtensions.DisableInsertKey="True"/>
+				ui:TextBoxExtensions.DisableInsertKey="True"
+				PreviewTextInput="CountTextBox_PreviewTextInput" DataObject.Pasting="CountTextBox_Pasting"/>
 		</Grid>
 
 		<ctl:DecoratedTextBox

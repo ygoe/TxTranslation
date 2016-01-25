@@ -22,7 +22,7 @@ namespace Unclassified.UI
 			name: "FixFocus",
 			propertyType: typeof(bool),
 			ownerType: typeof(ListBoxExtensions),
-			defaultMetadata: new PropertyMetadata(false, OnFixFocusChanged));
+			defaultMetadata: new PropertyMetadata(OnFixFocusChanged));
 
 		/// <summary>
 		/// Gets the value of the FixFocus XAML attached property from the specified DependencyObject.
@@ -44,17 +44,17 @@ namespace Unclassified.UI
 			obj.SetValue(FixFocusProperty, value);
 		}
 
-		private static void OnFixFocusChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+		private static void OnFixFocusChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
 		{
-			if (depObj is ListBox && args != null)
+			if (obj is ListBox && args != null)
 			{
 				if ((bool)args.NewValue)
 				{
-					(depObj as ListBox).GotKeyboardFocus += ListBox_GotKeyboardFocus;
+					((ListBox)obj).GotKeyboardFocus += ListBox_GotKeyboardFocus;
 				}
 				else
 				{
-					(depObj as ListBox).GotKeyboardFocus -= ListBox_GotKeyboardFocus;
+					((ListBox)obj).GotKeyboardFocus -= ListBox_GotKeyboardFocus;
 				}
 			}
 		}
