@@ -123,10 +123,11 @@ var
 begin
 	Result := '';
 
+	inParamName := Lowercase(inParamName);
 	if not StartsWith(inParamName, '/') then inParamName := '/' + inParamName;
 	for i := 1 to ParamCount do
 	begin
-		paramNameAndValue := ParamStr(i);
+		paramNameAndValue := Lowercase(ParamStr(i));
 		if StartsWith(paramNameAndValue, inParamName) then
 		begin
 			Result := StringReplace(paramNameAndValue, inParamName + '=', '');
@@ -142,10 +143,11 @@ var
 begin
 	Result := false;
 
+	inParamName := Lowercase(inParamName);
 	if not StartsWith(inParamName, '/') then inParamName := '/' + inParamName;
 	for i := 1 to ParamCount do
 	begin
-		paramNameAndValue := ParamStr(i);
+		paramNameAndValue := Lowercase(ParamStr(i));
 		if StartsWith(paramNameAndValue, inParamName + '=') or (paramNameAndValue = inParamName) then
 		begin
 			Result := true;

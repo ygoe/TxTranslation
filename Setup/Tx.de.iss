@@ -14,6 +14,6 @@ de.ClickFinish=Klicken Sie auf Fertigstellen, um das Setup zu beenden.
 de.Upgrade=&Aktualisieren
 de.UpdatedHeadingLabel=%n%n%n%nTxTranslation wurde aktualisiert.
 de.Task_VSTool=In Visual Studio (2010–2015) als Externes Tool eintragen
-de.Task_DeleteConfig=Vorhandene Konfiguration löschen
 de.NgenMessage=Anwendungs-Performance optimieren (kann einen Moment dauern)
 de.OpenSingleFileCommand=Einzelne Datei öffnen
+de.Uninstall_DeleteConfig=Möchten Sie die Konfigurationsdaten inkl. Logs löschen?

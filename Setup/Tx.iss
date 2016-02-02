@@ -1,7 +1,10 @@
 ; Determine product and file version from the application to be installed
-#define RevFileName '..\TxEditor\bin\Release\TxEditor.exe'
-#define RevId GetStringFileInfo(RevFileName, 'ProductVersion')
-#define TruncRevId GetFileVersion(RevFileName)
+#ifndef BuildConfig
+	#define BuildConfig "Release"
+#endif
+#define RevFileName "..\TxEditor\bin\" + BuildConfig + "\TxEditor.exe"
+#define RevId GetStringFileInfo(RevFileName, "ProductVersion")
+#define ShortRevId GetFileVersion(RevFileName)
 
 ; Include 3rd-party software check and download support
 #include "include\products.iss"
@@ -10,11 +13,9 @@
 #include "include\products\fileversion.iss"
 #include "include\products\dotnetfxversion.iss"
 
-; Include modules for required products
+; Include modules ONLY for required products to be installed
 #include "include\products\msi31.iss"
 #include "include\products\dotnetfx40client.iss"
-#include "include\products\dotnetfx40full.iss"
-#include "include\products\dotnetfx45.iss"
 
 ; Include general helper functions
 #include "include\util-code.iss"
@@ -32,18 +33,21 @@ AppPublisherURL=http://unclassified.software/source/txtranslation
 
 ; Setup file version
 VersionInfoDescription=TxTranslation Setup
-VersionInfoVersion={#TruncRevId}
+VersionInfoVersion={#ShortRevId}
 VersionInfoCompany=Yves Goergen
 
 ; General application information
 AppId={{99B66B72-FF8D-4169-ADE6-062A9EF0EB13}
 AppMutex=Global\Unclassified.TxEditor,Unclassified.TxEditor
 MinVersion=0,5.01sp3
+; isxdl.dll may not be DEP compatible
+DEPCompatible=no
 
 ; General setup information
 DefaultDirName={pf}\Unclassified\TxTranslation
 AllowUNCPath=False
 DefaultGroupName=TxTranslation
+DisableWelcomePage=no
 DisableDirPage=auto
 DisableProgramGroupPage=auto
 ShowLanguageDialog=no
@@ -51,7 +55,6 @@ ChangesAssociations=yes
 
 ; Setup design
 ; Large image max. 164x314 pixels, small image max. 55x58 pixels
-WizardImageBackColor=$ffffff
 WizardImageStretch=no
 WizardImageFile=TxFlag.bmp
 WizardSmallImageFile=TxFlagSmall.bmp
@@ -92,49 +95,43 @@ ClickFinish=Click Finish to exit the setup.
 Upgrade=&Upgrade
 UpdatedHeadingLabel=%n%n%n%nTxTranslation was upgraded.
 Task_VSTool=Register as External Tool in Visual Studio (2010/2012/2013)
-Task_DeleteConfig=Delete existing configuration
 NgenMessage=Optimising application performance (this may take a moment)
+Uninstall_DeleteConfig=Do you want to delete the configuration data incl. logs?
 
 ; Add translations after messages have been defined
 #include "Tx.de.iss"
 
 [Tasks]
 Name: VSTool; Description: "{cm:Task_VSTool}"
-Name: DeleteConfig; Description: "{cm:Task_DeleteConfig}"; Flags: unchecked
-#define Task_DeleteConfig_Index 1
 
 [Files]
 ; TxEditor application files
-Source: "..\TxEditor\bin\Release\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\TxEditor\bin\Release\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\TxEditor\bin\Release\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\TxEditor\bin\Release\Unclassified.FieldLog.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\Tx Documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\{#BuildConfig}\TxEditor.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\{#BuildConfig}\MultiSelectTreeView.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\{#BuildConfig}\TaskDialog.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxEditor\bin\{#BuildConfig}\Unclassified.FieldLog.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Tx Documentation.pdf"; DestDir: "{app}"
 ; This is the signed version of the DLL:
-Source: "..\TxLib\bin\Release\Unclassified.TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\TxLib\bin\{#BuildConfig}\Unclassified.TxLib.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; TxLib assembly
-Source: "..\TxLib\bin\Release\Unclassified.TxLib.dll"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
-Source: "..\TxLib\bin\Release\Unclassified.TxLib.xml"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+Source: "..\TxLib\bin\{#BuildConfig}\Unclassified.TxLib.dll"; DestDir: "{app}\TxLib assembly"; Flags: ignoreversion
+Source: "..\TxLib\bin\{#BuildConfig}\Unclassified.TxLib.xml"; DestDir: "{app}\TxLib assembly"
 
 ; TxLib source code
-Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
-Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
-Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
-Source: "..\TxLib\TxXaml.cs"; DestDir: "{app}\TxLib source code"; Flags: ignoreversion
+Source: "..\TxLib\DateTimeInterval.cs"; DestDir: "{app}\TxLib source code"
+Source: "..\TxLib\Tx.cs"; DestDir: "{app}\TxLib source code"
+Source: "..\TxLib\TxWinForms.cs"; DestDir: "{app}\TxLib source code"
+Source: "..\TxLib\TxXaml.cs"; DestDir: "{app}\TxLib source code"
 
 ; License files
-Source: "..\LICENSE-GPL"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\LICENSE-LGPL"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\LICENSE-GPL"; DestDir: "{app}"
+Source: "..\LICENSE-LGPL"; DestDir: "{app}"
 
 [Dirs]
 ; Create user-writable log directory in the installation directory.
 ; FieldLog will first try to write log file there.
 Name: "{app}\log"; Permissions: users-modify
-
-[InstallDelete]
-; Delete user configuration files if the task is selected
-Type: files; Name: "{userappdata}\Unclassified\TxTranslation\TxEditor.conf"; Tasks: DeleteConfig
 
 [Registry]
 ; Register .txd file name extension
@@ -165,23 +162,8 @@ Filename: {app}\TxEditor.exe; WorkingDir: {app}; Flags: nowait postinstall skipi
 [UninstallRun]
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\TxEditor.exe"""; Flags: runhidden
 
-[UninstallDelete]
-; Delete user configuration files if not uninstalling for a downgrade
-Type: files; Name: "{userappdata}\Unclassified\TxTranslation\TxEditor.conf"; Check: not IsDowngradeUninstall
-Type: dirifempty; Name: "{userappdata}\Unclassified\TxTranslation"
-Type: dirifempty; Name: "{userappdata}\Unclassified"
-
-; Delete log files if not uninstalling for a downgrade
-Type: files; Name: "{app}\log\TxEditor-*.fl"; Check: not IsDowngradeUninstall
-Type: files; Name: "{app}\log\!README.txt"; Check: not IsDowngradeUninstall
-; TODO: Is the following required? http://stackoverflow.com/q/28383251/143684
-Type: dirifempty; Name: "{app}\log"
-Type: dirifempty; Name: "{app}"
-
 [Code]
 function InitializeSetup: Boolean;
-var
-	cmp: Integer;
 begin
 	Result := InitCheckDowngrade;
 
@@ -193,7 +175,7 @@ begin
 		msi31('3.1');
 
 		// If no .NET 4.0 is found, install the client profile (smallest)
-		if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '')) then
+		if (not netfxinstalled(NetFx40Client, '') and not netfxinstalled(NetFx40Full, '') and not netfxinstalled(NetFx4x, '')) then
 			dotnetfx40client();
 	end;
 end;
@@ -201,7 +183,7 @@ end;
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
 	// Make upgrade install quicker
-	Result := ((PageID = wpSelectTasks) or (PageID = wpReady)) and PrevInstallExists;
+	Result := ((PageID = wpSelectTasks) or ((PageID = wpReady) and (GetArrayLength(products) = 0))) and PrevInstallExists;
 end;
 
 procedure CurPageChanged(CurPageID: Integer);
@@ -213,22 +195,6 @@ begin
 			// Change "Next" button to "Upgrade" on the first page, because it won't ask any more
 			WizardForm.NextButton.Caption := ExpandConstant('{cm:Upgrade}');
 			WizardForm.FinishedHeadingLabel.Caption := ExpandConstant('{cm:UpdatedHeadingLabel}');
-		end;
-	end;
-
-	if CurPageID = wpSelectTasks then
-	begin
-		if IsDowngradeSetup then
-		begin
-			// Pre-select task to delete existing configuration on downgrading (user can deselect it again)
-			// (Use the zero-based index of all rows in the tasks list GUI)
-			// Source: http://stackoverflow.com/a/10490352/143684
-			WizardForm.TasksList.Checked[{#Task_DeleteConfig_Index}] := true;
-		end
-		else
-		begin
-			// Clear possibly remembered value from previous downgrade install
-			WizardForm.TasksList.Checked[{#Task_DeleteConfig_Index}] := false;
 		end;
 	end;
 end;
@@ -247,6 +213,21 @@ end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
+	if CurUninstallStep = usUninstall then
+	begin
+		if IsCommandLineParamSet('verysilent') or
+			IsCommandLineParamSet('suppressmsgboxes') or
+			(MsgBox(ExpandConstant('{cm:Uninstall_DeleteConfig}'), mbConfirmation, MB_YESNO) = IDYES) then
+		begin
+			DeleteFile(ExpandConstant('{userappdata}\Unclassified\TxTranslation\TxEditor.conf'));
+			DeleteFile(ExpandConstant('{userappdata}\Unclassified\TxTranslation\TxEditor.conf.bak'));
+			RemoveDir(ExpandConstant('{userappdata}\Unclassified\TxTranslation'));
+			RemoveDir(ExpandConstant('{userappdata}\Unclassified'));
+			
+			DelTree(ExpandConstant('{app}\log'), true, true, true);
+			RemoveDir(ExpandConstant('{app}'));
+		end;
+	end;
 	if CurUninstallStep = usPostUninstall then
 	begin
 		// Unregister FieldLogViewer as external tool in all Visual Studio versions after uninstall
