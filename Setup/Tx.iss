@@ -94,7 +94,7 @@ ClickFinish=Click Finish to exit the setup.
 [CustomMessages]
 Upgrade=&Upgrade
 UpdatedHeadingLabel=%n%n%n%nTxTranslation was upgraded.
-Task_VSTool=Register as External Tool in Visual Studio (2010/2012/2013)
+Task_VSTool=Register as External Tool in Visual Studio (2010–2015)
 NgenMessage=Optimising application performance (this may take a moment)
 Uninstall_DeleteConfig=Do you want to delete the configuration data incl. logs?
 
@@ -203,7 +203,7 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
 	if (CurStep = ssPostInstall) and IsTaskSelected('VSTool') then
 	begin
-		// Register FieldLogViewer as external tool in all Visual Studio versions after setup
+		// Register application as external tool in all Visual Studio versions after setup
 		RegisterVSTool('10.0', 'TxEditor', '{app}\TxEditor.exe', '/scan:"$(SolutionDir) "');   // Trailing space to prevent \" in the cmdline
 		RegisterVSTool('11.0', 'TxEditor', '{app}\TxEditor.exe', '/scan:"$(SolutionDir) "');
 		RegisterVSTool('12.0', 'TxEditor', '{app}\TxEditor.exe', '/scan:"$(SolutionDir) "');
@@ -230,7 +230,7 @@ begin
 	end;
 	if CurUninstallStep = usPostUninstall then
 	begin
-		// Unregister FieldLogViewer as external tool in all Visual Studio versions after uninstall
+		// Unregister application as external tool in all Visual Studio versions after uninstall
 		UnregisterVSTool('10.0', 'TxEditor');
 		UnregisterVSTool('11.0', 'TxEditor');
 		UnregisterVSTool('12.0', 'TxEditor');
