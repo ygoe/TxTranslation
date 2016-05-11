@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeInterval.cs" />
+    <Compile Include="Fluent\TxFluentBuilder.cs" />
+    <Compile Include="Fluent\TxExtensions.cs" />
     <Compile Include="Tx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TxWinForms.cs" />
