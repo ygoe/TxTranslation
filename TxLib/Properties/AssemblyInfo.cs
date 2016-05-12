@@ -44,3 +44,4 @@ using System.Windows.Markup;
 // Other attributes
 [assembly: ComVisible(false)]
 [assembly: XmlnsDefinition("http://unclassified.software/source/txtranslation", "Unclassified.TxLib")]
+[assembly: XmlnsPrefix("http://unclassified.software/source/txtranslation", "Tx")]
