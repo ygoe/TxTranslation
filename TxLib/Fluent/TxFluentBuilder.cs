@@ -3,104 +3,144 @@ using System.Linq;
 
 namespace Unclassified.TxLib.Fluent
 {
-    /// <summary>
-    ///     Class wich provides fluent API for Tx
-    /// </summary>
-    public class TxFluentBuilder
-    {
-        #region Static members
+	/// <summary>
+	/// Provides a fluent syntax API for Tx.
+	/// </summary>
+	public class TxFluentBuilder
+	{
+		#region Static members
 
-        /// <summary>
-        ///     Implicitly converts builder to string.
-        /// </summary>
-        /// <param name="builder">Builder instance.</param>
-        /// <returns>String replacement for builder's key</returns>
-        public static implicit operator string(TxFluentBuilder builder)
-        {
-            return builder.Make();
-        }
+		/// <summary>
+		/// Implicitly converts a <see cref="TxFluentBuilder"/> instance to a string that contains
+		/// the translated text.
+		/// </summary>
+		/// <param name="builder">The builder instance.</param>
+		/// <returns>Text value for the builder's text key.</returns>
+		public static implicit operator string(TxFluentBuilder builder)
+		{
+			return builder.Make();
+		}
 
-        #endregion
+		#endregion Static members
 
-        private readonly ConcurrentDictionary<string, string> _arguments;
-        private readonly string _text;
-        private bool _colon;
-        private int? _count;
-        private bool _upper;
+		#region Private fields
 
-        #region Constructors
+		private readonly ConcurrentDictionary<string, string> arguments = new ConcurrentDictionary<string, string>();
+		private readonly string text;
+		private int count = -1;
+		private bool upperCase;
+		private bool colon;
+		private bool quoteNested;
+		private bool quote;
+		private bool parentheses;
 
-        /// <summary>
-        ///     Key string is atomic.
-        /// </summary>
-        /// <param name="text">Key to search.</param>
-        public TxFluentBuilder(string text)
-        {
-            _text = text;
+		#endregion Private fields
 
-            _arguments = new ConcurrentDictionary<string, string>();
-        }
+		#region Constructors
 
-        #endregion
+		/// <summary>
+		/// Initialises a new instance of the <see cref="TxFluentBuilder"/> class.
+		/// </summary>
+		/// <param name="text">The text key to search.</param>
+		public TxFluentBuilder(string text)
+		{
+			this.text = text;
+		}
 
-        #region Members
+		#endregion Constructors
 
-        /// <summary>
-        ///     Adds named argument to replace in formatted string.
-        /// </summary>
-        /// <param name="name">Replacement name.</param>
-        /// <param name="value">Replacement value.</param>
-        /// <returns>Builder for fluent configuration.</returns>
-        public TxFluentBuilder Argument(string name, string value)
-        {
-            _arguments.AddOrUpdate(name, value, (key, existing) => value);
-            return this;
-        }
+		#region Public methods
 
-        /// <summary>
-        ///     Setup colon string to putting after text.
-        /// </summary>
-        /// <returns>Builder for fluent configuration.</returns>
-        public TxFluentBuilder Colon()
-        {
-            _colon = true;
-            return this;
-        }
+		/// <summary>
+		/// Adds a placeholder name and value.
+		/// </summary>
+		/// <param name="name">Placeholder name.</param>
+		/// <param name="value">Placeholder value.</param>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder Argument(string name, string value)
+		{
+			arguments.AddOrUpdate(name, value, (key, existing) => value);
+			return this;
+		}
 
-        /// <summary>
-        ///     Setup count value to consider when selecting the text value.
-        /// </summary>
-        /// <param name="count">Count value.</param>
-        /// <returns>Builder for fluent configuration.</returns>
-        public TxFluentBuilder Count(int count)
-        {
-            _count = count;
-            return this;
-        }
+		/// <summary>
+		/// Sets the count value to consider when selecting the text value.
+		/// </summary>
+		/// <param name="count">Count value.</param>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder Count(int count)
+		{
+			this.count = count;
+			return this;
+		}
 
-        /// <summary>
-        ///     Creates replacement based on selected configuration.
-        /// </summary>
-        /// <returns>String replacement for builder's key</returns>
-        public string Make()
-        {
-            var count = _count.HasValue ? _count.Value : -1;
-            var result = Tx.T(_text, count, _arguments.ToDictionary(p => p.Key, p => p.Value));
-            if (_upper) result = Tx.UpperCase(result);
-            if (_colon) result += Tx.Colon();
-            return result;
-        }
+		/// <summary>
+		/// Transforms the first character of the text to upper case.
+		/// </summary>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder UpperCase()
+		{
+			upperCase = true;
+			return this;
+		}
 
-        /// <summary>
-        ///     Setup first character of a text transformation to the upper case.
-        /// </summary>
-        /// <returns>Builder for fluent configuration.</returns>
-        public TxFluentBuilder Upper()
-        {
-            _upper = true;
-            return this;
-        }
+		/// <summary>
+		/// Adds a colon string after the text.
+		/// </summary>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder Colon()
+		{
+			colon = true;
+			return this;
+		}
 
-        #endregion
-    }
+		/// <summary>
+		/// Encloses the text in nested quotation marks. These marks are used within normal
+		/// quotation marks.
+		/// </summary>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder QuoteNested()
+		{
+			quoteNested = true;
+			return this;
+		}
+
+		/// <summary>
+		/// Encloses the text in normal quotation marks.
+		/// </summary>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder Quote()
+		{
+			quote = true;
+			return this;
+		}
+
+		/// <summary>
+		/// Encloses the text in parentheses (round brackets).
+		/// </summary>
+		/// <returns>The builder for fluent configuration.</returns>
+		public TxFluentBuilder Parentheses()
+		{
+			parentheses = true;
+			return this;
+		}
+
+		/// <summary>
+		/// Performs the dictionary lookup and translates the text key based on the selected
+		/// configuration.
+		/// </summary>
+		/// <returns>Text value for the builder's text key.</returns>
+		public string Make()
+		{
+			var result = Tx.T(text, count, arguments.ToDictionary(p => p.Key, p => p.Value));
+			if (upperCase) result = Tx.UpperCase(result);
+			if (colon) result += Tx.Colon();
+			if (quoteNested) result = Tx.QuoteNested(result);
+			if (quote) result = Tx.Quote(result);
+			if (parentheses) result = Tx.Parentheses(result);
+			return result;
+		}
+
+		#endregion Public methods
+	}
 }
