@@ -76,6 +76,8 @@ namespace Unclassified.TxLib
 			public const string QuoteNestedEnd = "Tx:quote nested end";
 			/// <summary>The system text key for the unit name of a byte.</summary>
 			public const string ByteUnit = "Tx:byte unit";
+			/// <summary>The system text key for the format of percentage values.</summary>
+			public const string Percent = "Tx:percent";
 
 			/// <summary>The system text key for a negative number indicator.</summary>
 			public const string NumberNegative = "Tx:number.negative";
@@ -1824,6 +1826,94 @@ namespace Unclassified.TxLib
 				text = number.ToString() + ".";
 			}
 			return text;
+		}
+
+		/// <summary>
+		/// Formats a percentage value.
+		/// </summary>
+		/// <param name="value">The percentage value, in the range of 0 to 100.</param>
+		/// <returns></returns>
+		public static string Percent(int value)
+		{
+			string numStr = Number(value);
+			var data = new Dictionary<string, string>();
+			data["value"] = numStr;
+
+			string text = null;
+			text = ResolveData(GetText(SystemKeys.Percent, -1, false, true), SystemKeys.Percent, -1, data);
+			if (text == null)
+			{
+				text = numStr + "%";
+			}
+			return text;
+		}
+
+		/// <summary>
+		/// Formats a percentage value.
+		/// </summary>
+		/// <param name="value">The percentage value to format with as many decimal digits as are non-zero, in the range of 0 to 100.</param>
+		/// <returns></returns>
+		public static string Percent(decimal value)
+		{
+			string numStr = Number(value, 29);   // decimal has at most 29 siginificant digits
+			numStr = numStr.TrimEnd('0');
+			string decSep = GetText(SystemKeys.NumberDecimalSeparator, false, CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+			if (numStr.EndsWith(decSep))
+			{
+				numStr = numStr.Substring(0, numStr.Length - decSep.Length);
+			}
+			var data = new Dictionary<string, string>();
+			data["value"] = numStr;
+
+			string text = null;
+			text = ResolveData(GetText(SystemKeys.Percent, -1, false, true), SystemKeys.Percent, -1, data);
+			if (text == null)
+			{
+				text = numStr + "%";
+			}
+			return text;
+		}
+
+		/// <summary>
+		/// Formats a percentage value.
+		/// </summary>
+		/// <param name="value">The percentage value, in the range of 0 to 100.</param>
+		/// <param name="decimals">Fixed number of decimal digits to use.</param>
+		/// <returns></returns>
+		public static string Percent(decimal value, int decimals)
+		{
+			string numStr = Number(value, decimals);
+			var data = new Dictionary<string, string>();
+			data["value"] = numStr;
+
+			string text = null;
+			text = ResolveData(GetText(SystemKeys.Percent, -1, false, true), SystemKeys.Percent, -1, data);
+			if (text == null)
+			{
+				text = numStr + "%";
+			}
+			return text;
+		}
+
+		/// <summary>
+		/// Formats a percentage value.
+		/// </summary>
+		/// <param name="value">The percentage value to format with as many decimal digits as are non-zero, in the range of 0 to 100.</param>
+		/// <returns></returns>
+		public static string Percent(double value)
+		{
+			return Percent((decimal)value);
+		}
+
+		/// <summary>
+		/// Formats a percentage value.
+		/// </summary>
+		/// <param name="value">The percentage value, in the range of 0 to 100.</param>
+		/// <param name="decimals">Fixed number of decimal digits to use.</param>
+		/// <returns></returns>
+		public static string Percent(double value, int decimals)
+		{
+			return Percent((decimal)value, decimals);
 		}
 
 		#endregion Number formatting

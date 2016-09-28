@@ -24,6 +24,7 @@
 		<text key="Tx:number.negative">−</text>
 		<text key="Tx:number.ordinal">{#}.</text>
 		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:percent">{value} %</text>
 		<text key="Tx:quote begin">„</text>
 		<text key="Tx:quote end">“</text>
 		<text key="Tx:quote nested begin">‚</text>
@@ -246,6 +247,7 @@
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}th</text>
 		<text key="Tx:number.ordinal f" comment="Ordinal numbers, female if special." />
 		<text key="Tx:number.unit separator" comment="Separator between a number and its unit. Should be a non-breaking space. Should only be used for relatively short unit symbols, not longer names."> </text>
+		<text key="Tx:percent" comment="Default: {value}%">{value}%</text>
 		<text key="Tx:quote begin" comment="Opening regular quotation mark.">“</text>
 		<text key="Tx:quote end" comment="Closing regular quotation mark.">”</text>
 		<text key="Tx:quote nested begin" comment="Opening nested/secondary quotation mark.">‘</text>
@@ -451,6 +453,7 @@
 		<text key="Tx:number.ordinal" count="13" mod="100">{#}.º</text>
 		<text key="Tx:number.ordinal f">{#}.ª</text>
 		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:percent">{value} %</text>
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">‹</text>
@@ -493,6 +496,7 @@
 		<text key="Tx:number.ordinal" count="1">{#}ᵉʳ</text>
 		<text key="Tx:number.ordinal f" count="1">{#}ʳᵉ</text>
 		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:percent">{value} %</text>
 		<text key="Tx:quote begin">« </text>
 		<text key="Tx:quote end"> »</text>
 		<text key="Tx:quote nested begin">“</text>
@@ -534,6 +538,7 @@
 		<text key="Tx:number.ordinal">{#}º</text>
 		<text key="Tx:number.ordinal f">{#}ª</text>
 		<text key="Tx:number.unit separator"> </text>
+		<text key="Tx:percent">{value}%</text>
 		<text key="Tx:quote begin">«</text>
 		<text key="Tx:quote end">»</text>
 		<text key="Tx:quote nested begin">«</text>
