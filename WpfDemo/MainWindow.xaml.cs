@@ -44,6 +44,8 @@ namespace WpfDemo
 
 			//Info2Text.Text = Tx.DataSize(123456);
 			Info2Text.Text = Tx.T("months");
+
+			DataContext = this;
 		}
 
 		private void ChangeLanguageButton_Click(object sender, RoutedEventArgs args)

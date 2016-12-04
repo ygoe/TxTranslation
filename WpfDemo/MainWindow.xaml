@@ -15,6 +15,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
@@ -35,5 +36,18 @@
 		<DatePicker Grid.Row="6" Name="DatePicker1" SelectedDateFormat="Short"/>
 
 		<TextBlock Grid.Row="7" Name="Info2Text"/>
+
+		<TextBlock Grid.Row="8" VerticalAlignment="Center">
+			<TextBlock.Style>
+				<Style TargetType="{x:Type TextBlock}">
+					<Setter Property="Text" Value="My first text"/>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding ShowInTaskbar, Mode=OneWay}" Value="True">
+							<Setter Property="Text" Value="{Tx:T months}"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</TextBlock.Style>
+		</TextBlock>
 	</Grid>
 </Window>
