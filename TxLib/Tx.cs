@@ -2234,8 +2234,7 @@ namespace Unclassified.TxLib
 		private static DateTimeInterval GetRoundedInterval(DateTime start, DateTime end)
 		{
 			// Round difference to seconds, update end time
-			const long ticksPerSecond = 10000000;
-			long newEnd = (long)Math.Round((double)(end.Ticks - start.Ticks) / ticksPerSecond) * ticksPerSecond;
+			long newEnd = (long)Math.Round((double)(end.Ticks - start.Ticks) / System.TimeSpan.TicksPerSecond) * System.TimeSpan.TicksPerSecond;
 			end = new DateTime(start.Ticks + newEnd);
 
 			DateTimeInterval interval = new DateTimeInterval(start, end);
