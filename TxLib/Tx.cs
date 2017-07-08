@@ -702,33 +702,45 @@ namespace Unclassified.TxLib
 		public static void LoadFromEmbeddedResource(string name)
 		{
 			// First load the XML file into an XmlDocument for further processing
-			Stream stream = System.Reflection.Assembly.GetCallingAssembly().GetManifestResourceStream(name);
-			if (stream == null)
-			{
-				throw new ArgumentException("The embedded resource name was not found in the calling assembly.");
-			}
-			XmlDocument xmlDoc = new XmlDocument();
-			xmlDoc.Load(stream);
+		    var stream = System.Reflection.Assembly.GetCallingAssembly().GetManifestResourceStream(name);
+		    if (stream == null)
+		    {
+		        throw new ArgumentException("The embedded resource name was not found in the calling assembly.");
+		    }
 
-			// Try to find the culture name inside a combined XML document
-			using (new WriteLock(rwlock))
-			{
-				foreach (XmlElement xe in xmlDoc.DocumentElement.SelectNodes("culture[@name]"))
-				{
-					CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
-					LoadFromXml(ci.Name, xe, languages);
-
-					// Set the primary culture if a culture in the file claims to be it
-					XmlAttribute primaryAttr = xe.Attributes["primary"];
-					if (primaryAttr != null && primaryAttr.Value == "true")
-					{
-						PrimaryCulture = ci.Name;
-					}
-				}
-			}
-			// Need to raise the event after releasing the write lock
-			RaiseDictionaryChanged();
+            LoadFromStream(stream);
 		}
+
+        /// <summary>
+        /// Loads all text definitions from a stream into the global dictionary.
+        /// Only the combined format with all cultures in one document is supported by this method.
+        /// </summary>
+        /// <param name="stream">The stream which provides the resource file to load.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void LoadFromStream(Stream stream)
+	    {
+	        XmlDocument xmlDoc = new XmlDocument();
+	        xmlDoc.Load(stream);
+
+	        // Try to find the culture name inside a combined XML document
+	        using (new WriteLock(rwlock))
+	        {
+	            foreach (XmlElement xe in xmlDoc.DocumentElement.SelectNodes("culture[@name]"))
+	            {
+	                CultureInfo ci = CultureInfo.GetCultureInfo(xe.Attributes["name"].Value);
+	                LoadFromXml(ci.Name, xe, languages);
+
+	                // Set the primary culture if a culture in the file claims to be it
+	                XmlAttribute primaryAttr = xe.Attributes["primary"];
+	                if (primaryAttr != null && primaryAttr.Value == "true")
+	                {
+	                    PrimaryCulture = ci.Name;
+	                }
+	            }
+	        }
+	        // Need to raise the event after releasing the write lock
+	        RaiseDictionaryChanged();
+        }
 
 		/// <summary>
 		/// Loads all text definitions from an XML element into a dictionary.
