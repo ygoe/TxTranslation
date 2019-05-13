@@ -1937,7 +1937,7 @@ namespace Unclassified.TxEditor.ViewModels
 			string str = selectedTextKeys
 				.Select(tk => tk.TextKey)
 				.Aggregate((a, b) => a + Environment.NewLine + b);
-			Clipboard.SetText(str);
+			Clipboard.SetDataObject(str);
 			StatusText = Tx.T("statusbar.text key copied");
 		}
 
