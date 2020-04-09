@@ -245,26 +245,6 @@ namespace Unclassified.UI
 			return true;
 		}
 
-		/// <summary>
-		/// Checks whether the new property value has changed and updates the backing field.
-		/// </summary>
-		/// <typeparam name="T">Value type of the property.</typeparam>
-		/// <param name="value">New property value.</param>
-		/// <param name="field">Backing field.</param>
-		/// <param name="propertyNames">Names of the properties to notify updated.</param>
-		/// <returns>true if the value has changed, false otherwise.</returns>
-		[Obsolete("Use the SetValue method instead.")]
-		protected bool CheckUpdate<T>(T value, ref T field, params string[] propertyNames)
-		{
-			if (!EqualityComparer<T>.Default.Equals(value, field))
-			{
-				field = value;
-				OnPropertyChanged(propertyNames);
-				return true;
-			}
-			return false;
-		}
-
 		#endregion Property access methods
 
 		#region View state
