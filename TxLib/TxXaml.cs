@@ -13,7 +13,9 @@
 // library. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -71,6 +73,117 @@ namespace Unclassified.TxLib
 			Count = -1;
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name = "placeholderKey1" > The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, string placeholderKey1, Binding placeholder1)
+        {
+			Key = key;
+			Count = -1;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+        {
+			Key = key;
+			Count = count;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+		{
+			Key = key;
+			Count = -1;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+			PlaceholderKey2 = placeholderKey2;
+			PlaceholderBinding2 = placeholder2;
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+		{
+			Key = key;
+			Count = count;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+			PlaceholderKey2 = placeholderKey2;
+			PlaceholderBinding2 = placeholder2;
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+		{
+			Key = key;
+			Count = -1;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+			PlaceholderKey2 = placeholderKey2;
+			PlaceholderBinding2 = placeholder2;
+			PlaceholderKey3 = placeholderKey3;
+			PlaceholderBinding3 = placeholder3;
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public TExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+		{
+			Key = key;
+			Count = count;
+			PlaceholderKey1 = placeholderKey1;
+			PlaceholderBinding1 = placeholder1;
+			PlaceholderKey2 = placeholderKey2;
+			PlaceholderBinding2 = placeholder2;
+			PlaceholderKey3 = placeholderKey3;
+			PlaceholderBinding3 = placeholder3;
+		}
+
 		#endregion Constructors
 
 		#region Properties
@@ -91,6 +204,36 @@ namespace Unclassified.TxLib
 		public BindingBase CountBinding { get; set; }
 
 		/// <summary>
+		/// Gets or sets the name of placeholder one.
+		/// </summary>
+		public string PlaceholderKey1 { get; set; }
+
+		/// <summary>
+		/// Gets or sets the binding that provides the placeholder one value to use when templating the translation.
+		/// </summary>
+		public BindingBase PlaceholderBinding1 { get; set; }
+
+		/// <summary>
+		/// Gets or sets the name of placeholder two.
+		/// </summary>
+		public string PlaceholderKey2 { get; set; }
+
+		/// <summary>
+		/// Gets or sets the binding that provides the placeholder two value to use when templating the translation.
+		/// </summary>
+		public BindingBase PlaceholderBinding2 { get; set; }
+
+		/// <summary>
+		/// Gets or sets the name of placeholder three.
+		/// </summary>
+		public string PlaceholderKey3 { get; set; }
+
+		/// <summary>
+		/// Gets or sets the binding that provides the placeholder three value to use when templating the translation.
+		/// </summary>
+		public BindingBase PlaceholderBinding3 { get; set; }
+
+		/// <summary>
 		/// Gets or sets the default text to display at design time.
 		/// </summary>
 		public string Default { get; set; }
@@ -103,10 +246,28 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected virtual Func<string, int, string> GetTFunc()
+		protected virtual Func<string, int, string> GetTFuncCount()
 		{
 			return Tx.T;
 		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual Func<string, string[], string> GetTFuncPlaceholders()
+        {
+			return Tx.T;
+        }
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
+        {
+			return Tx.T;
+        }
 
 		#endregion Converter action
 
@@ -127,28 +288,84 @@ namespace Unclassified.TxLib
 			binding.Source = DictionaryWatcher.Instance;
 			binding.Mode = BindingMode.OneWay;
 
-			if (CountBinding != null)
-			{
-				// A CountBinding has been set, so multiple bindings need to be combined.
+			var bindCount = CountBinding != null;
+			var bindPlaceholder1 = PlaceholderBinding1 != null;
+			var bindPlaceholder2 = bindPlaceholder1 && PlaceholderBinding2 != null;
+			var bindPlaceholder3 = bindPlaceholder2 && PlaceholderBinding3 != null;
+			var bindPlaceholders = bindPlaceholder1;
+
+			if (bindPlaceholder1 && string.IsNullOrEmpty(PlaceholderKey1))
+				throw new ArgumentException("Placeholder key 1 is not specified");
+
+			if (bindPlaceholder2 && string.IsNullOrEmpty(PlaceholderKey2))
+				throw new ArgumentException("Placeholder key 2 is not specified");
+
+			if (bindPlaceholder3 && string.IsNullOrEmpty(PlaceholderKey3))
+				throw new ArgumentException("Placeholder key 3 is not specified");
+
+			if (bindCount || bindPlaceholders)
+            {
+				// Optional bindings have been set, so multiple bindings need to be combined.
 				MultiBinding multiBinding = new MultiBinding();
 				multiBinding.Mode = BindingMode.TwoWay;
 
 				// Add the dummy binding as well as the binding for the count value.
 				multiBinding.Bindings.Add(binding);
-				multiBinding.Bindings.Add(CountBinding);
+				if (bindCount) multiBinding.Bindings.Add(CountBinding);
+				if (bindPlaceholder1) multiBinding.Bindings.Add(PlaceholderBinding1);
+				if (bindPlaceholder2) multiBinding.Bindings.Add(PlaceholderBinding2);
+				if (bindPlaceholder3) multiBinding.Bindings.Add(PlaceholderBinding3);
 
 				// The converter will invoke the actual translation of the key and additional data.
-				multiBinding.Converter = new TConverter(GetTFunc(), Key, Default);
-				return multiBinding.ProvideValue(serviceProvider);
+				if (bindCount && !bindPlaceholders)
+                {
+					multiBinding.Converter = new TConverter(GetTFuncCount(), Key, Default);
+					return multiBinding.ProvideValue(serviceProvider);
+				}
+				else if (!bindCount && bindPlaceholders)
+                {
+					var placeholder_keys = new string[] { PlaceholderKey1, PlaceholderKey2, PlaceholderKey3 }.Where(s => s != null).ToArray();
+					multiBinding.Converter = new TConverter(GetTFuncPlaceholders(), Key, placeholder_keys, Default);
+					return multiBinding.ProvideValue(serviceProvider);
+                }
+				else
+                {
+					var placeholder_keys = new string[] { PlaceholderKey1, PlaceholderKey2, PlaceholderKey3 }.Where(s => s != null).ToArray();
+					multiBinding.Converter = new TConverter(GetTFuncCountAndPlaceholders(), Key, Count, placeholder_keys, Default);
+					return multiBinding.ProvideValue(serviceProvider);
+				}
 			}
-			else
-			{
-				// No CountBinding, so a simple binding will do.
+            else
+            {
+				// No optional binding, so a simple binding will do.
 
 				// The converter will invoke the actual translation of the key and additional data.
-				binding.Converter = new TConverter(GetTFunc(), Key, Count, Default);
+				binding.Converter = new TConverter(GetTFuncCount(), Key, Count, Default);
 				return binding.ProvideValue(serviceProvider);
 			}
+
+			//if (CountBinding != null)
+			//{
+			//	// A CountBinding has been set, so multiple bindings need to be combined.
+			//	MultiBinding multiBinding = new MultiBinding();
+			//	multiBinding.Mode = BindingMode.TwoWay;
+
+			//	// Add the dummy binding as well as the binding for the count value.
+			//	multiBinding.Bindings.Add(binding);
+			//	multiBinding.Bindings.Add(CountBinding);
+
+			//	// The converter will invoke the actual translation of the key and additional data.
+			//	multiBinding.Converter = new TConverter(GetTFuncCount(), Key, Default);
+			//	return multiBinding.ProvideValue(serviceProvider);
+			//}
+			//else
+			//{
+			//	// No CountBinding, so a simple binding will do.
+
+			//	// The converter will invoke the actual translation of the key and additional data.
+			//	binding.Converter = new TConverter(GetTFuncCount(), Key, Count, Default);
+			//	return binding.ProvideValue(serviceProvider);
+			//}
 		}
 
 		#endregion MarkupExtension overrides
@@ -198,6 +415,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+        {
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count"> Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count" > Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count" > Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public UTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -206,7 +504,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.UT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.UT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.UT;
 		}
@@ -258,6 +574,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+        {
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the TCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public TCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -266,7 +663,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.TC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.TC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.TC;
 		}
@@ -318,6 +733,54 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+        {
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+        {
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the UTCExtension class.
+		/// </summary>
+		public UTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -326,7 +789,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.UTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.UTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.UTC;
 		}
@@ -378,6 +859,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+        {
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -386,7 +948,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.QT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.QT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.QT;
 		}
@@ -438,6 +1018,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -446,7 +1107,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.QTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.QTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.QTC;
 		}
@@ -498,6 +1177,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QUTExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -506,7 +1266,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.QUT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.QUT;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.QUT;
 		}
@@ -558,6 +1336,87 @@ namespace Unclassified.TxLib
 		{
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, string placeholderKey1, Binding placeholder1)
+			: base(key, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, int count, string placeholderKey1, Binding placeholder1)
+			: base(key, count, placeholderKey1, placeholder1)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
+		/// <summary>
+		/// Initialises a new instance of the QUTCExtension class.
+		/// </summary>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholderKey1">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder1">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey2">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder2">The value binding to replace the placeholder when templating.</param>
+		/// <param name="placeholderKey3">The name of the placeholder in the localization resource.</param>
+		/// <param name="placeholder3">The value binding to replace the placeholder when templating.</param>
+		public QUTCExtension(string key, int count, string placeholderKey1, Binding placeholder1, string placeholderKey2, Binding placeholder2, string placeholderKey3, Binding placeholder3)
+			: base(key, count, placeholderKey1, placeholder1, placeholderKey2, placeholder2, placeholderKey3, placeholder3)
+		{
+		}
+
 		#endregion Constructors
 
 		#region Converter action
@@ -566,7 +1425,25 @@ namespace Unclassified.TxLib
 		/// Provides the T method in specialised classes.
 		/// </summary>
 		/// <returns></returns>
-		protected override Func<string, int, string> GetTFunc()
+		protected override Func<string, int, string> GetTFuncCount()
+		{
+			return Tx.QUTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, string[], string> GetTFuncPlaceholders()
+		{
+			return Tx.QUTC;
+		}
+
+		/// <summary>
+		/// Provides the T method in specialised classes.
+		/// </summary>
+		/// <returns></returns>
+		protected override Func<string, int, string[], string> GetTFuncCountAndPlaceholders()
 		{
 			return Tx.QUTC;
 		}
@@ -972,7 +1849,8 @@ namespace Unclassified.TxLib
 
 		private string key;
 		private int count;
-		private Func<string, int, string> tFunc;
+		private string[] placeholder_keys;
+		private object tFunc;
 		private string defaultValue;
 
 		#endregion Private fields
@@ -1008,6 +1886,39 @@ namespace Unclassified.TxLib
 			this.defaultValue = defaultValue;
 		}
 
+		/// <summary>
+		/// Initialises a new instance of the TConverter class.
+		/// </summary>
+		/// <param name="tFunc"></param>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="placeholder_keys">Placeholders key and values data.</param>
+		/// <param name="defaultValue">Default text to display at design time.</param>
+		public TConverter(Func<string, string[], string> tFunc, string key, string[] placeholder_keys, string defaultValue)
+        {
+			this.tFunc = tFunc;
+			this.key = key;
+			this.placeholder_keys = placeholder_keys;
+			this.count = -1;
+			this.defaultValue = defaultValue;
+        }
+
+		/// <summary>
+		/// Initialises a new instance of the TConverter class.
+		/// </summary>
+		/// <param name="tFunc"></param>
+		/// <param name="key">Text key to translate.</param>
+		/// <param name="count">Count value to consider when selecting the text value.</param>
+		/// <param name="placeholder_keys">Placeholders keys.</param>
+		/// <param name="defaultValue">Default text to display at design time.</param>
+		public TConverter(Func<string, int, string[], string> tFunc, string key, int count, string[] placeholder_keys, string defaultValue)
+        {
+			this.tFunc = tFunc;
+			this.key = key;
+			this.placeholder_keys = placeholder_keys;
+			this.count = count;
+			this.defaultValue = defaultValue;
+        }
+
 		#endregion Constructors
 
 		#region IValueConverter members
@@ -1023,7 +1934,15 @@ namespace Unclassified.TxLib
 			// value is the Dummy binding, don't use it
 
 			// Now translate the text and return the result.
-			return tFunc(key, count);
+			if (tFunc is Func<string, int, string> tFunc_str_int)
+				return tFunc_str_int(key, count);
+			if (tFunc is Func<string, string[], string> tFunc_str_strArr)
+				return tFunc_str_strArr(key, placeholder_keys);
+			if (tFunc is Func<string, int, string[], string> tFunc_str_int_strArr)
+				return tFunc_str_int_strArr(key, count, placeholder_keys);
+
+			// shouldn't reach here
+			return defaultValue ?? key;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -1044,25 +1963,53 @@ namespace Unclassified.TxLib
 			}
 
 			// values[0] is the Dummy binding, don't use it
-
-			// Read the count value from binding number two.
-			int count = -1;
-			if (values.Length > 1)
-			{
-				if (values[1] != DependencyProperty.UnsetValue)
-				{
-					count = System.Convert.ToInt32(values[1]);
-				}
-			}
+			values = values.Skip(1).ToArray();
 
 			// Now translate the text and return the result.
-			return tFunc(key, count);
+			if (tFunc is Func<string, int, string> tFunc_string_int)
+            {
+				// read the count value
+				if (values[0] != DependencyProperty.UnsetValue)
+					count = System.Convert.ToInt32(values[0]);
+				return tFunc_string_int(key, count);
+			}
+			if (tFunc is Func<string, string[], string> tFunc_string_stringArr)
+            {
+				// read the bound parameter values
+				values = values.Where(v => v != DependencyProperty.UnsetValue).ToArray();
+				var args = JoinKeyValuePairs(placeholder_keys, values).ToArray();
+				return tFunc_string_stringArr(key, args);
+            }
+			if (tFunc is Func<string, int, string[], string> tFunc_string_int_stringArr)
+            {
+				// read the count value
+				if (values[0] != DependencyProperty.UnsetValue)
+					count = System.Convert.ToInt32(values[0]);
+
+				// read the bound parameter values
+				values = values.Where(v => v != DependencyProperty.UnsetValue).ToArray();
+				var args = JoinKeyValuePairs(placeholder_keys, values).ToArray();
+				return tFunc_string_int_stringArr(key, count, args);
+			}
+			return null;
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
 		{
 			return new object[0];
 		}
+
+		private IEnumerable<string> JoinKeyValuePairs(IEnumerable<string> keys, IEnumerable<object> values)
+        {
+			var iter_keys = keys.GetEnumerator();
+			var iter_values = values.GetEnumerator();
+
+			while (iter_keys.MoveNext() && iter_values.MoveNext())
+            {
+				yield return iter_keys.Current;
+				yield return iter_values.Current as string;
+            }
+        }
 
 		#endregion IMultiValueConverter members
 	}

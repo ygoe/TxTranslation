@@ -16,6 +16,7 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
@@ -49,5 +50,11 @@
 				</Style>
 			</TextBlock.Style>
 		</TextBlock>
+
+        <TextBlock Grid.Row="9" HorizontalAlignment="Center"
+                   Text="{Tx:T Key=test.params.xaml,
+								PlaceholderKey1=extra, PlaceholderBinding1={Binding Path=Extra},
+								PlaceholderKey2=amp, PlaceholderBinding2={Binding Path=Amp}}">
+        </TextBlock>
 	</Grid>
 </Window>

@@ -7,6 +7,9 @@ namespace WpfDemo
 {
 	public partial class MainWindow : Window
 	{
+		public string Extra => "too many";
+		public string Amp => "no context whatsoever";
+
 		public MainWindow()
 		{
 			// Setup logging
