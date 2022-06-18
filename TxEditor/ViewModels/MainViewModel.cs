@@ -175,8 +175,10 @@ namespace Unclassified.TxEditor.ViewModels
 			}
 			set
 			{
-				if (CheckUpdate(value, ref fontScale, "FontScale", "FontSize", "TextFormattingMode"))
+				if(SetValue(value))
 				{
+					OnPropertyChanged("FontSize");
+					OnPropertyChanged("TextFormattingMode");
 					App.Settings.View.FontScale = fontScale;
 				}
 			}
