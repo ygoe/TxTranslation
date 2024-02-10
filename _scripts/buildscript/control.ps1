@@ -19,21 +19,21 @@ if (IsAnySelected build commit publish)
 	{
 		Sign-File "TxLib\bin\Release\Unclassified.TxLib.dll" "$signKeyFile" "$signPassword"
 		Sign-File "TxEditor\bin\Release\TxEditor.exe" "$signKeyFile" "$signPassword"
-		Sign-File "Setup\bin\TxSetup-$revId.exe" "$signKeyFile" "$signPassword"
+		Sign-File "Setup\out\TxSetup-$revId.exe" "$signKeyFile" "$signPassword"
 	}
 }
 
 # Install setup
 if (IsSelected install)
 {
-	Exec-File "Setup\bin\TxSetup-$revId.exe" "/norestart /verysilent"
+	Exec-File "Setup\out\TxSetup-$revId.exe" "/norestart /verysilent"
 }
 
 # Commit to repository
 if (IsSelected commit)
 {
 	# Clean up test build files
-	Delete-File "Setup\bin\TxSetup-$revId.exe"
+	Delete-File "Setup\out\TxSetup-$revId.exe"
 
 	Git-Commit
 }
@@ -51,11 +51,11 @@ if (IsSelected publish)
 # Copy to website (local)
 if (IsSelected transfer-web)
 {
-	Copy-File "Setup\bin\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\"
+	Copy-File "Setup\out\TxSetup-$revId.exe" "$webDir\files\source\txtranslation\"
 	Copy-File ".local\Release\TxChanges.txt" "$webDir\files\source\txtranslation\"
 	
 	$today = (Get-Date -Format "yyyy-MM-dd")
-	Exec-File "_scripts\bin\AutoReplace.exe" "$webDataFile txtranslation version=$revId date=$today"
+	Exec-File "_scripts\tools\AutoReplace.exe" "$webDataFile txtranslation version=$revId date=$today"
 }
 
 # Upload to NuGet

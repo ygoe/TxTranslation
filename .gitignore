@@ -1,4 +1,5 @@
 # Project-specific files
+/Setup/out/
 
 # User-specific files
 .vs/

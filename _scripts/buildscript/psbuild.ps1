@@ -45,7 +45,7 @@ $startTime = Get-Date
 
 # Configuration defaults
 # (Paths relative to this script file)
-$toolsPath = "../bin"
+$toolsPath = "../tools"
 $modulesPath = "modules"
 $revId = "0"
 $shortRevId = "0"

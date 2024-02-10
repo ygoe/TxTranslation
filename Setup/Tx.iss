@@ -64,7 +64,7 @@ UninstallDisplayName=TxTranslation
 UninstallDisplayIcon={app}\TxEditor.exe
 
 ; Setup package creation
-OutputDir=bin
+OutputDir=out
 OutputBaseFilename=TxSetup-{#RevId}
 SolidCompression=True
 InternalCompressLevel=max
